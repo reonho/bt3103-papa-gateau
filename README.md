@@ -1,4 +1,4 @@
-# bt3103-prototype
+# bt3103-papa-gateau
 
 ## Project setup
 ```
