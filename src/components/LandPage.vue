@@ -31,15 +31,18 @@
     </nav>
 
 <!-- Page Content -->
-    <div class="container">
-        <h1 class="mt-4 mb-5">BT3103 Protoype App</h1>
-
-        <h3>My Stats Radar Chart</h3>
-        <div id="chart" style="width:80%; font-size:50px" >
-            <apexchart type="radar" :options="chartOptions1" :series="series"></apexchart>
+    <div class="container-fluid" style="text-align: justify">
+        <h1 class="mt-4 mb-3 ml-3">BT3103 Protoype App</h1>
+        <h3 class = "ml-3">My Stats </h3>
+        <div style="display:flex" class= "container-fluid p-3">
+            <div id="chart" style="width:50% ;" class="mb-4 mt-4">
+                <apexchart type="radar" :options="chartOptions2" :series="series1"></apexchart>
+            </div>
+            <div id="chart" style="width:50% ;" class="mb-4 mt-4">
+                <apexchart type="line" :options="chartOptions1" :series="series2"></apexchart>
+            </div>
         </div>
-
-         <div id="mod-modal" class="container">
+        <div id="mod-modal">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Module</button>
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -83,6 +86,7 @@
         </div>
         <p></p>
         
+        
     </div>
 </div>
 </template>
@@ -97,14 +101,24 @@ export default {
   components:function(){
   },
   data: function(){ 
-    return {series: [{
-    name: 'Series 1',
-    data: [4, 4.5, 3, 5, 3.5, 5],
-    }],
-    chartOptions1: {
+    return {series1: [{ name: 'Series 1',data: [5, 5, 5, 4.5, 4.5, 4.5],}],
+    series2: [{ name: 'Series 2',data: [4.7, 4.4, 3.9, 4.2],}],
+    chartOptions2: {
         chart: {
             height: 350,
             type: 'radar',
+            dropShadow: {
+                enabled: true,
+                enabledOnSeries: undefined,
+                top: 1,
+                left: 1,
+                blur: 3,
+                color: '#000',
+                opacity: 0.3
+            },
+        },
+        dataLabels: {
+            enabled: true,
         },
         title: {
             text: ''
@@ -113,12 +127,54 @@ export default {
             labels: {
              style: {
                 fontSize: '15px',
-                colors: 'black'
+                colors: ''
              }
             },
-            categories: ['Computer Science', 'BT', 'IS', 'April', 'May', 'June']
-        }
-    }};
+            categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
+        },
+    },
+    chartOptions1: {
+        chart: {
+            height: 350,
+            type: 'line',
+            dropShadow: {
+                enabled: true,
+                color: '#000',
+                top: 1,
+                left: 1,
+                blur: 10,
+                opacity: 0.15
+            },
+            toolbar: {
+            show: false
+            }
+        },
+        colors: ['#77B6EA', '#545454'],
+        dataLabels: {
+            enabled: true,
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        xaxis: {
+            labels: {
+                style: {
+                fontSize: '15px',
+                colors: ''
+                }
+            },
+            categories: ['Y1S1', 'Y1S2', 'Y1S2', 'Y2S2']
+        },
+        yaxis: {
+              title: {
+                text: 'CAP'
+              },
+              
+              max: 5
+            },
+            
+    }
+    };
   
 }
 
@@ -129,4 +185,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import './style.css';
+
 </style>
