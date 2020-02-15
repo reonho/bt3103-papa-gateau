@@ -101,8 +101,8 @@ export default {
   components:function(){
   },
   data: function(){ 
-    return {series1: [{ name: 'Series 1',data: [5, 5, 5, 4.5, 4.5, 4.5],}],
-    series2: [{ name: 'Series 2',data: [4.7, 4.4, 3.9, 4.2],}],
+    return {series1: [{ name: 'My Average',data: [5, 4.5, 4, 5, 3, 4],}, { name: 'NUS Average',data: [3.6, 3, 4, 3.5, 4, 4],}],
+    series2: [{ name: 'Series 2',data: [4.1, 4.4, 4.2, 4],}],
     chartOptions2: {
         chart: {
             height: 350,
@@ -110,8 +110,8 @@ export default {
             dropShadow: {
                 enabled: true,
                 enabledOnSeries: undefined,
-                top: 1,
-                left: 1,
+                top: 5,
+                left: 5,
                 blur: 3,
                 color: '#000',
                 opacity: 0.3
@@ -170,7 +170,8 @@ export default {
                 text: 'CAP'
               },
               
-              max: 5
+              max: 5.0,
+              min: 1
             },
             
     }
