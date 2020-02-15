@@ -8,5 +8,9 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  el: '#app',
+  data: {
+    showModal: true
+  }
 }).$mount('#app')
 

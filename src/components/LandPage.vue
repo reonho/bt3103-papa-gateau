@@ -32,11 +32,54 @@
 
 <!-- Page Content -->
     <div class="container">
-        <h1 class="mt-4">BT3103 Protoype App</h1>
-        <p>The logo in the navbar is now a default Bootstrap feature in Bootstrap 4! Make sure to set the width and height of the logo within the HTML or with CSS. For best results, use an SVG image as your logo.</p>
+        <h1 class="mt-4 mb-5">BT3103 Protoype App</h1>
+         <!--button type="button" data-toggle="modal" data-target="#myModal">Launch modal</button!-->
+         
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add a Subject</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Module</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            Module Code:
+                            <input name="mod" value="" type="text" class="form-control mb-2">
+
+                            Semester Undertaken:
+                            <input name="sem" value="" type="text" class="form-control mb-2">
+                            
+                            Professor:
+                            <input name="prof" value="" type="text" class="form-control mb-2">  
+                           
+                            Grade Obtained:
+                            <input name="grade" value="" type="text" class="form-control mb-2"> 
+                            
+                            <!--input type="text" class="form-control" id="module-code">
+                            </div>
+                            <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message</label>
+                            <textarea class="form-control" id="message-text"></textarea-->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Confirm</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <p></p>
     </div>
 </div>
 </template>
+
 
 <script>
 export default {
