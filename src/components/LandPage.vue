@@ -33,6 +33,12 @@
 <!-- Page Content -->
     <div class="container">
         <h1 class="mt-4 mb-5">BT3103 Protoype App</h1>
+
+        <h3>My Stats Radar Chart</h3>
+        <div id="chart" style="width:80%; font-size:50px" >
+            <apexchart type="radar" :options="chartOptions1" :series="series"></apexchart>
+        </div>
+
          <div id="mod-modal" class="container">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Module</button>
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -76,6 +82,7 @@
             </div>
         </div>
         <p></p>
+        
     </div>
 </div>
 </template>
@@ -86,7 +93,36 @@ export default {
   name: 'LandPage',
   props: {
     msg: String
-  } 
+  },
+  components:function(){
+  },
+  data: function(){ 
+    return {series: [{
+    name: 'Series 1',
+    data: [4, 4.5, 3, 5, 3.5, 5],
+    }],
+    chartOptions1: {
+        chart: {
+            height: 350,
+            type: 'radar',
+        },
+        title: {
+            text: ''
+        },
+        xaxis: {
+            labels: {
+             style: {
+                fontSize: '15px',
+                colors: 'black'
+             }
+            },
+            categories: ['Computer Science', 'BT', 'IS', 'April', 'May', 'June']
+        }
+    }};
+  
+}
+
+  
 }
 </script>
 
