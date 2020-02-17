@@ -19,10 +19,10 @@
 
 
 <script>
-    import AddModulesModal from "./AddModuleModal.vue"
-    import RadarChart from "./RadarChart.vue"
-    import TreeChart from "./TreeChart"
-    import NavBar from "./NavBar"
+    import AddModulesModal from "../components/AddModuleModal"
+    import RadarChart from "../components/RadarChart.vue"
+    import TreeChart from "../components/TreeChart"
+    import NavBar from '../components/NavBar'
     export default {
     name: 'LandPage',
     props: {
@@ -31,8 +31,8 @@
     components:{
         AddModulesModal,
         RadarChart,
-        NavBar,
-        TreeChart
+        TreeChart,
+        NavBar
     },
     data: function(){ 
         return {
