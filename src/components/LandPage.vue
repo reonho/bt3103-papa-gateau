@@ -193,13 +193,13 @@ methods: {
     printMod: function(){
     var moduleTitle = document.createElement("FORM");
     moduleTitle.setAttribute("id", "mod");
-    document.body.appendChild(x);
+    document.body.appendChild(moduleTitle);
     var sem = document.createTextNode("sem");
     var prof = document.createTextNode("prof");
     var grade = document.createTextNode("grade");
-    x.appendChild(sem);
-    x.appendChild(prof);
-    x.appendChild(grade);
+    moduleTitle.appendChild(sem);
+    moduleTitle.appendChild(prof);
+    moduleTitle.appendChild(grade);
     
 },
 
