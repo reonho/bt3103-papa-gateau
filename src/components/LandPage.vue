@@ -2,71 +2,35 @@
 <div class="land">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>
+        <div class="container" id="navbar">
+            <a class="navbar-brand" href="#">
+                <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>
             </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-                    <span class="sr-only">(current)</span>
-                </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-            </li>
-        </ul>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+            </div>
         </div>
-    </div>
     </nav>
 
 <!-- Page Content -->
-<<<<<<< Updated upstream
-    <div class="container">
-        <h1 class="mt-4 mb-5">BT3103 Protoype App</h1>
-         <!--button type="button" data-toggle="modal" data-target="#myModal">Launch modal</button!-->
-         
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add a Subject</button>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Module</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            Module Code:
-                            <input name="mod" value="" type="text" class="form-control mb-2">
-
-                            Semester Undertaken:
-                            <input name="sem" value="" type="text" class="form-control mb-2">
-                            
-                            Professor:
-                            <input name="prof" value="" type="text" class="form-control mb-2">  
-                           
-                            Grade Obtained:
-                            <input name="grade" value="" type="text" class="form-control mb-2"> 
-                            
-                            <!--input type="text" class="form-control" id="module-code">
-                            </div>
-                            <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message</label>
-                            <textarea class="form-control" id="message-text"></textarea-->
-=======
     <div class="container-fluid" style="text-align: justify">
         <h1 class="mt-4 mb-3 ml-3">BT3103 Protoype App</h1>
         <h3 class = "ml-3">My Stats </h3>
@@ -77,13 +41,7 @@
             <div id="chart" style="width:50% ;" class="mb-4 mt-4">
                 <apexchart type="line" :options="chartOptions1" :series="series2"></apexchart>
             </div>
-        
         </div>
-
-        <div id = "modlist">
-            Modules Included: {{ moduleList }}
-        </div>
-
         <div id="mod-modal">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Module</button>
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,16 +57,16 @@
                         <form>
                             <div class="form-group">
                                 Module Code:
-                                <input name="mod" v-model = "mod" value="" type="text" class="form-control mb-2">
+                                <input name="mod" value="" type="text" class="form-control mb-2">
 
                                 Semester Undertaken:
-                                <input name="sem" v-model = "sem" value="" type="text" class="form-control mb-2">
+                                <input name="sem" value="" type="text" class="form-control mb-2">
                                 
                                 Professor:
-                                <input name="prof" v-model = "prof" value="" type="text" class="form-control mb-2">  
+                                <input name="prof" value="" type="text" class="form-control mb-2">  
                             
                                 Grade Obtained:
-                                <input name="grade" v-model = "grade" value="" type="text" class="form-control mb-2"> 
+                                <input name="grade" value="" type="text" class="form-control mb-2"> 
                                 
                                 <!--input type="text" class="form-control" id="module-code">
                                 </div>
@@ -120,32 +78,25 @@
                     </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button v-on:click = "printMods()" type="button" class="btn btn-success success">Confirm</button>
->>>>>>> Stashed changes
+                            <button type="button" class="btn btn-primary">Confirm</button>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Confirm</button>
-                </div>
+                    </div>
                 </div>
             </div>
         </div>
         <p></p>
+        
+        
     </div>
 </div>
-
 </template>
+
 
 <script>
 export default {
   name: 'LandPage',
   props: {
     msg: String
-<<<<<<< Updated upstream
-  } 
-=======
   },
   components:function(){
   },
@@ -182,9 +133,6 @@ export default {
             categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
         },
     },
-    moduleList: [],
-    mod: "",
-
     chartOptions1: {
         chart: {
             height: 350,
@@ -226,39 +174,17 @@ export default {
               min: 1
             },
             
-    },
-   
-
+    }
     };
   
-},
-methods: {
-    printMod: function(){
-    var moduleTitle = document.createElement("FORM");
-    moduleTitle.setAttribute("id", "mod");
-    document.body.appendChild(x);
-    var sem = document.createTextNode("sem");
-    var prof = document.createTextNode("prof");
-    var grade = document.createTextNode("grade");
-    x.appendChild(sem);
-    x.appendChild(prof);
-    x.appendChild(grade);
-    
-},
-
-printMods() {
-    this.moduleList = this.mod
-  },
 }
 
-
-
   
->>>>>>> Stashed changes
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import './style.css';
+
 </style>
