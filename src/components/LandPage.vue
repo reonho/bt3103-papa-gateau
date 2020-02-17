@@ -41,7 +41,13 @@
             <div id="chart" style="width:50% ;" class="mb-4 mt-4">
                 <apexchart type="line" :options="chartOptions1" :series="series2"></apexchart>
             </div>
+        
         </div>
+
+        <div id = "modlist">
+            Modules Included: {{ moduleList }}
+        </div>
+
         <div id="mod-modal">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Module</button>
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -57,16 +63,16 @@
                         <form>
                             <div class="form-group">
                                 Module Code:
-                                <input name="mod" value="" type="text" class="form-control mb-2">
+                                <input name="mod" v-model = "mod" value="" type="text" class="form-control mb-2">
 
                                 Semester Undertaken:
-                                <input name="sem" value="" type="text" class="form-control mb-2">
+                                <input name="sem" v-model = "sem" value="" type="text" class="form-control mb-2">
                                 
                                 Professor:
-                                <input name="prof" value="" type="text" class="form-control mb-2">  
+                                <input name="prof" v-model = "prof" value="" type="text" class="form-control mb-2">  
                             
                                 Grade Obtained:
-                                <input name="grade" value="" type="text" class="form-control mb-2"> 
+                                <input name="grade" v-model = "grade" value="" type="text" class="form-control mb-2"> 
                                 
                                 <!--input type="text" class="form-control" id="module-code">
                                 </div>
@@ -78,7 +84,7 @@
                     </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Confirm</button>
+                            <button v-on:click = "printMods()" type="button" class="btn btn-success success">Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -89,8 +95,8 @@
         
     </div>
 </div>
-</template>
 
+</template>
 
 <script>
 export default {
@@ -133,6 +139,9 @@ export default {
             categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
         },
     },
+    moduleList: [],
+    mod: "",
+
     chartOptions1: {
         chart: {
             height: 350,
@@ -174,10 +183,32 @@ export default {
               min: 1
             },
             
-    }
+    },
+   
+
     };
   
+},
+methods: {
+    printMod: function(){
+    var moduleTitle = document.createElement("FORM");
+    moduleTitle.setAttribute("id", "mod");
+    document.body.appendChild(x);
+    var sem = document.createTextNode("sem");
+    var prof = document.createTextNode("prof");
+    var grade = document.createTextNode("grade");
+    x.appendChild(sem);
+    x.appendChild(prof);
+    x.appendChild(grade);
+    
+},
+
+printMods() {
+    this.moduleList = this.mod
+  },
 }
+
+
 
   
 }
