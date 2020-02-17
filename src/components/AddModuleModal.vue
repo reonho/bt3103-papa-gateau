@@ -46,17 +46,17 @@
 
 <script>
 export default {
-  name: 'AddModuleModal',
-  props: {
-    msg: String
-  },
-  components:function(){
-  },
-  data: function(){ 
-    return {
-    };
-  }
-}
+    name: 'AddModuleModal',
+    props: {
+        msg: String
+    },
+    components:function(){
+    },
+    data: function(){ 
+        return {
+        };
+    }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
