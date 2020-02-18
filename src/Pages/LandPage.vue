@@ -2,7 +2,7 @@
 <div class="landPage">
     <NavBar/>
     <div class="container-fluid" style="text-align: justify">
-        <h1 class="mt-4 mb-3 ml-3">Student Insights</h1>
+        <h1 class="mt-4 mb-3 ml-3">My Insights</h1>
         <AddModulesModal class="ml-3"/><br>
         <h3 style="text-align:center">My Stats </h3>
         
