@@ -22,8 +22,8 @@
                                 Professor/Lecturer:
                                 <input name="prof" value="" type="text" class="form-control mb-2">  
                             
-                            Grade Obtained:
-                            <input name="grade" value="" type="text" class="form-control mb-2"> 
+                                Grade Obtained:
+                                <input name="grade" value="" type="text" class="form-control mb-2"> 
                     </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

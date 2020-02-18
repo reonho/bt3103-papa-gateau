@@ -1,12 +1,30 @@
 <template>
+
 <div class="NavBar">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+   <md-toolbar class="md-accent" md-elevation="1">
+      <h3 class="md-title " style="flex: 2; font-size: 200%">Modeaux</h3>
+       <router-link class="nav-link" to="/">
+          <md-button>Logout</md-button>
+        </router-link>
+        <router-link class="nav-link" to="/LandPage">
+          <md-button class="md-primary">Dashboard</md-button>
+        </router-link>
+        <router-link class="nav-link" to="/">
+          <md-button class="md-primary">Modules</md-button>
+        </router-link>
+        <router-link class="nav-link" to="/LandPage">
+          <md-button class="md-primary">Settings</md-button>
+        </router-link>
+        
+    </md-toolbar>
+    
+    <!-- Navigation>
+    <nav class="navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container-fluid">
 
-        <a class="navbar-brand" href="#">
-          <h1>MOD-Oui</h1>
-            <!--img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50-->
+        <a class="navbar-brand ml-1" href="#">
+         
+            <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>
             </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -18,7 +36,7 @@
             <router-link class="nav-link" to="/LandPage">Dashboard</router-link>
             </li>
             <li class="nav-item">
-            <router-link class="nav-link" to="/">Logout</router-link>
+           
             </li>
             <li class="nav-item">
             <a class="nav-link" href="#">Contact</a>
@@ -26,7 +44,7 @@
         </ul>
         </div>
     </div>
-    </nav>
+    </nav-->
 </div>
 </template>
 
