@@ -16,27 +16,21 @@
                             Module Code:
                             <input name="mod" value="" type="text" class="form-control mb-2">
 
-                            Semester Undertaken:
-                            <input name="sem" value="" type="text" class="form-control mb-2">
+                                Semester Undertaken:
+                                <input name="sem" value="" type="text" class="form-control mb-2">
+                                
+                                Professor/Lecturer:
+                                <input name="prof" value="" type="text" class="form-control mb-2">  
                             
-                            Professor:
-                            <input name="prof" value="" type="text" class="form-control mb-2">  
-                        
                             Grade Obtained:
                             <input name="grade" value="" type="text" class="form-control mb-2"> 
-                            
-                            <!--input type="text" class="form-control" id="module-code">
-                            </div>
-                            <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message</label>
-                            <textarea class="form-control" id="message-text"></textarea-->
+                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Confirm</button>
                         </div>
                     </form>
                 </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Confirm</button>
-                    </div>
                 </div>
             </div>
         </div>

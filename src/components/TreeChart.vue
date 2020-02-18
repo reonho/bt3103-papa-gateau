@@ -48,7 +48,7 @@
                             colors: ''
                             }
                         },
-                        categories: ['Y1S1', 'Y1S2', 'Y1S2', 'Y2S2']
+                        categories: ['Y1S1', 'Y1S2', 'Y2S1', 'Y2S2']
                     },
                     yaxis: {
                         title: {

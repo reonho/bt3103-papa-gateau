@@ -2,7 +2,7 @@
 <div class="landPage">
     <NavBar/>
     <div class="container-fluid" style="text-align: justify">
-        <h1 class="mt-4 mb-3 ml-3">BT3103 Protoype App</h1>
+        <h1 class="mt-4 mb-3 ml-3">Student Insights</h1>
         <h3 class = "ml-3">My Stats </h3>
         <div style="display:flex" class= "container-fluid p-3">
             <div id="chart" style="width:50% ;" class="mb-4 mt-4">
