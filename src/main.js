@@ -4,7 +4,7 @@ import app from './App.vue'
 import router from './router.js'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
+import VueApexCharts from 'vue-apexcharts'
 Vue.config.productionTip = false
 Vue.component('apexchart', VueApexCharts)
 

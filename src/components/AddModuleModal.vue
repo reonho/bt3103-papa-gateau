@@ -19,18 +19,11 @@
                                 Semester Undertaken:
                                 <input name="sem" value="" type="text" class="form-control mb-2">
                                 
-                                Professor:
+                                Professor/Lecturer:
                                 <input name="prof" value="" type="text" class="form-control mb-2">  
                             
-                            Professor:
-                            <input name="prof" value="" type="text" class="form-control mb-2">  
-                        
                             Grade Obtained:
                             <input name="grade" value="" type="text" class="form-control mb-2"> 
-                            
-                            <!--input type="text" class="form-control" id="module-code">
-                            </div>
-                        </form>
                     </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -38,10 +31,6 @@
                         </div>
                     </form>
                 </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Confirm</button>
-                    </div>
                 </div>
             </div>
         </div>
