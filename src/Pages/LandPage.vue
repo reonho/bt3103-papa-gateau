@@ -2,7 +2,7 @@
 <div class="landPage">
     <NavBar/>
     <div class="container-fluid" style="text-align: justify">
-        <h1 class="mt-4 mb-3 ml-3">Student Insights</h1>
+        <h1 class="mt-4 mb-3 ml-3">My Insights</h1>
         <AddModulesModal class="ml-3"/><br>
         <h3 style="text-align:center">My Stats </h3>
         <div style="display:flex" class= "container-fluid p-3">
@@ -13,7 +13,12 @@
                 <TreeChart/>
             </div>
         </div>
-       
+        <md-tabs class="md-transparent" md-alignment="fixed">
+            <md-tab id="tab-home" md-label="Home"></md-tab>
+            <md-tab id="tab-pages" md-label="Pages"></md-tab>
+            <md-tab id="tab-posts" md-label="Posts"></md-tab>
+            <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
+        </md-tabs>
         <Feed/>
     </div>
 </div>
