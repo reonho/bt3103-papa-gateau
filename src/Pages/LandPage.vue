@@ -5,7 +5,6 @@
         <h1 class="mt-4 mb-3 ml-3">Student Insights</h1>
         <AddModulesModal class="ml-3"/><br>
         <h3 style="text-align:center">My Stats </h3>
-        
         <div style="display:flex" class= "container-fluid p-3">
             <div id="chart" style="width:50% ;" class="mb-4 mt-4">
                 <RadarChart/>
