@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LandPage msg="Welcome to Your Vue.js App"/>
+    <LandPage>
   </div>
 </template>
 
