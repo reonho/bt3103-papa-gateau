@@ -44,12 +44,24 @@
         NavBar,
         Feed
     },
+    methods: {
+        //use this method to find data of a specific module
+        findModule(mod,database){
+            var data = database.Modules
+            for (var i = 0; i < data.length; ++i){
+                if (data[i].Name == mod) {
+                    return data[i]
+                }
+            }
+        },
+    },
     data: function(){ 
         return {
-            Data: DataObject.Module
+            // assign data into Data attribute
+            Data: this.findModule("CS2030",DataObject)
         };
     
-    }
+    },
     
     }
 </script>
