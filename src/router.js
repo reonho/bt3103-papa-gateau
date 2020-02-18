@@ -9,7 +9,8 @@ export default new Router({
     {
       path: '/LandPage',
       name: 'LandPage',
-      component: LandPage
+      component: LandPage,
+      props: true
     },
     {
       path: '/',

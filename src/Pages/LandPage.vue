@@ -2,7 +2,7 @@
 <div class="landPage">
     <NavBar/>
     <div class="container-fluid" style="text-align: justify">
-        <h1 class="mt-4 mb-3 ml-3">My Insights</h1>
+        <h1 class="mt-4 mb-3 ml-3"> Hello {{User.User}}!</h1>
         <AddModulesModal class="ml-3"/><br>
         <h3 style="text-align:center">My Stats </h3>
         <div style="display:flex" class= "container-fluid p-3">
@@ -19,7 +19,7 @@
             <md-tab id="tab-posts" md-label="Posts"></md-tab>
             <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
         </md-tabs>
-        <p>{{this.Data}}</p>
+        <span>{{this.User}}</span>
         <Feed/>
     </div>
 </div>
@@ -35,14 +35,15 @@
     import Feed from '../components/Feed'
     export default {
     name: 'LandPage',
-    props: {
-    },
+    props: [
+        'userPassed'
+    ],
     components:{
         AddModulesModal,
         RadarChart,
         TreeChart,
         NavBar,
-        Feed
+        Feed,
     },
     methods: {
         //use this method to find data of a specific module
@@ -58,11 +59,15 @@
     data: function(){ 
         return {
             // assign data into Data attribute
-            Data: this.findModule("CS2030",DataObject)
+            Data: this.findModule("CS2030",DataObject),
+            User: null
         };
-    
     },
-    
+    mounted() {
+        if (this.userPassed) {
+            this.User = this.userPassed   
+        }
+    }
     }
 </script>
 
