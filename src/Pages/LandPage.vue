@@ -5,7 +5,6 @@
         <h1 class="mt-4 mb-3 ml-3">My Insights</h1>
         <AddModulesModal class="ml-3"/><br>
         <h3 style="text-align:center">My Stats </h3>
-        
         <div style="display:flex" class= "container-fluid p-3">
             <div id="chart" style="width:50% ;" class="mb-4 mt-4">
                 <RadarChart/>
@@ -20,6 +19,7 @@
             <md-tab id="tab-posts" md-label="Posts"></md-tab>
             <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
         </md-tabs>
+        <p>{{this.Data}}</p>
         <Feed/>
     </div>
 </div>
@@ -27,6 +27,7 @@
 
 
 <script>
+    import DataObject from "../Database.js"
     import AddModulesModal from "../components/AddModuleModal"
     import RadarChart from "../components/RadarChart.vue"
     import TreeChart from "../components/TreeChart"
@@ -45,6 +46,7 @@
     },
     data: function(){ 
         return {
+            Data: DataObject.Module
         };
     
     }
