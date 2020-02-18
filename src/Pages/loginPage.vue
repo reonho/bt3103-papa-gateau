@@ -43,7 +43,6 @@
     export default {
     name: 'loginPage',
     props: {
-        msg: String
     },
     components:{
     },
