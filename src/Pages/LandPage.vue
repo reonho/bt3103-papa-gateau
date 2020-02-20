@@ -12,31 +12,46 @@
         <!--div style="display:flex" class= "container-fluid p-3"-->
         <div class="md-layout md-gutter md-alignment-center" style="margin:2vh">
             <div class = "md-layout-item">
-            <md-card style="height:70vh" md-with-hover>
-                <md-card style="background:salmon;color:white">
+            
+            <md-card style="background:salmon;color:white" md-with-hover>
                 <md-card-header>
                     <div class="md-title">My Stats and Attributes</div>
                     <div class="md-subhead">Discover your strengths and weaknesses!</div>
                 </md-card-header>
                 </md-card>
+            <md-card style="height:70vh" md-with-hover>
+    
             <div id="chart">
                 <RadarChart/>
             </div>
+            
             </md-card>
             </div>
+
             <div class="md-layout-item">
-            <md-card style="height:70vh" md-with-hover>
-                <md-card style="background:salmon;color:white">
+                <md-card style="background:salmon;color:white" md-with-hover >
+                <md-card-header>
+                    <div class="md-title">Overall Academic Progress</div>
+                    <div class="md-subhead">How much of your degree you have left!</div>
+                </md-card-header>
+                </md-card>
+                <md-card style="height:70vh; padding: 6vh" md-with-hover>         
+                    <OverallProgress/>
+                </md-card>   
+            </div>
+        </div>
+        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh">
                 <md-card-header>
                     <div class="md-title">My Degree progress</div>
                     <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
                 </md-card-header>
-                </md-card>
-            <div id="treechart" >
+        </md-card>
+
+        <md-card style="height:70vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
+               
+            <div id="treechart" class = "container-fluid" >
                 <md-tabs md-alignment="centered">
-                    <md-tab id="OverallProgress" md-label="Academic Progress" >
-                        <OverallProgress/>
-                    </md-tab>
+
                     <md-tab id="GE" md-label="General Electives" >
                         <TreeChartGe v-bind:data = 'this.treeData'/>
                     </md-tab>
@@ -49,8 +64,6 @@
                 </md-tabs>
             </div>
             </md-card>
-            </div>
-        </div>
         <!--/div-->
         <!-- <md-tabs class="md-transparent" md-alignment="fixed">
             <md-tab id="tab-home" md-label="Home"></md-tab>

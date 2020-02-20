@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1 style = "text-align: center; margin-top: 20">Overall Academic Progress</h1>
-        <div id = "chartdiv" style = 'height:400px;'/>
+        <!--h1 style = "text-align: center; margin-top: 20">Overall Academic Progress</h1-->
+        <div id = "chartdiv" style = 'height:50vh;'/>
     </div>
 </template>
 
