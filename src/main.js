@@ -10,7 +10,6 @@ import 'vue-material/dist/theme/default.css'
 
 import VueMaterial from "vue-material";
 import "vue-material/dist/vue-material.min.css";
-import vuetify from './plugins/vuetify';
 
 Vue.use(VueMaterial);
 Vue.use(MdButton)
@@ -21,7 +20,6 @@ Vue.use(MdTabs)
 Vue.config.productionTip = false
 
 new Vue({
-  vuetify
   render: h => h(app),
   el: '#app',
 }).$mount('#app')

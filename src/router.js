@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LandPage from './Pages/LandPage.vue'
 import loginPage from './Pages/loginPage.vue'
+import ModuleList from './Pages/ModuleList.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -10,6 +11,11 @@ export default new Router({
       path: '/LandPage',
       name: 'LandPage',
       component: LandPage
+    },
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList
     },
     {
       path: '/',
