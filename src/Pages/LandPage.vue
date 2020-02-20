@@ -13,14 +13,17 @@
                 <TreeChart/>
             </div>
         </div>
-        <md-tabs class="md-transparent" md-alignment="fixed">
+        <!-- <md-tabs class="md-transparent" md-alignment="fixed">
             <md-tab id="tab-home" md-label="Home"></md-tab>
             <md-tab id="tab-pages" md-label="Pages"></md-tab>
             <md-tab id="tab-posts" md-label="Posts"></md-tab>
             <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
-        </md-tabs>
-        <p>{{this.Data}}</p>
-        <Feed/>
+        </md-tabs> -->
+        <!-- <p>{{this.Data}}</p> -->
+        <!-- <Feed/> -->
+        <md-content class = 'md-layout md-alignment-center-center'>
+        <ReviewCard/>
+        </md-content>
     </div>
 </div>
 </template>
@@ -32,7 +35,8 @@
     import RadarChart from "../components/RadarChart.vue"
     import TreeChart from "../components/TreeChart"
     import NavBar from '../components/NavBar'
-    import Feed from '../components/Feed'
+    // import Feed from '../components/Feed'
+    import ReviewCard from '../components/ReviewCard'
     export default {
     name: 'LandPage',
     props: {
@@ -42,7 +46,8 @@
         RadarChart,
         TreeChart,
         NavBar,
-        Feed
+        // Feed
+        ReviewCard
     },
     methods: {
         //use this method to find data of a specific module
