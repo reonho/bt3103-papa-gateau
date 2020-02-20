@@ -6,7 +6,14 @@
   <div class="py-5">
     <div class="row">
       <div class="col-lg-9 mx-auto">
-        
+        <md-card class="md-primary" md-with-hover>
+            <md-ripple>
+                <md-card-header>
+                <div class="md-title">Reviews</div>
+                <div class="md-subhead">With hover and ripple effects</div>
+                </md-card-header>
+            </md-ripple>
+        </md-card>
         
         <div class="card shadow mb-4">
           <div class="card-body shadow-sm p-5">

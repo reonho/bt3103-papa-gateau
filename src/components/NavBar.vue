@@ -2,7 +2,7 @@
 
 <div class="NavBar">
    <md-toolbar class="md-accent" md-elevation="1">
-      <h3 class="md-title " style="flex: 2; font-size: 200%">Modeaux</h3>
+      <h3 class="md-title" style="flex: 2; font-size: 200%">Modeaux</h3>
        <router-link class="nav-link" to="/">
           <md-button>Logout</md-button>
         </router-link>
