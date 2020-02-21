@@ -1,5 +1,5 @@
 <template>
-    <div id = "TreeChartGe" style = 'height:500px;'/>
+    <div id = "TreeChartGe" style = 'height:65vh;'/>
 </template>
 
 
@@ -18,10 +18,7 @@
             extractMods(data) {
                 var geData = []
                 for (var i = 0; i < data.length; i++){
-                    geData.push({
-                        "name": data[i],
-                        "value": 1
-                    })
+                    geData.push(data[i])
                 }
                 return geData
             },
@@ -33,24 +30,41 @@
         chart_ge.legend = new am4charts.Legend();
         var modules_ge = chart_ge.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
         modules_ge.data = [{
-            "name": "General Electives",
+            name: "General Electives",
             fixed: true,
             x: am4core.percent(50),
-            y: am4core.percent(50),  
-            "children": this.extractMods(this.data.ge)
+            y: am4core.percent(50), 
+            children: this.extractMods(this.data.ge)
         }]
-        modules_ge.nodes.template.label.text = "[bold]{name}";
         modules_ge.dataFields.value = "value";
         modules_ge.dataFields.name = "name";
         modules_ge.dataFields.children = "children";
+        modules_ge.nodes.template.tooltipText = "{name}:{value}";
+        modules_ge.nodes.template.fillOpacity = 1;
+        modules_ge.nodes.template.fill = am4core.color("#5a5")
+        modules_ge.nodes.template.adapter.add("fill", function(fill, target) {
+        return blackorWhite(target);
+        });
+        function blackorWhite(target){
+            if (target.dataItem.value > 1){
+                return am4core.color("#F42B03")
+            } else {
+                return am4core.color("#D84A05")
+            }
+        }
+        modules_ge.nodes.template.label.text = "[bold]{name}";
+        modules_ge.nodes.template.label.fontSize = 15;
+        modules_ge.nodes.template.outerCircle.filters.push(new am4core.DropShadowFilter());
+        modules_ge.links.template.strokeWidth = 5;
         modules_ge.fontSize = 10;
-        modules_ge.minRadius = 20;
-        modules_ge.maxRadius = 50;
+        modules_ge.minRadius = 40;
+        modules_ge.maxRadius = 80;
         modules_ge.maxLevels = 1;
-        modules_ge.dataFields.fixed = "fixed";
-        modules_ge.nodes.template.propertyFields.x = "x";
-        modules_ge.nodes.template.propertyFields.y = "y";
-        modules_ge.svgContainer.autoResize;
+        //modules_ge.dataFields.fixed = "fixed";
+        //modules_ge.nodes.template.propertyFields.x = "x";
+        //modules_ge.nodes.template.propertyFields.y = "y";
+
+
         /*nodeTemplate.events.on("out", function (event) {
             var dataItem = event.target.dataItem;
             dataItem.childLinks.each(function (link) {

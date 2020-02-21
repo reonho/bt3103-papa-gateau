@@ -1,5 +1,5 @@
 <template>
-    <div id = "TreeChartCe" style = 'height: 50vh'/>
+    <div id = "TreeChartCe" style = 'height:65vh;'/>
 </template>
 
 
@@ -40,12 +40,14 @@
             "children": this.extractMods(this.data.ce)
         }]
         modules_Ce.nodes.template.label.text = "[bold]{name}";
+        modules_Ce.nodes.template.label.fontSize = 15;
         modules_Ce.dataFields.value = "value";
         modules_Ce.dataFields.name = "name";
         modules_Ce.dataFields.children = "children";
+        modules_Ce.nodes.template.outerCircle.filters.push(new am4core.DropShadowFilter());
         modules_Ce.fontSize = 10;
-        modules_Ce.minRadius = 20;
-        modules_Ce.maxRadius = 50;
+        modules_Ce.minRadius = 40;
+        modules_Ce.maxRadius = 80;
         modules_Ce.maxLevels = 1;
         modules_Ce.dataFields.fixed = "fixed";
         modules_Ce.nodes.template.propertyFields.x = "x";

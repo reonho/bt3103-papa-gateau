@@ -54,7 +54,7 @@
     methods: {
       skip(){
         this.userObject = {
-            User: "Reon",
+            User: this.user,
             Password: "12345",
             ModulesTaken: ["MA1101R","CS2030","CS1010S"],
             Course: "Business Analytics",
@@ -62,7 +62,6 @@
             SecondMajor: "",
             DoubleDegree: ""
           };
-        this.userObject.User = this.user;
         this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
       },
       validate(){

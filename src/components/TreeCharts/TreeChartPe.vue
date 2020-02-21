@@ -1,5 +1,5 @@
 <template>
-    <div id = "TreeChartPe" style = 'height:500px;'/>
+    <div id = "TreeChartPe" style = 'height:65vh;'/>
 </template>
 
 
@@ -33,19 +33,21 @@
         chart_Pe.legend = new am4charts.Legend();
         var modules_Pe = chart_Pe.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
         modules_Pe.data = [{
-            "name": "General Electives",
+            "name": "Programme Electives",
             fixed: true,
             x: am4core.percent(50),
             y: am4core.percent(50),  
             "children": this.extractMods(this.data.pe)
         }]
         modules_Pe.nodes.template.label.text = "[bold]{name}";
+        modules_Pe.nodes.template.label.fontSize = 15;
         modules_Pe.dataFields.value = "value";
         modules_Pe.dataFields.name = "name";
         modules_Pe.dataFields.children = "children";
+        modules_Pe.nodes.template.outerCircle.filters.push(new am4core.DropShadowFilter());
         modules_Pe.fontSize = 10;
-        modules_Pe.minRadius = 20;
-        modules_Pe.maxRadius = 50;
+        modules_Pe.minRadius = 40;
+        modules_Pe.maxRadius = 80;
         modules_Pe.maxLevels = 1;
         modules_Pe.dataFields.fixed = "fixed";
         modules_Pe.nodes.template.propertyFields.x = "x";
