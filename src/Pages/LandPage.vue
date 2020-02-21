@@ -1,7 +1,7 @@
 <template>
-<div class="landPage" style="background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);">
-    <NavBar/>
-    <md-card  style = "margin-top:3vh; padding:2vh; margin:4vh" md-with-hover> 
+<div class="landPage" style="background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);padding: 45px 0 0 0;">
+    <NavBar class="fixed-top" @scroll = "scrolltoView"/>
+    <md-card  style = "margin-top:3vh; padding:4vh; margin-bottom:4vh" md-with-hover> 
         <div class="md-layout md-gutter md-alignment-center-right">
         <div class = "md-layout-item"> <h1>Hello, {{User.User}}!</h1></div>
         <div class = "md-layout-item" style="text-align:right">
@@ -11,9 +11,9 @@
     </md-card>
         <!--div style="display:flex" class= "container-fluid p-3"-->
         <div class="md-layout md-gutter md-alignment-center" style="margin:2vh">
-            <div class = "md-layout-item">
+            <div class = "md-layout-item" id = "StatsCard">
             
-            <md-card style="background:salmon;color:white" md-with-hover>
+            <md-card style="background:salmon;color:white" md-with-hover >
                 <md-card-header>
                     <div class="md-title">My Stats and Attributes</div>
                     <div class="md-subhead">Discover your strengths and weaknesses!</div>
@@ -40,14 +40,15 @@
                 </md-card>   
             </div>
         </div>
-        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh">
+        <div id = "DegreeProgressCard">
+        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh" >
                 <md-card-header>
                     <div class="md-title">My Degree progress</div>
                     <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
                 </md-card-header>
         </md-card>
-
-        <md-card style="height:70vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
+        </div>
+        <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
                
             <div id="treechart" class = "container-fluid" >
                 <md-tabs md-alignment="centered">
@@ -125,14 +126,33 @@
                 }
             }
         },
-    },
+        scrolltoView(elementPosition){
+            var headerOffset = 90;
+            //227.578125
+            //863.828125
+            var offsetPosition = elementPosition - headerOffset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+            
+        }
+    },  
     data: function(){ 
         return {
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: null,
             treeData: {
-                "ge": ["GER1000","GET1001", "GEQ1000","GES1000"],
+                "ge": [
+                     {
+                        name: "GER1000",
+                        value: 1.2
+                    },
+                    {
+                        name: "GET1001",
+                        value: 0.3
+                    },],
                 "pe": ["BT4222","BT4221"],
                 "ce": ["MA1101R","MA1521"] 
             }
