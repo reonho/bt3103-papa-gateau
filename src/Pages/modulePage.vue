@@ -24,24 +24,46 @@
       {{Modules[0].description}}
       <br />
       <br />
-      <b>Preclusion(s)</b>
+      <b style="color: darkblue">Preclusion(s)</b>
       <br />
       {{Modules[0].preclusion}}
       <br />
       <br />
-      <b>Prerequisite(s)</b>
+      <b style="color: darkblue">Prerequisite(s)</b>
       <br />
       {{Modules[0].prerequisite}}
     </div>
     <hr />
     <div id="statistics">
       <span style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">Statistics</span>
+      <br><br>
       <div id="container">
         <div class="row">
-          <div class="col-4 well" style = "margin-left: 20px;">
+          <div class="col-3 well">
             <div class="small">
               <pie-chart :chart-data="datacollection" :options="chartOptions"></pie-chart>
             </div>
+          </div>
+          <div class="col-3 well">
+            <div class="small">
+              <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
+            </div>
+            <br>
+            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: brown">3.27</b> out of 5</h5>
+          </div>
+          <div class="col-3 well">
+            <div class="small">
+              <bar-chart :chart-data="datacollection2" :options="chartOptions2"></bar-chart>
+            </div>
+            <br>
+            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: navy">3.27</b> out of 5</h5>
+          </div>
+          <div class="col-3 well">
+            <div class="small">
+              <bar-chart :chart-data="datacollection3" :options="chartOptions3"></bar-chart>
+            </div>
+            <br>
+            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: darkgreen">3.27</b> out of 5</h5>
           </div>
         </div>
       </div>
@@ -71,7 +93,7 @@
         <div class="row">
           <div class="col-lg-4 col-sm-7" style="color: #309ad8">
             <p>
-              <b>How manageable is the module?</b>
+              <b>How manageable is the workload?</b>
             </p>
           </div>
           <div class="col-lg-8 col-sm-5" style="float:right">
@@ -91,7 +113,7 @@
         <div class="row">
           <div class="col-lg-4 col-sm-7" style="color: #309ad8">
             <p>
-              <b>How easy is the module?</b>
+              <b>How difficult is the module?</b>
             </p>
           </div>
           <div class="col-lg-8 col-sm-5" style="float:right">
@@ -146,10 +168,12 @@
 <script>
 import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
+import BarChart from "../BarChart.js";
 
 export default {
   components: {
-    PieChart
+    PieChart,
+    BarChart
   },
   data: () => ({
     Modules: DataObject.Modules,
@@ -170,13 +194,81 @@ export default {
       labels: ["Computing", "Science", "Arts and Social Sciences"],
       datasets: [
         {
-          label: "Data One",
           backgroundColor: [
             "rgb(255, 99, 132)",
             "rgb(54, 162, 235)",
             "rgb(255, 205, 86)"
           ],
           data: [10, 5, 3]
+        }
+      ]
+    }, 
+    chartOptions1: {
+      responsive: true,
+      maintainAspectRatio: true,
+      title: {
+        display: true,
+        text: "How difficult is the module?",
+        padding: 5
+      },
+      legend: {
+        position: "bottom",
+        fullWidth: true
+      }
+    },
+    datacollection1: {
+      labels: ["1", "2", "3", "4", "5"],
+      datasets: [
+        {
+          label: "Number of votes",
+          backgroundColor: "rgba(255,99,132, 0.4)",
+          data: [1, 4, 6, 2, 3]
+        }
+      ]
+    }, 
+    chartOptions2: {
+      responsive: true,
+      maintainAspectRatio: true,
+      title: {
+        display: true,
+        text: "How likely will you recommend the module?",
+        padding: 5
+      },
+      legend: {
+        position: "bottom",
+        fullWidth: true
+      }
+    },
+    datacollection2: {
+      labels: ["1", "2", "3", "4", "5"],
+      datasets: [
+        {
+          label: "Number of votes",
+          backgroundColor: "rgba(20,53,200, 0.4)",
+          data: [1, 4, 6, 2, 3]
+        }
+      ]
+    }, 
+    chartOptions3: {
+      responsive: true,
+      maintainAspectRatio: true,
+      title: {
+        display: true,
+        text: "How likely will you recommend the module?",
+        padding: 5
+      },
+      legend: {
+        position: "bottom",
+        fullWidth: true
+      }
+    },
+    datacollection3: {
+      labels: ["1", "2", "3", "4", "5"],
+      datasets: [
+        {
+          label: "Number of votes",
+          backgroundColor: "rgba(20,200,50, 0.4)",
+          data: [1, 4, 6, 2, 3]
         }
       ]
     }
@@ -234,6 +326,5 @@ export default {
 }
 .small {
   text-align: center;
-  margin: 0 auto 0 auto;
 }
 </style>
