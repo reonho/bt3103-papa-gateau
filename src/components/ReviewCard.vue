@@ -1,20 +1,27 @@
 <template>
   <div id="ReviewCard">
-    <md-card v-for="r in reviewData" v-bind:key="r.id">
+    <md-card>
       <md-card-header>
-        <b>{{r.module_code}} {{r.module_name}}</b>
+        <md-button v-on:click='showDetail = !showDetail'>
+        <b>{{review.module_code}} {{review.module_name}}</b>
+          <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon>
+        </md-button>
       </md-card-header>
       
       <md-card-content>
-        <span>{{r.comments}}</span>
+        <div class = 'comments'>{{review.comments}}</div>
+        <div v-show='showDetail'>
+          <p>Additional Details to be rendered</p>
+          </div>
       </md-card-content>
+
       <md-divider/>
       <span class="footerDiv">
           <p class = 'iconLabel'>
-            {{r.like_count}}
+            {{review.like_count}}
             <md-icon>favorite</md-icon>
             
-            {{r.comment_count}}
+            {{review.comment_count}}
           <md-icon>comment</md-icon>
           </p>
         <!-- </span> -->
@@ -25,16 +32,24 @@
 
 
 <script>
-import DataObject from "../Database.js";
 export default {
   name: "ReviewCard",
   props: {
-    msg: String
+    msg: String,
+    review: Object //renders the review object passed from ReviewSection
   },
   data: () => ({
-    // reviewData: Object //To be replaced with result of backend call for data
-    reviewData: DataObject.reviewData
+    showDetail: false //toggle visibility of hidden content
   }),
+  methods: {
+    swapIcon() {
+      if (this.showDetail) {
+        return 'arrow_drop_up'
+      }
+      return 'arrow_drop_down'
+    }
+
+  },
   components: {}
 };
 </script>
@@ -58,15 +73,25 @@ export default {
 
 .footerDiv {
   display: flex;
-  align-content: flex-end;
   float:right;
-  vertical-align: center
-  
 }
 .iconLabel {
   justify-self: center;
   margin: 0px;
 
+}
+/* .dropdown {
+
+
+} */
+.md-card-header {
+  vertical-align:text-bottom;
+  overflow:auto;
+  width: 100%;
+}
+.comments {
+  text-overflow:ellipsis;
+  overflow: hidden;
 }
 
 </style>

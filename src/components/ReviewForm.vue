@@ -1,7 +1,7 @@
 /* eslint eqeqeq: "off", curly: "error" */
 <template>
   <form @submit.prevent='submitForm'>
-    <md-steppers md-alternative md-linear :md-active-step.sync:="active">
+    <md-steppers md-alternative :md-active-step.sync:="active">
       <md-step id="first" md-label="Basic Details" :md-done.sync="first">
         <md-card>
           <md-card-content>
@@ -63,16 +63,29 @@
 
       <md-step id="second" md-label="Lectures" :md-done.sync="second">
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your experience with lectures for the module.</md-card-header>
           <md-card-content>
             <label class="md-subheading">
               <b>The lecture material was well-organised and useful for understanding the module content.</b>
             </label>
             <br />
             <div>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="sd">Strongly Disagree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="disagree">Disagree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="agree">Agree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="sa">Strongly Agree</md-radio>
+              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="1">Strongly Disagree</md-radio>
+              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="2">Disagree</md-radio>
+              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="3">Agree</md-radio>
+              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="4">Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The lecturer was able to explain concepts clearly and effectively.</b>
+            </label>
+            
+            <div>
+              <md-radio v-model.lazy="lectureForm.clarity" class="md-primary" value="1">Strongly Disagree</md-radio>
+              <md-radio v-model.lazy="lectureForm.clarity" class="md-primary" value="2">Disagree</md-radio>
+              <md-radio v-model.lazy="lectureForm.clarity" class="md-primary" value="3">Agree</md-radio>
+              <md-radio v-model.lazy="lectureForm.clarity" class="md-primary" value="4">Strongly Agree</md-radio>
             </div>
           </md-card-content>
           <md-card-actions class="md-layout md-alignment-center-center">
@@ -86,17 +99,23 @@
 
       <md-step id="third" md-label="Tutorials" :md-done.sync="third">
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your experience with tutorials for the module.</md-card-header>
+
+          <!-- <ModuleFormRadio :question="{title: 'Test'}"/> -->
+          
           <md-card-content>
             <label class="md-subheading">
               <b>The tutorial material was well-organised and useful for understanding the module content.</b>
             </label>
             <br />
-            <div>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="sd">Strongly Disagree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="disagree">Disagree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="agree">Agree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="sa">Strongly Agree</md-radio>
-            </div>
+            <!-- <div>
+              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value=1>Strongly Disagree</md-radio>
+              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value=2>Disagree</md-radio>
+              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value=3>Agree</md-radio>
+              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value=4>Strongly Agree</md-radio>
+            </div> -->
+            <!-- <Ratings eventName="questionOne" v-on:questionOne='onChildClick'/>  -->
+            <Ratings v-model='test'/>
           </md-card-content>
         <md-card-actions class="md-layout md-alignment-center-center">
           <md-button class="md-primary md-raised" v-on:click.prevent="goNext('tutorialForm', 'third','fourth')">Next</md-button>
@@ -127,10 +146,15 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import Ratings from './Ratings'
 export default {
   name: "ReviewForm",
   props: {
-    msg: String
+    msg: String,
+    value: Number
+  },
+  components: {
+    Ratings
   },
   mixins: [validationMixin],
   validations: {
@@ -151,6 +175,9 @@ export default {
 
     lectureForm: {
       lectureMaterial: {
+        required
+      },
+      clarity: {
         required
       }
     },
@@ -195,11 +222,12 @@ export default {
     setDone(id, index) {
       this[id] = true;
 
-      //this.secondStepError = null;
-
       if (index) {
         this.active = index;
       }
+    },
+    onChildClick(value) {
+      this[value.id] = value.rating
     }
   },
   data: () => ({
@@ -207,13 +235,14 @@ export default {
       selectedSemester: null,
       selectedStaff: null,
       selectedGrade: null,
-      selectedFaculty: null
+      selectedFaculty: null,
     },
     lectureForm: {
-      lectureMaterial: 'agree'
+      lectureMaterial: '3',
+      clarity: '3',
     },
     tutorialForm: {
-      tutorialMaterial: 'agree'
+      tutorialMaterial: '3'
     },
     commentForm: {
       comments: null
@@ -227,6 +256,8 @@ export default {
     second: false,
     third: false,
     fourth: false,
+    questionOne: null,
+    test: null,
 
     faculties: [
       {

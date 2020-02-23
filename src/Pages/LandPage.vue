@@ -22,7 +22,9 @@
         <!-- <p>{{this.Data}}</p> -->
         <!-- <Feed/> -->
         <md-content class = 'md-layout md-alignment-center-center'>
-        <ReviewCard/>
+        <!-- <ReviewCard/> -->
+        <!-- <Ratings/> -->
+        <ReviewSection/>
         </md-content>
     </div>
 </div>
@@ -36,7 +38,9 @@
     import TreeChart from "../components/TreeChart"
     import NavBar from '../components/NavBar'
     // import Feed from '../components/Feed'
-    import ReviewCard from '../components/ReviewCard'
+    // import Ratings from '../components/Ratings'
+    import ReviewSection from '../components/ReviewSection'
+
     export default {
     name: 'LandPage',
     props: [
@@ -48,7 +52,8 @@
         TreeChart,
         NavBar,
         // Feed
-        ReviewCard
+        ReviewSection,
+        // Ratings
     },
     methods: {
         //use this method to find data of a specific module
