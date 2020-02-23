@@ -10,8 +10,10 @@ export default new Router({
     {
       path: '/LandPage',
       name: 'LandPage',
-      component: LandPage
+      component: LandPage,
+      props: true
     },
+    //comment this block to test components
     {
       path: '/ModuleList',
       name: 'ModuleList',
@@ -22,5 +24,11 @@ export default new Router({
       name: 'loginPage',
       component: loginPage
     },
+    //CHANGE PATH HERE, ONLY FOR TESTING PURPOSES
+    // {
+    //   path:'/',
+    //   name: 'reviewCard',
+    //   component: ReviewCard
+    // }
   ]
 })

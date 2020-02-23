@@ -1,8 +1,18 @@
 var DataObject = {
   Students: [
     {
-      Name: "Reon",
+      User: "Reon",
+      Password: "12345",
       ModulesTaken: ["MA1101R", "CS2030", "CS1010S"],
+      Course: "Business Analytics",
+      Minor: "",
+      SecondMajor: "",
+      DoubleDegree: ""
+    },
+    {
+      User: "Janson",
+      Password: "98765",
+      ModulesTaken: ["MA1521", "CS2030", "CS1010S", "BT2102"],
       Course: "Business Analytics",
       Minor: "",
       SecondMajor: "",
