@@ -7,7 +7,7 @@
                 <div class="card card-signin my-5 ">
                 <div class="card-body p-5">
                     <h3 class="card-title text-center">MODEAUX Sign-In Page</h3>
-                    <form>
+                    <!---form>
                       <div class="form-group">
                         <label for="username"> Username:</label>
                         <input type="username" id="username" placeholder="Enter username" v-model = "user">
@@ -18,7 +18,15 @@
                       </div>
                       <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" v-on:click = "validate">Sign In</button>
                       <span> {{this.error}}</span>
-                    </form>
+                    </form-->
+                   
+                     <md-field>
+                        <label>Enter Username</label>
+                        <md-input type="username" id="username" v-model = "user"></md-input>
+                    </md-field>
+
+                    
+                    <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" v-on:click = "skip">Sign In</button>
                 </div>
                 </div>
             </div>
@@ -44,6 +52,18 @@
         };
     },
     methods: {
+      skip(){
+        this.userObject = {
+            User: this.user,
+            Password: "12345",
+            ModulesTaken: ["MA1101R","CS2030","CS1010S"],
+            Course: "Business Analytics",
+            Minor: "",
+            SecondMajor: "",
+            DoubleDegree: ""
+          };
+        this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
+      },
       validate(){
         let data = DataObject.Students
         var error = true

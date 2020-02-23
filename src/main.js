@@ -14,7 +14,6 @@ Vue.use(MdToolbar)
 Vue.use(MdTabs)
 
 
-
 Vue.config.productionTip = false
 
 new Vue({

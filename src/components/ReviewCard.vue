@@ -57,7 +57,7 @@ export default {
 
 <style scoped>
 .md-card {
-  width: 640px;
+  
   margin: 8px;
   display: block;
   align-self: center;
