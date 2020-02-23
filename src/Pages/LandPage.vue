@@ -82,7 +82,8 @@
    
         
         <div class = 'md-layout md-alignment-center-center'>
-            <ReviewCard/>
+            <!-- <ReviewCard/> -->
+            <ReviewSection/>
         </div>
     </div>
 
