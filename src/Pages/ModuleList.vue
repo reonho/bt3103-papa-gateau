@@ -1,7 +1,6 @@
 <template>
   <div>
     <NavBar />
-
     <div class="md-layout">
       <div class="md-layout-item md-size-25">
         <!-- Filter -->
@@ -24,7 +23,7 @@
           </table>
           <span class="minihead">Faculty</span>
 
-          <md-field>
+          <md-field class="mod-dropdown">
             <label for="faculties">Add Faculties...</label>
             <md-select v-model="chosenfac" name="chosenfac" id="chosenfac" md-dense multiple>
               <md-option
@@ -36,11 +35,11 @@
             </md-select>
           </md-field>
 
-          <md-chips v-model="chosenfac" md-static></md-chips>
+          <md-chips class="mod-chips" v-model="chosenfac" md-static></md-chips>
 
           <span class="minihead">Department</span>
 
-          <md-field>
+          <md-field class="mod-dropdown">
             <label for="faculties">Add Departments...</label>
             <md-select v-model="chosendept" name="chosendept" id="chosendept" md-dense multiple>
               <md-option
@@ -51,7 +50,7 @@
               >{{ dept.text }}</md-option>
             </md-select>
           </md-field>
-          <md-chips v-model="chosendept" md-static></md-chips>
+          <md-chips class="mod-chips" v-model="chosendept" md-static></md-chips>
           <span class="minihead">Offered in</span>
           <span v-for="sem in semarr" :key="sem.value">
             <md-checkbox v-bind:value="sem.value" v-model="chosensems">{{ sem.text }}</md-checkbox>
@@ -87,7 +86,7 @@
           </div>
 
           <div class="module-numberdiv">
-            <span class="modnum">{{modulenum}} Modules Found</span>
+            <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
           </div>
           <hr style="width:95%" />
           <div id="ModuleItem">
@@ -96,7 +95,7 @@
                 <p class="module-name">{{post.moduleCode}} - {{post.title}}</p>
                 <p
                   class="module-type"
-                >School Of {{post.faculty}} | {{post.department}} | {{post.moduleCredit}} MCs</p>
+                >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
                 <p class="module-desc">{{post.description}}</p>
 
                 <div class="md-layout">
@@ -121,7 +120,9 @@
                   </div>
                   <div class="md-layout-item" style="padding-left:25px">
                     <div>
-                      <md-tabs class="md-accent" md-alignment="fixed" style="width:680px">
+                      <br />
+                      <br />
+                      <md-tabs class="md-accent test" style="width:680px;" md-alignment="fixed">
                         <md-tab
                           v-for="sem in checksemester(post.semesterData)"
                           v-bind:key="sem.index"
@@ -142,26 +143,14 @@
                               <br />
                               <span class="examhead">
                                 WorkLoad - {{calcwork(post.workload) + " hours"}}
-                                <md-tooltip md-direction="bottom">
-                                  <apexchart
-                                    style="background-color:white;width:350px"
-                                    type="bar"
-                                    height="150"
-                                    :options="chartOptions"
-                                    :series="formatwork(post.workload)"
-                                  ></apexchart>
+                                <md-tooltip class="mod-tooltip" md-direction="bottom">
+                                  <workloadchart :seriesStats="formatwork(post.workload)"></workloadchart>
                                 </md-tooltip>
                                 <br />
                               </span>
                             </div>
                             <div>
-                              <apexchart
-                                style="background-color:white;width:410px"
-                                type="line"
-                                height="170"
-                                :options="chartOptions2"
-                                :series="seriesStats"
-                              ></apexchart>
+                              <intakechart :seriesStats="seriesStats"></intakechart>
                             </div>
                           </div>
                         </md-tab>
@@ -171,6 +160,7 @@
                 </div>
               </div>
             </md-list>
+            <div style="height:200px"></div>
           </div>
         </div>
       </div>
@@ -181,12 +171,22 @@
 <script>
 import DataObject from "../Database.js";
 import NavBar from "../components/NavBar";
+import StudentIntakeChart from "../components/StudentIntakeChart";
+import WorkloadChart from "../components/WorkloadChart";
 import VueApexCharts from "vue-apexcharts";
 export default {
   components: {
     NavBar,
     // eslint-disable-next-line vue/no-unused-components
-    apexchart: VueApexCharts
+    apexchart: VueApexCharts,
+    intakechart: StudentIntakeChart,
+    workloadchart: WorkloadChart
+  },
+  props: {
+    test: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -236,67 +236,8 @@ export default {
           selected: false
         }
       ],
-      chartOptions: {
-        chart: {
-          type: "bar"
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
 
-        xaxis: {
-          categories: [
-            "Lectures",
-            "Tutorials",
-            "Laboratory",
-            "Project",
-            "Preparation"
-          ]
-        }
-      },
       seriesStats: [{ data: [150, 210, 186, 195] }],
-      chartOptions2: {
-        title: {
-          text: "Student Intake Per Semester"
-        },
-        chart: {
-          type: "line",
-          height: 150,
-          toolbar: {
-            show: true,
-            tools: {
-              download: false,
-              selection: false,
-              zoom: false,
-              zoomin: true,
-              zoomout: true,
-              pan: false,
-              reset: true | '<img src="/static/icons/reset.png" width="20">',
-              customIcons: []
-            }
-          }
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: "smooth",
-          width: 3
-        },
-        xaxis: {
-          categories: ["Aug 2018", "Jan 2019", "Aug 2019", "Jan 2020"]
-        }
-      },
       chosenfac: [],
       chosendept: [],
       chosensems: [],
@@ -497,13 +438,22 @@ export default {
       });
       console.log(series);
       return series;
+    },
+    checkmodnum(modnum) {
+      if (modnum === 1) {
+        return "1 Module ";
+      } else if (modnum === 0) {
+        return "No Module ";
+      } else {
+        return modnum + " Modules ";
+      }
     }
   }
 };
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 .md-content {
   max-width: 400px;
@@ -513,16 +463,18 @@ export default {
   padding-left: 30px;
   font-family: Helvetica;
 }
+
 </style>
 <style>
-.md-theme-default {
-  background-color: transparent !important;
-}
-html {
-  background-color: white;
-}
+
 hr {
   height: 0px !important;
+}
+/* Filter section css */
+.filter-header {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 50%;
 }
 .filter-head {
   font-size: 130%;
@@ -530,23 +482,30 @@ hr {
   font-weight: bold;
   margin-right: 80px;
 }
-.clear-filter {
-  background-color: #8e44ad !important;
-}
-.md-button-content {
-  color: white;
+.minihead {
+  color: #fb3723;
+  font-size: 80%;
   font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+.md-button.clear-filter {
+  background-color: salmon !important;
+  font-weight: bold;
+}
+.md-button.clear-filter.md-theme-default {
+  color: white !important;
 }
 .module-numberdiv {
   text-align: right;
 }
 .modnum {
   margin-right: 30px;
-  color: #8e44ad;
+  color: #fb3723;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #8e44ad !important;
+  background-color: #ad2d1f !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -557,13 +516,6 @@ hr {
   top: 1px;
   left: 6px;
 }
-.minihead {
-  color: #8e44ad;
-  font-size: 80%;
-  font-weight: bold;
-  margin-bottom: 10px;
-  display: block;
-}
 .md-checkbox {
   display: flex !important;
   margin: 5px 5px 5px 0px !important;
@@ -572,37 +524,29 @@ hr {
   padding: 11px;
   padding-top: 0px;
 }
-.flex.xs6 {
-  max-width: 150% !important;
-}
-label.v-label.theme--light {
-  margin-bottom: 0;
-}
-div.v-input--selection-controls__input {
-  padding-right: 20px;
-  padding-left: 10px;
-}
-.md-field {
+
+.mod-dropdown.md-field {
   margin: 4px 0px 10px !important;
 }
-.md-chips.md-field.md-theme-default:after {
+
+/* Chips css */
+.md-chips.md-field.mod-chips.md-theme-default:after {
   background-color: white !important;
 }
-.filter-header {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  width: 50%;
+.mod-chips .md-chip.md-theme-default {
+  background-color: #ad2d1f !important;
+  color: white !important;
+  font-weight: bold !important;
 }
-</style>
-<style>
+
 /* Module Card css */
 .modulecard {
   margin: 30px;
-  margin-bottom: 20px;
+  margin-bottom: 0px !important;
 }
 .module-name {
   font-size: 150%;
-  color: #8e44ad;
+  color: #fb3723;
   font-weight: bold;
 }
 .module-preclusionhead {
@@ -622,21 +566,16 @@ div.v-input--selection-controls__input {
   margin-top: 35px;
 }
 
-.md-tabs-navigation {
-  background-color: #bb8fce !important;
-  height: 30px;
+.md-tabs.md-theme-default.md-accent.test .md-tab-nav-button.md-theme-default {
+  font-weight: bold !important;
 }
-.md-tabs-navigation .md-button-content {
-  color: white !important;
-  font-size: 85% !important;
+.md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
+  background-color: salmon !important;
 }
-.md-tabs-navigation .md-button {
-  height: 30px !important;
+.md-tabs.md-theme-default.md-accent.test .md-active {
+  background-color: #fb3723 !important;
 }
-.md-active {
-  background-color: #8e44ad !important;
-}
-.md-tabs-content {
+.md-tabs.test .md-tabs-content {
   height: 190px !important;
   max-width: 100% !important;
   padding-left: 0px !important;
@@ -648,7 +587,10 @@ div.v-input--selection-controls__input {
   color: #616a6b;
   font-weight: bold;
 }
-.md-tooltip .md-tooltip-top {
+.md-tooltip.mod-tooltip .md-tooltip-top {
   background-color: white !important;
+}
+.md-tooltip.mod-tooltip.md-theme-default {
+  background-color: transparent !important;
 }
 </style>
