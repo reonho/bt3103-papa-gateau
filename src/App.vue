@@ -1,20 +1,15 @@
 <template>
-  <div id="app">
-    <LandPage msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="app">
+        <router-view/>
+    </div>
 </template>
 
-<script>
-import LandPage from './components/LandPage.vue'
 
-export default {
-  name: 'App',
-  components: {
-    LandPage
-  }
-}
+<script>
+    import router from './router.js'
+    export default {
+        name: 'app',
+        router
+    }
 </script>
 
-<style>
-
-</style>
