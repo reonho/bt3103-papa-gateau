@@ -1,27 +1,35 @@
 <template>
   <div id="FollowUpModal">
-    <md-button class="md-primary md-raised" @click="showModal = true">Add new module</md-button>
-    <md-dialog :md-active.sync="showModal">
-      <md-dialog-title>Add another module</md-dialog-title>
-      <ModuleForm/>
-    </md-dialog>
+    <head >Add another module?</head>
+    <md-button class="md-primary md-raised" v-on:click ="submitYes">Yes</md-button>
+    <md-button class="md-primary md-raised" v-on:click ="submitNo">No</md-button>
   </div>
 </template>
 
 <script>
-import ModuleForm from './ModuleForm.vue'
 export default {
   name: "FollowUpModal",
   props: {
     msg: String
   },
   data:() =>( {
-      showModal: false
   })
   ,
   components: {
-      ModuleForm
-  }
+
+  },
+  mounted(){
+
+  },
+  methods:{
+      submitYes(){
+          this.$root.$emit('YES');
+      },
+      submitNo(){
+          this.$root.$emit('NO');
+      }
+
+  },
 
   
 };

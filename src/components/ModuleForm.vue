@@ -1,7 +1,7 @@
 <template>
   <md-card>
     <md-card-content>
-      <!-- <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
+      <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
         <md-select v-model="detailsForm.selectedModule">
           <md-option
@@ -14,7 +14,7 @@
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
         >This field is required</span>
-      </md-field> -->
+      </md-field>
       <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
         <label>Your faculty</label>
         <md-select v-model="detailsForm.selectedFaculty">
@@ -65,10 +65,10 @@
           class="md-primary md-raised"
           type="submit"
           v-on:click.prevent="submitForm"
-          @click ="showModal = true">Submit</md-button>
-        <md-dialog :md-active.sync="showModal">
+          >Submit</md-button>
+        <!-- <md-dialog :md-active.sync="showModal">
           <FollowUpModal/>
-        </md-dialog>
+        </md-dialog> -->
         
       </md-card-actions>
     </md-card-content>
@@ -77,7 +77,7 @@
 
 <script>
 import DataObject from "../Database.js";
-import FollowUpModal from "./FollowUpModal.vue"
+// import FollowUpModal from "./FollowUpModal.vue"
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -86,7 +86,7 @@ export default {
     msg: String
   },
   components: {
-    FollowUpModal
+    // FollowUpModal
   },
 
   data: function() {
@@ -140,16 +140,27 @@ export default {
       }
     },
     submitForm() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        this.submitStatus = "OK";
-        // this.setDone("first", "second");
-        console.log("form submitted!");
-      } else {
-        this.submitStatus = "INVALID";
-        console.log("form invalid");
-      }
+      // this.$v.$touch();
+      // if (!this.$v.$invalid) {
+      //   this.submitStatus = "OK";
+      //   // this.setDone("first", "second");
+      //   console.log("form submitted!");
+      // } else {
+      //   this.submitStatus = "INVALID";
+      //   console.log("form invalid");
+      // }
+      this.$root.$emit('closeModal');
     }
   }
 };
 </script>
+
+<style scoped>
+@import "./style.css";
+.md-card {
+  overflow: scroll;
+  display:block;
+
+  /* min-height: 180px; */
+}
+</style>

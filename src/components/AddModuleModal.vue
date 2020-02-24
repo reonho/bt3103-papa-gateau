@@ -1,9 +1,13 @@
 <template>
   <div id="AddModuleModal">
-    <md-button class="md-primary md-raised" @click="showModal = true">Add new module</md-button>
+    <md-button class="md-primary md-raised" @click="showModal = true" >Add new module</md-button>
     <md-dialog :md-active.sync="showModal">
       <md-dialog-title>Add New Module</md-dialog-title>
-      <ModuleForm/>
+      <ModuleForm />
+    </md-dialog>
+    <md-dialog :md-active.sync="showFollowUp">
+      <md-dialog-title>Add another Module?</md-dialog-title>
+      <FollowUpModal/>
     </md-dialog>
   </div>
 </template>
@@ -11,32 +15,51 @@
 
 <script>
 import ModuleForm from './ModuleForm.vue'
+import FollowUpModal from './FollowUpModal'
 export default {
   name: "AddModuleModal",
   props: {
     msg: String
   },
   data:() =>( {
-      showModal: false
+      showModal: false,
+      showFollowUp: false
   })
   ,
   components: {
-      ModuleForm
+      ModuleForm,
+      FollowUpModal
+  },
+  mounted(){
+    this.$root.$on("closeModal", this.closeThis);
+    this.$root.$on("YES", this.showNewForm);
+    this.$root.$on("NO", this.closeFollowUp);
+  },
+  methods: {
+  closeThis(){
+    this.showModal = false;
+    this.showFollowUp = true;
+  },
+  showNewForm(){
+    console.log("hi");
+    this.showModal = true;
+    this.showFollowUp = false;
+  },
+  closeFollowUp(){
+    this.showFollowUp = false;
+    this.showModal = false;
+  }
   }
 
-  
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "./style.css";
-.md-dialog-title {
-  overflow: visible;
-  margin: 8px;
+.md-dialog{
+  overflow: scroll;
   display: block;
-  align-self: auto;
-  padding: 4px;
-  /* min-height: 180px; */
 }
+@import "./style.css";
+
 </style>
