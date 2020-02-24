@@ -1,18 +1,17 @@
 <template>
-  <div id="AddModuleModal">
+  <div id="FollowUpModal">
     <md-button class="md-primary md-raised" @click="showModal = true">Add new module</md-button>
     <md-dialog :md-active.sync="showModal">
-      <md-dialog-title>Add New Module</md-dialog-title>
+      <md-dialog-title>Add another module</md-dialog-title>
       <ModuleForm/>
     </md-dialog>
   </div>
 </template>
 
-
 <script>
 import ModuleForm from './ModuleForm.vue'
 export default {
-  name: "AddModuleModal",
+  name: "FollowUpModal",
   props: {
     msg: String
   },
@@ -32,7 +31,7 @@ export default {
 <style scoped>
 @import "./style.css";
 .md-dialog-title {
-  overflow: visible;
+  overflow: scroll;
   margin: 8px;
   display: block;
   align-self: auto;
