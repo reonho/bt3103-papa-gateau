@@ -36,7 +36,8 @@
     <hr />
     <div id="statistics">
       <span style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">Statistics</span>
-      <br><br>
+      <br />
+      <br />
       <div id="container">
         <div class="row">
           <div class="col-3 well">
@@ -48,22 +49,31 @@
             <div class="small">
               <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
             </div>
-            <br>
-            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: brown">3.27</b> out of 5</h5>
+            <br />
+            <h5 style="text-align: center; font-weight:400">
+              Average:
+              <b style="color: brown">3.27</b> out of 5
+            </h5>
           </div>
           <div class="col-3 well">
             <div class="small">
               <bar-chart :chart-data="datacollection2" :options="chartOptions2"></bar-chart>
             </div>
-            <br>
-            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: navy">3.27</b> out of 5</h5>
+            <br />
+            <h5 style="text-align: center; font-weight:400">
+              Average:
+              <b style="color: navy">3.27</b> out of 5
+            </h5>
           </div>
           <div class="col-3 well">
             <div class="small">
               <bar-chart :chart-data="datacollection3" :options="chartOptions3"></bar-chart>
             </div>
-            <br>
-            <h5 style="text-align: center; font-weight:400">Average: <b style = "color: darkgreen">3.27</b> out of 5</h5>
+            <br />
+            <h5 style="text-align: center; font-weight:400">
+              Average:
+              <b style="color: darkgreen">3.27</b> out of 5
+            </h5>
           </div>
         </div>
       </div>
@@ -77,91 +87,99 @@
         href="/#/review"
         id="addReview"
       >New Review</a>
+      <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" style = "float:right" no-caret>
+        <template v-slot:button-content>Sort by Newest &#9662;</template>
+        <b-dropdown-item href="#"><h5>Best</h5></b-dropdown-item>
+        <b-dropdown-item href="#"><h5>Newest</h5></b-dropdown-item>
+        <b-dropdown-item href="#"><h5>Oldest</h5></b-dropdown-item>
+      </b-dropdown>
     </div>
     <br />
     <div class="well ml-4 mr-4" style="padding-bottom:0">
-        <div class="row">
-          <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-            <p>
-              <b>Faculty:</b>
-            </p>
-          </div>
-          <div class="col-lg-8 col-sm-5" style="float:right">
-            <p>School of Computing</p>
-          </div>
+      <div class="row">
+        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
+          <p>
+            <b>Faculty:</b>
+          </p>
         </div>
-        <div class="row">
-          <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-            <p>
-              <b>How manageable is the workload?</b>
-            </p>
-          </div>
-          <div class="col-lg-8 col-sm-5" style="float:right">
-            <p>
-              <span style="color: gold;" class="star">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-              </span>
-              <span style="color: lightgrey;" class="star">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-              </span>
-            </p>
-          </div>
+        <div class="col-lg-8 col-sm-5" style="float:right">
+          <p>School of Computing</p>
         </div>
-        <div class="row">
-          <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-            <p>
-              <b>How difficult is the module?</b>
-            </p>
-          </div>
-          <div class="col-lg-8 col-sm-5" style="float:right">
-            <p>
-              <span style="color: gold;" class="star">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-              </span>
-              <span style="color: lightgrey;" class="star">
-                <i class="fa fa-star"></i>
-              </span>
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-            <p>
-              <b>How likely will you recommend the module?</b>
-            </p>
-          </div>
-          <div class="col-lg-8 col-sm-5" style="float:right">
-            <p>
-              <span style="color: gold;" class="star">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-              </span>
-              <span style="color: lightgrey;" class="star">
-                <i class="fa fa-star"></i>
-              </span>
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-            <p>
-              <b>Other Comments:</b>
-            </p>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="card-body">This module is very interesting and the prof is pretty cool.</div>
-        </div>
-        <h5 style = "text-align: right">Posted on 2019-10-02</h5>
       </div>
+      <div class="row">
+        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
+          <p>
+            <b>How manageable is the workload?</b>
+          </p>
+        </div>
+        <div class="col-lg-8 col-sm-5" style="float:right">
+          <p>
+            <span style="color: gold;" class="star">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </span>
+            <span style="color: lightgrey;" class="star">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
+          <p>
+            <b>How difficult is the module?</b>
+          </p>
+        </div>
+        <div class="col-lg-8 col-sm-5" style="float:right">
+          <p>
+            <span style="color: gold;" class="star">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </span>
+            <span style="color: lightgrey;" class="star">
+              <i class="fa fa-star"></i>
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
+          <p>
+            <b>How likely will you recommend the module?</b>
+          </p>
+        </div>
+        <div class="col-lg-8 col-sm-5" style="float:right">
+          <p>
+            <span style="color: gold;" class="star">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </span>
+            <span style="color: lightgrey;" class="star">
+              <i class="fa fa-star"></i>
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
+          <p>
+            <b>Other Comments:</b>
+          </p>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="card-body">This module is very interesting and the prof is pretty cool.</div>
+      </div>
+      <md-icon style="margin-right: 20px">favorite</md-icon>
+      <md-icon>comment</md-icon>
+      <h5 style="text-align: right">Posted on 2019-10-02</h5>
+    </div>
   </div>
 </template>
 
@@ -202,10 +220,19 @@ export default {
           data: [10, 5, 3]
         }
       ]
-    }, 
+    },
     chartOptions1: {
       responsive: true,
       maintainAspectRatio: true,
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      },
       title: {
         display: true,
         text: "How difficult is the module?",
@@ -225,10 +252,19 @@ export default {
           data: [1, 4, 6, 2, 3]
         }
       ]
-    }, 
+    },
     chartOptions2: {
       responsive: true,
       maintainAspectRatio: true,
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      },
       title: {
         display: true,
         text: "How likely will you recommend the module?",
@@ -248,10 +284,19 @@ export default {
           data: [1, 4, 6, 2, 3]
         }
       ]
-    }, 
+    },
     chartOptions3: {
       responsive: true,
       maintainAspectRatio: true,
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      },
       title: {
         display: true,
         text: "How likely will you recommend the module?",
