@@ -118,15 +118,16 @@
                     <span class="module-prerequisite">{{post.prerequisite}}</span>
                     <br />
                   </div>
-                  <div class="md-layout-item" style="padding-left:25px">
+                  <div class="md-layout-item-30" style="padding-left:25px">
                     <div>
                       <br />
                       <br />
-                      <md-tabs class="md-accent test" style="width:680px;" md-alignment="fixed">
+                      <md-tabs class="md-accent test" style="width:45vw;" md-alignment="fixed">
                         <md-tab
                           v-for="sem in checksemester(post.semesterData)"
                           v-bind:key="sem.index"
                           :md-label="sem.semester"
+                          
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -149,7 +150,7 @@
                                 <br />
                               </span>
                             </div>
-                            <div>
+                            <div style="width:27vw">
                               <intakechart :seriesStats="seriesStats"></intakechart>
                             </div>
                           </div>
@@ -461,11 +462,16 @@ export default {
   overflow: auto;
   padding: 20px;
   padding-left: 30px;
-  font-family: Helvetica;
+  
 }
+
+
 
 </style>
 <style>
+label {
+    font-weight: 100 !important; 
+}
 
 hr {
   height: 0px !important;
@@ -571,9 +577,11 @@ hr {
 }
 .md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
   background-color: salmon !important;
+  width:47vw;
 }
 .md-tabs.md-theme-default.md-accent.test .md-active {
   background-color: #fb3723 !important;
+  width:47vw;
 }
 .md-tabs.test .md-tabs-content {
   height: 190px !important;
