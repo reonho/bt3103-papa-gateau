@@ -4,6 +4,7 @@ import LandPage from './Pages/LandPage.vue'
 import loginPage from './Pages/loginPage.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+import ModuleList from './Pages/ModuleList.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -15,6 +16,11 @@ export default new Router({
       props: true
     },
     //comment this block to test components
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList
+    },
     {
       path: '/',
       name: 'loginPage',

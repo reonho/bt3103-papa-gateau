@@ -3,7 +3,7 @@ var DataObject = {
     {
       User: "Reon",
       Password: "12345",
-      ModulesTaken: ["MA1101R","CS2030","CS1010S"],
+      ModulesTaken: ["MA1101R", "CS2030", "CS1010S"],
       Course: "Business Analytics",
       Minor: "",
       SecondMajor: "",
@@ -12,7 +12,7 @@ var DataObject = {
     {
       User: "Janson",
       Password: "98765",
-      ModulesTaken: ["MA1521","CS2030","CS1010S","BT2102"],
+      ModulesTaken: ["MA1521", "CS2030", "CS1010S", "BT2102"],
       Course: "Business Analytics",
       Minor: "",
       SecondMajor: "",
@@ -265,31 +265,32 @@ var DataObject = {
   reviewData: [
     {
       id: 1,
-      module_code: 'BT3103',
-      module_name: 'Application Systems for Business Analytics',
-      comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
+      module_code: "BT3103",
+      module_name: "Application Systems for Business Analytics",
+      comments:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
       comment_count: 15,
       like_count: 8
     },
     {
       id: 2,
-      module_code: 'BT3102',
-      module_name: 'Computational Methods for Business Analytics',
-      comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
+      module_code: "BT3102",
+      module_name: "Computational Methods for Business Analytics",
+      comments:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
       comment_count: 15,
       like_count: 4
     },
     {
       id: 3,
-      module_code: 'CS1010S',
-      module_name: 'Programming Methodology I',
-      comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
+      module_code: "CS1010S",
+      module_name: "Programming Methodology I",
+      comments:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
       comment_count: 15,
       like_count: 22
-    },
-
-
+    }
   ]
-}
+};
 
 module.exports = DataObject;
