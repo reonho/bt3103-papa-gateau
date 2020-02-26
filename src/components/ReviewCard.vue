@@ -1,15 +1,45 @@
 <template>
   <div id="ReviewCard">
     <md-card>
-      <md-card-header>
-        <md-button v-on:click='showDetail = !showDetail'>
-        <b>{{review.module_code}} {{review.module_name}}</b>
-          <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon>
-        </md-button>
+      <md-card-header class = 'md-gutter'>
+        <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
+        <b>{{review.module_code}} {{review.module_name}} ({{review.sem_taken}})</b>
+          <!-- <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon> -->
+        <!-- </md-button> -->
       </md-card-header>
       
       <md-card-content>
-        <div class = 'comments'>{{review.comments}}</div>
+        <div>
+        <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
+        </div>
+        <!-- <br/> -->
+        <div class = 'para'>
+          <!-- <div class = 'md-subheading'>Lectures</div> -->
+          <b>Lectures</b><p class = 'comments'>{{review.lecture_comments}}</p>
+        </div>
+
+        <div class = 'para'>
+          <!-- <div class = 'md-subheading'>Tutorials</div> -->
+          <b>Tutorials</b>
+          <p class = 'comments'>{{review.tutorial_comments}}</p>
+        </div>
+
+        <div class ='para'>
+          <!-- <div class = 'md-subheading'>Comments</div> -->
+          <b>Comments</b>
+          <p class = 'comments'>{{review.comments}}</p>
+        </div>
+
+        <div class = 'grade'>
+         <b>Grade obtained: {{review.grade_obtained}}</b>
+        </div>
+
+        <div class = 'date'>
+          Written on: {{review.date}}
+        </div>
+
+
+
         <div v-show='showDetail'>
           <p>Additional Details to be rendered</p>
           </div>
@@ -88,10 +118,32 @@ export default {
   vertical-align:text-bottom;
   overflow:auto;
   width: 100%;
+  display: flex;
+  
 }
 .comments {
   text-overflow:ellipsis;
   overflow: hidden;
+}
+
+.para {
+  margin-bottom: 4px;
+}
+
+.md-button .md-ripple {
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerButton {
+  overflow: auto;
+}
+
+.date {
+  align-self: flex-end;
+  float: right;
 }
 
 </style>
