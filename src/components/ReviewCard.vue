@@ -1,20 +1,57 @@
 <template>
   <div id="ReviewCard">
-    <md-card v-for="r in reviewData" v-bind:key="r.id">
-      <md-card-header>
-        <b>{{r.module_code}} {{r.module_name}}</b>
+    <md-card>
+      <md-card-header class = 'md-gutter'>
+        <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
+        <b>{{review.module_code}} {{review.module_name}} ({{review.sem_taken}})</b>
+          <!-- <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon> -->
+        <!-- </md-button> -->
       </md-card-header>
       
       <md-card-content>
-        <span>{{r.comments}}</span>
+        <div>
+        <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
+        </div>
+        <!-- <br/> -->
+        <div class = 'para'>
+          <!-- <div class = 'md-subheading'>Lectures</div> -->
+          <b>Lectures</b><p class = 'comments'>{{review.lecture_comments}}</p>
+        </div>
+
+        <div class = 'para'>
+          <!-- <div class = 'md-subheading'>Tutorials</div> -->
+          <b>Tutorials</b>
+          <p class = 'comments'>{{review.tutorial_comments}}</p>
+        </div>
+
+        <div class ='para'>
+          <!-- <div class = 'md-subheading'>Comments</div> -->
+          <b>Comments</b>
+          <p class = 'comments'>{{review.comments}}</p>
+        </div>
+
+        <div class = 'grade'>
+         <b>Grade obtained: {{review.grade_obtained}}</b>
+        </div>
+
+        <div class = 'date'>
+          Written on: {{review.date}}
+        </div>
+
+
+
+        <div v-show='showDetail'>
+          <p>Additional Details to be rendered</p>
+          </div>
       </md-card-content>
+
       <md-divider/>
       <span class="footerDiv">
           <p class = 'iconLabel'>
-            {{r.like_count}}
+            {{review.like_count}}
             <md-icon>favorite</md-icon>
             
-            {{r.comment_count}}
+            {{review.comment_count}}
           <md-icon>comment</md-icon>
           </p>
         <!-- </span> -->
@@ -25,16 +62,24 @@
 
 
 <script>
-import DataObject from "../Database.js";
 export default {
   name: "ReviewCard",
   props: {
-    msg: String
+    msg: String,
+    review: Object //renders the review object passed from ReviewSection
   },
   data: () => ({
-    // reviewData: Object //To be replaced with result of backend call for data
-    reviewData: DataObject.reviewData
+    showDetail: false //toggle visibility of hidden content
   }),
+  methods: {
+    swapIcon() {
+      if (this.showDetail) {
+        return 'arrow_drop_up'
+      }
+      return 'arrow_drop_down'
+    }
+
+  },
   components: {}
 };
 </script>
@@ -58,15 +103,47 @@ export default {
 
 .footerDiv {
   display: flex;
-  align-content: flex-end;
   float:right;
-  vertical-align: center
-  
 }
 .iconLabel {
   justify-self: center;
   margin: 0px;
 
+}
+/* .dropdown {
+
+
+} */
+.md-card-header {
+  vertical-align:text-bottom;
+  overflow:auto;
+  width: 100%;
+  display: flex;
+  
+}
+.comments {
+  text-overflow:ellipsis;
+  overflow: hidden;
+}
+
+.para {
+  margin-bottom: 4px;
+}
+
+.md-button .md-ripple {
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerButton {
+  overflow: auto;
+}
+
+.date {
+  align-self: flex-end;
+  float: right;
 }
 
 </style>

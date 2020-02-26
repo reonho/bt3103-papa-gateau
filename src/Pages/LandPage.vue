@@ -82,7 +82,8 @@
    
         
         <div class = 'md-layout md-alignment-center-center'>
-            <ReviewCard/>
+            <!-- <ReviewCard/> -->
+            <ReviewSection/>
         </div>
     </div>
 
@@ -100,7 +101,9 @@
     import OverallProgress from "../components/OverallProgress"
     import NavBar from '../components/NavBar'
     // import Feed from '../components/Feed'
-    import ReviewCard from '../components/ReviewCard'
+    // import Ratings from '../components/Ratings'
+    import ReviewSection from '../components/ReviewSection'
+
     export default {
     name: 'LandPage',
     props: [
@@ -115,7 +118,8 @@
         OverallProgress,
         NavBar,
         // Feed
-        ReviewCard
+        ReviewSection,
+        // Ratings
     },
     methods: {
         //use this method to find data of a specific module

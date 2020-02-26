@@ -1,8 +1,8 @@
 /* eslint eqeqeq: "off", curly: "error" */
 <template>
   <form @submit.prevent='submitForm'>
-    <md-steppers md-alternative md-linear :md-active-step.sync:="active">
-      <md-step id="first" md-label="Basic Details" :md-done.sync="first">
+    <md-steppers md-linear md-alternative :md-active-step.sync:="active" >
+      <md-step id="first" md-label="Basic Details" :md-done.sync="first" v-on:click.prevent="active = 'first'">
         <md-card>
           <md-card-content>
             <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
@@ -61,19 +61,43 @@
         </md-card>
       </md-step>
 
-      <md-step id="second" md-label="Lectures" :md-done.sync="second">
+      <md-step id="second" md-label="Lectures" :md-done.sync="second" v-on:click.prevent="active = 'second'" :md-error="lectureForm.error">
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your experience with lectures for the module.</md-card-header>
           <md-card-content>
             <label class="md-subheading">
               <b>The lecture material was well-organised and useful for understanding the module content.</b>
             </label>
             <br />
             <div>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="sd">Strongly Disagree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="disagree">Disagree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="agree">Agree</md-radio>
-              <md-radio v-model.lazy="lectureForm.lectureMaterial" class="md-primary" value="sa">Strongly Agree</md-radio>
+              <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The lecturer was able to explain concepts clearly and effectively.</b>
+            </label>
+            
+            <div>
+              <md-radio v-model="lectureForm.clarity" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="lectureForm.clarity" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="lectureForm.clarity" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="lectureForm.clarity" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="lectureForm.clarity" class="md-primary" value='5'>Strongly Agree</md-radio>
+  
+            </div>
+            <md-divider/>
+            <br/>
+
+            <md-field :class="getValidationClass('lectureForm', 'comments')">
+              <label class>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
+              <md-textarea v-model="lectureForm.comments"></md-textarea>
+              <span class="md-error" v-if="!$v.lectureForm.comments.required">This field is required</span>
+            </md-field>
           </md-card-content>
           <md-card-actions class="md-layout md-alignment-center-center">
             <md-button
@@ -84,19 +108,43 @@
         </md-card>
       </md-step>
 
-      <md-step id="third" md-label="Tutorials" :md-done.sync="third">
+      <md-step id="third" md-label="Tutorials" :md-done.sync="third" :md-error='tutorialForm.error'>
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your experience with tutorials for the module.</md-card-header>
+
+          <!-- <ModuleFormRadio :question="{title: 'Test'}"/> -->
+          
           <md-card-content>
             <label class="md-subheading">
               <b>The tutorial material was well-organised and useful for understanding the module content.</b>
             </label>
-            <br />
+            <br/>
             <div>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="sd">Strongly Disagree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="disagree">Disagree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="agree">Agree</md-radio>
-              <md-radio v-model.lazy="tutorialForm.tutorialMaterial" class="md-primary" value="sa">Strongly Agree</md-radio>
+              <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The tutor was well-prepared and knowledgeable about the module content.</b>
+            </label>
+            <div>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <md-field :class="getValidationClass('tutorialForm', 'comments')">
+              <label class>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
+              <md-textarea v-model="tutorialForm.comments"></md-textarea>
+              <span class="md-error" v-if="!$v.tutorialForm.comments.required">This field is required</span>
+            </md-field>
           </md-card-content>
         <md-card-actions class="md-layout md-alignment-center-center">
           <md-button class="md-primary md-raised" v-on:click.prevent="goNext('tutorialForm', 'third','fourth')">Next</md-button>
@@ -104,22 +152,77 @@
         </md-card>
       </md-step>
 
-      <md-step id="fourth" md-label="Comments" :md-done.sync="fourth">
+      <md-step id="fourth" md-label="Comments" :md-done.sync="fourth" v-on:click.prevent="active = 'fourth'">
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your overall experience for the module.</md-card-header>
           <md-card-content>
-            <md-field :class="getValidationClass('commentForm', 'comments')">
-              <label>Comments</label>
+            <label class="md-subheading">
+              <b>I would recommend this module to my peers/friends.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>Overall, I felt that the module was easy.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The workload of the module was manageable.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+
+
+
+
+
+            <md-field>
+              <label>Please write down any other comments you have about the module.</label>
               <md-textarea v-model="commentForm.comments"></md-textarea>
-              <span class="md-error" v-if="!$v.commentForm.comments.required">This field is required</span>
             </md-field>
           </md-card-content>
           <md-card-actions class="md-layout md-alignment-center-center">
           <md-button class="md-primary md-raised" type = 'submit'>Submit</md-button>
         </md-card-actions>
+        <!-- <md-snackbar md-active = true md-position='center'></md-snackbar> -->
         </md-card>
+
+
       </md-step>
       
     </md-steppers>
+    <md-snackbar md-position='center' :md-active.sync="showSubmitMessage" md-persistent>
+      <span>Your review has been submitted. Thank you!</span>
+      <md-button class="md-primary" @click="showSubmitMessage = false">Okay</md-button>
+    </md-snackbar>
+    <md-snackbar md-position='center' :md-active.sync="showErrorMessage" md-persistent>
+      <span>Your review is incomplete. Please ensure that all fields are correctly filled up.</span>
+      <md-button class="md-primary" @click="showErrorMessage = false">Okay</md-button>
+    </md-snackbar>
   </form>
 </template>
 
@@ -130,7 +233,10 @@ import { required } from "vuelidate/lib/validators";
 export default {
   name: "ReviewForm",
   props: {
-    msg: String
+    msg: String,
+    value: Number
+  },
+  components: {
   },
   mixins: [validationMixin],
   validations: {
@@ -152,17 +258,38 @@ export default {
     lectureForm: {
       lectureMaterial: {
         required
+      },
+      clarity: {
+        required
+      },
+      comments: {
+        required
       }
     },
     tutorialForm: {
       tutorialMaterial: {
         required
+      },
+      comments : {
+        required
+      },
+      tutor: {
+        required
       }
     },
     commentForm: {
       comments: {
+      },
+      recommend: {
+        required
+      },
+      difficulty: {
+        required
+      }, 
+      workload: {
         required
       }
+      
     }
   },
   methods: {
@@ -170,17 +297,37 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
+        this.showSubmitMessage = true
         // this.setDone("first", "second");
         console.log("form submitted!");
       } else {
         this.submitStatus = "INVALID";
+        this.showErrorMessage = true
+
+        //This part is hard-coded for now, until I find a better way to do the error check for all the forms upon submit button press
+        if (this.$v.lectureForm.$invalid) {
+          this.lectureForm.error = 'Error'
+        } else {
+          this.lectureForm.error = null
+        }
+
+        if (this.$v.tutorialForm.$invalid) {
+          this.tutorialForm.error = 'Error'
+        } else {
+          this.tutorialForm.error = null
+        }
+
+  
         console.log("form invalid");
-      }
-    },
+        }
+      },
     goNext(formName, currStep, nextStep) {
       this.$v[formName].$touch();
       if (!this.$v[formName].$invalid) {
+        this[formName].error = null;
         this.setDone(currStep, nextStep);
+      } else {
+        this[formName].error = 'Error!'
       }
     },
     getValidationClass(formName, fieldName) {
@@ -194,9 +341,6 @@ export default {
     },
     setDone(id, index) {
       this[id] = true;
-
-      //this.secondStepError = null;
-
       if (index) {
         this.active = index;
       }
@@ -207,16 +351,25 @@ export default {
       selectedSemester: null,
       selectedStaff: null,
       selectedGrade: null,
-      selectedFaculty: null
+      selectedFaculty: null,
     },
     lectureForm: {
-      lectureMaterial: 'agree'
+      lectureMaterial: '3',
+      clarity: '3',
+      lectureComments: null,
+      error: null
     },
     tutorialForm: {
-      tutorialMaterial: 'agree'
+      tutorialMaterial: '3',
+      tutorialComments: null,
+      error: null,
+      tutor: '3'
     },
     commentForm: {
-      comments: null
+      comments: null,
+      recommend: '3',
+      difficulty: '3',
+      workload: '3'
     },
 
     submitStatus: null,
@@ -227,6 +380,10 @@ export default {
     second: false,
     third: false,
     fourth: false,
+    questionOne: null,
+    showSubmitMessage: false,
+    showErrorMessage: false,
+    lectureError: null,
 
     faculties: [
       {
