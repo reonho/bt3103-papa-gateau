@@ -197,7 +197,12 @@ var DataObject = {
       module_name: 'Application Systems for Business Analytics',
       comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
       comment_count: 15,
-      like_count: 8
+      like_count: 8,
+      lecture_comments: 'Lectures are great! The professor is well-versed in the subject matter and leverages on in-class exercises for students to learn better!',
+      tutorial_comments: 'There were no tutorials for this module, as both lectures and tutorials were done together.',
+      date: '01/01/2020',
+      grade_obtained: 'A',
+      sem_taken: 'AY1920 Semester 1'
     },
     {
       id: 2,
@@ -205,7 +210,13 @@ var DataObject = {
       module_name: 'Computational Methods for Business Analytics',
       comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
       comment_count: 15,
-      like_count: 4
+      like_count: 4,
+      lecture_comments: 'The slides were well-crafted and informative. The professor is knowledgeable and approachable, and provides additional resources in the lecture slides.',
+      tutorial_comments: 'Due to the nCov outbreak, the tutorials were delivered in a recording. The materials were helpful in strengthening the understanding of lecture concepts!',
+      date: '06/02/2020',
+      grade_obtained: 'A',
+      sem_taken: 'AY1920 Semester 2'
+
     },
     {
       id: 3,
@@ -213,7 +224,12 @@ var DataObject = {
       module_name: 'Programming Methodology I',
       comments: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip',
       comment_count: 15,
-      like_count: 22
+      like_count: 22,
+      lecture_comments: 'The prof has a knack for explaining concepts well, and manages to keep the students entertained through the power of sorting algorithm dances!',
+      tutorial_comments: 'Tutorial exercises were useful in reinforcing concepts taught. My tutor prepared her own slides which was very useful for studying the module!',
+      date: '06/08/2019',
+      grade_obtained: 'A',
+      sem_taken: 'AY1819 Semester 2'
     },
 
 
