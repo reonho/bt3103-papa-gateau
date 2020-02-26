@@ -193,6 +193,9 @@ export default {
     PieChart,
     BarChart
   },
+  methods: {
+
+  },
   data: () => ({
     Modules: DataObject.Modules,
     chartOptions: {
