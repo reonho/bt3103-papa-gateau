@@ -1,5 +1,5 @@
 <template>
-  <div id="modulePage">
+  <div id="modulePage" style="margin-left: 160px; margin-right: 250px">
     <title>{{Modules[0].moduleCode}} - {{Modules[0].title}}</title>
     <div style="color:orangered; margin-left: 20px; margin-top:20px" class="header">
       <b>{{Modules[0].moduleCode}} - {{Modules[0].title}}</b>
@@ -7,7 +7,7 @@
     <button
       class="button"
       style="float: right; margin-right: 20px"
-      onclick="window.location.href = #"
+      onclick="window.location.href = '/#/ModuleList';"
     >
       <span>Back To All Modules</span>
     </button>
@@ -18,20 +18,32 @@
     <div
       style="color: rgb(104, 104, 104); margin-left: 22px; padding-top: 5px"
       class="depFac"
-    >Semester 1 • Semester 2</div>
+    >Semester 1 • Semester 2 • Special Term I</div>
     <hr />
     <div style="margin-left: 20px; margin-right:20px;font-size:15px">
       {{Modules[0].description}}
       <br />
       <br />
-      <b style="color: darkblue">Preclusion(s)</b>
-      <br />
-      {{Modules[0].preclusion}}
-      <br />
-      <br />
-      <b style="color: darkblue">Prerequisite(s)</b>
-      <br />
-      {{Modules[0].prerequisite}}
+      <div class="row">
+        <div class="col-4" style="text-align:left">
+          <b style="color: darkblue">Preclusion(s)</b>
+          <br />
+          {{Modules[0].preclusion}}
+          <br />
+          <br />
+          <b style="color: darkblue">Prerequisite(s)</b>
+          <br />
+          {{Modules[0].prerequisite}}
+          <br />
+          <br />
+          <b style="color: darkblue">Exam</b>
+          <br />4-Dec-2019 9:00 AM • 2 hours
+        </div>
+        <div class="col-8">
+          <b style="color: darkblue">Workload</b>
+          <workloadchart :seriesStats="formatwork(Modules[0].workload)"></workloadchart>
+        </div>
+      </div>
     </div>
     <hr />
     <div id="statistics">
@@ -40,40 +52,70 @@
       <br />
       <div id="container">
         <div class="row">
-          <div class="col-3 well">
-            <div class="small">
-              <pie-chart :chart-data="datacollection" :options="chartOptions"></pie-chart>
-            </div>
+          <div class="col-4">
+            <pie-chart :chart-data="datacollection" :options="chartOptions"></pie-chart>
           </div>
-          <div class="col-3 well">
-            <div class="small">
-              <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
+          <div class="col-8 box">
+            <div class="row">
+              <div class="col-5">
+                <h3 style="padding-top: 10px">Student reviews</h3>
+                <p>
+                  <span style="color: gold;font-size:16px;" class="star">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-alt"></i>
+                  </span>
+                  <span style="padding:10px;font-size: 15px">4.4 out of 5</span>
+                </p>
+                <h5 style="font-weight:400">10 student ratings</h5>
+                <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
+              </div>
+              <div class="col-7">
+                <h4 style="padding-top: 10px">Features</h4>
+                <div class="row">
+                  <div class="col-6">
+                    <p style="font-weight:400; font-size:12px">Easy to understand</p>
+                  </div>
+                  <div class="col-6" style="float:right">
+                    <p>
+                      <span style="color: gold;" class="star">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </span>
+                      <span style="color: lightgrey;" class="star">
+                        <i class="fa fa-star"></i>
+                      </span>
+                      <span style="padding:10px;font-size: 12px">4.0</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                  </div>
+                  <div class="col-6" style="float:right">
+                    <p>
+                      <span style="color: gold;" class="star">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </span>
+                      <span style="color: lightgrey;" class="star">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </span>
+                      <span style="padding:10px;font-size: 12px">2.9</span>
+                    </p>
+                  </div>
+                </div>
+                <br />
+                <intakechart :seriesStats="seriesStats"></intakechart>
+              </div>
             </div>
-            <br />
-            <h5 style="text-align: center; font-weight:400">
-              Average:
-              <b style="color: brown">3.27</b> out of 5
-            </h5>
-          </div>
-          <div class="col-3 well">
-            <div class="small">
-              <bar-chart :chart-data="datacollection2" :options="chartOptions2"></bar-chart>
-            </div>
-            <br />
-            <h5 style="text-align: center; font-weight:400">
-              Average:
-              <b style="color: navy">3.27</b> out of 5
-            </h5>
-          </div>
-          <div class="col-3 well">
-            <div class="small">
-              <bar-chart :chart-data="datacollection3" :options="chartOptions3"></bar-chart>
-            </div>
-            <br />
-            <h5 style="text-align: center; font-weight:400">
-              Average:
-              <b style="color: darkgreen">3.27</b> out of 5
-            </h5>
           </div>
         </div>
       </div>
@@ -87,99 +129,27 @@
         href="/#/review"
         id="addReview"
       >New Review</a>
-      <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" style = "float:right" no-caret>
+      <b-dropdown
+        size="lg"
+        variant="link"
+        toggle-class="text-decoration-none"
+        style="float:right"
+        no-caret
+      >
         <template v-slot:button-content>Sort by Newest &#9662;</template>
-        <b-dropdown-item href="#"><h5>Best</h5></b-dropdown-item>
-        <b-dropdown-item href="#"><h5>Newest</h5></b-dropdown-item>
-        <b-dropdown-item href="#"><h5>Oldest</h5></b-dropdown-item>
+        <b-dropdown-item href="#">
+          <h5>Best</h5>
+        </b-dropdown-item>
+        <b-dropdown-item href="#">
+          <h5>Newest</h5>
+        </b-dropdown-item>
+        <b-dropdown-item href="#">
+          <h5>Oldest</h5>
+        </b-dropdown-item>
       </b-dropdown>
     </div>
     <br />
-    <div class="well ml-4 mr-4" style="padding-bottom:0">
-      <div class="row">
-        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-          <p>
-            <b>Faculty:</b>
-          </p>
-        </div>
-        <div class="col-lg-8 col-sm-5" style="float:right">
-          <p>School of Computing</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-          <p>
-            <b>How manageable is the workload?</b>
-          </p>
-        </div>
-        <div class="col-lg-8 col-sm-5" style="float:right">
-          <p>
-            <span style="color: gold;" class="star">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </span>
-            <span style="color: lightgrey;" class="star">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </span>
-          </p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-          <p>
-            <b>How difficult is the module?</b>
-          </p>
-        </div>
-        <div class="col-lg-8 col-sm-5" style="float:right">
-          <p>
-            <span style="color: gold;" class="star">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </span>
-            <span style="color: lightgrey;" class="star">
-              <i class="fa fa-star"></i>
-            </span>
-          </p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-          <p>
-            <b>How likely will you recommend the module?</b>
-          </p>
-        </div>
-        <div class="col-lg-8 col-sm-5" style="float:right">
-          <p>
-            <span style="color: gold;" class="star">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </span>
-            <span style="color: lightgrey;" class="star">
-              <i class="fa fa-star"></i>
-            </span>
-          </p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 col-sm-7" style="color: #309ad8">
-          <p>
-            <b>Other Comments:</b>
-          </p>
-        </div>
-      </div>
-      <div class="panel panel-default">
-        <div class="card-body">This module is very interesting and the prof is pretty cool.</div>
-      </div>
-      <md-icon style="margin-right: 20px">favorite</md-icon>
-      <md-icon>comment</md-icon>
-      <h5 style="text-align: right">Posted on 2019-10-02</h5>
-    </div>
+    <reviewcard :review="reviewData"/>
   </div>
 </template>
 
@@ -187,20 +157,38 @@
 import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
+import StudentIntakeChart from "../components/StudentIntakeChart";
+import WorkloadChartForMod from "../components/WorkloadChartForMod";
+import ReviewCardForMod from "../components/ReviewCardForMod";
 
 export default {
   components: {
     PieChart,
-    BarChart
+    BarChart,
+    intakechart: StudentIntakeChart,
+    workloadchart: WorkloadChartForMod,
+    reviewcard: ReviewCardForMod
   },
   methods: {
-
+    formatwork(workload) {
+      var series = [];
+      series.push({
+        name: "Workload",
+        data: workload
+      });
+      return series;
+    }
   },
   data: () => ({
+    reviewData: DataObject.reviewData[2],
+    seriesStats: [
+      {
+        name: "Intake",
+        data: [150, 210, 186, 195]
+      }
+    ],
     Modules: DataObject.Modules,
     chartOptions: {
-      responsive: true,
-      maintainAspectRatio: true,
       title: {
         display: true,
         text: "Faculties",
@@ -225,98 +213,37 @@ export default {
       ]
     },
     chartOptions1: {
-      responsive: true,
-      maintainAspectRatio: true,
       scales: {
         yAxes: [
           {
+            gridLines: {
+              display: false
+            }
+          }
+        ],
+        xAxes: [
+          {
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              display: true
+            },
+            gridLines: {
+              display: true
             }
           }
         ]
       },
-      title: {
-        display: true,
-        text: "How difficult is the module?",
-        padding: 5
-      },
       legend: {
-        position: "bottom",
-        fullWidth: true
+        display: false
       }
     },
     datacollection1: {
-      labels: ["1", "2", "3", "4", "5"],
+      labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
       datasets: [
         {
           label: "Number of votes",
-          backgroundColor: "rgba(255,99,132, 0.4)",
-          data: [1, 4, 6, 2, 3]
-        }
-      ]
-    },
-    chartOptions2: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
-          }
-        ]
-      },
-      title: {
-        display: true,
-        text: "How likely will you recommend the module?",
-        padding: 5
-      },
-      legend: {
-        position: "bottom",
-        fullWidth: true
-      }
-    },
-    datacollection2: {
-      labels: ["1", "2", "3", "4", "5"],
-      datasets: [
-        {
-          label: "Number of votes",
-          backgroundColor: "rgba(20,53,200, 0.4)",
-          data: [1, 4, 6, 2, 3]
-        }
-      ]
-    },
-    chartOptions3: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
-          }
-        ]
-      },
-      title: {
-        display: true,
-        text: "How likely will you recommend the module?",
-        padding: 5
-      },
-      legend: {
-        position: "bottom",
-        fullWidth: true
-      }
-    },
-    datacollection3: {
-      labels: ["1", "2", "3", "4", "5"],
-      datasets: [
-        {
-          label: "Number of votes",
-          backgroundColor: "rgba(20,200,50, 0.4)",
-          data: [1, 4, 6, 2, 3]
+          backgroundColor: "rgba(255,99,132, 0.5)",
+          data: [3, 5, 1, 2, 2]
         }
       ]
     }
@@ -372,7 +299,9 @@ export default {
   opacity: 1;
   right: 0;
 }
-.small {
-  text-align: center;
+.box {
+  border-style: solid;
+  border-width: 0;
+  border-left-width: 0.1px;
 }
 </style>

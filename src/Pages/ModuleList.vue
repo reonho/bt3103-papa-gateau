@@ -92,7 +92,7 @@
           <div id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <p class="module-name">{{post.moduleCode}} - {{post.title}}</p>
+                <a class="module-name" href="/#/module" style="color:#FB3723;">{{post.moduleCode}} - {{post.title}}</a>
                 <p
                   class="module-type"
                 >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
