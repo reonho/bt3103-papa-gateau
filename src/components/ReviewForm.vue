@@ -54,7 +54,7 @@
             </md-field>
 
             <md-card-actions class="md-layout md-alignment-center">
-              <md-button class="md-accent md-raised">Cancel</md-button>
+              <md-button class="md-accent md-raised" href = '/#/module'>Cancel</md-button>
               <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="goNext('detailsForm', 'first', 'second')">Next</md-button>
             </md-card-actions>
           </md-card-content>
