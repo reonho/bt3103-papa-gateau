@@ -113,6 +113,25 @@ var DataObject = {
           examDuration: 120
         }
       ]
+    },
+    {
+      moduleCode: "AH3202",
+      title: "Time Traveller: The Curatorial in Southeast Asia",
+      description:
+        "The module aims to equip students with curatorial methodologies and theories drawn from the history of exhibitions in Southeast Asia. Students will be introduced to postcolonial theories, approaches and methodologies with an inter-disciplinary focus that can be used to frame the art histories of the region. This module will provide opportunities for students to gain hands-on experience of curatorial practices through workshops with curators, conservators, educators and public programmers by drawing resources from the NUS Museum and the National Gallery Singapore.",
+      moduleCredit: "4",
+      department: "History",
+      faculty: "Arts and Social Science",
+      workload: [2, 1, 0, 0, 7],
+      prerequisite: "AH2101",
+      semesterData: [
+        {
+          semester: 2
+        },
+        {
+          semester: 3
+        }
+      ]
     }
   ],
   Courses: [

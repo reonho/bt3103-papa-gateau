@@ -1,7 +1,7 @@
 <template>
   <div>
     <apexchart
-      style="background-color:white;width:410px"
+      style="background-color:white"
       type="line"
       height="170"
       :options="chartOptions2"
