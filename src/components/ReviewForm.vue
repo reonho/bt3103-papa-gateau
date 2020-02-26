@@ -90,6 +90,8 @@
               <md-radio v-model="lectureForm.clarity" class="md-primary" value='5'>Strongly Agree</md-radio>
   
             </div>
+            <md-divider/>
+            <br/>
 
             <md-field :class="getValidationClass('lectureForm', 'comments')">
               <label class>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
@@ -116,7 +118,7 @@
             <label class="md-subheading">
               <b>The tutorial material was well-organised and useful for understanding the module content.</b>
             </label>
-            <br />
+            <br/>
             <div>
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='1'>Strongly Disagree</md-radio>
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='2'>Disagree</md-radio>
@@ -124,6 +126,20 @@
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The tutor was well-prepared and knowledgeable about the module content.</b>
+            </label>
+            <div>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="tutorialForm.tutor" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
             <md-field :class="getValidationClass('tutorialForm', 'comments')">
               <label class>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
               <md-textarea v-model="tutorialForm.comments"></md-textarea>
@@ -138,7 +154,52 @@
 
       <md-step id="fourth" md-label="Comments" :md-done.sync="fourth" v-on:click.prevent="active = 'fourth'">
         <md-card>
+          <md-card-header class = 'md-title'>For the questions below, rate your overall experience for the module.</md-card-header>
           <md-card-content>
+            <label class="md-subheading">
+              <b>I would recommend this module to my peers/friends.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.recommend" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>Overall, I felt that the module was easy.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.difficulty" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+            <label class="md-subheading">
+              <b>The workload of the module was manageable.</b>
+            </label>
+            <br />
+            <div>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='1'>Strongly Disagree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='2'>Disagree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='3'>Neutral</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='4'>Agree</md-radio>
+              <md-radio v-model="commentForm.workload" class="md-primary" value='5'>Strongly Agree</md-radio>
+            </div>
+            <md-divider/>
+            <br/>
+
+
+
+
+
             <md-field>
               <label>Please write down any other comments you have about the module.</label>
               <md-textarea v-model="commentForm.comments"></md-textarea>
@@ -211,10 +272,22 @@ export default {
       },
       comments : {
         required
+      },
+      tutor: {
+        required
       }
     },
     commentForm: {
       comments: {
+      },
+      recommend: {
+        required
+      },
+      difficulty: {
+        required
+      }, 
+      workload: {
+        required
       }
       
     }
@@ -289,10 +362,14 @@ export default {
     tutorialForm: {
       tutorialMaterial: '3',
       tutorialComments: null,
-      error: null
+      error: null,
+      tutor: '3'
     },
     commentForm: {
-      comments: null
+      comments: null,
+      recommend: '3',
+      difficulty: '3',
+      workload: '3'
     },
 
     submitStatus: null,
