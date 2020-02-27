@@ -156,7 +156,7 @@
         <md-card>
           <md-card-header class = 'md-title'>For the questions below, rate your overall experience for the module.</md-card-header>
           <md-card-content>
-            <!-- <label class="md-subheading">
+            <label class="md-subheading">
               <b>I would recommend this module to my peers/friends.</b>
             </label>
             <br />
@@ -168,7 +168,7 @@
               <md-radio v-model="commentForm.recommend" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
             <md-divider/>
-            <br/> -->
+            <br/>
             <label class="md-subheading">
               <b>Overall, I felt that the module was easy.</b>
             </label>
@@ -195,12 +195,11 @@
             </div>
             <md-divider/>
             <br/>
-            <label class="md-subheading">
-              <b>As a whole, how would you rate this module?</b>
-            </label>
-            <Ratings v-model='commentForm.rating'/>
-            <md-divider/>
-            <br/>
+
+
+
+
+
             <md-field>
               <label>Please write down any other comments you have about the module.</label>
               <md-textarea v-model="commentForm.comments"></md-textarea>
@@ -231,7 +230,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
-import Ratings from './Ratings'
 export default {
   name: "ReviewForm",
   props: {
@@ -239,7 +237,6 @@ export default {
     value: Number
   },
   components: {
-    Ratings
   },
   mixins: [validationMixin],
   validations: {
@@ -261,22 +258,10 @@ export default {
     lectureForm: {
       lectureMaterial: {
         required
-      },
-      clarity: {
-        required
-      },
-      comments: {
-        required
       }
     },
     tutorialForm: {
       tutorialMaterial: {
-        required
-      },
-      comments : {
-        required
-      },
-      tutor: {
         required
       }
     },
@@ -289,7 +274,7 @@ export default {
       difficulty: {
         required
       }, 
-      rating: {
+      workload: {
         required
       }
       
@@ -376,8 +361,7 @@ export default {
       comments: null,
       recommend: '3',
       difficulty: '3',
-      // workload: '3',
-      rating: null
+      workload: '3'
     },
 
     submitStatus: null,

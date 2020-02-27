@@ -195,7 +195,7 @@ export default {
   data() {
     return {
       searchbar: "",
-      modulesData: DataObject.Modules,
+      modulesData: DataObject.Modules2,
       modulenum: 0,
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
