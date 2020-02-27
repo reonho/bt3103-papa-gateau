@@ -27,7 +27,11 @@ export default {
     return {
       chartOptions2: {
         title: {
-          text: "Student Intake Per Semester"
+          text: "Student Intake Per Semester",
+          style: {
+            fontWeight: 'bold',
+            fontFamily: 'Roboto'
+          }
         },
         chart: {
           type: "line",
