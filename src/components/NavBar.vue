@@ -11,7 +11,7 @@
             <md-menu-content>
                 <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
                 <md-menu-item @click="scroll(227.578125)">Academic Progress</md-menu-item>
-                <md-menu-item @click="scroll(863.828125)">Degree Progress</md-menu-item>
+                <md-menu-item @click="scroll(839.828125)">Degree Progress</md-menu-item>
                 <md-menu-item @click="scroll(-110)">Back to Top</md-menu-item>
             </md-menu-content>
         </md-menu>
