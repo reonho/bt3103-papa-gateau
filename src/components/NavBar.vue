@@ -2,7 +2,7 @@
 
 <div class="NavBar">
    <md-toolbar class="md-accent" style="background:salmon" md-elevation="2">
-       <h3 class="md-title" style="flex: 2; font-size: 250%; margin-left:4vh">Modeaux</h3>
+       <h3 class="md-title" style="flex: 2; font-size: 250%; margin-left:4vh;cursor:pointer" onclick="window.location.href = '/#/LandPage';">Modeaux</h3>
        <router-link class="nav-link" to="/">
           <md-button>Logout</md-button>
         </router-link>
@@ -11,11 +11,11 @@
             <md-menu-content>
                 <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
                 <md-menu-item @click="scroll(227.578125)">Academic Progress</md-menu-item>
-                <md-menu-item @click="scroll(863.828125)">Degree Progress</md-menu-item>
+                <md-menu-item @click="scroll(839.828125)">Degree Progress</md-menu-item>
                 <md-menu-item @click="scroll(-110)">Back to Top</md-menu-item>
             </md-menu-content>
         </md-menu>
-        <router-link class="nav-link" to="/">
+        <router-link class="nav-link" to="/ModuleList">
           <md-button class="md-primary">Modules</md-button>
         </router-link>
         <router-link class="nav-link" to="/LandPage">   

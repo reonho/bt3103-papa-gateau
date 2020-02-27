@@ -40,13 +40,19 @@
                 </md-card>   
             </div>
         </div>
-
-        <div id = "DegreeProgressCard" style="margin-bottom:0%">
-            <md-card style="background:teal;color:white" >
-                    <md-card-header>
-                        <div class="md-title">My Degree progress</div>
-                        <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
-                    </md-card-header>
+        <div id = "DegreeProgressCard">
+        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh" >
+                <md-card-header>
+                    <div class="md-title">My Degree progress</div>
+                    <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
+                </md-card-header>
+        </md-card>
+        </div>
+        <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
+               
+            <div id="treechart" class = "container-fluid" >
+                <TreeChart v-bind:data = 'this.treeData'/>
+            </div>
             </md-card>
             <md-card md-with-hover>
                 
@@ -65,7 +71,7 @@
                     </md-tabs>
                 </div>
                 </md-card>
-        </div>
+        
         
         <!--/div-->
         <!-- <md-tabs class="md-transparent" md-alignment="fixed">
@@ -84,7 +90,8 @@
    
         
         <div class = 'md-layout md-alignment-center-center'>
-            <ReviewCard/>
+            <!-- <ReviewCard/> -->
+            <ReviewSection/>
         </div>
     </div>
 
@@ -96,14 +103,13 @@
     import AddModulesModal from "../components/AddModuleModal"
     // import FollowUpModal from "../compononets/FollowUpModal"
     import RadarChart from "../components/RadarChart.vue"
-    import TreeChartGe from "../components/TreeCharts/TreeChartGe"
-    import TreeChartCe from "../components/TreeCharts/TreeChartCe"
-    import TreeChartPe from "../components/TreeCharts/TreeChartPe"
-    //import OverallProgress from "../components/OverallProgress"
-    import capline from '../components/capline'
+    import TreeChart from "../components/TreeCharts/TreeChart"
+    import OverallProgress from "../components/OverallProgress"
     import NavBar from '../components/NavBar'
     // import Feed from '../components/Feed'
-    import ReviewCard from '../components/ReviewCard'
+    // import Ratings from '../components/Ratings'
+    import ReviewSection from '../components/ReviewSection'
+
     export default {
     name: 'LandPage',
     props: [
@@ -112,14 +118,12 @@
     components:{
         AddModulesModal,
         RadarChart,
-        TreeChartGe,
-        TreeChartCe,
-        TreeChartPe,
-        //OverallProgress,
-        capline,
+        TreeChart,
+        OverallProgress,
         NavBar,
         // Feed
-        ReviewCard
+        ReviewSection,
+        // Ratings
     },
     methods: {
         //use this method to find data of a specific module
@@ -148,19 +152,49 @@
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: null,
-            treeData: {
-                "ge": [
+            treeData: [ {
+                "name" : "General Modules",
+                "off": true,
+                "value": 0,
+                "children": [
                      {
-                        name: "GER1000",
-                        value: 1.2
+                        'name': "GER1000",
+                        'value': 0
                     },
                     {
-                        name: "GET1001",
-                        value: 0.3
-                    },],
-                "pe": ["BT4222","BT4221"],
-                "ce": ["MA1101R","MA1521"] 
-            }
+                        'name': "GET1001",
+                        'value': 0.7
+                    }
+                ] 
+            },{
+                "name" : "Core Modules",
+                "value": 0,
+                "off": true,
+                "children": [
+                     {
+                        'name': "BT1101",
+                        'value': 0
+                    },
+                    {
+                        'name': "BT2101",
+                        'value': 0
+                    }
+                ] 
+            },{
+                "name" : "Programme Modules",
+                "value": 0,
+                "off": true,
+                "children": [
+                     {
+                        'name': "BT4222",
+                        'value': 0.7
+                    },
+                    {
+                        'name': "BT4102",
+                        'value': 0.7
+                    }
+                ] 
+            },]
         };
     },
     mounted() {
