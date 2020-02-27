@@ -1,6 +1,6 @@
 <template>
   <div id="ReviewCard">
-    <md-card style='margin-left:auto;margin-right:auto; background-color:rgb(226, 235, 240)'>
+    <md-card style='margin-left:auto;margin-right:auto; width:100%;background-color:rgb(226, 235, 240)'>
       <md-card-header class = 'md-gutter'>
         <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
         {{review.sem_taken}}

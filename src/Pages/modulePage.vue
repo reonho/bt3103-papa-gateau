@@ -151,7 +151,9 @@
       </b-dropdown>
     </div>
     <br />
+    <div>
     <reviewcard :review="reviewData" />
+    </div>
   </div>
 </div>
 </template>
