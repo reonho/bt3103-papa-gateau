@@ -499,7 +499,7 @@ hr {
   display: block;
 }
 .md-button.clear-filter {
-  background-color: #0B5345 !important;
+  background-color: #17A589 !important;
   font-weight: bold;
 }
 .md-button.clear-filter.md-theme-default {

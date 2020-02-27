@@ -192,7 +192,7 @@ export default {
         data: [150, 210, 186, 195]
       }
     ],
-    Modules: DataObject.Modules,
+    Modules: DataObject.Modules2,
     chartOptions: {
       title: {
         display: true,

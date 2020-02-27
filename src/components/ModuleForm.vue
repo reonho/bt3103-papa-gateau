@@ -90,7 +90,6 @@ export default {
   components: {
     // FollowUpModal
   },
-
   data: function() {
     return {
       showModal: false,
@@ -109,7 +108,6 @@ export default {
       }
     };
   },
-
   mixins: [validationMixin],
   validations: {
     detailsForm: {
@@ -130,11 +128,9 @@ export default {
       }
     }
   },
-
   methods: {
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
-
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty
@@ -164,7 +160,6 @@ export default {
 .md-card {
   /* overflow: scroll; */
   display:block;
-
   /* min-height: 180px; */
 }
 </style>
