@@ -1,7 +1,8 @@
 <template>
     <div>
         <!--h1 style = "text-align: center; margin-top: 20">Overall Academic Progress</h1-->
-        <div id = "chartdiv" style = 'height:50vh;'/>
+        <!--div id = "chartdiv" style = 'height:50vh;'/-->
+         
     </div>
 </template>
 
@@ -10,6 +11,7 @@
     import * as am4core from "@amcharts/amcharts4/core";
     import am4themes_animated from "@amcharts/amcharts4/themes/animated";
     import * as am4charts from "@amcharts/amcharts4/charts";
+    
 
     export default {
         name: "OverallProgress",

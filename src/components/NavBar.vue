@@ -7,7 +7,7 @@
           <md-button>Logout</md-button>
         </router-link>
         <md-menu md-size="medium" md-align-trigger>
-            <md-button md-menu-trigger>Dashbaord</md-button>
+            <md-button md-menu-trigger>Dashboard</md-button>
             <md-menu-content>
                 <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
                 <md-menu-item @click="scroll(227.578125)">Academic Progress</md-menu-item>
@@ -18,7 +18,7 @@
         <router-link class="nav-link" to="/">
           <md-button class="md-primary">Modules</md-button>
         </router-link>
-        <router-link class="nav-link" to="/LandPage">
+        <router-link class="nav-link" to="/LandPage">   
           <md-button class="md-primary">Settings</md-button>
         </router-link>
         

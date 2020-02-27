@@ -10,16 +10,16 @@
         </div>
     </md-card>
         <!--div style="display:flex" class= "container-fluid p-3"-->
-        <div class="md-layout md-gutter md-alignment-center" style="margin:2vh">
-            <div class = "md-layout-item" id = "StatsCard">
+        <div class="md-layout md-gutter md-alignment-top-center" style="margin:15%; margin-top:0; margin-bottom:0">
+            <div class = "md-layout-item" id = "StatsCard" >
             
-            <md-card style="background:salmon;color:white" md-with-hover >
+            <md-card style="background:teal;color:white" md-with-hover >
                 <md-card-header>
                     <div class="md-title">My Stats and Attributes</div>
                     <div class="md-subhead">Discover your strengths and weaknesses!</div>
                 </md-card-header>
                 </md-card>
-            <md-card style="height:70vh" md-with-hover>
+            <md-card  md-with-hover>
     
             <div id="chart">
                 <RadarChart/>
@@ -29,42 +29,44 @@
             </div>
 
             <div class="md-layout-item">
-                <md-card style="background:salmon;color:white" md-with-hover >
+                <md-card style="background: teal; color:white" md-with-hover >
                 <md-card-header>
-                    <div class="md-title">Overall Academic Progress</div>
-                    <div class="md-subhead">How much of your degree you have left!</div>
+                    <div class="md-title">My Cumulative Average Point</div>
+                    <div class="md-subhead">How your CAP has changed over the semesters</div>
                 </md-card-header>
                 </md-card>
-                <md-card style="height:70vh; padding: 6vh" md-with-hover>         
-                    <OverallProgress/>
+                <md-card style="padding: 6vh" md-with-hover>         
+                    <capline/>
                 </md-card>   
             </div>
         </div>
-        <div id = "DegreeProgressCard">
-        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh" >
-                <md-card-header>
-                    <div class="md-title">My Degree progress</div>
-                    <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
-                </md-card-header>
-        </md-card>
-        </div>
-        <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
-               
-            <div id="treechart" class = "container-fluid" >
-                <md-tabs md-alignment="centered">
 
-                    <md-tab id="GE" md-label="General Electives" >
-                        <TreeChartGe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                    <md-tab id="CE" md-label="Core Electives">
-                        <TreeChartCe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                    <md-tab id="PE" md-label="Programme Electives">
-                        <TreeChartPe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                </md-tabs>
-            </div>
+        <div id = "DegreeProgressCard" style="margin-bottom:0%">
+            <md-card style="background:teal;color:white" >
+                    <md-card-header>
+                        <div class="md-title">My Degree progress</div>
+                        <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
+                    </md-card-header>
             </md-card>
+            <md-card md-with-hover>
+                
+                <div id="treechart" class = "container-fluid" >
+                    <md-tabs md-alignment="centered">
+
+                        <md-tab id="GE" md-label="General Electives" >
+                            <TreeChartGe v-bind:data = 'this.treeData'/>
+                        </md-tab>
+                        <md-tab id="CE" md-label="Core Electives">
+                            <TreeChartCe v-bind:data = 'this.treeData'/>
+                        </md-tab>
+                        <md-tab id="PE" md-label="Programme Electives">
+                            <TreeChartPe v-bind:data = 'this.treeData'/>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                </md-card>
+        </div>
+        
         <!--/div-->
         <!-- <md-tabs class="md-transparent" md-alignment="fixed">
             <md-tab id="tab-home" md-label="Home"></md-tab>
@@ -76,7 +78,7 @@
         <!-- <Feed/> -->
         
            
-        <md-card  style = " padding:2vh;  margin-left:25vh; margin-right:25vh; background:salmon; color:white; margin-top:5vh"  md-with-hover> 
+        <md-card  style = " padding:2vh;  background:teal; color:white; margin-top:5vh"  md-with-hover> 
             <h2 style="text-align:center" >My Reviews</h2>
         </md-card>
    
@@ -97,7 +99,8 @@
     import TreeChartGe from "../components/TreeCharts/TreeChartGe"
     import TreeChartCe from "../components/TreeCharts/TreeChartCe"
     import TreeChartPe from "../components/TreeCharts/TreeChartPe"
-    import OverallProgress from "../components/OverallProgress"
+    //import OverallProgress from "../components/OverallProgress"
+    import capline from '../components/capline'
     import NavBar from '../components/NavBar'
     // import Feed from '../components/Feed'
     import ReviewCard from '../components/ReviewCard'
@@ -112,7 +115,8 @@
         TreeChartGe,
         TreeChartCe,
         TreeChartPe,
-        OverallProgress,
+        //OverallProgress,
+        capline,
         NavBar,
         // Feed
         ReviewCard
