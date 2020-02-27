@@ -1,6 +1,5 @@
 <template>
   <md-card>
-    <form>
     <md-card-content>
       <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
@@ -73,7 +72,6 @@
         
       </md-card-actions>
     </md-card-content>
-    </form>
   </md-card>
 </template>
 
@@ -90,6 +88,7 @@ export default {
   components: {
     // FollowUpModal
   },
+
   data: function() {
     return {
       showModal: false,
@@ -108,6 +107,7 @@ export default {
       }
     };
   },
+
   mixins: [validationMixin],
   validations: {
     detailsForm: {
@@ -128,9 +128,11 @@ export default {
       }
     }
   },
+
   methods: {
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
+
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty
@@ -138,18 +140,16 @@ export default {
       }
     },
     submitForm() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        this.$root.$emit('closeModal');
-        // this.setDone("first", "second");
-        console.log("form submitted!");
-      } else {
-        return
-      }
+      // this.$v.$touch();
+      // if (!this.$v.$invalid) {
+      //   this.submitStatus = "OK";
+      //   // this.setDone("first", "second");
+      //   console.log("form submitted!");
       // } else {
       //   this.submitStatus = "INVALID";
       //   console.log("form invalid");
       // }
+      this.$root.$emit('closeModal');
     }
   }
 };
@@ -160,6 +160,7 @@ export default {
 .md-card {
   /* overflow: scroll; */
   display:block;
+
   /* min-height: 180px; */
 }
 </style>
