@@ -1,5 +1,5 @@
 <template>
-    <div id = "TreeChart" style = 'height:80vh;'/>
+    <div id = "TreeChart" style="height:50vh" />
 </template>
 
 

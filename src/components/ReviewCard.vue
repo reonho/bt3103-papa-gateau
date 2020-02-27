@@ -1,6 +1,6 @@
 <template>
   <div id="ReviewCard">
-    <md-card style="margin-left:auto;margin-right:auto; width:75%;">
+    <md-card style="margin-bottom:2%">
       <md-card-header class = 'md-gutter'>
         <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
         <b>{{review.module_code}} {{review.module_name}} ({{review.sem_taken}})</b>
@@ -87,19 +87,15 @@ export default {
 
 <style scoped>
 .md-card {
-  width: 640px;
-  margin: 8px;
   display: block;
   align-self: center;
-  padding: 4px;
+  padding: 4%;
   /* min-height: 180px; */
   overflow:auto;
 
   /* vertical-align: top; */
 }
-.md-icon {
-  margin: 4px;
-}
+
 
 .footerDiv {
   display: flex;
