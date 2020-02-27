@@ -104,8 +104,9 @@
     // import FollowUpModal from "../compononets/FollowUpModal"
     import RadarChart from "../components/RadarChart.vue"
     import TreeChart from "../components/TreeCharts/TreeChart"
-    import OverallProgress from "../components/OverallProgress"
+    //import OverallProgress from "../components/OverallProgress"
     import NavBar from '../components/NavBar'
+    import capline from '../components/capline'
     // import Feed from '../components/Feed'
     // import Ratings from '../components/Ratings'
     import ReviewSection from '../components/ReviewSection'
@@ -119,7 +120,8 @@
         AddModulesModal,
         RadarChart,
         TreeChart,
-        OverallProgress,
+        //OverallProgress,
+        capline,
         NavBar,
         // Feed
         ReviewSection,
