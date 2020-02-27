@@ -3,22 +3,22 @@
   <NavBar />
   <div id="modulePage" style="margin-left:15vw;margin-right:15vw;margin-top:5vh">
     <title id="details">{{Modules[0].moduleCode}} - {{Modules[0].title}}</title>
-    <div style="color:orangered; margin-left: 20px; margin-top:20px" class="header">
+    <div style="color:#0B5345; margin-left: 20px; margin-top:20px" class="header">
       <b>{{Modules[0].moduleCode}} - {{Modules[0].title}}</b>
     </div>
     <button
       class="button"
-      style="float: right; margin-right: 20px"
+      style="float: right; margin-right: 20px;background-color:#0B5345"
       onclick="window.location.href = '/#/ModuleList';"
     >
       <span>Back To All Modules</span>
     </button>
     <div
-      style="color: rgb(104, 104, 104); margin-left: 22px; padding-top: 10px"
+      style="color: #616a6b; margin-left: 22px; padding-top: 10px"
       class="depFac"
     >{{Modules[0].department}} • {{Modules[0].faculty}} • {{Modules[0].moduleCredit}} MCs</div>
     <div
-      style="color: rgb(104, 104, 104); margin-left: 22px; padding-top: 5px"
+      style="color: #616a6b; margin-left: 22px; padding-top: 5px"
       class="depFac"
     >Semester 1 • Semester 2 • Special Term I</div>
     <hr />
@@ -28,28 +28,28 @@
       <br />
       <div class="row">
         <div class="col-4" style="text-align:left">
-          <b style="color: darkblue">Preclusion(s)</b>
+          <b style="color: #616a6b">Preclusion(s)</b>
           <br />
           {{Modules[0].preclusion}}
           <br />
           <br />
-          <b style="color: darkblue">Prerequisite(s)</b>
+          <b style="color: #616a6b">Prerequisite(s)</b>
           <br />
           {{Modules[0].prerequisite}}
           <br />
           <br />
-          <b style="color: darkblue">Exam</b>
+          <b style="color: #616a6b">Exam</b>
           <br />4-Dec-2019 9:00 AM • 2 hours
         </div>
         <div class="col-8">
-          <b style="color: darkblue">Workload</b>
+          <b style="color: #616a6b">Workload</b>
           <workloadchart :seriesStats="formatwork(Modules[0].workload)"></workloadchart>
         </div>
       </div>
     </div>
     <hr />
     <div id="statistics">
-      <span style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">Statistics</span>
+      <span style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">Statistics</span>
       <br />
       <br />
       <div id="container">
@@ -60,7 +60,7 @@
           <div class="col-8 box">
             <div class="row">
               <div class="col-5">
-                <h3 style="padding-top: 10px">Student reviews</h3>
+                <h3 style="padding-top: 10px;color:#0B5345">Student reviews</h3>
                 <p>
                   <span style="color: gold;font-size:16px;" class="star">
                     <i class="fa fa-star"></i>
@@ -75,7 +75,7 @@
                 <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
               </div>
               <div class="col-7">
-                <h4 style="padding-top: 10px">Features</h4>
+                <h4 style="padding-top: 10px;color:#0B5345">Features</h4>
                 <div class="row">
                   <div class="col-6">
                     <p style="font-weight:400; font-size:12px">Easy to understand</p>
@@ -123,7 +123,7 @@
       </div>
     </div>
     <hr />
-    <div id="reviews" style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">
+    <div id="reviews" style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">
       Reviews
       <a
         class="btn btn-primary btn-lg mr-4"

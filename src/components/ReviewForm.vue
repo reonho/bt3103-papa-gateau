@@ -217,7 +217,7 @@
     </md-steppers>
     <md-snackbar md-position='center' :md-active.sync="showSubmitMessage" md-persistent>
       <span>Your review has been submitted. Thank you!</span>
-      <md-button class="md-primary" @click="showSubmitMessage = false">Okay</md-button>
+      <md-button class="md-primary" @click="goback">Okay</md-button>
     </md-snackbar>
     <md-snackbar md-position='center' :md-active.sync="showErrorMessage" md-persistent>
       <span>Your review is incomplete. Please ensure that all fields are correctly filled up.</span>
@@ -344,6 +344,10 @@ export default {
       if (index) {
         this.active = index;
       }
+    },
+    goback() {
+      this.showSubmitMessage = false;
+      window.location.href='/#/module'
     }
   },
   data: () => ({
