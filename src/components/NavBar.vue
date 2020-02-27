@@ -18,7 +18,7 @@
         <router-link class="nav-link" to="/ModuleList">
           <md-button class="md-primary">Modules</md-button>
         </router-link>
-        <router-link class="nav-link" to="/LandPage">
+        <router-link class="nav-link" to="/LandPage">   
           <md-button class="md-primary">Settings</md-button>
         </router-link>
         
