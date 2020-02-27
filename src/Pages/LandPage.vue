@@ -92,6 +92,7 @@
 <script>
     import DataObject from "../Database.js"
     import AddModulesModal from "../components/AddModuleModal"
+    // import FollowUpModal from "../compononets/FollowUpModal"
     import RadarChart from "../components/RadarChart.vue"
     import TreeChartGe from "../components/TreeCharts/TreeChartGe"
     import TreeChartCe from "../components/TreeCharts/TreeChartCe"
