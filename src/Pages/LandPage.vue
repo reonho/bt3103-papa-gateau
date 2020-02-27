@@ -51,18 +51,7 @@
         <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
                
             <div id="treechart" class = "container-fluid" >
-                <md-tabs md-alignment="centered">
-
-                    <md-tab id="GE" md-label="General Electives" >
-                        <TreeChartGe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                    <md-tab id="CE" md-label="Core Electives">
-                        <TreeChartCe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                    <md-tab id="PE" md-label="Programme Electives">
-                        <TreeChartPe v-bind:data = 'this.treeData'/>
-                    </md-tab>
-                </md-tabs>
+                <TreeChart v-bind:data = 'this.treeData'/>
             </div>
             </md-card>
         <!--/div-->
@@ -94,9 +83,7 @@
     import AddModulesModal from "../components/AddModuleModal"
     // import FollowUpModal from "../compononets/FollowUpModal"
     import RadarChart from "../components/RadarChart.vue"
-    import TreeChartGe from "../components/TreeCharts/TreeChartGe"
-    import TreeChartCe from "../components/TreeCharts/TreeChartCe"
-    import TreeChartPe from "../components/TreeCharts/TreeChartPe"
+    import TreeChart from "../components/TreeCharts/TreeChart"
     import OverallProgress from "../components/OverallProgress"
     import NavBar from '../components/NavBar'
     // import Feed from '../components/Feed'
@@ -109,9 +96,7 @@
     components:{
         AddModulesModal,
         RadarChart,
-        TreeChartGe,
-        TreeChartCe,
-        TreeChartPe,
+        TreeChart,
         OverallProgress,
         NavBar,
         // Feed
@@ -144,19 +129,49 @@
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: null,
-            treeData: {
-                "ge": [
+            treeData: [ {
+                "name" : "General Modules",
+                "off": true,
+                "value": 0,
+                "children": [
                      {
-                        name: "GER1000",
-                        value: 1.2
+                        'name': "GER1000",
+                        'value': 0
                     },
                     {
-                        name: "GET1001",
-                        value: 0.3
-                    },],
-                "pe": ["BT4222","BT4221"],
-                "ce": ["MA1101R","MA1521"] 
-            }
+                        'name': "GET1001",
+                        'value': 0.7
+                    }
+                ] 
+            },{
+                "name" : "Core Modules",
+                "value": 0,
+                "off": true,
+                "children": [
+                     {
+                        'name': "BT1101",
+                        'value': 0
+                    },
+                    {
+                        'name': "BT2101",
+                        'value': 0
+                    }
+                ] 
+            },{
+                "name" : "Programme Modules",
+                "value": 0,
+                "off": true,
+                "children": [
+                     {
+                        'name': "BT4222",
+                        'value': 0.7
+                    },
+                    {
+                        'name': "BT4102",
+                        'value': 0.7
+                    }
+                ] 
+            },]
         };
     },
     mounted() {
