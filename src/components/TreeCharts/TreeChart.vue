@@ -23,17 +23,15 @@
         modules.data = [{
             "name": "Buiness Analytics",
             "value": 0,
-            "word" : "",
             //fixed: true,
             //x: am4core.percent(30),
             //y: am4core.percent(50),  
             "children": this.data
         }]
-        modules.nodes.template.label.text = "[bold]{name}\n{word}";
+        modules.nodes.template.label.text = "[bold]{name}";
         modules.nodes.template.label.fontSize = 13;
         modules.dataFields.value = "value";
         modules.dataFields.name = "name";
-        modules.dataFields.word = "word";
         modules.dataFields.off = "off"
         modules.dataFields.children = "children";
         modules.nodes.template.outerCircle.filters.push(new am4core.DropShadowFilter());

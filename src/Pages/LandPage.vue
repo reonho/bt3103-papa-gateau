@@ -172,51 +172,42 @@
                 "name" : "General Modules",
                 "off": true,
                 "value": 0,
-                "word" : "",
                 "children": [
                      {
                         'name': "GER1000",
-                        'value': 0,
-                        "word" : ""
+                        'value': 0
                     },
                     {
                         'name': "GET1001",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
+                        'value': 0.7
                     }
                 ] 
             },{
                 "name" : "Core Modules",
                 "value": 0,
                 "off": true,
-                "word" : "",
                 "children": [
                      {
                         'name': "BT1101",
-                        'value': 0,
-                        "word" : "",
+                        'value': 0
                     },
                     {
                         'name': "BT2101",
-                        'value': 0,
-                        "word" : "",
+                        'value': 0
                     }
                 ] 
             },{
                 "name" : "Programme Modules",
                 "value": 0,
                 "off": true,
-                "word" : "",
                 "children": [
                      {
                         'name': "BT4222",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
+                        'value': 0.7
                     },
                     {
                         'name': "BT4102",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
+                        'value': 0.7
                     }
                 ] 
             },]
