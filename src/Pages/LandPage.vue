@@ -9,69 +9,52 @@
         </div>
         </div>
     </md-card>
-
-
-
-
-    <div class="md-layout md-gutter md-alignment-center-center" style="margin-top:0; margin-bottom:0">
-                
-                <div class = "md-layout-item" id = "StatsCard" >            
-                    <md-card style="background:teal;color:white;" md-with-hover >
-                        <md-card-header>
-                            <div class="md-title">My Stats and Attributes</div>
-                            <div class="md-subhead">Discover your strengths and weaknesses!</div>
-                        </md-card-header>
-                        </md-card>
-                    <md-card  style = "padding:1vh" md-with-hover>            
-                    <div id="chart">
-                        <RadarChart/>
-                    </div>
-                    </md-card>
-                </div>
-
-                <div class="md-layout-item">
-                    <md-card style="background: teal; color:white;" md-with-hover >
-                    <md-card-header>
-                        <div class="md-title">My Cumulative Average Point</div>
-                        <div class="md-subhead">How your CAP has changed over the semesters</div>
-                    </md-card-header>
-                    </md-card>
-                    <md-card style="padding: 1vh" md-with-hover>         
-                        <capline/>
-                    </md-card>   
-                </div>
-            </div>
-
-            <div id = "DegreeProgressCard" style=" margin-top:2% ;margin-bottom:2%" class="md-alignment-center-center">
-                <md-card style="background:teal;color:white;" >
-                    <md-card-header>
-                        <div class="md-title">My Degree progress</div>
-                        <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
-                    </md-card-header>
-                </md-card>
-                <md-card md-with-hover>
-                
-                <div id="treechart" class = "container-fluid" >
-                    <TreeChart v-bind:data = 'this.treeData'/>
-                </div>
-                </md-card> 
-            </div>
-</div>
-
-
-    <div class="md-layout md-gutter md-alignment-center">
         <!--div style="display:flex" class= "container-fluid p-3"-->
-        <div class="md-layout-item">
+        <div class="md-layout md-gutter md-alignment-top-center" style="margin:15%; margin-top:0; margin-bottom:0">
+            <div class = "md-layout-item" id = "StatsCard" >
             
-
+            <md-card style="background:teal;color:white" md-with-hover >
+                <md-card-header>
+                    <div class="md-title">My Stats and Attributes</div>
+                    <div class="md-subhead">Discover your strengths and weaknesses!</div>
+                </md-card-header>
+                </md-card>
+            <md-card  md-with-hover>
+    
+            <div id="chart">
+                <RadarChart/>
             </div>
-             
-        </div>
-        <div class="md-layout-item">
-           
-        </div>
             
-            <!--md-card md-with-hover>
+            </md-card>
+            </div>
+
+            <div class="md-layout-item">
+                <md-card style="background: teal; color:white" md-with-hover >
+                <md-card-header>
+                    <div class="md-title">My Cumulative Average Point</div>
+                    <div class="md-subhead">How your CAP has changed over the semesters</div>
+                </md-card-header>
+                </md-card>
+                <md-card style="padding: 6vh" md-with-hover>         
+                    <capline/>
+                </md-card>   
+            </div>
+        </div>
+        <div id = "DegreeProgressCard">
+        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh" >
+                <md-card-header>
+                    <div class="md-title">My Degree progress</div>
+                    <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
+                </md-card-header>
+        </md-card>
+        </div>
+        <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
+               
+            <div id="treechart" class = "container-fluid" >
+                <TreeChart v-bind:data = 'this.treeData'/>
+            </div>
+            </md-card>
+            <md-card md-with-hover>
                 
                 <div id="treechart" class = "container-fluid" >
                     <md-tabs md-alignment="centered">
@@ -87,7 +70,7 @@
                         </md-tab>
                     </md-tabs>
                 </div>
-            </md-card-->
+                </md-card>
         
         
         <!--/div-->
@@ -99,14 +82,17 @@
         </md-tabs> -->
         <!-- <p>{{this.Data}}</p> -->
         <!-- <Feed/> -->
-
         
-        <div >
            
+        <md-card  style = " padding:2vh;  background:teal; color:white; margin-top:5vh"  md-with-hover> 
+            <h2 style="text-align:center" >My Reviews</h2>
+        </md-card>
+   
+        
+        <div class = 'md-layout md-alignment-center-center'>
             <!-- <ReviewCard/> -->
             <ReviewSection/>
         </div>
-    </div>
     </div>
 
 </template>
