@@ -11,15 +11,15 @@
             <md-menu-content>
                 <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
                 <md-menu-item @click="scroll(227.578125)">Academic Progress</md-menu-item>
-                <md-menu-item @click="scroll(863.828125)">Degree Progress</md-menu-item>
+                <md-menu-item @click="scroll(839.828125)">Degree Progress</md-menu-item>
                 <md-menu-item @click="scroll(-110)">Back to Top</md-menu-item>
             </md-menu-content>
         </md-menu>
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
         </router-link>
-        <router-link class="nav-link" to="/LandPage">
-          <md-button style="color:white;font-weight:bold" class="md-primary">Settings</md-button>
+        <router-link class="nav-link" to="/LandPage">   
+          <md-button class="md-primary">Settings</md-button>
         </router-link>
         
     </md-toolbar>
