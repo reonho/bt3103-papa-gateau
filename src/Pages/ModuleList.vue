@@ -1,6 +1,9 @@
 <template>
   <div>
-    <NavBar />
+    <div>
+       <NavBar />
+    </div>
+   
     <div class="md-layout">
       <div class="md-layout-item md-size-25">
         <!-- Filter -->
@@ -92,7 +95,7 @@
           <div id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <a class="module-name" href="/#/module" style="color:#FB3723;">{{post.moduleCode}} - {{post.title}}</a>
+                <a class="module-name" href="/#/module" style="color:#0B5345;">{{post.moduleCode}} - {{post.title}}</a>
                 <p
                   class="module-type"
                 >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
@@ -489,14 +492,14 @@ hr {
   margin-right: 80px;
 }
 .minihead {
-  color: #fb3723;
+  color: #0B5345;
   font-size: 80%;
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
 }
 .md-button.clear-filter {
-  background-color: salmon !important;
+  background-color: #0B5345 !important;
   font-weight: bold;
 }
 .md-button.clear-filter.md-theme-default {
@@ -507,11 +510,11 @@ hr {
 }
 .modnum {
   margin-right: 30px;
-  color: #fb3723;
+  color: #0B5345;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #ad2d1f !important;
+  background-color: #0B5345 !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -540,7 +543,7 @@ hr {
   background-color: white !important;
 }
 .mod-chips .md-chip.md-theme-default {
-  background-color: #ad2d1f !important;
+  background-color: #0B5345 !important;
   color: white !important;
   font-weight: bold !important;
 }
@@ -552,7 +555,7 @@ hr {
 }
 .module-name {
   font-size: 150%;
-  color: #fb3723;
+  color: #1ABC9C;
   font-weight: bold;
 }
 .module-preclusionhead {
@@ -576,11 +579,11 @@ hr {
   font-weight: bold !important;
 }
 .md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
-  background-color: salmon !important;
+  background-color: #1ABC9C !important;
   width:47vw;
 }
 .md-tabs.md-theme-default.md-accent.test .md-active {
-  background-color: #fb3723 !important;
+  background-color: #148F77 !important;
   width:47vw;
 }
 .md-tabs.test .md-tabs-content {
