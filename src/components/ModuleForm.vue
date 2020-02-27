@@ -7,8 +7,8 @@
           <md-option
             v-for="mod in modules"
             v-bind:key="mod.id"
-            v-bind:value="mod.title"
-          >{{mod.title}}</md-option>
+            v-bind:value="mod.Name"
+          >{{mod.Name}}</md-option>
         </md-select>
         <span
           class="md-error"
@@ -92,7 +92,7 @@ export default {
   data: function() {
     return {
       showModal: false,
-      modules: DataObject.modules,
+      modules: DataObject.Modules,
       faculties: DataObject.faculties,
       staff: DataObject.staff,
       grades: DataObject.grades,
@@ -158,7 +158,7 @@ export default {
 <style scoped>
 @import "./style.css";
 .md-card {
-  overflow: scroll;
+  /* overflow: scroll; */
   display:block;
 
   /* min-height: 180px; */

@@ -21,6 +21,7 @@ var DataObject = {
   ],
   Modules: [
     {
+      id:1,
       Name: "CS2030",
       Faculty: "SOC",
       Prereq: ["CS1010S"],
@@ -28,6 +29,7 @@ var DataObject = {
       Details: "This module is taught by proX"
     },
     {
+      id:2,
       Name: "MA1101R",
       Faculty: "FOS",
       Prereq: [],
@@ -35,6 +37,7 @@ var DataObject = {
       Details: "This module is taught by proY"
     },
     {
+      id:3,
       Name: "BT2101",
       Faculty: "SOC",
       Prereq: ["MA1101R"],
