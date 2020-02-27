@@ -1,5 +1,6 @@
 <template>
   <md-card>
+    <form>
     <md-card-content>
       <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
@@ -72,6 +73,7 @@
         
       </md-card-actions>
     </md-card-content>
+    </form>
   </md-card>
 </template>
 
@@ -140,16 +142,18 @@ export default {
       }
     },
     submitForm() {
-      // this.$v.$touch();
-      // if (!this.$v.$invalid) {
-      //   this.submitStatus = "OK";
-      //   // this.setDone("first", "second");
-      //   console.log("form submitted!");
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.$root.$emit('closeModal');
+        // this.setDone("first", "second");
+        console.log("form submitted!");
+      } else {
+        return
+      }
       // } else {
       //   this.submitStatus = "INVALID";
       //   console.log("form invalid");
       // }
-      this.$root.$emit('closeModal');
     }
   }
 };
