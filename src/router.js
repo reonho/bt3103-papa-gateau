@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LandPage from './Pages/LandPage.vue'
-// import loginPage from './Pages/loginPage.vue'
+import loginPage from './Pages/loginPage.vue'
+import ModuleList from './Pages/ModuleList.vue'
+import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
 
 
@@ -16,15 +18,24 @@ export default new Router({
       props: true
     },
     // comment this block to test components
-    // {
-    //   path: '/',
-    //   name: 'loginPage',
-    //   component: loginPage
-    // },
-    // CHANGE PATH HERE, ONLY FOR TESTING PURPOSES
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList
+    },
     {
       path: '/',
-      name: 'reviewCard',
+      name: 'loginPage',
+      component: loginPage
+    },
+    {
+      path: '/module',
+      name: 'modulePage',
+      component: modulePage
+    },
+    {
+      path:'/review',
+      name: 'reviewForm',
       component: ReviewForm
     }
   ]

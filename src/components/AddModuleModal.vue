@@ -3,7 +3,7 @@
     <md-button class="md-primary md-raised" @click="showModal = true" >Add new module</md-button>
     <md-dialog :md-active.sync="showModal">
       <md-dialog-title>Add New Module</md-dialog-title>
-      <ModuleForm />
+      <ModuleForm/>
     </md-dialog>
     <md-dialog :md-active.sync="showFollowUp">
       <md-dialog-title>Add another Module?</md-dialog-title>
@@ -57,7 +57,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .md-dialog{
-  /* overflow: scroll; */
+  overflow: auto;
   display: block;
 }
 @import "./style.css";
