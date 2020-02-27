@@ -1,13 +1,13 @@
 <template>
 
-<div class="NavBar">
-   <md-toolbar class="md-accent" style="background:salmon" md-elevation="2">
-       <h3 class="md-title" style="flex: 2; font-size: 250%; margin-left:4vh;cursor:pointer" onclick="window.location.href = '/#/LandPage';">Modeaux</h3>
+<div class="NavBar" style="border:1px solid white;border-bottom-color:grey;">
+   <md-toolbar class="md-accent" style="background:#1ABC9C;" md-elevation="0">
+       <h3 class="md-title" style="flex: 2; font-size: 250%; margin-left:4vh;color:white;font-weight:bold">Modeaux</h3>
        <router-link class="nav-link" to="/">
-          <md-button>Logout</md-button>
+          <md-button style="color:white;font-weight:bold">Logout</md-button>
         </router-link>
         <md-menu md-size="medium" md-align-trigger>
-            <md-button md-menu-trigger>Dashboard</md-button>
+            <md-button style="color:white;font-weight:bold" md-menu-trigger>Dashboard</md-button>
             <md-menu-content>
                 <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
                 <md-menu-item @click="scroll(227.578125)">Academic Progress</md-menu-item>
@@ -16,10 +16,10 @@
             </md-menu-content>
         </md-menu>
         <router-link class="nav-link" to="/ModuleList">
-          <md-button class="md-primary">Modules</md-button>
+          <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
         </router-link>
-        <router-link class="nav-link" to="/LandPage">   
-          <md-button class="md-primary">Settings</md-button>
+        <router-link class="nav-link" to="/LandPage">
+          <md-button style="color:white;font-weight:bold" class="md-primary">Settings</md-button>
         </router-link>
         
     </md-toolbar>

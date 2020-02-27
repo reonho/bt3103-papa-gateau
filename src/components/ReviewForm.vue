@@ -1,4 +1,3 @@
-/* eslint eqeqeq: "off", curly: "error" */
 <template>
   <form @submit.prevent='submitForm'>
     <md-steppers md-linear md-alternative :md-active-step.sync:="active" >
@@ -54,8 +53,8 @@
             </md-field>
 
             <md-card-actions class="md-layout md-alignment-center">
-              <md-button class="md-accent md-raised" href = '/#/module'>Cancel</md-button>
-              <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="goNext('detailsForm', 'first', 'second')">Next</md-button>
+              <md-button class="md-raised cancelbtn">Cancel</md-button>
+              <md-button class="md-raised okaybtn" type="submit" v-on:click.prevent="goNext('detailsForm', 'first', 'second')">Next</md-button>
             </md-card-actions>
           </md-card-content>
         </md-card>
@@ -101,7 +100,7 @@
           </md-card-content>
           <md-card-actions class="md-layout md-alignment-center-center">
             <md-button
-              class="md-primary md-raised"
+              class="md-raised okaybtn"
               v-on:click.prevent="goNext('lectureForm','second','third')"
             >Next</md-button>
           </md-card-actions>
@@ -147,7 +146,7 @@
             </md-field>
           </md-card-content>
         <md-card-actions class="md-layout md-alignment-center-center">
-          <md-button class="md-primary md-raised" v-on:click.prevent="goNext('tutorialForm', 'third','fourth')">Next</md-button>
+          <md-button class="md-raised okaybtn" v-on:click.prevent="goNext('tutorialForm', 'third','fourth')">Next</md-button>
         </md-card-actions>
         </md-card>
       </md-step>
@@ -156,7 +155,7 @@
         <md-card>
           <md-card-header class = 'md-title'>For the questions below, rate your overall experience for the module.</md-card-header>
           <md-card-content>
-            <label class="md-subheading">
+            <!-- <label class="md-subheading">
               <b>I would recommend this module to my peers/friends.</b>
             </label>
             <br />
@@ -168,7 +167,7 @@
               <md-radio v-model="commentForm.recommend" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
             <md-divider/>
-            <br/>
+            <br/> -->
             <label class="md-subheading">
               <b>Overall, I felt that the module was easy.</b>
             </label>
@@ -195,18 +194,19 @@
             </div>
             <md-divider/>
             <br/>
-
-
-
-
-
+            <label class="md-subheading">
+              <b>As a whole, how would you rate this module?</b>
+            </label>
+            <Ratings v-model='commentForm.rating'/>
+            <md-divider/>
+            <br/>
             <md-field>
               <label>Please write down any other comments you have about the module.</label>
               <md-textarea v-model="commentForm.comments"></md-textarea>
             </md-field>
           </md-card-content>
           <md-card-actions class="md-layout md-alignment-center-center">
-          <md-button class="md-primary md-raised" type = 'submit'>Submit</md-button>
+          <md-button class="md-raised okaybtn" type = 'submit'>Submit</md-button>
         </md-card-actions>
         <!-- <md-snackbar md-active = true md-position='center'></md-snackbar> -->
         </md-card>
@@ -217,7 +217,7 @@
     </md-steppers>
     <md-snackbar md-position='center' :md-active.sync="showSubmitMessage" md-persistent>
       <span>Your review has been submitted. Thank you!</span>
-      <md-button class="md-primary" @click="showSubmitMessage = false">Okay</md-button>
+      <md-button class="md-primary" @click="goback">Okay</md-button>
     </md-snackbar>
     <md-snackbar md-position='center' :md-active.sync="showErrorMessage" md-persistent>
       <span>Your review is incomplete. Please ensure that all fields are correctly filled up.</span>
@@ -230,6 +230,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import Ratings from './Ratings'
 export default {
   name: "ReviewForm",
   props: {
@@ -237,6 +238,7 @@ export default {
     value: Number
   },
   components: {
+    Ratings
   },
   mixins: [validationMixin],
   validations: {
@@ -254,7 +256,6 @@ export default {
         required
       }
     },
-
     lectureForm: {
       lectureMaterial: {
         required
@@ -286,7 +287,7 @@ export default {
       difficulty: {
         required
       }, 
-      workload: {
+      rating: {
         required
       }
       
@@ -303,20 +304,17 @@ export default {
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true
-
         //This part is hard-coded for now, until I find a better way to do the error check for all the forms upon submit button press
         if (this.$v.lectureForm.$invalid) {
           this.lectureForm.error = 'Error'
         } else {
           this.lectureForm.error = null
         }
-
         if (this.$v.tutorialForm.$invalid) {
           this.tutorialForm.error = 'Error'
         } else {
           this.tutorialForm.error = null
         }
-
   
         console.log("form invalid");
         }
@@ -332,7 +330,6 @@ export default {
     },
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
-
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty
@@ -344,6 +341,10 @@ export default {
       if (index) {
         this.active = index;
       }
+    },
+    goback() {
+      this.showSubmitMessage = false
+      window.location.href = "/#/module"
     }
   },
   data: () => ({
@@ -369,9 +370,9 @@ export default {
       comments: null,
       recommend: '3',
       difficulty: '3',
-      workload: '3'
+      workload: '3',
+      rating: null
     },
-
     submitStatus: null,
     errors: false,
     formTouched: false,
@@ -384,7 +385,6 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-
     faculties: [
       {
         id: 1,
@@ -443,7 +443,6 @@ export default {
         title: "Science"
       }
     ],
-
     semesters: [
       {
         id: 1,
@@ -522,3 +521,15 @@ export default {
 };
 </script>
 
+<style>
+.md-button.okaybtn {
+  background-color: #007bff  !important;
+  font-weight: bold;
+  color: white !important
+}
+.md-button.cancelbtn {
+  background-color: orangered !important;
+  font-weight: bold;
+  color: white !important
+}
+</style>

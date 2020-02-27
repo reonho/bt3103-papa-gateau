@@ -19,7 +19,7 @@ var DataObject = {
       DoubleDegree: ""
     }
   ],
-  Modules: [
+  Modules2: [
     {
       moduleCode: "CS2030",
       title: "Programming Methodology II",
@@ -131,7 +131,34 @@ var DataObject = {
         {
           semester: 3
         }
-      ]
+      ],
+    }
+     
+  ],
+  Modules : [
+    {
+     id: 1,
+      Name: "CS2030",
+      Faculty: "SOC",
+      Prereq: ["CS1010S"],
+      MCs: 4,
+      Details: "This module is taught by proX"
+    },
+    {
+      id: 2,
+      Name: "MA1101R",
+      Faculty: "FOS",
+      Prereq: [],
+      MCs: 4,
+      Details: "This module is taught by proY"
+    },
+    {
+      id: 3,
+      Name: "BT2101",
+      Faculty: "SOC",
+      Prereq: ["MA1101R"],
+      MCs: 4,
+      Details: "This module is taught by proZ"
     }
   ],
   Courses: [
@@ -284,10 +311,9 @@ var DataObject = {
   reviewData: [
     {
       id: 1,
-      module_code: "BT3103",
-      module_name: "Application Systems for Business Analytics",
-      comments:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
+      module_code: 'BT3103',
+      module_name: 'Application Systems for Business Analytics',
+      comments: 'Overall, I enjoyed the module. The content taught was useful and helped to develop my interest in web development.',
       comment_count: 15,
       like_count: 8,
       lecture_comments: 'Lectures are great! The professor is well-versed in the subject matter and leverages on in-class exercises for students to learn better!',
@@ -298,10 +324,9 @@ var DataObject = {
     },
     {
       id: 2,
-      module_code: "BT3102",
-      module_name: "Computational Methods for Business Analytics",
-      comments:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
+      module_code: 'BT3102',
+      module_name: 'Computational Methods for Business Analytics',
+      comments: 'The module teaches you the theory behind OLS regression, which required a good understanding of linear algebra. Highly advised to take MA1101R before this!',
       comment_count: 15,
       like_count: 4,
       lecture_comments: 'The slides were well-crafted and informative. The professor is knowledgeable and approachable, and provides additional resources in the lecture slides.',
@@ -313,10 +338,9 @@ var DataObject = {
     },
     {
       id: 3,
-      module_code: "CS1010S",
-      module_name: "Programming Methodology I",
-      comments:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
+      module_code: 'CS1010S',
+      module_name: 'Programming Methodology I',
+      comments: 'The module was a good primer to python and computational thinking in general. Although the weekly missions were heavy, they were useful in assessing our understanding of lecture concepts. Study and you will do well!',
       comment_count: 15,
       like_count: 22,
       lecture_comments: 'The prof has a knack for explaining concepts well, and manages to keep the students entertained through the power of sorting algorithm dances!',
