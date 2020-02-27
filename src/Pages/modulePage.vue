@@ -1,6 +1,8 @@
 <template>
-  <div id="modulePage" style="margin-left: 160px; margin-right: 250px">
-    <title>{{Modules[0].moduleCode}} - {{Modules[0].title}}</title>
+<div>
+  <NavBar />
+  <div id="modulePage" style="margin-left:15vw;margin-right:15vw;margin-top:5vh">
+    <title id="details">{{Modules[0].moduleCode}} - {{Modules[0].title}}</title>
     <div style="color:orangered; margin-left: 20px; margin-top:20px" class="header">
       <b>{{Modules[0].moduleCode}} - {{Modules[0].title}}</b>
     </div>
@@ -121,7 +123,7 @@
       </div>
     </div>
     <hr />
-    <div style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">
+    <div id="reviews" style="color:orangered; margin-left: 20px; margin-top:20px; font-size: 25px">
       Reviews
       <a
         class="btn btn-primary btn-lg mr-4"
@@ -149,8 +151,9 @@
       </b-dropdown>
     </div>
     <br />
-    <reviewcard :review="reviewData"/>
+    <reviewcard :review="reviewData" />
   </div>
+</div>
 </template>
 
 <script>
@@ -160,6 +163,7 @@ import BarChart from "../BarChart.js";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import ReviewCardForMod from "../components/ReviewCardForMod";
+import NavBar from "../components/NavBar";
 
 export default {
   components: {
@@ -167,7 +171,8 @@ export default {
     BarChart,
     intakechart: StudentIntakeChart,
     workloadchart: WorkloadChartForMod,
-    reviewcard: ReviewCardForMod
+    reviewcard: ReviewCardForMod,
+    NavBar
   },
   methods: {
     formatwork(workload) {
