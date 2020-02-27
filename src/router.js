@@ -2,7 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LandPage from './Pages/LandPage.vue'
 import loginPage from './Pages/loginPage.vue'
-// import ReviewCard from './components/ReviewCard'
+import ModuleList from './Pages/ModuleList.vue'
+import modulePage from './Pages/modulePage.vue'
+import ReviewForm from './components/ReviewForm'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -13,17 +17,26 @@ export default new Router({
       component: LandPage,
       props: true
     },
-    //comment this block to test components
+    // comment this block to test components
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList
+    },
     {
       path: '/',
       name: 'loginPage',
       component: loginPage
     },
-    //CHANGE PATH HERE, ONLY FOR TESTING PURPOSES
-    // {
-    //   path:'/',
-    //   name: 'reviewCard',
-    //   component: ReviewCard
-    // }
+    {
+      path: '/module',
+      name: 'modulePage',
+      component: modulePage
+    },
+    {
+      path:'/review',
+      name: 'reviewForm',
+      component: ReviewForm
+    }
   ]
 })
