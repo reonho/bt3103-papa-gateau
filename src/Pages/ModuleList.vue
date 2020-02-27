@@ -150,7 +150,7 @@
                                 <br />
                               </span>
                             </div>
-                            <div style="width:27vw">
+                            <div style="width:27vw;background-color:white">
                               <intakechart :seriesStats="seriesStats"></intakechart>
                             </div>
                           </div>
