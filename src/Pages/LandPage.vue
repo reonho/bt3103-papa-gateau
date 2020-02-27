@@ -19,7 +19,7 @@
                     <div class="md-subhead">Discover your strengths and weaknesses!</div>
                 </md-card-header>
                 </md-card>
-            <md-card  md-with-hover>
+            <md-card style="padding:1vh" md-with-hover>
     
             <div id="chart">
                 <RadarChart/>
@@ -35,43 +35,28 @@
                     <div class="md-subhead">How your CAP has changed over the semesters</div>
                 </md-card-header>
                 </md-card>
-                <md-card style="padding: 6vh" md-with-hover>         
+                <md-card style="padding: 1vh" md-with-hover>         
                     <capline/>
                 </md-card>   
             </div>
         </div>
+        <div style="margin-left:15%; margin-right:15% ">
         <div id = "DegreeProgressCard">
-        <md-card style="background:salmon;color:white; margin: 5vh; margin-bottom:0vh" >
+        <md-card style="background:teal;color:white; margin: 5vh; margin-bottom:0vh" >
                 <md-card-header>
                     <div class="md-title">My Degree progress</div>
                     <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
                 </md-card-header>
         </md-card>
-        </div>
         <md-card style="height:90vh; margin: 5vh; margin-bottom:0vh; margin-top:0vh; padding:0vh" md-with-hover>
                
             <div id="treechart" class = "container-fluid" >
                 <TreeChart v-bind:data = 'this.treeData'/>
             </div>
             </md-card>
-            <md-card md-with-hover>
-                
-                <div id="treechart" class = "container-fluid" >
-                    <md-tabs md-alignment="centered">
+        </div>
+        </div>
 
-                        <md-tab id="GE" md-label="General Electives" >
-                            <TreeChartGe v-bind:data = 'this.treeData'/>
-                        </md-tab>
-                        <md-tab id="CE" md-label="Core Electives">
-                            <TreeChartCe v-bind:data = 'this.treeData'/>
-                        </md-tab>
-                        <md-tab id="PE" md-label="Programme Electives">
-                            <TreeChartPe v-bind:data = 'this.treeData'/>
-                        </md-tab>
-                    </md-tabs>
-                </div>
-                </md-card>
-        
         
         <!--/div-->
         <!-- <md-tabs class="md-transparent" md-alignment="fixed">
