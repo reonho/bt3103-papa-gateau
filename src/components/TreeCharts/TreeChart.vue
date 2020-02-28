@@ -4,10 +4,10 @@
 
 
 <script>
+    import * as am4charts from "@amcharts/amcharts4/charts";
     import * as am4core from "@amcharts/amcharts4/core";
     import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDirected"; 
     import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-    import * as am4charts from "@amcharts/amcharts4/charts";
 
     export default {
         name: "TreeChartCe",
@@ -21,7 +21,7 @@
         chart.legend = new am4charts.Legend();
         var modules = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
         modules.data = [{
-            "name": "Buiness Analytics",
+            "name": "Business Analytics",
             "value": 0,
             "word" : "",
             //fixed: true,
