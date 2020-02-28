@@ -76,7 +76,8 @@
               <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
+            <!-- <md-divider/> -->
             <br/>
             <label class="md-subheading">
               <b>The lecturer was able to explain concepts clearly and effectively.</b>

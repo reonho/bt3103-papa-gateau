@@ -1,5 +1,5 @@
 <template>
-  <div id="FollowUpModal">
+  <div id="FollowUpModal" class = 'md-layout md-alignment-center-center'>
     <head >Add another module?</head>
     <md-button class="md-primary md-raised" v-on:click ="submitYes">Yes</md-button>
     <md-button class="md-primary md-raised" v-on:click ="submitNo">No</md-button>
