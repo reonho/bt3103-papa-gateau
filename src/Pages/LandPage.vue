@@ -1,8 +1,8 @@
 <template>
 <div class="landPage" style=" padding: 45px 0 0 0;">
-    <NavBar class="fixed-top" @scroll = "scrolltoView"/>
+    <NavBarLandpage class="fixed-top" @scroll = "scrolltoView"/>
     <div class="container">
-        <md-card class="test" style = "margin-top:5%; padding:4vh; margin-bottom:4vh; " md-with-hover> 
+        <md-card class="test1" style = "margin-top:5%; padding:4vh; margin-bottom:4vh; color:white;background-color:#1ABC9C;} " md-with-hover> 
         
             <div class="md-layout md-gutter md-alignment-center-right">
             <div class = "md-layout-item" > <h1 style="font-size:250%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
@@ -95,7 +95,7 @@
     import RadarChart from "../components/RadarChart.vue"
     import TreeChart from "../components/TreeCharts/TreeChart"
     //import OverallProgress from "../components/OverallProgress"
-    import NavBar from '../components/NavBar'
+    import NavBarLandpage from '../components/NavBarLandpage'
     import capline from '../components/capline'
     // import Feed from '../components/Feed'
     // import Ratings from '../components/Ratings'
@@ -112,7 +112,7 @@
         TreeChart,
         //OverallProgress,
         capline,
-        NavBar,
+        NavBarLandpage,
         // Feed
         ReviewSection,
         // Ratings
@@ -167,15 +167,23 @@
                 "off": true,
                 "word" : "",
                 "children": [
-                     {
+                    {
+                        'name': "BT2101",
+                        'value': 0.7,
+                        "word" : "Not Completed!",
+                        "children":[
+                            {
                         'name': "BT1101",
                         'value': 0,
                         "word" : "",
+                        },
+                         {
+                        'name': "MA1521",
+                        'value': 0.7,
+                        "word" : "Not Completed!",
                     },
-                    {
-                        'name': "BT2101",
-                        'value': 0,
-                        "word" : "",
+
+                        ]
                     }
                 ] 
             },{
@@ -212,8 +220,10 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .test{
+    color:white;
     background-image :url(../assets/gradient.png)
 }
+
 .landPage{
     background-image : linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)
 }

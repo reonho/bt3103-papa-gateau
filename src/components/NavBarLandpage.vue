@@ -12,10 +12,15 @@
           <md-button style="color:white;font-weight:bold">Logout</md-button>
         </router-link>
         <md-menu md-size="medium" md-align-trigger>
+            <md-button style="color:white;font-weight:bold" md-menu-trigger>Dashboard</md-button>
+            <md-menu-content>
+                <md-menu-item @click="scroll(227.578125)">Statistics</md-menu-item>
+                <md-menu-item @click="scroll(227.578125)">CAP Progress</md-menu-item>
+                <md-menu-item @click="scroll(750.828125)">Degree Progress</md-menu-item>
+                <md-menu-item @click="scroll(1350.828125)">My Reviews</md-menu-item>
+                <md-menu-item @click="scroll(-110)">Back to Top</md-menu-item>
+            </md-menu-content>
         </md-menu>
-        <router-link class="nav-link" to="/LandPage">
-          <md-button style="color:white;font-weight:bold">Dashboard</md-button>
-        </router-link>
 
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
