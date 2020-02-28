@@ -12,11 +12,14 @@
     "amcharts": "^3.14.5",
     "apexcharts": "^3.15.6",
     "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.5.0",
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.5.2",
+    "vue-chartjs": "^3.5.0",
     "vue-material": "^1.0.0-beta-11",
     "vue-router": "^3.1.5",
     "vuelidate": "^0.7.5"
@@ -28,6 +31,8 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.1.2",
+    "node-sass": "^4.13.1",
+    "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
