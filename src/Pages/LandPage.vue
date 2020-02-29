@@ -3,9 +3,8 @@
     <NavBarLandpage class="fixed-top" @scroll = "scrolltoView"/>
     <div class="container">
         <md-card class="test1" style = "margin-top:5%; padding:4vh; margin-bottom:4vh; color:white;background-color:#1ABC9C;} " md-with-hover> 
-        
             <div class="md-layout md-gutter md-alignment-center-right">
-            <div class = "md-layout-item" > <h1 style="font-size:250%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
+            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
@@ -48,7 +47,7 @@
             <div id = "DegreeProgressCard">
             <md-card style="background:#1ABC9C;color:white; margin-bottom:0vh" >
                     <md-card-header>
-                        <div class="md-title">My Degree progress</div>
+                        <div class="md-title">My Degree Progress</div>
                         <div class="md-subhead">Explore your graduation requirements and completed modules.</div>
                     </md-card-header>
             </md-card>

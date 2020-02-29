@@ -53,7 +53,9 @@
             </md-field>
 
             <md-card-actions class="md-layout md-alignment-center">
+              <router-link class = 'nav-link' to = '/module'>
               <md-button class="md-raised cancelbtn">Cancel</md-button>
+              </router-link>
               <md-button class="md-raised okaybtn" type="submit" v-on:click.prevent="goNext('detailsForm', 'first', 'second')">Next</md-button>
             </md-card-actions>
           </md-card-content>
@@ -75,7 +77,7 @@
               <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="lectureForm.lectureMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
             <label class="md-subheading">
               <b>The lecturer was able to explain concepts clearly and effectively.</b>
@@ -89,7 +91,7 @@
               <md-radio v-model="lectureForm.clarity" class="md-primary" value='5'>Strongly Agree</md-radio>
   
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
 
             <md-field :class="getValidationClass('lectureForm', 'comments')">
@@ -125,7 +127,7 @@
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="tutorialForm.tutorialMaterial" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
             <label class="md-subheading">
               <b>The tutor was well-prepared and knowledgeable about the module content.</b>
@@ -137,7 +139,7 @@
               <md-radio v-model="tutorialForm.tutor" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="tutorialForm.tutor" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
             <md-field :class="getValidationClass('tutorialForm', 'comments')">
               <label class>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
@@ -151,7 +153,7 @@
         </md-card>
       </md-step>
 
-      <md-step id="fourth" md-label="Comments" :md-done.sync="fourth" v-on:click.prevent="active = 'fourth'">
+      <md-step id="fourth" md-label="Comments" :md-done.sync="fourth" v-on:click.prevent="active = 'fourth'" :md-error='commentForm.error'>
         <md-card>
           <md-card-header class = 'md-title'>For the questions below, rate your overall experience for the module.</md-card-header>
           <md-card-content>
@@ -179,7 +181,7 @@
               <md-radio v-model="commentForm.difficulty" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="commentForm.difficulty" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
             <label class="md-subheading">
               <b>The workload of the module was manageable.</b>
@@ -192,13 +194,13 @@
               <md-radio v-model="commentForm.workload" class="md-primary" value='4'>Agree</md-radio>
               <md-radio v-model="commentForm.workload" class="md-primary" value='5'>Strongly Agree</md-radio>
             </div>
-            <md-divider/>
+            <hr/>
             <br/>
             <label class="md-subheading">
               <b>As a whole, how would you rate this module?</b>
             </label>
             <Ratings v-model='commentForm.rating'/>
-            <md-divider/>
+            <hr/>
             <br/>
             <md-field>
               <label>Please write down any other comments you have about the module.</label>
@@ -314,6 +316,12 @@ export default {
           this.tutorialForm.error = 'Error'
         } else {
           this.tutorialForm.error = null
+        }
+
+        if (this.$v.commentForm.$invalid) {
+          this.commentForm.error = 'Error'
+        } else {
+          this.commentForm.error = null
         }
   
         console.log("form invalid");

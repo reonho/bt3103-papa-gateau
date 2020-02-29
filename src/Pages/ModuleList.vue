@@ -146,7 +146,7 @@
                               <br />
                               <br />
                               <span class="examhead">
-                                WorkLoad - {{calcwork(post.workload) + " hours"}}
+                                Workload - {{calcwork(post.workload) + " hours"}}
                                 <md-tooltip class="mod-tooltip" md-direction="bottom">
                                   <workloadchart :seriesStats="formatwork(post.workload)"></workloadchart>
                                 </md-tooltip>

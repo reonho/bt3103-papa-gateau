@@ -44,8 +44,8 @@
           <p>Additional Details to be rendered</p>
           </div>
       </md-card-content>
-
-      <md-divider/>
+      <hr/>
+      <!-- <md-divider/> -->
       <span class="footerDiv">
           <p class = 'iconLabel'>
             {{review.like_count}}
@@ -89,7 +89,7 @@ export default {
 .md-card {
   display: block;
   align-self: center;
-  padding: 4%;
+  padding: 1%;
   /* min-height: 180px; */
   overflow:auto;
 
@@ -100,6 +100,8 @@ export default {
 .footerDiv {
   display: flex;
   float:right;
+  /* padding-right:1%; */
+
 }
 .iconLabel {
   justify-self: center;
