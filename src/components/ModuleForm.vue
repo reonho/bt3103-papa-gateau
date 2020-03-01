@@ -141,15 +141,10 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.$root.$emit('closeModal');
-        // this.setDone("first", "second");
-        console.log("form submitted!");
-      } else {
-        return
+
       }
-      // } else {
-      //   this.submitStatus = "INVALID";
-      //   console.log("form invalid");
-      // }
+
+      
     }
   }
 };

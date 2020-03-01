@@ -1,9 +1,10 @@
 <template>
   <div id="ReviewCard">
-    <md-card style='margin-left:auto;margin-right:auto; width:100%;background-color:rgb(226, 235, 240)'>
+    <!-- background-color:rgb(226, 235, 240) -->
+    <md-card style='margin-left:auto;margin-right:auto; width:100%;'>
       <md-card-header class = 'md-gutter'>
         <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
-        {{review.sem_taken}}
+        <b>{{review.sem_taken}}</b>
           <!-- <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon> -->
         <!-- </md-button> -->
       </md-card-header>
@@ -45,7 +46,7 @@
           </div>
       </md-card-content>
 
-      <md-divider/>
+      <hr/>
       <span class="footerDiv">
           <p class = 'iconLabel'>
             {{review.like_count}}

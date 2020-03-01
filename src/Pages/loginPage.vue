@@ -6,7 +6,8 @@
             <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
                 <div class="card card-signin my-5 ">
                 <div class="card-body p-5">
-                    <h3 class="card-title text-center">MODEAUX Sign-In Page</h3>
+                    <h1 class="text-center" style="color:#1ABC9C">MODEAUX</h1>
+                    <h1 class="card-title text-center">Sign-In Page</h1>
                     <!---form>
                       <div class="form-group">
                         <label for="username"> Username:</label>
@@ -26,7 +27,7 @@
                     </md-field>
 
                     
-                    <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" v-on:click = "skip">Sign In</button>
+                    <button class="btn btn-lg btn-block text-uppercase" type="submit" v-on:click = "skip" style="background-color:#1ABC9C; color:white">Sign In</button>
                 </div>
                 </div>
             </div>
@@ -47,7 +48,7 @@
         return {
           user: "",
           password: "",
-          userObject: null,
+          userObject: "Reon",
           error: ""
         };
     },
@@ -92,8 +93,8 @@
   --input-padding-y: 2rem;
 }
 body {
-  background: #007bff;
-  background: linear-gradient(to right, #0062E6, #33AEFF);
+  background: #1ABC9C;
+  background: linear-gradient(to right, teal,#1ABC9C);
   min-height: 100vh ;
 }
 .card-signin {
