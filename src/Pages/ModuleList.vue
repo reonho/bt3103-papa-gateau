@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div>
-       <NavBar />
+    <div class="sticky-header">
+      <NavBar />
     </div>
-   
+
     <div class="md-layout">
       <div class="md-layout-item md-size-25">
         <!-- Filter -->
@@ -80,22 +80,37 @@
       </div>
       <div class="md-layout-item">
         <!-- Modules -->
-        <div>
-          <div class="search-wrapper">
-            <md-field>
-              <label>Search for modules</label>
-              <md-input v-model="searchbar"></md-input>
-            </md-field>
-          </div>
+        <div class="module-div">
+          <div class="module-header">
+            <div class="search-wrapper">
+          
+              <md-autocomplete v-model="searchbar" :md-options="searchlist">
+                <label>Search for Modules...</label>
 
-          <div class="module-numberdiv">
-            <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
+                <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+                  <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+                </template>
+
+                <template slot="md-autocomplete-empty" slot-scope="{ term }">
+                  No employees matching "{{ term }}" were found.
+                </template>
+              </md-autocomplete>
+
+            </div>
+
+            <div class="module-numberdiv">
+              <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
+              <hr />
+            </div>
           </div>
-          <hr style="width:95%" />
           <div id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <a class="module-name" href="/#/module" style="color:#0B5345;">{{post.moduleCode}} - {{post.title}}</a>
+                <a
+                  class="module-name"
+                  href="/#/module"
+                  style="color:#0B5345;"
+                >{{post.moduleCode}} {{post.title}}</a>
                 <p
                   class="module-type"
                 >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
@@ -130,7 +145,6 @@
                           v-for="sem in checksemester(post.semesterData)"
                           v-bind:key="sem.index"
                           :md-label="sem.semester"
-                          
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -219,28 +233,9 @@ export default {
         { text: "5-8 MC", value: "3", selected: false },
         { text: "More than 8 MC", value: "4", selected: false }
       ],
-      faculties: [
-        { text: "Computing", value: "Computing", selected: false },
-        { text: "Science", value: "Science", selected: false }
-      ],
-      departments: [
-        {
-          text: "Computer Science",
-          value: "Computer Science",
-          selected: false
-        },
-        {
-          text: "Mathematics",
-          value: "Mathematics",
-          selected: false
-        },
-        {
-          text: "Information Systems and Analytics",
-          value: "Information Systems and Analytics",
-          selected: false
-        }
-      ],
-
+      faculties: [],
+      departments: [],
+      searchlist: [],
       seriesStats: [{ data: [150, 210, 186, 195] }],
       chosenfac: [],
       chosendept: [],
@@ -312,18 +307,64 @@ export default {
       }
       if (this.searchbar !== "") {
         filterData = filterData.filter(item => {
-          return (
-            item.title.toLowerCase().indexOf(this.searchbar.toLowerCase()) > -1
-          );
+          var title =
+            item.moduleCode.toLowerCase() + " " + item.title.toLowerCase();
+          return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
+      console.log(filterData);
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
     }
   },
   methods: {
+    retrieveFac: function() {
+      var lookup = {};
+      var items = this.modulesData;
+      for (var i = 0; i < items.length; i++) {
+        var name = items[i].faculty;
+
+        if (!(name in lookup)) {
+          lookup[name] = 1;
+          this.faculties.push({
+            text: name,
+            value: name,
+            selected: false
+          });
+        }
+      }
+    },
+    retrieveDept: function() {
+      var lookup = {};
+      var items = this.modulesData;
+      for (var i = 0; i < items.length; i++) {
+        var name = items[i].department;
+
+        if (!(name in lookup)) {
+          lookup[name] = 1;
+          this.departments.push({
+            text: name,
+            value: name,
+            selected: false
+          });
+        }
+      }
+    },
+    retrieveModule: function() {
+      var lookup = {};
+      var items = this.modulesData;
+      for (var i = 0; i < items.length; i++) {
+        var name = items[i].moduleCode + " " + items[i].title;
+
+        if (!(name in lookup)) {
+          lookup[name] = 1;
+          this.searchlist.push(name);
+        }
+      }
+    },
     clearfilter: function() {
+      this.searchbar = "";
       this.chosensems = [];
       this.chosenfac = [];
       this.chosendept = [];
@@ -404,7 +445,7 @@ export default {
 
         var hours = finishDate.getHours();
         var minutes = finishDate.getMinutes();
-        var ampm = hours >= 1 & hours <= 8 ? "PM" : "AM";
+        var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? "0" + minutes : minutes;
@@ -452,6 +493,11 @@ export default {
         return modnum + " Modules ";
       }
     }
+  },
+  created() {
+    this.retrieveFac();
+    this.retrieveDept();
+    this.retrieveModule();
   }
 };
 </script>
@@ -465,21 +511,34 @@ export default {
   overflow: auto;
   padding: 20px;
   padding-left: 30px;
-  
 }
-
-
-
+hr {
+  height: 0px !important;
+  margin: 0 !important;
+  margin-top: 10px !important;
+}
 </style>
 <style>
 label {
-    font-weight: 100 !important; 
+  font-weight: 100 !important;
 }
 
-hr {
-  height: 0px !important;
+.sticky-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+}
+.module-div {
+  position: relative;
 }
 /* Filter section css */
+.md-content.md-scrollbar {
+  position: fixed;
+  margin-top: 70px;
+  width: 25%;
+}
 .filter-header {
   margin-bottom: 20px;
   margin-top: 20px;
@@ -492,15 +551,16 @@ hr {
   margin-right: 80px;
 }
 .minihead {
-  color: #0B5345;
+  color: #0b5345;
   font-size: 80%;
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
 }
 .md-button.clear-filter {
-  background-color: #17A589 !important;
+  background-color: #17a589 !important;
   font-weight: bold;
+  margin-left: 30%;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -510,11 +570,11 @@ hr {
 }
 .modnum {
   margin-right: 30px;
-  color: #0B5345;
+  color: #0b5345;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #0B5345 !important;
+  background-color: #0b5345 !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -543,19 +603,22 @@ hr {
   background-color: white !important;
 }
 .mod-chips .md-chip.md-theme-default {
-  background-color: #0B5345 !important;
+  background-color: #0b5345 !important;
   color: white !important;
   font-weight: bold !important;
 }
 
 /* Module Card css */
+#ModuleItem {
+  margin-top: 20%;
+}
 .modulecard {
   margin: 30px;
   margin-bottom: 0px !important;
 }
 .module-name {
   font-size: 150%;
-  color: #1ABC9C;
+  color: #1abc9c;
   font-weight: bold;
 }
 .module-preclusionhead {
@@ -569,22 +632,30 @@ hr {
   font-weight: bold;
 }
 .search-wrapper {
-  width: 95%;
   margin: 0 auto;
   margin-bottom: 20px;
-  margin-top: 35px;
+  margin-top: 100px;
+}
+.module-header {
+  position: fixed;
+  background-color: white;
+  left: 27%;
+  top: 0;
+  right: 0;
+  z-index: 5;
+  width: 71%;
 }
 
 .md-tabs.md-theme-default.md-accent.test .md-tab-nav-button.md-theme-default {
   font-weight: bold !important;
 }
 .md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
-  background-color: #1ABC9C !important;
-  width:47vw;
+  background-color: #1abc9c !important;
+  width: 47vw;
 }
 .md-tabs.md-theme-default.md-accent.test .md-active {
-  background-color: #148F77 !important;
-  width:47vw;
+  background-color: #148f77 !important;
+  width: 47vw;
 }
 .md-tabs.test .md-tabs-content {
   height: 190px !important;
