@@ -83,7 +83,6 @@
         <div class="module-div">
           <div class="module-header">
             <div class="search-wrapper">
-          
               <md-autocomplete v-model="searchbar" :md-options="searchlist">
                 <label>Search for Modules...</label>
 
@@ -91,11 +90,11 @@
                   <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
                 </template>
 
-                <template slot="md-autocomplete-empty" slot-scope="{ term }">
-                  No employees matching "{{ term }}" were found.
-                </template>
+                <template
+                  slot="md-autocomplete-empty"
+                  slot-scope="{ term }"
+                >No employees matching "{{ term }}" were found.</template>
               </md-autocomplete>
-
             </div>
 
             <div class="module-numberdiv">
@@ -140,11 +139,18 @@
                     <div>
                       <br />
                       <br />
-                      <md-tabs class="md-accent test" style="width:45vw;" md-alignment="fixed">
-                        <md-tab
+                      <b-tabs
+                        style="width:45vw;"
+                        active-nav-item-class="activetab"
+                        class="semtabs"
+                        content-class="mt-3"
+                        no-fade="false"
+                        lazy
+                      >
+                        <b-tab
                           v-for="sem in checksemester(post.semesterData)"
                           v-bind:key="sem.index"
-                          :md-label="sem.semester"
+                          :title="sem.semester"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -171,8 +177,8 @@
                               <intakechart :seriesStats="seriesStats"></intakechart>
                             </div>
                           </div>
-                        </md-tab>
-                      </md-tabs>
+                        </b-tab>
+                      </b-tabs>
                     </div>
                   </div>
                 </div>
@@ -646,17 +652,21 @@ label {
   width: 71%;
 }
 
-.md-tabs.md-theme-default.md-accent.test .md-tab-nav-button.md-theme-default {
+.activetab {
+  background-color: #1abc9c !important;
   font-weight: bold !important;
 }
-.md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
-  background-color: #1abc9c !important;
-  width: 47vw;
+
+.md-theme-default .nav-link:not(.md-button) {
+  color: #17a589 !important;
+  font-weight: bold !important;
 }
-.md-tabs.md-theme-default.md-accent.test .md-active {
-  background-color: #148f77 !important;
-  width: 47vw;
+
+.md-theme-default .nav-link.active:not(.md-button) {
+  color: white !important;
+  
 }
+
 .md-tabs.test .md-tabs-content {
   height: 190px !important;
   max-width: 100% !important;
