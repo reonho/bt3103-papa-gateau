@@ -60,40 +60,41 @@ let router = new Router({
 // Nav Guard
 router.beforeEach((to, from, next) => {
   // Check for requiresAuth guard
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Check if NO logged user
-    if (!database.getUser()) {
-      console.log(database.getUser())
-      // Go to login
-      next({
-        path: '/loginPage',
-        query: {
-          redirect: to.fullPath
-        }
-      });
+  database.getUser().then(function(user){
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      // Check if NO logged user
+      if (!user) {
+        // Go to login
+        next({
+          path: '/loginPage',
+          query: {
+            redirect: to.fullPath
+          }
+        });
+      } else {
+        // Proceed to route
+        next();
+      }
+    } else if (to.matched.some(record => record.meta.requiresGuest)) {
+      // Check if NO logged user
+      if (user) {
+        // Go to login
+        next({
+          path: '/',
+          query: {
+            redirect: to.fullPath
+          }
+        });
+      } else {
+        // Proceed to route
+        next();
+      }
     } else {
       // Proceed to route
       next();
     }
-  } else if (to.matched.some(record => record.meta.requiresGuest)) {
-    // Check if NO logged user
-    if (database.getUser()) {
-      console.log(database.getUser())
-      // Go to login
-      next({
-        path: '/',
-        query: {
-          redirect: to.fullPath
-        }
-      });
-    } else {
-      // Proceed to route
-      next();
-    }
-  } else {
-    // Proceed to route
-    next();
-  }
+  })
+  
 });
 
 export default router;

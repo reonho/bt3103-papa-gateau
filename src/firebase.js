@@ -21,39 +21,56 @@ var database = {
     this.user = user
   },
   getUser(){
+    var promise = new Promise(function(resolve){
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           database.user = user.uid
+          resolve(database.user)
         } else {
           database.user = null
+          resolve(database.user)
         }
+      })
     })
-    return database.user
+    return promise
   },
   login(email,password) {
-    firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password)
-    .then(
-      user => {
-        this.user = user.uid
-      },
-      err => {
-        console.log(err)
-      }
-    );
+    var promise = new Promise(function(resolve){
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(
+        user => {
+          database.user = user.uid
+          resolve(true)
+        },
+        err => {
+          resolve(err)
+        }
+      );
+    })
+    return promise
   },
   logout(){
-    firebase.auth().signOut()
+    var promise = new Promise(function(resolve){
+      firebase.auth().signOut().then(function(){
+        resolve(true)
+      })
+
+    })
+    return promise
   },
   getModuleReview(module_){
-    var doc_name = module_ + ".R"
-    database.firebase_data.collection("reviews").doc(doc_name)
-    .get().then(function(doc) {
-      database.data = doc
-      
-    });
-    return database.data
+    database.data = null
+    var promise = new Promise(function(resolve) {
+      var doc_name = module_ + ".R"
+      database.firebase_data.collection("reviews").doc(doc_name)
+      .get().then(function(doc) {
+        database.data = doc.data()
+        resolve(database.data)
+      });
+    })
+    return promise
   }
 
 

@@ -71,9 +71,15 @@
       //   this.$router.push({ path: "/", params: {userPassed: this.userObject}})
       // },
       login(){
-        database.login(this.user, this.password)
+        const self = this
+        database.login(this.user, this.password).then(function(e){
+          if (e){
+            self.$router.push({ path: "/"});
+          } else {
+            alert(e)
+          }
+        })
         console.log(database.getUser())
-        this.$router.push({ path: "/", params: {userPassed: this.userObject}});
       },
       // validate(){
       //   let data = DataObject.Students

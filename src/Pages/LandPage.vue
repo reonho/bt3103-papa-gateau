@@ -131,8 +131,10 @@
         },
         readDatabase(){
             console.log(database.getUser())
-            console.log(database.getModuleReview("BT1101"))
-            //database.logout()
+            database.getModuleReview("BT1101").then(function(e){
+                console.log(e)
+                console.log('its done')
+            })
         },
         scrolltoView(elementPosition){
             var headerOffset = 90;
@@ -215,7 +217,8 @@
     },
     mounted() {
         if (this.userPassed) {
-            this.User = this.userPassed   
+            //this.User = this.userPassed  
+            this.User = "Reon" 
         }
         else{
             this.User = {User:"there"}
