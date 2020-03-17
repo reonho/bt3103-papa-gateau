@@ -4,13 +4,18 @@
     <md-card-content>
       <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
-        <md-select v-model="detailsForm.selectedModule">
-          <md-option
-            v-for="mod in modules"
-            v-bind:key="mod.id"
-            v-bind:value="mod.Name"
-          >{{mod.Name}}</md-option>
-        </md-select>
+        <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist">
+          <label>Select Module</label>
+  
+          <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+          <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+          </template>
+      
+          <template
+            slot="md-autocomplete-empty"
+            slot-scope="{ term }"
+            >No employees matching "{{ term }}" were found.</template>
+          </md-autocomplete>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
@@ -104,7 +109,8 @@ export default {
         selectedSemester: null,
         selectedStaff: null,
         selectedGrade: null,
-        selectedFaculty: null
+        selectedFaculty: null,
+        searchlist: []
       }
     };
   },
@@ -145,7 +151,20 @@ export default {
       }
 
       
-    }
+      
+    },
+    getModule: function() {
+      var lookup = {};
+      var items = this.modules;
+      for (var i = 0; i < items.length; i++) {
+      var name = items[i].moduleCode + " " + items[i].title;
+    
+      if (!(name in lookup)) {
+        lookup[name] = 1;
+        this.searchlist.push(name);
+      }
+  }
+}
   }
 };
 </script>
