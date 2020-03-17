@@ -59,13 +59,11 @@ let router = new Router({
 
 // Nav Guard
 router.beforeEach((to, from, next) => {
-  var user = database.getUser()
-  console.log(user)
   // Check for requiresAuth guard
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Check if NO logged user
-    if (!user) {
-      console.log(user)
+    if (!database.getUser()) {
+      console.log(database.getUser())
       // Go to login
       next({
         path: '/loginPage',
@@ -79,9 +77,9 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     // Check if NO logged user
-    if (user) {
+    if (database.getUser()) {
+      console.log(database.getUser())
       // Go to login
-      console.log(user)
       next({
         path: '/',
         query: {

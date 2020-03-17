@@ -72,10 +72,8 @@
       // },
       login(){
         database.login(this.user, this.password)
-        if (database.getUser()){
-          console.log(database.getUser())
-          this.$router.push({ path: "/", params: {userPassed: this.userObject}});
-        }
+        console.log(database.getUser())
+        this.$router.push({ path: "/", params: {userPassed: this.userObject}});
       },
       // validate(){
       //   let data = DataObject.Students

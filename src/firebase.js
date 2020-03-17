@@ -16,41 +16,44 @@ firebase.initializeApp(firebaseConfig);
 var database = {
   firebase_data: firebase.firestore(),
   user: null,
+  data: null,
   setUser (user) {
     this.user = user
   },
-  authenticate() {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        database.user = user.uid        
-      } else {
-        database.user = null
-      }
-    })
-  },
   getUser(){
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          database.user = user.uid
+        } else {
+          database.user = null
+        }
+    })
     return database.user
   },
   login(email,password) {
-      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(function(){
-        firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(
-          user => {
-            alert(`You are logged in as ${user}`);
-            this.user = user.uid
-          },
-          err => {
-            alert(err.message);
-  
-          }
-        );
-      })
+    firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(
+      user => {
+        this.user = user.uid
+      },
+      err => {
+        console.log(err)
+      }
+    );
   },
   logout(){
     firebase.auth().signOut()
+  },
+  getModuleReview(module_){
+    var doc_name = module_ + ".R"
+    database.firebase_data.collection("reviews").doc(doc_name)
+    .get().then(function(doc) {
+      database.data = doc
+      
+    });
+    return database.data
   }
 
 

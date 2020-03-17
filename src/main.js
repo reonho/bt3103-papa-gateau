@@ -10,7 +10,6 @@ import VueMaterial from 'vue-material'
 import { MdButton, MdContent, MdToolbar, MdTabs} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-import database from './firebase.js'
 
 Vue.use(VueMaterial);
 Vue.use(MdButton)
@@ -24,9 +23,6 @@ Vue.use(IconsPlugin)
 Vue.config.productionTip = false
 
 new Vue({
-  created(){
-    database.authenticate()
-  },
   render: h => h(app),
   el: '#app',
 }).$mount('#app')

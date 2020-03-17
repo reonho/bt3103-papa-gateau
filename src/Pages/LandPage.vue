@@ -120,16 +120,6 @@
         // Ratings
     },
     methods: {
-
-        // created(){
-        //     firebase.auth().onAuthStateChanged(function(user) {
-        //         if (user) {
-        //         alert("Signed in user!")
-        //         } else {
-        //         alert("No user!")
-        //         }
-        //     });
-        // },
         //use this method to find data of a specific module
         findModule(mod,database){
             var data = database.Modules
@@ -141,12 +131,8 @@
         },
         readDatabase(){
             console.log(database.getUser())
-            database.logout()
-            // database.collection("modules").doc("BT2101").collection("sem_1").doc("timetable")
-            //     .get().then(function(doc) {
-            //         var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-            //         console.log(source, " data: ", doc.data());
-            //     });
+            console.log(database.getModuleReview("BT1101"))
+            //database.logout()
         },
         scrolltoView(elementPosition){
             var headerOffset = 90;
