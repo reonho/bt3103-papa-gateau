@@ -2,11 +2,10 @@
   <md-card>
     <form>
     <md-card-content>
-      <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
+      <md-field>
         <label>Your Module</label>
         <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist">
-          <label>Select Module</label>
-  
+
           <template slot="md-autocomplete-item" slot-scope="{ item, term }">
           <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
           </template>
@@ -14,7 +13,7 @@
           <template
             slot="md-autocomplete-empty"
             slot-scope="{ term }"
-            >No employees matching "{{ term }}" were found.</template>
+            >No modules matching "{{ term }}" were found.</template>
           </md-autocomplete>
         <span
           class="md-error"
