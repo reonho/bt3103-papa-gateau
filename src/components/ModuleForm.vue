@@ -3,23 +3,19 @@
     <form>
     <md-card-content>
       <md-field>
-        <label>Your Module</label>
-        <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist">
+      <label>Your Module</label>
+      <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist" @md-changed="getModules" 
+              @md-opened="getModules"></md-autocomplete>
+        
 
-          <template slot="md-autocomplete-item" slot-scope="{ item, term }">
-          <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
-          </template>
-      
-          <template
-            slot="md-autocomplete-empty"
-            slot-scope="{ term }"
-            >No modules matching "{{ term }}" were found.</template>
-          </md-autocomplete>
+        <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.name }}</template>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
         >This field is required</span>
       </md-field>
+
+
       <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
         <label>Your faculty</label>
         <md-select v-model="detailsForm.selectedFaculty">
@@ -97,6 +93,7 @@ export default {
   data: function() {
     return {
       showModal: false,
+      searchlist: [],
       modules: DataObject.Modules,
       faculties: DataObject.faculties,
       staff: DataObject.staff,
@@ -109,7 +106,6 @@ export default {
         selectedStaff: null,
         selectedGrade: null,
         selectedFaculty: null,
-        searchlist: []
       }
     };
   },
@@ -152,18 +148,19 @@ export default {
       
       
     },
-    getModule: function() {
-      var lookup = {};
-      var items = this.modules;
-      for (var i = 0; i < items.length; i++) {
-      var name = items[i].moduleCode + " " + items[i].title;
-    
-      if (!(name in lookup)) {
-        lookup[name] = 1;
-        this.searchlist.push(name);
+    getModules (searchTerm) {
+        this.searchlist = new Promise(resolve => {
+          window.setTimeout(() => {
+            if (!searchTerm) {
+              resolve(this.modules)
+            } else {
+              const term = searchTerm.toLowerCase()
+
+              resolve(this.modules.filter(({ Name }) => Name.toLowerCase().includes(term)))
+            }
+          }, 500)
+        })
       }
-  }
-}
   }
 };
 </script>
