@@ -7,7 +7,7 @@
                 <div class="card card-signin my-5 ">
                 <div class="card-body p-5">
                     <h1 class="text-center" style="color:#1ABC9C">MODEAUX</h1>
-                    <h1 class="card-title text-center">Sign-In Page</h1>
+                    <h1 class="card-title text-center">Login Page</h1>
                     <!---form>
                       <div class="form-group">
                         <label for="username"> Username:</label>
@@ -22,12 +22,16 @@
                     </form-->
                    
                      <md-field>
-                        <label>Enter Username</label>
+                        <label>Enter Email</label>
                         <md-input type="username" id="username" v-model = "user"></md-input>
+                    </md-field>
+                    <md-field>
+                        <label>Enter Password</label>
+                        <md-input type="password" id="password" v-model = "password"></md-input>
                     </md-field>
 
                     
-                    <button class="btn btn-lg btn-block text-uppercase" type="submit" v-on:click = "skip" style="background-color:#1ABC9C; color:white">Sign In</button>
+                    <button class="btn btn-lg btn-block text-uppercase" type="submit" v-on:click = "login" style="background-color:#1ABC9C; color:white">Sign In</button>
                 </div>
                 </div>
             </div>
@@ -39,7 +43,8 @@
 
 
 <script>
-    import DataObject from "../Database.js"
+    // import DataObject from "../Database.js"
+    import database from "../firebase.js"
     export default {
     name: 'loginPage',
     components:{
@@ -53,35 +58,42 @@
         };
     },
     methods: {
-      skip(){
-        this.userObject = {
-            User: this.user,
-            Password: "12345",
-            ModulesTaken: ["MA1101R","CS2030","CS1010S"],
-            Course: "Business Analytics",
-            Minor: "",
-            SecondMajor: "",
-            DoubleDegree: ""
-          };
-        this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
+      // skip(){
+      //   this.userObject = {
+      //       User: this.user,
+      //       Password: "12345",
+      //       ModulesTaken: ["MA1101R","CS2030","CS1010S"],
+      //       Course: "Business Analytics",
+      //       Minor: "",
+      //       SecondMajor: "",
+      //       DoubleDegree: ""
+      //     };
+      //   this.$router.push({ path: "/", params: {userPassed: this.userObject}})
+      // },
+      login(){
+        database.login(this.user, this.password)
+        if (database.getUser()){
+          console.log(database.getUser())
+          this.$router.push({ path: "/", params: {userPassed: this.userObject}});
+        }
       },
-      validate(){
-        let data = DataObject.Students
-        var error = true
-        for (var i = 0; i < data.length; ++i){
-            if (data[i].User == this.user && data[i].Password == this.password) {
-                this.userObject = data[i]
-                this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
-                error = false
-                break
-            }
-        }
-        if (error == true){
-          this.error = "Wrong username or passowrd!"
-        } else {
-          this.error = ""
-        }
-      }
+      // validate(){
+      //   let data = DataObject.Students
+      //   var error = true
+      //   for (var i = 0; i < data.length; ++i){
+      //       if (data[i].User == this.user && data[i].Password == this.password) {
+      //           this.userObject = data[i]
+      //           this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
+      //           error = false
+      //           break
+      //       }
+      //   }
+      //   if (error == true){
+      //     this.error = "Wrong username or passowrd!"
+      //   } else {
+      //     this.error = ""
+      //   }
+      // }
     }
     }
 </script>

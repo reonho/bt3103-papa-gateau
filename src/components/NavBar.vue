@@ -1,5 +1,4 @@
 <template>
-
 <div class="NavBar" style="border:1px solid white;border-bottom-color:grey;">
    <md-toolbar class="md-accent" style="background:#1ABC9C;" md-elevation="0">
        <h3 class="md-title" style="flex: 2;  margin-left:4vh;color:white;font-weight:bold">

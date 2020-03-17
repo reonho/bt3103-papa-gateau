@@ -4,7 +4,9 @@
     <div class="container">
         <md-card class="test1" style = "margin-top:5%; padding:4vh; margin-bottom:4vh; color:white;background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
-            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
+            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.
+            <button v-on:click="readDatabase">Greet</button>
+            </h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
@@ -99,6 +101,7 @@
     // import Feed from '../components/Feed'
     // import Ratings from '../components/Ratings'
     import ReviewSection from '../components/ReviewSection'
+    import database from '../firebase.js'
 
     export default {
     name: 'LandPage',
@@ -117,6 +120,16 @@
         // Ratings
     },
     methods: {
+
+        // created(){
+        //     firebase.auth().onAuthStateChanged(function(user) {
+        //         if (user) {
+        //         alert("Signed in user!")
+        //         } else {
+        //         alert("No user!")
+        //         }
+        //     });
+        // },
         //use this method to find data of a specific module
         findModule(mod,database){
             var data = database.Modules
@@ -125,6 +138,15 @@
                     return data[i]
                 }
             }
+        },
+        readDatabase(){
+            console.log(database.getUser())
+            database.logout()
+            // database.collection("modules").doc("BT2101").collection("sem_1").doc("timetable")
+            //     .get().then(function(doc) {
+            //         var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+            //         console.log(source, " data: ", doc.data());
+            //     });
         },
         scrolltoView(elementPosition){
             var headerOffset = 90;
