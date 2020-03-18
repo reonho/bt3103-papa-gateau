@@ -4,7 +4,9 @@
     <div class="container">
         <md-card class="test1" style = "margin-top:5%; padding:4vh; margin-bottom:4vh; color:white;background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
-            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
+            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.
+            <button v-on:click="readDatabase">Greet</button>
+            </h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
@@ -99,6 +101,7 @@
     // import Feed from '../components/Feed'
     // import Ratings from '../components/Ratings'
     import ReviewSection from '../components/ReviewSection'
+    import database from '../firebase.js'
 
     export default {
     name: 'LandPage',
@@ -125,6 +128,13 @@
                     return data[i]
                 }
             }
+        },
+        readDatabase(){
+            console.log(database.getUser())
+            database.getModuleReview("BT1101").then(function(e){
+                console.log(e)
+                console.log('its done')
+            })
         },
         scrolltoView(elementPosition){
             var headerOffset = 90;
@@ -207,7 +217,8 @@
     },
     mounted() {
         if (this.userPassed) {
-            this.User = this.userPassed   
+            //this.User = this.userPassed  
+            this.User = "Reon" 
         }
         else{
             this.User = {User:"there"}
