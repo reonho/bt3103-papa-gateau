@@ -129,7 +129,7 @@
                 }
             }
         },
-        readDatabase(){
+        readDatabase(){ // this is a function for testing the queries only. for reference
             database.getModuleDetails("BT2101").then(function(e){
                 console.log(e)
             })
