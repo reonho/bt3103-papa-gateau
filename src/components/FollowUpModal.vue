@@ -1,5 +1,5 @@
 <template>
-  <div id="FollowUpModal">
+  <div id="FollowUpModal" class = 'md-layout md-alignment-center-center'>
     <head >Add another module?</head>
     <md-button class="md-primary md-raised" v-on:click ="submitYes">Yes</md-button>
     <md-button class="md-primary md-raised" v-on:click ="submitNo">No</md-button>
@@ -39,11 +39,13 @@ export default {
 <style scoped>
 @import "./style.css";
 .md-dialog-title {
-  overflow: scroll;
+  /* overflow: scroll; */
   margin: 8px;
   display: block;
   align-self: auto;
   padding: 4px;
   /* min-height: 180px; */
+
 }
+
 </style>
