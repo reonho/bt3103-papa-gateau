@@ -155,6 +155,7 @@ export default {
               resolve(this.modules)
             } else {
               const term = searchTerm.toLowerCase()
+              
 
               resolve(this.modules.filter(({ Name }) => Name.toLowerCase().includes(term)))
             }
