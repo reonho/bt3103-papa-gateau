@@ -72,6 +72,17 @@ var database = {
     })
     return promise
   },
+  getModules(){
+    database.data = null
+    var promise = new Promise(function(resolve) {
+      database.firebase_data.collection("modules").doc()
+      .get().then(function(doc) {
+        database.data = doc.data()
+        resolve(database.data)
+      });
+    })
+    return promise
+  },
   
 
 
