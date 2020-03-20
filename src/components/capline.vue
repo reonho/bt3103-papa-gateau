@@ -1,6 +1,8 @@
 <template>
-<div id = "Radar">
-     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
+<div style="text-align:center">
+    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Grade</h1> </md-card>
+    <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
 
@@ -21,8 +23,7 @@
                 chartOptions2: {
                     chart: {
                         type: 'line',
-                        height: 350,
-                          toolbar: {
+                        toolbar: {
                             show: false,
                           }
                     },
@@ -31,7 +32,7 @@
                     },
                     yaxis: [
                             {
-                            min: 2.5,
+                            min: 3,
                             max: 5,
                             }],
 
