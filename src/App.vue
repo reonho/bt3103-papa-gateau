@@ -9,7 +9,7 @@
     import router from './router.js'
     export default {
         name: 'app',
-        router
+        router,
     }
 </script>
 

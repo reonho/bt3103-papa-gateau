@@ -9,7 +9,7 @@
         </h3>
        
        <router-link class="nav-link" to="/">
-          <md-button style="color:white;font-weight:bold">Logout</md-button>
+          <md-button style="color:white;font-weight:bold" @click = "logout">Logout</md-button>
         </router-link>
         <md-menu md-size="medium" md-align-trigger>
             <md-button style="color:white;font-weight:bold" md-menu-trigger>Dashboard</md-button>
@@ -60,6 +60,7 @@
 
 
 <script>
+    import database from '../firebase.js'
     export default {
         name: 'NavBar',
         props: {
@@ -75,6 +76,14 @@
         methods: {
             scroll(ev){
                 this.$emit('scroll',ev)
+            },
+            logout(){
+                var self = this
+                database.logout().then(function(e){
+                    if(e){
+                        self.$router.push("/loginPage")
+                    }
+                })
             }
         }
     }
