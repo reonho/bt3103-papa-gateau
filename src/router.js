@@ -27,7 +27,7 @@ let router = new Router({
       name: 'ModuleList',
       component: ModuleList,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -35,7 +35,7 @@ let router = new Router({
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: true
+        requiresGuest: false
       }
     },
     {
