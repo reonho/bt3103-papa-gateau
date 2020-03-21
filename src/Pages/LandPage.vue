@@ -175,8 +175,11 @@
             }
         },
         readUser(){ // this is a function for testing the queries only. for reference
-            database.getUserInfo().then((e)=>{
-                this.User = e
+            // database.getUserInfo().then((e)=>{
+            //     this.User = e
+            //     console.log(e)
+            // })
+            database.getStudentInfo().then(function(e){
                 console.log(e)
             })
 
