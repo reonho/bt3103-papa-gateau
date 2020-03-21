@@ -2,19 +2,19 @@
   <md-card>
     <form>
     <md-card-content>
-      <md-field>
-      <label>Your Module</label>
-      <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist" @md-changed="getModules" 
-              @md-opened="getModules"></md-autocomplete>
+      <span :class="getValidationClass('detailsForm', 'selectedModule')">
         
-
+        <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist" @md-changed="getModules" @md-opened="getModules">
+        <label>Your Module</label>
+        </md-autocomplete>
+        
         <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.name }}</template>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
         >This field is required</span>
-      </md-field>
-
+        </span>
+      <!-- </md-field> -->
 
       <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
         <label>Your faculty</label>
@@ -144,9 +144,6 @@ export default {
         this.$root.$emit('closeModal');
 
       }
-
-      
-      
     },
     getModules (searchTerm) {
         this.searchlist = new Promise(resolve => {
@@ -155,8 +152,7 @@ export default {
               resolve(this.modules)
             } else {
               const term = searchTerm.toLowerCase()
-              
-
+      
               resolve(this.modules.filter(({ Name }) => Name.toLowerCase().includes(term)))
             }
           }, 500)
