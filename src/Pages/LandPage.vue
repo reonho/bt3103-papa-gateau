@@ -5,7 +5,7 @@
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
 
-            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.
+            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.name}}! Welcome to your dashboard.
             <!--button v-on:click="readDatabase">Greet</button-->
             </h1></div>
             <div class = "md-layout-item" style="text-align:right">
@@ -24,7 +24,7 @@
                         </md-card-media>
                         <md-card-header-text>
                             <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">ENROLLED COURSE:</div>
-                            <div class="md-title">Bachelor of Science - Business Analytics</div>
+                            <div class="md-title">{{User.faculty}}, {{User.dept}} - {{User.course}}</div>
                         </md-card-header-text>
                     </md-card-header>
                  </md-card>
@@ -173,8 +173,8 @@
             }
         },
         readUser(){ // this is a function for testing the queries only. for reference
-            database.getUserInfo().then(function(e){
-                this.data.User = e
+            database.getUserInfo().then((e)=>{
+                this.User = e
                 console.log(e)
             })
 
@@ -260,11 +260,12 @@
     },
     created(){
         this.readUser()
+       
     },
     mounted() {
         if (this.userPassed) {
             //this.User = this.userPassed  
-            this.User = "Reon" 
+            
         }
         else{
             this.User = {User:"there"}
