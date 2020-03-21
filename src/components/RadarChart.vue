@@ -1,5 +1,7 @@
 <template>
-<div id = "Radar">
+<div id = "Radar" style="text-align:center">
+     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Strengths</h1> </md-card>
      <apexchart type="radar" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
