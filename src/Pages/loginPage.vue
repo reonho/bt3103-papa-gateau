@@ -6,7 +6,7 @@
             <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
                 <div class="card card-signin my-5 ">
                 <div class="card-body p-5">
-                    <h1 class="text-center" style="color:#1ABC9C">MODEAUX</h1>
+                    <h1 class="text-center" style="color:#1ABC9C; font-size:500%">MODEAUX</h1>
                     <h1 class="card-title text-center">Login Page</h1>
                     <!---form>
                       <div class="form-group">
