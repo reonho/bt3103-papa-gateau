@@ -169,12 +169,14 @@
                 }
             }
         },
-        readDatabase(){
-            console.log(database.getUser())
-            database.getModuleReview("BT1101").then(function(e){
+        readDatabase(){ // this is a function for testing the queries only. for reference
+            database.getModuleDetails("BT2101").then(function(e){
                 console.log(e)
-                console.log('its done')
             })
+            database.getAllModules().then(function(e){
+                console.log(e)
+            })
+
         },
         scrolltoView(elementPosition){
             var headerOffset = 90;
