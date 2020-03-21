@@ -583,7 +583,10 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    faculties: [],
+    faculties: [{
+      id:"CS2030",
+      title:"CS2030"
+    }],
     semesters: [
       {
         id: 1,

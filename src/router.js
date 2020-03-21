@@ -43,7 +43,7 @@ let router = new Router({
       name: 'modulePage',
       component: modulePage,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {

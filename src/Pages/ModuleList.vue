@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import DataObject from "../firebase.js";
+import database from "../firebase.js";
 import NavBar from "../components/NavBar";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -215,8 +215,8 @@ export default {
   data() {
     return {
       searchbar: "",
-      modulesData: [],
       modulenum: 0,
+      modulesData: [],
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
         { text: "Semester 1", value: "1", selected: false },
@@ -318,7 +318,7 @@ export default {
           return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
-      console.log(filterData);
+
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
@@ -326,10 +326,13 @@ export default {
   },
   methods: {
     readDatabase() {
-      // this is a function for testing the queries only. for reference
-      DataObject.getAllModules.then(function(e) {
+      database.getAllModules().then((e) => {
+        
         this.modulesData = e;
+
+        
       });
+      console.log(this.modulesData);
     },
     retrieveFac: function() {
       var lookup = {};
@@ -507,6 +510,7 @@ export default {
     }
   },
   created() {
+    this.readDatabase();
     this.retrieveFac();
     this.retrieveDept();
     this.retrieveModule();

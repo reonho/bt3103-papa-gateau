@@ -216,7 +216,7 @@ import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
-import database from '../firebase'
+import database from '../firebase.js'
 import ReviewSection from '../components/ReviewSection'
 
 export default {

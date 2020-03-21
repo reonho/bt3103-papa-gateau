@@ -36,7 +36,7 @@ export default {
         this.reviewData.push(item)
         // console.log(doc.id)
       })
-      // console.log(this.reviewData)
+       console.log(this.reviewData)
       
     })
 
