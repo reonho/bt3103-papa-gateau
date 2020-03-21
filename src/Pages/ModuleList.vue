@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import DataObject from "../Database.js";
+import DataObject from "../firebase.js";
 import NavBar from "../components/NavBar";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -215,7 +215,7 @@ export default {
   data() {
     return {
       searchbar: "",
-      modulesData: DataObject.Modules2,
+      modulesData: [],
       modulenum: 0,
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
@@ -325,6 +325,12 @@ export default {
     }
   },
   methods: {
+    readDatabase() {
+      // this is a function for testing the queries only. for reference
+      DataObject.getAllModules.then(function(e) {
+        this.modulesData = e;
+      });
+    },
     retrieveFac: function() {
       var lookup = {};
       var items = this.modulesData;
@@ -664,7 +670,6 @@ label {
 
 .md-theme-default .nav-link.active:not(.md-button) {
   color: white !important;
-  
 }
 
 .md-tabs.test .md-tabs-content {
