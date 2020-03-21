@@ -6,7 +6,7 @@
             <div class="md-layout md-gutter md-alignment-center-right">
 
             <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.
-            <button v-on:click="readDatabase">Greet</button>
+            <!--button v-on:click="readDatabase">Greet</button-->
             </h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
@@ -24,13 +24,13 @@
                         </md-card-media>
                         <md-card-header-text>
                             <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">ENROLLED COURSE:</div>
-                            <div class="md-title">Business Analytics</div>
+                            <div class="md-title">Bachelor of Science - Business Analytics</div>
                         </md-card-header-text>
                     </md-card-header>
                  </md-card>
             </div>
 
-             <div class = "md-layout-item md-size-25">
+             <div class = "md-layout-item md-size-20">
                  <md-card style='background: #1ABC9C; color:whitesmoke' md-with-hover>
                     <md-card-header>
                         <md-card-media md-small style="padding:1vh">
@@ -48,7 +48,7 @@
                   
             </div>
 
-             <div class = "md-layout-item md-size-25">
+             <div class = "md-layout-item md-size-30">
                     <md-card style='background: #1ABC9C;; color:whitesmoke' md-with-hover>
                         <md-card-header>
                             <md-card-media md-small style="padding:1vh">
@@ -72,7 +72,7 @@
 
 
         <!--div style="display:flex" class= "container-fluid p-3"-->
-        <div  class="md-layout md-gutter " style="margin-bottom:3vh; max-height:100vh" >
+        <div  class="md-layout md-gutter " >
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
             
                  <md-card  md-with-hover  >    
@@ -96,7 +96,7 @@
         <div>
             <div id = "DegreeProgressCard" >
             
-            <md-card style="height:90vh; margin-bottom:0vh; margin-top:0vh; padding:2vh; height:50vh" md-with-hover>
+            <md-card style="height:90vh; margin-bottom:0vh; padding:2vh; margin-top:5vh; height:50vh" md-with-hover>
 
                 <md-card style="background:#1ABC9C;color:white; margin-bottom:0vh" >
                     <md-card-header>
@@ -172,11 +172,9 @@
                 }
             }
         },
-        readDatabase(){ // this is a function for testing the queries only. for reference
-            database.getModuleDetails("BT2101").then(function(e){
-                console.log(e)
-            })
-            database.getAllModules().then(function(e){
+        readUser(){ // this is a function for testing the queries only. for reference
+            database.getUserInfo().then(function(e){
+                this.data.User = e
                 console.log(e)
             })
 
@@ -197,7 +195,7 @@
         return {
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
-            User: {User:"Reon Ho"},
+            User: {},
             treeData: [ {
                 "name" : "General Modules",
                 "off": true,
@@ -259,6 +257,9 @@
                 ] 
             },]
         };
+    },
+    created(){
+        this.readUser()
     },
     mounted() {
         if (this.userPassed) {

@@ -38,6 +38,21 @@ var database = {
     return promise
   },
 
+  getUserInfo(){
+    var promise = new Promise(function(resolve) {
+      firebase.auth().onAuthStateChanged(function(user){
+        var doc_name = user.uid
+        database.firebase_data.collection("students").doc(doc_name)
+        .get().then(function(doc) {
+          database.data = doc.data()
+          resolve(database.data)
+        });
+      })
+    })
+    return promise
+  },
+
+
   login(email,password) {
     var promise = new Promise(function(resolve){
       firebase
