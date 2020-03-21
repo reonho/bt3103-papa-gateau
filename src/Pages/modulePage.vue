@@ -49,7 +49,7 @@
       </div>
       <hr />
       <div id="statistics">
-        <span style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">Statistics</span>
+        <span style="color:#0B5345; margin-top:20px; font-size: 25px">Statistics</span>
         <br />
         <br />
         <b-tabs
@@ -138,7 +138,7 @@
         </b-tabs>
       </div>
       <hr />
-      <div id="reviews" style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">
+      <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
