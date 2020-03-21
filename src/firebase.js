@@ -66,6 +66,10 @@ var database = {
     return promise
   },
 
+
+
+  //==================Use methods from here onwards==========================//
+
   getModuleReview(module_){
     var promise = new Promise(function(resolve) {
       var doc_name = module_ + ".R"
