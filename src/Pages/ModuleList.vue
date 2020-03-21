@@ -109,11 +109,11 @@
                   class="module-name"
                   href="/#/module"
                   style="color:#0B5345;"
-                >{{post.moduleCode}} {{post.title}}</a>
+                >{{post.info.moduleCode}} {{post.info.title}}</a>
                 <p
                   class="module-type"
-                >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
-                <p class="module-desc">{{post.description}}</p>
+                >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
+                <p class="module-desc">{{post.info.description}}</p>
 
                 <div class="md-layout">
                   <div class="md-layout-item md-size-30">
@@ -124,7 +124,7 @@
                       Preclusions
                       <br />
                     </span>
-                    <span class="module-preclusion">{{post.preclusion}}</span>
+                    <span class="module-preclusion">{{post.info.preclusion}}</span>
                     <br />
                     <br />
                     <span class="module-prerequisitehead">
@@ -132,7 +132,7 @@
                       <br />
                     </span>
 
-                    <span class="module-prerequisite">{{post.prerequisite}}</span>
+                    <span class="module-prerequisite">{{post.info.prerequisite}}</span>
                     <br />
                   </div>
                   <div class="md-layout-item-30" style="padding-left:25px">
@@ -148,7 +148,7 @@
                         lazy
                       >
                         <b-tab
-                          v-for="sem in checksemester(post.semesterData)"
+                          v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
                           :title="sem.semester"
                         >
@@ -166,9 +166,9 @@
                               <br />
                               <br />
                               <span class="examhead">
-                                Workload - {{calcwork(post.workload) + " hours"}}
+                                Workload - {{calcwork(post) + " hours"}}
                                 <md-tooltip class="mod-tooltip" md-direction="bottom">
-                                  <workloadchart :seriesStats="formatwork(post.workload)"></workloadchart>
+                                  <workloadchart :seriesStats="formatwork(post)"></workloadchart>
                                 </md-tooltip>
                                 <br />
                               </span>
@@ -193,7 +193,8 @@
 </template>
 
 <script>
-import database from "../firebase.js";
+import database from "../firebase_wx.js";
+import dataObject from "../Database.js";
 import NavBar from "../components/NavBar";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -254,11 +255,14 @@ export default {
   computed: {
     filteredList: function() {
       let filterData = this.modulesData;
+
       if (this.chosensems.length > 0) {
         filterData = filterData.filter(item => {
-          for (var i = 0; i < item.semesterData.length; i++) {
+          for (var i = 0; i < item.info.semesterData.length; i++) {
             if (
-              this.chosensems.includes(item.semesterData[i].semester.toString())
+              this.chosensems.includes(
+                item.info.semesterData[i].semester.toString()
+              )
             ) {
               return true;
             }
@@ -268,7 +272,7 @@ export default {
       }
       if (this.chosenexam) {
         filterData = filterData.filter(item => {
-          if (Object.keys(item.semesterData[0]).length === 1) {
+          if (Object.keys(item.info.semesterData[0]).length === 1) {
             return true;
           }
 
@@ -277,9 +281,8 @@ export default {
       }
       if (this.chosenlevel.length > 0) {
         filterData = filterData.filter(item => {
-          var str = item.moduleCode.toString();
+          var str = item.info.moduleCode.toString();
           var matches = str.match(/(\d+)/);
-          console.log(matches[0].charAt(0) + "000");
           if (this.chosenlevel.includes(matches[0].charAt(0) + "000")) {
             return true;
           }
@@ -288,7 +291,7 @@ export default {
       }
       if (this.chosenmc.length > 0) {
         filterData = filterData.filter(item => {
-          var mc = parseInt(item.moduleCredit);
+          var mc = parseInt(item.info.moduleCredit);
 
           if (mc < 4) {
             return this.chosenmc.includes("1");
@@ -303,79 +306,86 @@ export default {
       }
       if (this.chosenfac.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosenfac.includes(item.faculty);
+          return this.chosenfac.includes(item.info.faculty);
         });
       }
       if (this.chosendept.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosendept.includes(item.department);
+          return this.chosendept.includes(item.info.department);
         });
       }
       if (this.searchbar !== "") {
         filterData = filterData.filter(item => {
           var title =
-            item.moduleCode.toLowerCase() + " " + item.title.toLowerCase();
+            item.info.moduleCode.toLowerCase() +
+            " " +
+            item.info.title.toLowerCase();
           return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
 
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
+      console.log(this.modulesData);
+      console.log(filterData.length);
       return filterData;
     }
   },
   methods: {
-    readDatabase() {
-      database.getAllModules().then((e) => {
-        
-        this.modulesData = e;
+    readDatabase: function() {
+      database
+        .collection("modules")
+        .get()
+        .then(querySnapShot => {
+          var flookup = {};
+          var dlookup = {};
+          var slookup = {};
+          //Loop through each item
+          querySnapShot.forEach(doc => {
+            //console.log(doc.id+"==>"+doc.data())
+            this.modulesData.push(doc.data());
+            var fac = doc.data().info.faculty;
+            var dept = doc.data().info.department;
+            if (!(fac in flookup)) {
+              flookup[fac] = 1;
+              this.faculties.push({
+                text: fac,
+                value: fac,
+                selected: false
+              });
+            }
+            if (!(dept in dlookup)) {
+              dlookup[dept] = 1;
+              this.departments.push({
+                text: dept,
+                value: dept,
+                selected: false
+              });
+            }
 
-        
-      });
-      console.log(this.modulesData);
-    },
-    retrieveFac: function() {
-      var lookup = {};
-      var items = this.modulesData;
-      for (var i = 0; i < items.length; i++) {
-        var name = items[i].faculty;
+            //search list
+            var name = doc.data().info.moduleCode + " " + doc.data().info.title;
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.faculties.push({
-            text: name,
-            value: name,
-            selected: false
+            if (!(name in slookup)) {
+              slookup[name] = 1;
+              this.searchlist.push(name);
+            }
           });
-        }
-      }
+        });
     },
-    retrieveDept: function() {
-      var lookup = {};
-      var items = this.modulesData;
-      for (var i = 0; i < items.length; i++) {
-        var name = items[i].department;
+    writeDatabase: function() {
+      var items = dataObject.Modules2;
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.departments.push({
-            text: name,
-            value: name,
-            selected: false
-          });
-        }
-      }
-    },
-    retrieveModule: function() {
-      var lookup = {};
-      var items = this.modulesData;
       for (var i = 0; i < items.length; i++) {
-        var name = items[i].moduleCode + " " + items[i].title;
+        var item = {
+          info: items[i],
+          intake: 0
+        };
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.searchlist.push(name);
-        }
+        database
+          .collection("modules")
+          .doc()
+          .set(item);
       }
     },
     clearfilter: function() {
@@ -395,6 +405,7 @@ export default {
     },
     checksemester(arr) {
       var semesters = [];
+      arr = arr.info.semesterData;
       var num = arr.length;
       for (var i = 1; i <= 4; i++) {
         var semname;
@@ -429,6 +440,17 @@ export default {
       }
 
       return semesters;
+    },
+    formatprereq: function(arr) {
+      var str = "";
+      for (var i = 0; i < arr.length; i++) {
+        if (i === arr.length - 1) {
+          str = str + arr[i];
+        } else {
+          str = str + arr[i] + ", ";
+        }
+      }
+      return str;
     },
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
@@ -484,10 +506,11 @@ export default {
         return "";
       }
     },
-    calcwork(workload) {
+    calcwork(arr) {
+      arr = arr.info.workload;
       var num = 0;
-      for (var i = 0; i < workload.length; i++) {
-        num = num + workload[i];
+      for (var i = 0; i < arr.length; i++) {
+        num = num + arr[i];
       }
       return num;
     },
@@ -496,7 +519,7 @@ export default {
       series.push({
         data: workload
       });
-      console.log(series);
+
       return series;
     },
     checkmodnum(modnum) {
@@ -509,11 +532,9 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
+    //this.writeDatabase();
     this.readDatabase();
-    this.retrieveFac();
-    this.retrieveDept();
-    this.retrieveModule();
   }
 };
 </script>
