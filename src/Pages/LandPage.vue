@@ -38,7 +38,7 @@
                         </md-card-media>
                         <md-card-header-text>
                             <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">CAP:</div>
-                            <div class="md-title">4.88</div>
+                            <div class="md-title">{{User.current_cap}}</div>
                         </md-card-header-text>
                     </md-card-header>
                  </md-card>
@@ -76,7 +76,7 @@
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
             
                  <md-card  md-with-hover  >    
-                    <RadarChart style="padding:2%"/>
+                    <RadarChart style="padding:2%"></RadarChart>
                  </md-card>
                  <br>
 
@@ -105,7 +105,7 @@
                 </md-card>
                 
                 <div id="treechart" class="container-fluid" >
-                    
+                    <coursetree></coursetree>
                 </div>
                 </md-card>
             </div>
@@ -145,6 +145,7 @@
     // import Ratings from '../components/Ratings'
     import ReviewSection from '../components/ReviewSection'
     import database from '../firebase.js'
+    import coursetree from '../components/coursetree'
 
     export default {
     name: 'LandPage',
@@ -154,6 +155,7 @@
     components:{
         AddModulesModal,
         RadarChart,
+        coursetree,
         //TreeChart,
         //OverallProgress,
         capline,
@@ -260,6 +262,7 @@
     },
     created(){
         this.readUser()
+
        
     },
     mounted() {
