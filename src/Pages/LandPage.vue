@@ -169,6 +169,7 @@
                 }
             }
         },
+
         get_currentsem(obj_array){
             var keys = ["one","two","three","four","five", "six", "seven", "eight"]
             var sem_no = 1
@@ -202,6 +203,7 @@
             // })
 
         },
+
         scrolltoView(elementPosition){
             var headerOffset = 90;
             //227.578125
@@ -283,9 +285,27 @@
         };
     },
     created(){
-        this.readUser()
 
-       
+        const self = this
+        // database.getStudentInfo().then(function(user){
+        //     self.User = user
+        // })
+        database.firebase_data.collection("students").doc(database.user)
+        .onSnapshot(function(user){ 
+            var userData = user.data()
+            var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sap_by_sem,
+            overall_cap: userData.overall_cap
+            }
+            self.User = result
+        })
+        
+
     },
     mounted() {
         if (this.userPassed) {
