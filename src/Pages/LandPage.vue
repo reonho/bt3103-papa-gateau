@@ -290,6 +290,7 @@
         // database.getStudentInfo().then(function(user){
         //     self.User = user
         // })
+        
         database.firebase_data.collection("students").doc(database.user)
         .onSnapshot(function(user){ 
             var userData = user.data()
@@ -302,12 +303,18 @@
             sap_by_sem: userData.sap_by_sem,
             overall_cap: userData.overall_cap
             }
+
+            
             self.User = result
+            self.get_currentsem(self.User.sap_by_sem)
         })
+       
+        
         
 
     },
     mounted() {
+        
         if (this.userPassed) {
             //this.User = this.userPassed  
         }
