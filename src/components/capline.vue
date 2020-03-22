@@ -25,7 +25,7 @@
                  { name: 'Cumulative Grade', data: [0,0],}],
                 chartOptions2: {
                     chart: {
-                        type: 'line',
+                        type: 'area',
                         toolbar: {
                             show: false,
                           },
@@ -38,10 +38,18 @@
                             {
                             min: 3,
                             max: 5,
+                            "labels": {
+                                "formatter": function (val) {
+                                    return val.toFixed(2)
+                                }
+                            }
                             }],
 
                     dataLabels: {
                         enabled: true,
+                        "formatter": function (val) {
+                                return val.toFixed(2)
+                            }
                     },
                     colors:['#00aaff', '#ff9900', '#2cab93', "#9500ff", '#E91E63', '#FF9800',],
                     fill: {

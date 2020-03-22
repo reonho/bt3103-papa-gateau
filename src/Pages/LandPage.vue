@@ -288,11 +288,13 @@
     created(){
 
         const self = this
+
         database.getStudentInfo().then(function(user){
             self.User = user
         })
 
         // query database for user info
+
         database.firebase_data.collection("students").doc(database.user)
         .onSnapshot(function(user){ 
             var userData = user.data()
@@ -306,6 +308,8 @@
             overall_cap: userData.overall_cap,
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
+
+            
             self.User = result
             console.log("User info:")
             console.log(self.User) // console log result for reference
@@ -329,12 +333,19 @@
                 console.log(attributes) // console log result for reference
                 self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
             })
+        
+
+
+            self.get_currentsem(self.User.sap_by_sem)
         })
+       
+        
 
         
 
     },
     mounted() {
+        
         if (this.userPassed) {
             //this.User = this.userPassed  
         }
