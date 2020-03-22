@@ -126,6 +126,10 @@ var database = {
   //setModuleResults(moduleCode, su, grade, sem, year, teacher) {
     //set into module_grades
     //update student overall cap
+    //update semester cap
+    //update student attributes
+    // set module attribute
+
     // 
   //}
     // database.firebase_data.collection("module_grades").where("studentID","==",database.user)
@@ -137,6 +141,29 @@ var database = {
   //   result.modules = grades
   //   resolve(result)
   // })
+//   calculateGrade(grade){
+//     if (grade == "A+" || grade == "A"){
+//         return 5
+//     } else if (grade == "A-"){
+//         return 4.5
+//     } else if (grade == "B+"){
+//         return 4
+//     } else if (grade == "B"){
+//         return 3.5
+//     } else if (grade == "B-"){
+//         return 3
+//     } else if (grade == "C+"){
+//         return 2.5
+//     } else if (grade == "C"){
+//         return 2
+//     } else if (grade == "D+"){
+//         return 1.5
+//     } else if (grade == "D"){
+//         return 1
+//     } else if (grade == "F"){
+//         return 0
+//     }
+// },
 
 }
 
