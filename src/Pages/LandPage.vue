@@ -189,6 +189,7 @@
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: {},
+            facultyAttributes: [],
             treeData: [ {
                 "name" : "General Modules",
                 "off": true,
@@ -253,9 +254,11 @@
     },
     created(){
         const self = this
-        // database.getStudentInfo().then(function(user){
-        //     self.User = user
-        // })
+        database.getStudentInfo().then(function(user){
+            self.User = user
+        })
+
+        // query database for user info
         database.firebase_data.collection("students").doc(database.user)
         .onSnapshot(function(user){ 
             var userData = user.data()
@@ -266,10 +269,34 @@
             course: userData.course,
             modules: userData.modules_taken,
             sap_by_sem: userData.sap_by_sem,
-            overall_cap: userData.overall_cap
+            overall_cap: userData.overall_cap,
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
             self.User = result
+            console.log("User info:")
+            console.log(self.User) // console log result for reference
+
+
+            // query database for course attributes
+            var attributes = []
+            database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
+            .onSnapshot(function(onSnapshot){
+                onSnapshot.forEach(function(doc){
+                    var attr= doc.data().attributes
+                    var x
+                    for (x of attr){
+                        attributes.push({
+                            attribute: x.name,
+                            score: x.avg_score
+                        })
+                    }
+                })
+                console.log("Attribute info according to user's faculty:")
+                console.log(attributes) // console log result for reference
+                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
+            })
         })
+
         
     },
     mounted() {
