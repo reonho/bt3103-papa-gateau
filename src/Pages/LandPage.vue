@@ -38,7 +38,7 @@
                         </md-card-media>
                         <md-card-header-text>
                             <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">CAP:</div>
-                            <div class="md-title">{{User.current_cap}}</div>
+                            <div class="md-title">{{User.overall_cap}}</div>
                         </md-card-header-text>
                     </md-card-header>
                  </md-card>
@@ -48,7 +48,7 @@
                   
             </div>
 
-             <div class = "md-layout-item md-size-30">
+             <div class = "md-layout-item md-size-30" v-if="sem">
                     <md-card style='background: #1ABC9C;; color:whitesmoke' md-with-hover>
                         <md-card-header>
                             <md-card-media md-small style="padding:1vh">
@@ -56,16 +56,11 @@
                             </md-card-media>
                             <md-card-header-text>
                                 <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">SEMESTER:</div>
-                                <div class="md-title">Year 2 Semester 2</div>
+                                <div class="md-title"  >{{sem}}</div>
                             </md-card-header-text>
                         </md-card-header>
                     </md-card>
-
-                      
                  </div>
-
-            
-
         </div>
 
 
@@ -81,7 +76,7 @@
                  <br>
 
                  <md-card  md-with-hover  >         
-                    <capline style="padding:2%"/>
+                    <capline v-if='User.sap_by_sem'  :sap="User.sap_by_sem" style="padding:2%"/>
                 </md-card>                   
             </div>
 
@@ -174,14 +169,37 @@
                 }
             }
         },
+        get_currentsem(obj_array){
+            var keys = ["one","two","three","four","five", "six", "seven", "eight"]
+            var sem_no = 1
+            for(let i=0; i < 8; i++){
+                var key = keys[i]
+                //console.log(obj_array[0][key])
+                var value = obj_array[i][key]
+                if (!value){
+                    sem_no = i+1
+                    break
+                }
+            }
+
+            var year = Math.ceil(sem_no/2)
+            var sem = sem_no%2
+
+            this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
+
+
+
+        },
         readUser(){ // this is a function for testing the queries only. for reference
-            // database.getUserInfo().then((e)=>{
+            database.getStudentInfo().then((e)=>{
+                this.User = e
+                console.log(e)
+                this.get_currentsem(e.sap_by_sem)
+            })
+            // database.getStudentInfo().then(function(e){
             //     this.User = e
             //     console.log(e)
             // })
-            database.getStudentInfo().then(function(e){
-                console.log(e)
-            })
 
         },
         scrolltoView(elementPosition){
@@ -201,66 +219,67 @@
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: {},
-            treeData: [ {
-                "name" : "General Modules",
-                "off": true,
-                "value": 0,
-                "word" : "",
-                "children": [
-                     {
-                        'name': "GER1000",
-                        'value': 0,
-                        "word" : ""
-                    },
-                    {
-                        'name': "GET1001",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
-                    }
-                ] 
-            },{
-                "name" : "Core Modules",
-                "value": 0,
-                "off": true,
-                "word" : "",
-                "children": [
-                    {
-                        'name': "BT2101",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
-                        "children":[
-                            {
-                        'name': "BT1101",
-                        'value': 0,
-                        "word" : "",
-                        },
-                         {
-                        'name': "MA1521",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
-                    },
+            sem: null
+            // treeData: [ {
+            //     "name" : "General Modules",
+            //     "off": true,
+            //     "value": 0,
+            //     "word" : "",
+            //     "children": [
+            //          {
+            //             'name': "GER1000",
+            //             'value': 0,
+            //             "word" : ""
+            //         },
+            //         {
+            //             'name': "GET1001",
+            //             'value': 0.7,
+            //             "word" : "Not Completed!",
+            //         }
+            //     ] 
+            // },{
+            //     "name" : "Core Modules",
+            //     "value": 0,
+            //     "off": true,
+            //     "word" : "",
+            //     "children": [
+            //         {
+            //             'name': "BT2101",
+            //             'value': 0.7,
+            //             "word" : "Not Completed!",
+            //             "children":[
+            //                 {
+            //             'name': "BT1101",
+            //             'value': 0,
+            //             "word" : "",
+            //             },
+            //              {
+            //             'name': "MA1521",
+            //             'value': 0.7,
+            //             "word" : "Not Completed!",
+            //         },
 
-                        ]
-                    }
-                ] 
-            },{
-                "name" : "Programme Modules",
-                "value": 0,
-                "off": true,
-                "word" : "",
-                "children": [
-                     {
-                        'name': "BT4222",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
-                    },
-                    {
-                        'name': "BT4102",
-                        'value': 0.7,
-                        "word" : "Not Completed!",
-                    }
-                ] 
-            },]
+            //             ]
+            //         }
+            //     ] 
+            // },{
+            //     "name" : "Programme Modules",
+            //     "value": 0,
+            //     "off": true,
+            //     "word" : "",
+            //     "children": [
+            //          {
+            //             'name': "BT4222",
+            //             'value': 0.7,
+            //             "word" : "Not Completed!",
+            //         },
+            //         {
+            //             'name': "BT4102",
+            //             'value': 0.7,
+            //             "word" : "Not Completed!",
+            //         }
+            //     ] 
+            // },]
         };
     },
     created(){
@@ -271,7 +290,6 @@
     mounted() {
         if (this.userPassed) {
             //this.User = this.userPassed  
-            
         }
         else{
             this.User = {User:"there"}
