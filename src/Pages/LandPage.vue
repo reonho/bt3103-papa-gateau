@@ -71,7 +71,7 @@
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
             
                  <md-card  md-with-hover  >    
-                    <RadarChart style="padding:2%"></RadarChart>
+                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 } ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 } ] ' ></RadarChart>
                  </md-card>
                  <br>
 
@@ -329,8 +329,8 @@
                         })
                     }
                 })
-                console.log("Attribute info according to user's faculty:")
-                console.log(attributes) // console log result for reference
+                //console.log("Attribute info according to user's faculty:")
+                //console.log(attributes) // console log result for reference
                 self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
             })
         
