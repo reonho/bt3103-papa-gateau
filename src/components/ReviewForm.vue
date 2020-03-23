@@ -8,7 +8,7 @@
       md-content="Your review will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
-      @md-confirm = 'goback'
+      @md-confirm="goback"
     />
     <div class="page">
       <div class="pageHeader">
@@ -41,6 +41,22 @@
                     v-if="!$v.detailsForm.selectedFaculty.required"
                   >This field is required</span>
                 </md-field>
+
+                <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
+                  <label>Academic year</label>
+                  <md-select v-model="detailsForm.selectedYear">
+                    <md-option
+                      v-for="yr in years"
+                      v-bind:key="yr.id"
+                      v-bind:value="yr.title"
+                    >{{yr.title}}</md-option>
+                  </md-select>
+                  <span
+                    class="md-error"
+                    v-if="!$v.detailsForm.selectedYear.required"
+                  >This field is required</span>
+                </md-field>
+
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
                   <md-select v-model="detailsForm.selectedSemester">
@@ -58,9 +74,8 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedStaff')">
                   <label>Taught by</label>
-                  <md-select v-model="detailsForm.selectedStaff">
-                    <md-option v-for="s in staff" v-bind:key="s.id" v-bind:value="s.name">{{s.name}}</md-option>
-                  </md-select>
+                  <md-input v-model="detailsForm.selectedStaff"></md-input>
+                  <span class="md-helper-text">Please enter the full name of the module lecturer</span>
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
@@ -229,17 +244,13 @@
                     v-if="!$v.tutorialForm.comments.required"
                   >This field is required</span>
                 </md-field>
-                <hr/>
-                <br/>
+                <hr />
+                <br />
                 <label class="md-subheading">
                   <b>As a whole, the assignments and projects were manageable.</b>
                 </label>
                 <div>
-                  <md-radio
-                    v-model="tutorialForm.ap"
-                    class="md-primary"
-                    value="1"
-                  >Strongly Disagree</md-radio>
+                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="1">Strongly Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="4">Agree</md-radio>
@@ -255,8 +266,8 @@
                     v-if="!$v.tutorialForm.apcomments.required"
                   >This field is required</span>
                 </md-field>
-                <hr/>
-                <br/>
+                <hr />
+                <br />
 
                 <label class="md-subheading">
                   <b>The module's examinations were manageable.</b>
@@ -282,8 +293,8 @@
                     v-if="!$v.tutorialForm.examcomments.required"
                   >This field is required</span>
                 </md-field>
-                <hr/>
-                <br/>
+                <hr />
+                <br />
               </md-card-content>
               <md-card-actions class="md-layout md-alignment-center-center">
                 <md-button
@@ -367,14 +378,13 @@
             </md-step>
           </md-steppers>
           <md-dialog-confirm
-          :md-active.sync='showSubmitMessage'
-          md-title='Review Submitted!'
-          md-content='Thanks for submitting a review!'
-          @md-confirm='goback'
-          md-cancel-text=''
-          md-confirm-text='Okay'
-            />
-
+            :md-active.sync="showSubmitMessage"
+            md-title="Review Submitted!"
+            md-content="Thanks for submitting a review!"
+            @md-confirm="goback"
+            md-cancel-text
+            md-confirm-text="Okay"
+          />
         </form>
       </div>
     </div>
@@ -387,7 +397,7 @@ import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
-import database from '../firebase'
+import database from "../firebase";
 export default {
   name: "ReviewForm",
   props: {
@@ -401,6 +411,9 @@ export default {
   mixins: [validationMixin],
   validations: {
     detailsForm: {
+      selectedYear: {
+        required
+      },
       selectedSemester: {
         required
       },
@@ -457,21 +470,24 @@ export default {
   },
   methods: {
     submitForm() {
+      let db = database.firebase_data;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
         // this.goback()
-        database.collection('reviews').add({
-          'userid': 'e0123456', //change this to the user id
-          'module_code': 'CS2030', //change this to the passed props from moduleinfo page
-          'likes': 0,
-          'dislikes': 0,
-          'detailsForm': this.detailsForm,
-          'lectureForm': this.lectureForm,
-          'tutorialForm': this.tutorialForm,
-          'commentForm': this.commentForm
-        })
+        db.collection("reviews").add({
+          userid: "e0123451", //change this to the user id
+          module_code: "CS2030", //change this to the passed props from moduleinfo page
+          likes: 0,
+          users_liked: [],
+          dislikes: 0,
+          users_disliked: [],
+          detailsForm: this.detailsForm,
+          lectureForm: this.lectureForm,
+          tutorialForm: this.tutorialForm,
+          commentForm: this.commentForm
+        });
         // this.setDone("first", "second");
 
         console.log("form submitted!");
@@ -529,19 +545,33 @@ export default {
   },
 
   created() {
-    database.collection('faculties').get().then((querySnapShot) => {
-      let item = {}
-      querySnapShot.forEach(doc => {
-        item = doc.data()
-        this.faculties.push(item)
-      })
+    // database.collection('faculties').get().then((querySnapShot) => {
+    //   let item = {}
+    //   querySnapShot.forEach(doc => {
+    //     item = doc.data()
+    //     this.faculties.push(item)
+    //   })
+    // })
+    database.getFaculties().then(r => {
+      this.faculties = r;
+    });
+
+    database.getGrades().then(g => {
+      this.grades = g;
+    });
+
+    database.getYears().then(y => {
+      this.years = y
+    })
+
+    database.getSemesters().then(s => {
+      this.semesters = s
     })
   },
 
-
-
   data: () => ({
     detailsForm: {
+      selectedYear: null,
       selectedSemester: null,
       selectedStaff: null,
       selectedGrade: null,
@@ -556,19 +586,18 @@ export default {
       tutorialMaterial: "3",
       error: null,
       tutor: "3",
-      ap: '3',
+      ap: "3",
       apcomments: null,
       comments: null,
-      exam: '3',
-      examcomments: null,
+      exam: "3",
+      examcomments: null
     },
     commentForm: {
       comments: null,
       recommend: "3",
       difficulty: "3",
       workload: "3",
-      rating: null,
-      
+      rating: null
     },
     exitDialog: false,
     submitStatus: null,
@@ -584,16 +613,9 @@ export default {
     showErrorMessage: false,
     lectureError: null,
     faculties: [],
-    semesters: [
-      {
-        id: 1,
-        title: "AY1819 Semester 2"
-      },
-      {
-        id: 2,
-        title: "AY1819 Semester 1"
-      }
-    ],
+    grades: [],
+    semesters: [],
+    years: [],
     staff: [
       {
         id: 1,
@@ -602,61 +624,7 @@ export default {
       {
         id: 2,
         name: "Ben Leong"
-      }
-    ],
-    grades: [
-      {
-        id: 1,
-        title: "A+"
       },
-      {
-        id: 2,
-        title: "A"
-      },
-      {
-        id: 3,
-        title: "A-"
-      },
-      {
-        id: 4,
-        title: "B+"
-      },
-      {
-        id: 5,
-        title: "B"
-      },
-      {
-        id: 6,
-        title: "B-"
-      },
-      {
-        id: 7,
-        title: "C+"
-      },
-      {
-        id: 8,
-        title: "C"
-      },
-      {
-        id: 9,
-        title: "D+"
-      },
-      {
-        id: 10,
-        title: "D"
-      },
-      {
-        id: 11,
-        title: "F"
-      },
-      {
-        id: 12,
-        title: "S"
-      },
-      {
-        id: 13,
-        title: "U"
-      }
     ]
   })
 };
@@ -707,9 +675,12 @@ export default {
 Tentative fix to css background
 */
 .pageBody {
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
-  height: 80vmax; 
-  padding:0px;
-
+  background-image: linear-gradient(
+    to top,
+    #cfd9df 0%,
+    #e2ebf0 100%
+  ) !important;
+  height: 80vmax;
+  padding: 0px;
 }
 </style>
