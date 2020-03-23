@@ -167,10 +167,13 @@ import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
-import database from '../firebase'
-import ReviewSection from '../components/ReviewSection'
+import database from "../firebase";
+import ReviewSection from "../components/ReviewSection";
 
 export default {
+  props: {
+    // module_code: String //pass in module_code from prev page
+  },
   components: {
     PieChart,
     BarChart,
@@ -192,9 +195,9 @@ export default {
   },
 
   created() {
-    //replace this with a query by module code
-    console.log('created')
-    database.collection('reviews').onSnapshot((querySnapShot)=> {
+    let db = database.firebase_data;
+    //query all reviews which match the passed module code
+    db.collection('reviews').where('module_code', '==', this.module_code).onSnapshot((querySnapShot)=> {
       this.reviewData = []
       querySnapShot.forEach(doc => {
         let item = {}
@@ -204,11 +207,18 @@ export default {
         // console.log(doc.id)
       })
       // console.log(this.reviewData)
-      
+
     })
+    // database.getModuleReviews().then(r => {
+    //   this.reviewData = r;
+    // })
+
+    
+      
   },
   data: () => ({
     reviewData: [],
+    module_code: 'CS2030', //testing purposes, replace with passed module code
     seriesStats: [
       {
         name: "Intake",
