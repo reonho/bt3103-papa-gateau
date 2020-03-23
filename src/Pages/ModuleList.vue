@@ -93,7 +93,7 @@
                 <template
                   slot="md-autocomplete-empty"
                   slot-scope="{ term }"
-                >No employees matching "{{ term }}" were found.</template>
+                >No Modules with "{{ term }}" were found.</template>
               </md-autocomplete>
             </div>
 
@@ -105,11 +105,13 @@
           <div id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <a
+                <router-link
                   class="module-name"
-                  href="/#/module"
+                  :to="'/'+post.info.moduleCode"
                   style="color:#0B5345;"
-                >{{post.info.moduleCode}} {{post.info.title}}</a>
+                >{{post.info.moduleCode}} {{post.info.title}}</router-link>
+                <br/>
+                <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
                 <p
                   class="module-type"
                 >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
@@ -151,6 +153,7 @@
                           v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
                           :title="sem.semester"
+                          :title-link-class="sem.disabled"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -326,8 +329,6 @@ export default {
 
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
-      console.log(this.modulesData);
-      console.log(filterData.length);
       return filterData;
     }
   },
@@ -343,7 +344,8 @@ export default {
           //Loop through each item
           querySnapShot.forEach(doc => {
             //console.log(doc.id+"==>"+doc.data())
-            this.modulesData.push(doc.data());
+            var item = doc.data();
+            this.modulesData.push(item);
             var fac = doc.data().info.faculty;
             var dept = doc.data().info.department;
             if (!(fac in flookup)) {
@@ -372,6 +374,7 @@ export default {
             }
           });
         });
+
     },
     writeDatabase: function() {
       var items = dataObject.Modules2;
@@ -384,7 +387,7 @@ export default {
 
         database
           .collection("modules")
-          .doc()
+          .doc(items[i].moduleCode)
           .set(item);
       }
     },
@@ -411,6 +414,7 @@ export default {
         var semname;
         var examDate;
         var examDuration;
+        var disabled = "";
         if (i === 3) {
           semname = "Special Term 1";
         } else if (i === 4) {
@@ -422,6 +426,7 @@ export default {
           //leftover
           examDate = null;
           examDuration = 0;
+          disabled = "disabledTab"
         } else {
           if (Object.keys(arr[i - 1]).length > 1) {
             examDate = arr[i - 1].examDate;
@@ -435,23 +440,24 @@ export default {
         semesters.push({
           semester: semname,
           examDate: examDate,
-          examDuration: examDuration
+          examDuration: examDuration,
+          disabled: disabled
         });
       }
 
       return semesters;
     },
-    formatprereq: function(arr) {
-      var str = "";
-      for (var i = 0; i < arr.length; i++) {
-        if (i === arr.length - 1) {
-          str = str + arr[i];
-        } else {
-          str = str + arr[i] + ", ";
-        }
-      }
-      return str;
-    },
+    // formatprereq: function(arr) {
+    //   var str = "";
+    //   for (var i = 0; i < arr.length; i++) {
+    //     if (i === arr.length - 1) {
+    //       str = str + arr[i];
+    //     } else {
+    //       str = str + arr[i] + ", ";
+    //     }
+    //   }
+    //   return str;
+    // },
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -530,6 +536,9 @@ export default {
       } else {
         return modnum + " Modules ";
       }
+    },
+    passmod: function(code) {
+      this.$router.push({ name: "modulePage", params: {code: code}})
     }
   },
   mounted() {
