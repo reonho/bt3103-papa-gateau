@@ -1,6 +1,6 @@
 <template>
 <div class="landPage" style=" padding: 40px 0 0 0;">
-    <NavBarLandpage class="fixed-top" @scroll = "scrolltoView"/>
+    <NavBarLandpage class="fixed-top" v-bind:user = 'User' @scroll = "scrolltoView"/>
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
