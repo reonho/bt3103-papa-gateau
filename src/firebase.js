@@ -56,13 +56,43 @@ var database = {
     })
     return promise
   },
+  async getModuleReviews() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('reviews').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+    })
+    return promise
+  },
+  
 
   logout(){
     var promise = new Promise(function(resolve){
       firebase.auth().signOut().then(function(){
         resolve(true)
       })
-
+    })
+    return promise
+  },
+  async getFaculties() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('faculties').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
     })
     return promise
   },
@@ -110,6 +140,55 @@ var database = {
     })
     return promise
   },
+
+  async getGrades() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('grades').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+
+    })
+    return promise
+  },
+  async getYears() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('years').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+
+    })
+    return promise
+  },
+  async getSemesters() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('semesters').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+
+    })
+    return promise
+  }
 
 
   //=====================================//
@@ -248,4 +327,3 @@ export default database;
   //   //returning promise object
   //   return promise
   // },
-
