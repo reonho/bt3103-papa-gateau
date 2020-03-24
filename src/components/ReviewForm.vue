@@ -612,10 +612,20 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    faculties: [],
-    grades: [],
-    semesters: [],
-    years: [],
+    faculties: [{
+      id:"CS2030",
+      title:"CS2030"
+    }],
+    semesters: [
+      {
+        id: 1,
+        title: "AY1819 Semester 2"
+      },
+      {
+        id: 2,
+        title: "AY1819 Semester 1"
+      }
+    ],
     staff: [
       {
         id: 1,
