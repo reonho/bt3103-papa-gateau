@@ -6,7 +6,7 @@
            <md-button style="font-size: 200%;color:white;font-weight:bold">Modeaux</md-button>
         </router-link>
         </h3>
-          <md-button style="color:white;font-weight:bold" v-on:click="logout()">Lout</md-button>
+          <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>
         <md-menu md-size="medium" md-align-trigger>
         </md-menu>
         <router-link class="nav-link" to="/">

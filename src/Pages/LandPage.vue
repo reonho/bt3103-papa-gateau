@@ -1,6 +1,6 @@
 <template>
 <div class="landPage" style=" padding: 40px 0 0 0;">
-    <NavBarLandpage class="fixed-top" v-bind:user = 'User' @scroll = "scrolltoView"/>
+    <NavBarLandpage class="fixed-top" @scroll = "scrolltoView"/>
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
@@ -291,53 +291,53 @@
 
         database.getStudentInfo().then(function(user){
             self.User = user
+            //console.log(database.user)
         })
-
         // query database for user info
 
-        database.firebase_data.collection("students").doc(database.user)
-        .onSnapshot(function(user){ 
-            var userData = user.data()
-            var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sap_by_sem,
-            overall_cap: userData.overall_cap,
-            attributes: userData.attributes //individual attributes can be found in self.User.attributes
-            }
+        // database.firebase_data.collection("students").doc(database.user)
+        // .onSnapshot(function(user){ 
+        //     var userData = user.data()
+        //     var result = {
+        //     name: userData.name,
+        //     faculty: userData.faculty,
+        //     dept: userData.dept,
+        //     course: userData.course,
+        //     modules: userData.modules_taken,
+        //     sap_by_sem: userData.sap_by_sem,
+        //     overall_cap: userData.overall_cap,
+        //     attributes: userData.attributes //individual attributes can be found in self.User.attributes
+        // //     }
 
             
-            self.User = result
-            console.log("User info:")
-            console.log(self.User) // console log result for reference
+        //     self.User = result
+        //     console.log("User info:")
+        //     console.log(self.User) // console log result for reference
 
 
-            // query database for course attributes
-            var attributes = []
-            database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
-            .onSnapshot(function(onSnapshot){
-                onSnapshot.forEach(function(doc){
-                    var attr= doc.data().attributes
-                    var x
-                    for (x of attr){
-                        attributes.push({
-                            attribute: x.name,
-                            score: x.avg_score
-                        })
-                    }
-                })
-                console.log("Attribute info according to user's faculty:")
-                console.log(attributes) // console log result for reference
-                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
-            })
+        //     // query database for course attributes
+        //     var attributes = []
+        //     database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
+        //     .onSnapshot(function(onSnapshot){
+        //         onSnapshot.forEach(function(doc){
+        //             var attr= doc.data().attributes
+        //             var x
+        //             for (x of attr){
+        //                 attributes.push({
+        //                     attribute: x.name,
+        //                     score: x.avg_score
+        //                 })
+        //             }
+        //         })
+        //         console.log("Attribute info according to user's faculty:")
+        //         console.log(attributes) // console log result for reference
+        //         self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
+        //     })
         
 
 
-            self.get_currentsem(self.User.sap_by_sem)
-        })
+        //     self.get_currentsem(self.User.sap_by_sem)
+        // })
        
         
 

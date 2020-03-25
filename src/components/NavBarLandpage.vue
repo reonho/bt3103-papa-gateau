@@ -68,7 +68,6 @@
         },
         data: function(){ 
             return {
-                user: this.User
             };
         },
         methods: {

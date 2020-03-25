@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import 'firebase/firestore'
+import 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
@@ -188,13 +188,23 @@ var database = {
 
     })
     return promise
-  }
+  },
 
 
   //=====================================//
   //----------- getModules---------------//
   //=====================================//
-
+  async getModules(module){
+    var promise = new Promise(resolve => {
+      database.firebase_data.collection("modules")
+      .doc(module)
+      .get()
+      .then(doc => {
+        resolve(doc.data())
+      })
+    })
+    return promise
+  }
 
 
 

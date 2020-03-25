@@ -234,8 +234,8 @@ export default {
   },
   methods: {
     readDatabase: function() {
-      database
-        .collection("modules")
+      database.firebase_data
+        .collection("modules_")
         .doc(this.code)
         .get()
         .then(function(doc) {
@@ -365,25 +365,24 @@ export default {
   created() {
     //replace this with a query by module code
     console.log("created");
-    database.collection("reviews").onSnapshot(querySnapShot => {
-      this.reviewData = [];
-      querySnapShot.forEach(doc => {
-        let item = {};
-        item = doc.data();
-        item.id = doc.id;
-        this.reviewData.push(item);
-        // console.log(doc.id)
-      });
-      // console.log(this.reviewData)
-    });
-    database
-      .collection("modules")
-      .doc(this.code)
-      .get()
-      .then(doc => {
-        var item = doc.data();
-        this.Modules.push(item);
-      });
+    console.log(this.code)
+    // database.collection("reviews").onSnapshot(querySnapShot => {
+    //   this.reviewData = [];
+    //   querySnapShot.forEach(doc => {
+    //     let item = {};
+    //     item = doc.data();
+    //     item.id = doc.id;
+    //     this.reviewData.push(item);
+    //     // console.log(doc.id)
+    //   });
+    //   // console.log(this.reviewData)
+    // });
+
+    //get module details
+    database.getModules(this.code).then(item =>{
+      this.Modules.push(item);
+    })
+
   },
   data: () => ({
     totalsems: "",
