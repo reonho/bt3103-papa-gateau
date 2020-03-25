@@ -16,6 +16,10 @@
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
         </router-link>
+
+        <router-link class="nav-link" to="/Registration">
+          <md-button style="color:white;font-weight:bold" class="md-primary">Registration</md-button>
+        </router-link>
         
     </md-toolbar>
     

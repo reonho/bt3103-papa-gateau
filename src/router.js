@@ -5,6 +5,7 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+import Registration from './Pages/Registration'
 //import database from './firebase.js'
 
 
@@ -16,6 +17,14 @@ let router = new Router({
       path: '/ModuleList',
       name: 'ModuleList',
       component: ModuleList,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/Registration',
+      name: 'Registration',
+      component: Registration,
       meta: {
         requiresAuth: false
       }
