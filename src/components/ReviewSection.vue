@@ -14,13 +14,13 @@ import ReviewCard from "./ReviewCard";
 export default {
   name: "ReviewSection",
   props: {
-    msg: String,
+    user: String,
     reviewData: Array //should be an array of reviews from the backend
   },
   data: () => ({
     // reviewData: DataObject.reviewData
     // reviewData: [],
-    userid: 'e0123451'
+    //userid: 'e0123451'
   }),
 
   components: {

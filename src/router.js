@@ -50,8 +50,9 @@ let router = new Router({
     },
     {
       path:'/review',
-      name: 'reviewForm',
+      name: 'ReviewForm',
       component: ReviewForm,
+      props: true,
       meta: {
         requiresAuth: true
       }
