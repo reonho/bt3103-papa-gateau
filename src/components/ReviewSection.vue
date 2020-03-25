@@ -10,16 +10,17 @@
 <script>
 // import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
-import database from '../firebase';
+// import database from '../firebase';
 export default {
   name: "ReviewSection",
   props: {
-    msg: String,
-    // reviewData: Object //should be an array of reviews from the backend
+    user: String,
+    reviewData: Array //should be an array of reviews from the backend
   },
   data: () => ({
     // reviewData: DataObject.reviewData
-    reviewData: []
+    // reviewData: [],
+    //userid: 'e0123451'
   }),
 
   components: {
@@ -27,18 +28,10 @@ export default {
   },
 
   created() {
-    database.collection('reviews').onSnapshot((querySnapShot)=> {
-      this.reviewData = []
-      querySnapShot.forEach(doc => {
-        let item = {}
-        item = doc.data()
-        item.id = doc.id
-        this.reviewData.push(item)
-        // console.log(doc.id)
-      })
-       console.log(this.reviewData)
+    //query all reviews written by user
+     // console.log(this.reviewData)
       
-    })
+    
 
   }
 };

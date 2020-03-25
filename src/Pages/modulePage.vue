@@ -140,46 +140,15 @@
         </b-tabs>
       </div>
       <hr />
-      <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
-        Reviews
-        <a
-          class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right"
-          href="/#/review"
-          id="addReview"
-        >New Review</a>
-        <b-dropdown
-          size="lg"
-          variant="link"
-          toggle-class="text-decoration-none"
-          style="float:right"
-          no-caret
-        >
-          <template v-slot:button-content>Sort by Newest &#9662;</template>
-          <b-dropdown-item href="#">
-            <h5>Best</h5>
-          </b-dropdown-item>
-          <b-dropdown-item href="#">
-            <h5>Newest</h5>
-          </b-dropdown-item>
-          <b-dropdown-item href="#">
-            <h5>Oldest</h5>
-          </b-dropdown-item>
-        </b-dropdown>
-      </div>
-      <br />
-      <div>
-        <reviewcard :review="reviewData" />
-      </div>
-      <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
       <div id="reviews" style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
           style="color: white; font-size: 15px; float:right"
-          href="/#/review"
+          href="#"
           id="addReview"
+          @click="review"
         >New Review</a>
         <b-dropdown
           size="lg"
@@ -216,7 +185,7 @@ import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
-import database from "../firebase_wx.js";
+import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 
 export default {
@@ -233,9 +202,12 @@ export default {
     ReviewSection
   },
   methods: {
+    review(){
+      this.$router.push({name: "ReviewForm", params: {mod: this.Modules[0].info.moduleCode}})
+    },
     readDatabase: function() {
-      database
-        .collection("modules")
+      database.firebase_data
+        .collection("modules_")
         .doc(this.code)
         .get()
         .then(function(doc) {
@@ -365,29 +337,29 @@ export default {
   created() {
     //replace this with a query by module code
     console.log("created");
-    database.collection("reviews").onSnapshot(querySnapShot => {
-      this.reviewData = [];
-      querySnapShot.forEach(doc => {
-        let item = {};
-        item = doc.data();
-        item.id = doc.id;
-        this.reviewData.push(item);
-        // console.log(doc.id)
-      });
-      // console.log(this.reviewData)
-    });
-    database
-      .collection("modules")
-      .doc(this.code)
-      .get()
-      .then(doc => {
-        var item = doc.data();
-        this.Modules.push(item);
-      });
+    console.log(this.code)
+    // database.collection("reviews").onSnapshot(querySnapShot => {
+    //   this.reviewData = [];
+    //   querySnapShot.forEach(doc => {
+    //     let item = {};
+    //     item = doc.data();
+    //     item.id = doc.id;
+    //     this.reviewData.push(item);
+    //     // console.log(doc.id)
+    //   });
+    //   // console.log(this.reviewData)
+    // });
+
+    //get module details
+    database.getModules(this.code).then(item =>{
+      this.Modules.push(item);
+    })
+
   },
   data: () => ({
     totalsems: "",
     reviewData: [],
+    module_code: '', //testing purposes, replace with passed module code
     seriesStats: [
       {
         name: "Intake",
@@ -456,6 +428,40 @@ export default {
     }
   })
 };
+
+// archive 
+// <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
+//         Reviews
+//         <a
+//           class="btn btn-primary btn-lg mr-4"
+//           style="color: white; font-size: 15px; float:right"
+//           href="/#/review"
+//           id="addReview"
+//         >New Review</a>
+//         <b-dropdown
+//           size="lg"
+//           variant="link"
+//           toggle-class="text-decoration-none"
+//           style="float:right"
+//           no-caret
+//         >
+//           <template v-slot:button-content>Sort by Newest &#9662;</template>
+//           <b-dropdown-item href="#">
+//             <h5>Best</h5>
+//           </b-dropdown-item>
+//           <b-dropdown-item href="#">
+//             <h5>Newest</h5>
+//           </b-dropdown-item>
+//           <b-dropdown-item href="#">
+//             <h5>Oldest</h5>
+//           </b-dropdown-item>
+//         </b-dropdown>
+//       </div>
+//       <br />
+//       <div>
+//         <reviewcard :review="reviewData" />
+//       </div>
+//       <hr />
 </script>
 
 
@@ -518,3 +524,6 @@ export default {
   opacity: 0.5;
 }
 </style>
+
+
+

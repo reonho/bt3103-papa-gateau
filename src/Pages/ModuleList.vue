@@ -196,8 +196,7 @@
 </template>
 
 <script>
-import database from "../firebase_wx.js";
-import dataObject from "../Database.js";
+import database from "../firebase.js";
 import NavBar from "../components/NavBar";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -258,7 +257,6 @@ export default {
   computed: {
     filteredList: function() {
       let filterData = this.modulesData;
-
       if (this.chosensems.length > 0) {
         filterData = filterData.filter(item => {
           for (var i = 0; i < item.info.semesterData.length; i++) {
@@ -278,7 +276,6 @@ export default {
           if (Object.keys(item.info.semesterData[0]).length === 1) {
             return true;
           }
-
           return false;
         });
       }
@@ -295,7 +292,6 @@ export default {
       if (this.chosenmc.length > 0) {
         filterData = filterData.filter(item => {
           var mc = parseInt(item.info.moduleCredit);
-
           if (mc < 4) {
             return this.chosenmc.includes("1");
           } else if (mc === 4) {
@@ -326,7 +322,6 @@ export default {
           return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
-
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
@@ -334,7 +329,7 @@ export default {
   },
   methods: {
     readDatabase: function() {
-      database
+      database.firebase_data
         .collection("modules")
         .get()
         .then(querySnapShot => {
@@ -364,32 +359,14 @@ export default {
                 selected: false
               });
             }
-
             //search list
             var name = doc.data().info.moduleCode + " " + doc.data().info.title;
-
             if (!(name in slookup)) {
               slookup[name] = 1;
               this.searchlist.push(name);
             }
           });
         });
-
-    },
-    writeDatabase: function() {
-      var items = dataObject.Modules2;
-
-      for (var i = 0; i < items.length; i++) {
-        var item = {
-          info: items[i],
-          intake: 0
-        };
-
-        database
-          .collection("modules")
-          .doc(items[i].moduleCode)
-          .set(item);
-      }
     },
     clearfilter: function() {
       this.searchbar = "";
@@ -436,7 +413,6 @@ export default {
             examDuration = 0;
           }
         }
-
         semesters.push({
           semester: semname,
           examDate: examDate,
@@ -444,7 +420,6 @@ export default {
           disabled: disabled
         });
       }
-
       return semesters;
     },
     // formatprereq: function(arr) {
@@ -485,7 +460,6 @@ export default {
           time[1],
           time[2]
         );
-
         var hours = finishDate.getHours();
         var minutes = finishDate.getMinutes();
         var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
@@ -525,7 +499,6 @@ export default {
       series.push({
         data: workload
       });
-
       return series;
     },
     checkmodnum(modnum) {
@@ -568,7 +541,6 @@ hr {
 label {
   font-weight: 100 !important;
 }
-
 .sticky-header {
   position: fixed;
   left: 0;
@@ -639,11 +611,9 @@ label {
   padding: 11px;
   padding-top: 0px;
 }
-
 .mod-dropdown.md-field {
   margin: 4px 0px 10px !important;
 }
-
 /* Chips css */
 .md-chips.md-field.mod-chips.md-theme-default:after {
   background-color: white !important;
@@ -653,7 +623,6 @@ label {
   color: white !important;
   font-weight: bold !important;
 }
-
 /* Module Card css */
 #ModuleItem {
   margin-top: 20%;
@@ -691,21 +660,17 @@ label {
   z-index: 5;
   width: 71%;
 }
-
 .activetab {
   background-color: #1abc9c !important;
   font-weight: bold !important;
 }
-
 .md-theme-default .nav-link:not(.md-button) {
   color: #17a589 !important;
   font-weight: bold !important;
 }
-
 .md-theme-default .nav-link.active:not(.md-button) {
   color: white !important;
 }
-
 .md-tabs.test .md-tabs-content {
   height: 190px !important;
   max-width: 100% !important;
