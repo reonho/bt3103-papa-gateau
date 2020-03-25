@@ -216,7 +216,11 @@ var database = {
       .where("module", "==", module)
       .get().then(snapshot =>{
         snapshot.forEach(doc =>{
-          resolve(doc.data())
+          if (doc){
+            resolve(doc.data())
+          } else {
+            resolve(null)
+          }
         })
       })
     })
