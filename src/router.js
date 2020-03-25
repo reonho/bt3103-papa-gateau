@@ -5,6 +5,7 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+import EditForm from './components/EditForm'
 
 
 Vue.use(Router)
@@ -37,6 +38,11 @@ export default new Router({
       path:'/review',
       name: 'reviewForm',
       component: ReviewForm
+    },
+    {
+      path:'/edit',
+      name: 'EditForm',
+      component: EditForm
     }
   ]
 })
