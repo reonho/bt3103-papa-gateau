@@ -397,13 +397,10 @@ import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
-import database from "../firebase";
+import database from "../firebase.js";
 export default {
   name: "ReviewForm",
-  props: {
-    msg: String,
-    value: Number
-  },
+  props: ['mod'],
   components: {
     Ratings,
     NavBar
@@ -476,9 +473,10 @@ export default {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
         // this.goback()
-        db.collection("reviews").add({
-          userid: "e0123451", //change this to the user id
-          module_code: "CS2030", //change this to the passed props from moduleinfo page
+        database.getUser().then(user =>{
+          db.collection("reviews").add({
+          userid: user, //change this to the user id
+          module_code: this.mod, //change this to the passed props from moduleinfo page
           likes: 0,
           users_liked: [],
           dislikes: 0,
@@ -490,6 +488,7 @@ export default {
         });
         // this.setDone("first", "second");
 
+        })
         console.log("form submitted!");
       } else {
         this.submitStatus = "INVALID";
@@ -545,6 +544,15 @@ export default {
   },
 
   created() {
+    var self = this
+    database.getUser().then(user =>{
+      database.ifAddedModule(self.mod, user).then(mod =>{
+        this.faculties = [{id: 1, title: mod.faculty}]
+        this.grades = [{id: 1, title: mod.grade}]
+        this.years = [{id: 1, title: mod.year}]
+        this.semesters = [{id: 1, title: mod.sem}]
+      })
+    })
     // database.collection('faculties').get().then((querySnapShot) => {
     //   let item = {}
     //   querySnapShot.forEach(doc => {
@@ -552,21 +560,21 @@ export default {
     //     this.faculties.push(item)
     //   })
     // })
-    database.getFaculties().then(r => {
-      this.faculties = r;
-    });
+    // database.getFaculties().then(r => {
+    //   this.faculties = r;
+    // });
 
-    database.getGrades().then(g => {
-      this.grades = g;
-    });
+    // database.getGrades().then(g => {
+    //   this.grades = g;
+    // });
 
-    database.getYears().then(y => {
-      this.years = y
-    })
+    // database.getYears().then(y => {
+    //   this.years = y
+    // })
 
-    database.getSemesters().then(s => {
-      this.semesters = s
-    })
+    // database.getSemesters().then(s => {
+    //   this.semesters = s
+    // })
   },
 
   data: () => ({
@@ -612,10 +620,20 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    faculties: [],
-    grades: [],
-    semesters: [],
-    years: [],
+    faculties: [{
+      id:"CS2030",
+      title:"CS2030"
+    }],
+    semesters: [
+    //   {
+    //     id: 1,
+    //     title: "AY1819 Semester 2"
+    //   },
+    //   {
+    //     id: 2,
+    //     title: "AY1819 Semester 1"
+    //   }
+     ],
     staff: [
       {
         id: 1,
