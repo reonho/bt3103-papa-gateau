@@ -10,7 +10,6 @@ import database from './firebase.js'
 
 Vue.use(Router)
 
-// set the requirements to false for now
 let router = new Router({
   routes: [
     {
@@ -19,7 +18,7 @@ let router = new Router({
       component: LandPage,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     // comment this block to test components
@@ -28,7 +27,7 @@ let router = new Router({
       name: 'ModuleList',
       component: ModuleList,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -36,7 +35,7 @@ let router = new Router({
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
@@ -44,7 +43,7 @@ let router = new Router({
       name: 'modulePage',
       component: modulePage,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -52,7 +51,7 @@ let router = new Router({
       name: 'reviewForm',
       component: ReviewForm,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     }
   ]
