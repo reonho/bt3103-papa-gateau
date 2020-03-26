@@ -4,7 +4,10 @@
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
-            <div class = "md-layout-item" > <h1 style="font-size:350%">Hello {{User.User}}! Welcome to your dashboard.</h1></div>
+
+            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.name}}! Welcome to your dashboard.
+            <!--button v-on:click="readDatabase">Greet</button-->
+            </h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>

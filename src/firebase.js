@@ -22,24 +22,24 @@ var database = {
   firebase_data: firebase.firestore(),
   user: null,
 
-//   setUser (user) {
-//     this.user = user
-//   },
+  setUser (user) {
+    this.user = user
+  },
 
-//   getUser(){
-//     var promise = new Promise(function(resolve){
-//       firebase.auth().onAuthStateChanged(function(user) {
-//         if (user) {
-//           database.user = user.uid
-//           resolve(database.user)
-//         } else {
-//           database.user = null
-//           resolve(database.user)
-//         }
-//       })
-//     })
-//     return promise
-//   },
+  getUser(){
+    var promise = new Promise(function(resolve){
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          database.user = user.uid
+          resolve(database.user)
+        } else {
+          database.user = null
+          resolve(database.user)
+        }
+      })
+    })
+    return promise
+  },
 
   getUserInfo(){
     var promise = new Promise(function(resolve) {
@@ -74,15 +74,15 @@ var database = {
     return promise
   },
 
-//   logout(){
-//     var promise = new Promise(function(resolve){
-//       firebase.auth().signOut().then(function(){
-//         resolve(true)
-//       })
+  logout(){
+    var promise = new Promise(function(resolve){
+      firebase.auth().signOut().then(function(){
+        resolve(true)
+      })
 
-//     })
-//     return promise
-//   },
+    })
+    return promise
+  },
 
 
 
@@ -268,19 +268,8 @@ var database = {
     })
     return promise
   }
+
+
 }
 
 export default database;
-
-//             list.push(data)
-//           })
-//         })
-//         resolve(list)
-//       })
-//     })
-//     //returning promise object
-//     return promise
-//   }
-
-
-// }
