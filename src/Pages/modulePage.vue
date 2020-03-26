@@ -2,9 +2,9 @@
   <div>
     <NavBar />
     <div id="modulePage" style="margin-left:15vw;margin-right:15vw;margin-top:5vh">
-      <title id="details">{{Modules[0].moduleCode}} - {{Modules[0].title}}</title>
+      <title id="details">{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
       <div style="color:#0B5345; margin-left: 20px; margin-top:20px" class="header">
-        <b>{{Modules[0].moduleCode}} - {{Modules[0].title}}</b>
+        <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
       <button
         class="button"
@@ -16,34 +16,34 @@
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
-      >{{Modules[0].department}} • {{Modules[0].faculty}} • {{Modules[0].moduleCredit}} MCs</div>
+      >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 5px"
         class="depFac"
-      >Semester 1 • Semester 2 • Special Term I</div>
+      >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
       <div style="margin-left: 20px; margin-right:20px;font-size:15px">
-        {{Modules[0].description}}
+        {{this.Modules[0].info.description}}
         <br />
         <br />
         <div class="row">
-          <div class="col-4" style="text-align:left">
+          <div class="col-5" style="text-align:left">
             <b style="color: #616a6b">Preclusion(s)</b>
             <br />
-            {{Modules[0].preclusion}}
+            {{this.Modules[0].info.preclusion}}
             <br />
             <br />
             <b style="color: #616a6b">Prerequisite(s)</b>
             <br />
-            {{Modules[0].prerequisite}}
+            {{this.Modules[0].info.prerequisite}}
             <br />
             <br />
             <b style="color: #616a6b">Exam</b>
-            <br />4-Dec-2019 9:00 AM • 2 hours
+            <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
-          <div class="col-8">
-            <b style="color: #616a6b">Workload</b>
-            <workloadchart :seriesStats="formatwork(Modules[0].workload)"></workloadchart>
+          <div class="col-7">
+            <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
+            <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
           lazy
         >
           <b-tab
-            v-for="sem in checkSemester(Modules[0].semesterData)"
+            v-for="sem in checkSemester(this.Modules[0].info.semesterData)"
             v-bind:key="sem.index"
             :title="sem.semester"
             :title-link-class="sem.disabled"
@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import DataObject from "../Database.js";
+//import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import StudentIntakeChart from "../components/StudentIntakeChart";
@@ -197,6 +197,9 @@ import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 
 export default {
+  props: {
+    code: String
+  },
   components: {
     PieChart,
     BarChart,
@@ -220,6 +223,18 @@ export default {
       return Math.floor(num / 1);
     },
 
+    readDatabase: function() {
+      database
+        .collection("modules")
+        .doc(this.code)
+        .get()
+        .then(function(doc) {
+          this.Modules.push(doc.data());
+          this.test = doc.id;
+        });
+      console.log(this.code);
+      console.log(this.Modules);
+    },
     formatwork(workload) {
       var series = [];
       series.push({
@@ -237,6 +252,7 @@ export default {
         { semester: "Special Term II", disabled: "disabledTab" }
       ];
       var num = arr.length;
+
       for (var i = 0; i < num; i++) {
         if (arr[i].semester == 3) {
           semesters[2].disabled = "";
@@ -248,7 +264,92 @@ export default {
           semesters[0].disabled = "";
         }
       }
+
       return semesters;
+    },
+    showsem(sem) {
+      var totalsems = "";
+      var num = sem.length;
+      for (var i = 0; i < num; i++) {
+        var semesters = [
+          { semester: "Semester 1", disabled: "disabledTab" },
+          { semester: "Semester 2", disabled: "disabledTab" },
+          { semester: "Special Term I", disabled: "disabledTab" },
+          { semester: "Special Term II", disabled: "disabledTab" }
+        ];
+        if (sem[i].semester == 3) {
+          totalsems += semesters[2].semester + " • ";
+        } else if (sem[i].semester == 4) {
+          totalsems += semesters[3].semester + " • ";
+        } else if (sem[i].semester == 2) {
+          totalsems += semesters[1].semester + " • ";
+        } else {
+          totalsems += semesters[0].semester + " • ";
+        }
+      }
+      return totalsems.slice(0, -3);
+    },
+    formatDate: function(datetime) {
+      //2019-12-04T09:00:00.000Z
+      var monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ];
+      if (datetime !== null) {
+        var date = datetime.substring(0, 10).split("-");
+        var time = datetime.substring(11, 19).split(":");
+        var finishDate = new Date(
+          date[0],
+          date[1],
+          date[2],
+          time[0],
+          time[1],
+          time[2]
+        );
+
+        var hours = finishDate.getHours();
+        var minutes = finishDate.getMinutes();
+        var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        var strTime = hours + ":" + minutes + " " + ampm;
+        return (
+          finishDate.getDate() +
+          "-" +
+          monthNames[date[1] - 1] +
+          "-" +
+          date[0] +
+          " " +
+          strTime
+        );
+      }
+      return "No Exam";
+    },
+    formatDur: function(duration) {
+      if (duration !== 0) {
+        return " | " + duration + " hours";
+      } else {
+        return "";
+      }
+    },
+    calcwork(arr) {
+      arr = arr.info.workload;
+      var num = 0;
+      for (var i = 0; i < arr.length; i++) {
+        num = num + arr[i];
+      }
+      return num;
     }
   },
 
@@ -266,6 +367,7 @@ export default {
     });
   },
   data: () => ({
+    totalsems: "",
     reviewData: [],
     chosenSem: 0,
     seriesStats: [

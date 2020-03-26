@@ -93,7 +93,7 @@
                 <template
                   slot="md-autocomplete-empty"
                   slot-scope="{ term }"
-                >No employees matching "{{ term }}" were found.</template>
+                >No Modules with "{{ term }}" were found.</template>
               </md-autocomplete>
             </div>
 
@@ -105,15 +105,17 @@
           <div id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <a
+                <router-link
                   class="module-name"
-                  href="/#/module"
+                  :to="'/'+post.info.moduleCode"
                   style="color:#0B5345;"
-                >{{post.moduleCode}} {{post.title}}</a>
+                >{{post.info.moduleCode}} {{post.info.title}}</router-link>
+                <br/>
+                <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
                 <p
                   class="module-type"
-                >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
-                <p class="module-desc">{{post.description}}</p>
+                >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
+                <p class="module-desc">{{post.info.description}}</p>
 
                 <div class="md-layout">
                   <div class="md-layout-item md-size-30">
@@ -124,7 +126,7 @@
                       Preclusions
                       <br />
                     </span>
-                    <span class="module-preclusion">{{post.preclusion}}</span>
+                    <span class="module-preclusion">{{post.info.preclusion}}</span>
                     <br />
                     <br />
                     <span class="module-prerequisitehead">
@@ -132,7 +134,7 @@
                       <br />
                     </span>
 
-                    <span class="module-prerequisite">{{post.prerequisite}}</span>
+                    <span class="module-prerequisite">{{post.info.prerequisite}}</span>
                     <br />
                   </div>
                   <div class="md-layout-item-30" style="padding-left:25px">
@@ -148,9 +150,10 @@
                         lazy
                       >
                         <b-tab
-                          v-for="sem in checksemester(post.semesterData)"
+                          v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
                           :title="sem.semester"
+                          :title-link-class="sem.disabled"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -166,9 +169,9 @@
                               <br />
                               <br />
                               <span class="examhead">
-                                Workload - {{calcwork(post.workload) + " hours"}}
+                                Workload - {{calcwork(post) + " hours"}}
                                 <md-tooltip class="mod-tooltip" md-direction="bottom">
-                                  <workloadchart :seriesStats="formatwork(post.workload)"></workloadchart>
+                                  <workloadchart :seriesStats="formatwork(post)"></workloadchart>
                                 </md-tooltip>
                                 <br />
                               </span>
@@ -193,7 +196,8 @@
 </template>
 
 <script>
-import DataObject from "../Database.js";
+import database from "../firebase_wx.js";
+import dataObject from "../Database.js";
 import NavBar from "../components/NavBar";
 import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -215,8 +219,8 @@ export default {
   data() {
     return {
       searchbar: "",
-      modulesData: DataObject.Modules2,
       modulenum: 0,
+      modulesData: [],
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
         { text: "Semester 1", value: "1", selected: false },
@@ -254,11 +258,14 @@ export default {
   computed: {
     filteredList: function() {
       let filterData = this.modulesData;
+
       if (this.chosensems.length > 0) {
         filterData = filterData.filter(item => {
-          for (var i = 0; i < item.semesterData.length; i++) {
+          for (var i = 0; i < item.info.semesterData.length; i++) {
             if (
-              this.chosensems.includes(item.semesterData[i].semester.toString())
+              this.chosensems.includes(
+                item.info.semesterData[i].semester.toString()
+              )
             ) {
               return true;
             }
@@ -268,7 +275,7 @@ export default {
       }
       if (this.chosenexam) {
         filterData = filterData.filter(item => {
-          if (Object.keys(item.semesterData[0]).length === 1) {
+          if (Object.keys(item.info.semesterData[0]).length === 1) {
             return true;
           }
 
@@ -277,9 +284,8 @@ export default {
       }
       if (this.chosenlevel.length > 0) {
         filterData = filterData.filter(item => {
-          var str = item.moduleCode.toString();
+          var str = item.info.moduleCode.toString();
           var matches = str.match(/(\d+)/);
-          console.log(matches[0].charAt(0) + "000");
           if (this.chosenlevel.includes(matches[0].charAt(0) + "000")) {
             return true;
           }
@@ -288,7 +294,7 @@ export default {
       }
       if (this.chosenmc.length > 0) {
         filterData = filterData.filter(item => {
-          var mc = parseInt(item.moduleCredit);
+          var mc = parseInt(item.info.moduleCredit);
 
           if (mc < 4) {
             return this.chosenmc.includes("1");
@@ -303,70 +309,86 @@ export default {
       }
       if (this.chosenfac.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosenfac.includes(item.faculty);
+          return this.chosenfac.includes(item.info.faculty);
         });
       }
       if (this.chosendept.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosendept.includes(item.department);
+          return this.chosendept.includes(item.info.department);
         });
       }
       if (this.searchbar !== "") {
         filterData = filterData.filter(item => {
           var title =
-            item.moduleCode.toLowerCase() + " " + item.title.toLowerCase();
+            item.info.moduleCode.toLowerCase() +
+            " " +
+            item.info.title.toLowerCase();
           return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
-      console.log(filterData);
+
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
     }
   },
   methods: {
-    retrieveFac: function() {
-      var lookup = {};
-      var items = this.modulesData;
-      for (var i = 0; i < items.length; i++) {
-        var name = items[i].faculty;
+    readDatabase: function() {
+      database
+        .collection("modules")
+        .get()
+        .then(querySnapShot => {
+          var flookup = {};
+          var dlookup = {};
+          var slookup = {};
+          //Loop through each item
+          querySnapShot.forEach(doc => {
+            //console.log(doc.id+"==>"+doc.data())
+            var item = doc.data();
+            this.modulesData.push(item);
+            var fac = doc.data().info.faculty;
+            var dept = doc.data().info.department;
+            if (!(fac in flookup)) {
+              flookup[fac] = 1;
+              this.faculties.push({
+                text: fac,
+                value: fac,
+                selected: false
+              });
+            }
+            if (!(dept in dlookup)) {
+              dlookup[dept] = 1;
+              this.departments.push({
+                text: dept,
+                value: dept,
+                selected: false
+              });
+            }
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.faculties.push({
-            text: name,
-            value: name,
-            selected: false
+            //search list
+            var name = doc.data().info.moduleCode + " " + doc.data().info.title;
+
+            if (!(name in slookup)) {
+              slookup[name] = 1;
+              this.searchlist.push(name);
+            }
           });
-        }
-      }
-    },
-    retrieveDept: function() {
-      var lookup = {};
-      var items = this.modulesData;
-      for (var i = 0; i < items.length; i++) {
-        var name = items[i].department;
+        });
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.departments.push({
-            text: name,
-            value: name,
-            selected: false
-          });
-        }
-      }
     },
-    retrieveModule: function() {
-      var lookup = {};
-      var items = this.modulesData;
-      for (var i = 0; i < items.length; i++) {
-        var name = items[i].moduleCode + " " + items[i].title;
+    writeDatabase: function() {
+      var items = dataObject.Modules2;
 
-        if (!(name in lookup)) {
-          lookup[name] = 1;
-          this.searchlist.push(name);
-        }
+      for (var i = 0; i < items.length; i++) {
+        var item = {
+          info: items[i],
+          intake: 0
+        };
+
+        database
+          .collection("modules")
+          .doc(items[i].moduleCode)
+          .set(item);
       }
     },
     clearfilter: function() {
@@ -386,11 +408,13 @@ export default {
     },
     checksemester(arr) {
       var semesters = [];
+      arr = arr.info.semesterData;
       var num = arr.length;
       for (var i = 1; i <= 4; i++) {
         var semname;
         var examDate;
         var examDuration;
+        var disabled = "";
         if (i === 3) {
           semname = "Special Term 1";
         } else if (i === 4) {
@@ -402,6 +426,7 @@ export default {
           //leftover
           examDate = null;
           examDuration = 0;
+          disabled = "disabledTab"
         } else {
           if (Object.keys(arr[i - 1]).length > 1) {
             examDate = arr[i - 1].examDate;
@@ -415,12 +440,24 @@ export default {
         semesters.push({
           semester: semname,
           examDate: examDate,
-          examDuration: examDuration
+          examDuration: examDuration,
+          disabled: disabled
         });
       }
 
       return semesters;
     },
+    // formatprereq: function(arr) {
+    //   var str = "";
+    //   for (var i = 0; i < arr.length; i++) {
+    //     if (i === arr.length - 1) {
+    //       str = str + arr[i];
+    //     } else {
+    //       str = str + arr[i] + ", ";
+    //     }
+    //   }
+    //   return str;
+    // },
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -475,10 +512,11 @@ export default {
         return "";
       }
     },
-    calcwork(workload) {
+    calcwork(arr) {
+      arr = arr.info.workload;
       var num = 0;
-      for (var i = 0; i < workload.length; i++) {
-        num = num + workload[i];
+      for (var i = 0; i < arr.length; i++) {
+        num = num + arr[i];
       }
       return num;
     },
@@ -487,7 +525,7 @@ export default {
       series.push({
         data: workload
       });
-      console.log(series);
+
       return series;
     },
     checkmodnum(modnum) {
@@ -498,12 +536,14 @@ export default {
       } else {
         return modnum + " Modules ";
       }
+    },
+    passmod: function(code) {
+      this.$router.push({ name: "modulePage", params: {code: code}})
     }
   },
-  created() {
-    this.retrieveFac();
-    this.retrieveDept();
-    this.retrieveModule();
+  mounted() {
+    //this.writeDatabase();
+    this.readDatabase();
   }
 };
 </script>
@@ -664,7 +704,6 @@ label {
 
 .md-theme-default .nav-link.active:not(.md-button) {
   color: white !important;
-  
 }
 
 .md-tabs.test .md-tabs-content {
