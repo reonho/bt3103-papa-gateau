@@ -27,7 +27,7 @@ export default {
   },
 
   created() {
-    database.collection('reviews').onSnapshot((querySnapShot)=> {
+    database.firebase_data.collection('reviews').onSnapshot((querySnapShot)=> {
       this.reviewData = []
       querySnapShot.forEach(doc => {
         let item = {}

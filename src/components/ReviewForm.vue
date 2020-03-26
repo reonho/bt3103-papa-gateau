@@ -462,7 +462,7 @@ export default {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
         // this.goback()
-        database.collection('reviews').add({
+        database.firebase_data.collection('reviews').add({
           'userid': 'e0123456', //change this to the user id
           'module_code': 'CS2030', //change this to the passed props from moduleinfo page
           'likes': 0,
@@ -507,6 +507,7 @@ export default {
       } else {
         this[formName].error = "Error!";
       }
+      window.scrollTo(0, 0)
     },
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
@@ -529,7 +530,7 @@ export default {
   },
 
   created() {
-    database.collection('faculties').get().then((querySnapShot) => {
+    database.firebase_data.collection('faculties').get().then((querySnapShot) => {
       let item = {}
       querySnapShot.forEach(doc => {
         item = doc.data()
@@ -537,8 +538,6 @@ export default {
       })
     })
   },
-
-
 
   data: () => ({
     detailsForm: {
@@ -583,7 +582,41 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    faculties: [],
+    // there are 17 facculties and schools
+    faculties: [
+      {
+        id: 1,
+        title: "Arts and Social Sciences"
+      },
+      {
+        id: 2,
+        title: "Business"
+      },
+      {
+        id: 3,
+        title: "Computing"
+      },
+      {
+        id: 4,
+        title: "Dentistry"
+      },
+      {
+        id: 5,
+        title: "Design and Environment"
+      },
+      {
+        id: 6,
+        title: "Engineering"
+      },
+      {
+        id: 7,
+        title: "Law"
+      },
+      {
+        id: 8,
+        title: "Medicine"
+      }
+    ],
     semesters: [
       {
         id: 1,

@@ -1,16 +1,18 @@
 import firebase from 'firebase';
 import 'firebase/firestore'
 
+// for some reason cannot use CJ's config?
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
-    authDomain: "papa-gateau.firebaseapp.com",
-    databaseURL: "https://papa-gateau.firebaseio.com",
-    projectId: "papa-gateau",
-    storageBucket: "papa-gateau.appspot.com",
-    messagingSenderId: "945138208035",
-    appId: "1:945138208035:web:146ed078c96f9f09b81096",
-    measurementId: "G-B09D9JVQ0B"
-  };
+    apiKey: "AIzaSyA0mKkrlysr2qlW2OpqLLol24O5LWc_WxQ",
+    authDomain: "modeaux-13857.firebaseapp.com",
+    databaseURL: "https://modeaux-13857.firebaseio.com",
+    projectId: "modeaux-13857",
+    storageBucket: "modeaux-13857.appspot.com",
+    messagingSenderId: "289222405994",
+    appId: "1:289222405994:web:a783f3cdb5044ab5a0ff13",
+    measurementId: "G-R8TXP8D90D"
+};
 
 firebase.initializeApp(firebaseConfig);
 

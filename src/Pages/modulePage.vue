@@ -55,8 +55,8 @@
         <b-tabs
           active-nav-item-class="activetab"
           class="semtabs"
+          v-model="chosenSem"
           content-class="mt-3"
-          no-fade="false"
           lazy
         >
           <b-tab
@@ -68,7 +68,7 @@
             <div id="container">
               <div class="row">
                 <div class="col-4">
-                  <pie-chart :chart-data="datacollection" :options="chartOptions"></pie-chart>
+                  <pie-chart :semester="chosenSem"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
@@ -76,16 +76,24 @@
                       <h3 style="padding-top: 10px;color:#0B5345">Student reviews</h3>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star-half-alt"></i>
+                          <span>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                          </span>
                         </span>
-                        <span style="padding:10px;font-size: 15px">4.4 out of 5</span>
+                        <span style="color: lightgrey;font-size:16px;" class="star">
+                          <i class="fa fa-star"></i>
+                        </span>
+                        <span style="padding:10px;font-size: 15px">
+                          <span id="avg"></span> out of 5
+                        </span>
                       </p>
-                      <h5 style="font-weight:400">10 student ratings</h5>
-                      <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
+                      <h5 style="font-weight:400">
+                        <span id="ratings"></span> student ratings
+                      </h5>
+                      <bar-chart :semester="chosenSem"></bar-chart>
                     </div>
                     <div class="col-7">
                       <h4 style="padding-top: 10px;color:#0B5345">Features</h4>
@@ -99,12 +107,12 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
                             </span>
                             <span style="color: lightgrey;" class="star">
                               <i class="fa fa-star"></i>
+                              <i class="fa fa-star"></i>
                             </span>
-                            <span style="padding:10px;font-size: 12px">4.0</span>
+                            <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
                       </div>
@@ -123,7 +131,7 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                             </span>
-                            <span style="padding:10px;font-size: 12px">2.9</span>
+                            <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
@@ -132,7 +140,6 @@
                     </div>
                   </div>
                   <br />
-                  <intakechart :seriesStats="seriesStats"></intakechart>
                 </div>
               </div>
             </div>
@@ -146,6 +153,7 @@
           class="btn btn-primary btn-lg mr-4"
           style="color: white; font-size: 15px; float:right"
           href="/#/review"
+          onclick="window.scrollTo(0, 0)"
           id="addReview"
         >New Review</a>
         <b-dropdown
@@ -169,41 +177,10 @@
       </div>
       <br />
       <div>
-        <reviewcard :review="reviewData" />
+        <ReviewSection :review="reviewData" />
       </div>
       <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
-      <div id="reviews" style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">
-        Reviews
-        <a
-          class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right"
-          href="/#/review"
-          id="addReview"
-        >New Review</a>
-        <b-dropdown
-          size="lg"
-          variant="link"
-          toggle-class="text-decoration-none"
-          style="float:right"
-          no-caret
-        >
-          <template v-slot:button-content>Sort by Newest &#9662;</template>
-          <b-dropdown-item href="#">
-            <h5>Best</h5>
-          </b-dropdown-item>
-          <b-dropdown-item href="#">
-            <h5>Newest</h5>
-          </b-dropdown-item>
-          <b-dropdown-item href="#">
-            <h5>Oldest</h5>
-          </b-dropdown-item>
-        </b-dropdown>
-      </div>
-      <br />
-      <div>
-        <ReviewSection :reviewData="reviewData" />
-      </div>
     </div>
   </div>
 </template>
@@ -216,8 +193,8 @@ import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
-import database from '../firebase'
-import ReviewSection from '../components/ReviewSection'
+import database from "../firebase";
+import ReviewSection from "../components/ReviewSection";
 
 export default {
   components: {
@@ -230,6 +207,19 @@ export default {
     ReviewSection
   },
   methods: {
+    numWholeStars(ele) {
+      var num = 0;
+      if (ele == "easy") {
+        num = Number(document.getElementById("easy").innerHTML);
+      } else if (ele == "manag") {
+        num = Number(document.getElementById("manageable").innerHTML);
+      } else {
+        num = Number(document.getElementById("ratings").innerHTML);
+      }
+      console.log(num);
+      return Math.floor(num / 1);
+    },
+
     formatwork(workload) {
       var series = [];
       series.push({
@@ -238,6 +228,7 @@ export default {
       });
       return series;
     },
+
     checkSemester(arr) {
       var semesters = [
         { semester: "Semester 1", disabled: "disabledTab" },
@@ -263,88 +254,27 @@ export default {
 
   created() {
     //replace this with a query by module code
-    console.log('created')
-    database.collection('reviews').onSnapshot((querySnapShot)=> {
-      this.reviewData = []
+    console.log("created");
+    database.firebase_data.collection("reviews").onSnapshot(querySnapShot => {
+      this.reviewData = [];
       querySnapShot.forEach(doc => {
-        let item = {}
-        item = doc.data()
-        item.id = doc.id
-        this.reviewData.push(item)
-        // console.log(doc.id)
-      })
-      // console.log(this.reviewData)
-      
-    })
+        let item = {};
+        item = doc.data();
+        item.id = doc.id;
+        this.reviewData.push(item);
+      });
+    });
   },
   data: () => ({
     reviewData: [],
+    chosenSem: 0,
     seriesStats: [
       {
         name: "Intake",
         data: [150, 210, 186, 195]
       }
     ],
-    Modules: DataObject.Modules2,
-    chartOptions: {
-      title: {
-        display: true,
-        text: "Faculties",
-        padding: 5
-      },
-      legend: {
-        position: "bottom",
-        fullWidth: true
-      }
-    },
-    datacollection: {
-      labels: ["Computing", "Science", "Arts and Social Sciences"],
-      datasets: [
-        {
-          backgroundColor: [
-            "rgb(255, 99, 132)",
-            "rgb(54, 162, 235)",
-            "rgb(255, 205, 86)"
-          ],
-          data: [10, 5, 3]
-        }
-      ]
-    },
-    chartOptions1: {
-      scales: {
-        yAxes: [
-          {
-            gridLines: {
-              display: false
-            }
-          }
-        ],
-        xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              display: true
-            },
-            gridLines: {
-              display: true
-            }
-          }
-        ]
-      },
-      legend: {
-        display: false
-      }
-    },
-    datacollection1: {
-      labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
-      datasets: [
-        {
-          label: "Number of votes",
-          backgroundColor: "rgba(255,99,132, 0.5)",
-          data: [3, 5, 1, 2, 2]
-        }
-      ]
-    }
+    Modules: DataObject.Modules2
   })
 };
 </script>
