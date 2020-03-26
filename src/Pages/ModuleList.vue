@@ -110,7 +110,7 @@
                   :to="'/'+post.info.moduleCode"
                   style="color:#0B5345;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
-                <br/>
+                <br />
                 <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
                 <p
                   class="module-type"
@@ -154,6 +154,7 @@
                           v-bind:key="sem.index"
                           :title="sem.semester"
                           :title-link-class="sem.disabled"
+                          :active="sem.active"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -170,14 +171,11 @@
                               <br />
                               <span class="examhead">
                                 Workload - {{calcwork(post) + " hours"}}
-                                <md-tooltip class="mod-tooltip" md-direction="bottom">
-                                  <workloadchart :seriesStats="formatwork(post)"></workloadchart>
-                                </md-tooltip>
                                 <br />
                               </span>
                             </div>
                             <div style="width:27vw;background-color:white">
-                              <intakechart :seriesStats="seriesStats"></intakechart>
+                              <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
                         </b-tab>
@@ -198,7 +196,7 @@
 <script>
 import database from "../firebase.js";
 import NavBar from "../components/NavBar";
-import StudentIntakeChart from "../components/StudentIntakeChart";
+//import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
 import VueApexCharts from "vue-apexcharts";
 export default {
@@ -206,7 +204,7 @@ export default {
     NavBar,
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
-    intakechart: StudentIntakeChart,
+    //intakechart: StudentIntakeChart,
     workloadchart: WorkloadChart
   },
   props: {
@@ -377,13 +375,93 @@ export default {
       this.chosenlevel = [];
       this.chosenmc = [];
     },
-    checkexam(semester) {
-      if (semester.length === 1) {
-        return "No Exam";
-      }
-      return semester.examDate + " | " + semester.examDuration / 60 + " Hrs";
-    },
+
     checksemester(arr) {
+      arr = arr.info.semesterData;
+      var semesters = [
+        {
+          semester: "Semester 1",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Semester 2",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term I",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term II",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        }
+      ];
+      var num = arr.length;
+      var flag = false;
+      for (var i = 0; i < num; i++) {
+        if (arr[i].semester == 3) {
+          semesters[2].disabled = "";
+          if (flag === false) {
+            semesters[2].active = true;
+          }
+          flag = true;
+          console.log();
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[2].examDate = arr[i].examDate;
+            semesters[2].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 4) {
+          semesters[3].disabled = "";
+          if (flag === false) {
+            semesters[3].active = true;
+          }
+          flag = true;
+
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[3].examDate = arr[i].examDate;
+            semesters[3].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 2) {
+          semesters[1].disabled = "";
+          if (flag === false) {
+            semesters[1].active = true;
+          }
+          flag = true;
+
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[1].examDate = arr[i].examDate;
+            semesters[1].examDuration = arr[i].examDuration / 60;
+          }
+        } else {
+          semesters[0].disabled = "";
+          if (flag === false) {
+            semesters[0].active = true;
+          }
+          flag = true;
+
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[0].examDate = arr[i].examDate;
+            semesters[0].examDuration = arr[i].examDuration / 60;
+          }
+        }
+      }
+
+      return semesters;
+    },
+
+    checkSemester(arr) {
       var semesters = [];
       arr = arr.info.semesterData;
       var num = arr.length;
@@ -403,7 +481,7 @@ export default {
           //leftover
           examDate = null;
           examDuration = 0;
-          disabled = "disabledTab"
+          disabled = "disabledTab";
         } else {
           if (Object.keys(arr[i - 1]).length > 1) {
             examDate = arr[i - 1].examDate;
@@ -481,7 +559,7 @@ export default {
     },
     formatDur: function(duration) {
       if (duration !== 0) {
-        return " | " + duration + " hours";
+        return " • " + duration + " hours";
       } else {
         return "";
       }
@@ -511,12 +589,13 @@ export default {
       }
     },
     passmod: function(code) {
-      this.$router.push({ name: "modulePage", params: {code: code}})
+      this.$router.push({ name: "modulePage", params: { code: code } });
     }
   },
   mounted() {
     //this.writeDatabase();
     this.readDatabase();
+    //console.log(this.modulesData);
   }
 };
 </script>

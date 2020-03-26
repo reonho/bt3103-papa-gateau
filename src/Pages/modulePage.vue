@@ -214,8 +214,7 @@ export default {
           this.Modules.push(doc.data());
           this.test = doc.id;
         });
-      console.log(this.code);
-      console.log(this.Modules);
+
     },
     formatwork(workload) {
       var series = [];
@@ -337,7 +336,7 @@ export default {
   created() {
     //replace this with a query by module code
     console.log("created");
-    console.log(this.code)
+    
     // database.collection("reviews").onSnapshot(querySnapShot => {
     //   this.reviewData = [];
     //   querySnapShot.forEach(doc => {
@@ -354,6 +353,7 @@ export default {
     database.getModules(this.code).then(item =>{
       this.Modules.push(item);
     })
+    
 
   },
   data: () => ({

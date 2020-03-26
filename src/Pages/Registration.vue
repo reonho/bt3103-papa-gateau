@@ -8,7 +8,9 @@
             <div class="card-body p-5">
               <h1 class="text-center" style="color:#1ABC9C; font-size:500%">MODEAUX</h1>
               <h1 class="card-title text-center">Registration</h1>
-              <p class="form-header">User Info</p>
+              <br />
+              <p class="reg-header">User Info</p>
+
               <md-field>
                 <label>Email</label>
                 <md-input type="username" id="username" v-model="user"></md-input>
@@ -22,32 +24,50 @@
                 <label>Confirm Password</label>
                 <md-input type="password" id="cfmpassword" v-model="cfmpassword"></md-input>
               </md-field>
-              <p class="form-header">Education Info</p>
-              <md-field>
-                <label>Course</label>
-                <md-select id="course" v-model="course"></md-select>
-              </md-field>
+              <br />
+              <p class="reg-header">Education Info</p>
+
               <div class="md-layout">
-                <div class="md-layout-item md-size-45">
+                <div class="md-layout-item md-size-60">
+                  <md-field>
+                    <label>Course</label>
+                    <md-select id="course" v-model="course"></md-select>
+                  </md-field>
+                </div>
+                <div class="md-layout-item md-size-10"></div>
+                <div class="md-layout-item md-size-30">
+                  <!-- <md-field>
+                    <label>Number of semesters completed</label>
+                    <md-input type="number" v-on:keyup="filtersem" id="currentsem" v-model="semnum"></md-input>
+                  </md-field>-->
                   <md-field>
                     <label>Current Year of Study</label>
                     <md-input type="number" id="year" v-model="year"></md-input>
                   </md-field>
                 </div>
-                <div class="md-layout-item md-size-10"></div>
-                <div class="md-layout-item md-size-45">
-                  <md-field>
-                    <label>Number of semesters completed</label>
-                    <md-input type="number" v-on:keyup="filtersem" id="currentsem" v-model="semnum"></md-input>
-                  </md-field>
-                </div>
               </div>
-              <p>Module Grades</p>
-              <md-list v-for="post in semlist" v-bind:key="post.index">
-                Year {{post.year}} {{post.semester}}
+              <br />
+
+              <md-list v-for="post in updatesem" v-bind:key="post.index">
+                <p class="sem-header">Year {{post.year}} {{post.semester}}</p>
+                <md-empty-state v-show="showmod(post.mods)">
+                  <p class="empty">No Modules to Show</p>
+                  <p>Start adding modules by clicking the button below</p>
+                  <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
+                </md-empty-state>
+                <AddModulesModal />
+                <md-list v-for="mod in post.mods" v-bind:key="mod.index">{{mod.code}} {{mod.grade}}</md-list>
+                <p>
+                  Total CAP : 4.00
+                </p>
               </md-list>
 
-
+              <md-button
+                class="addsem"
+                :md-ripple="false"
+                v-on:click="addsem"
+                v-show="showbutton"
+              >Add Semester</md-button>
             </div>
           </div>
         </div>
@@ -76,43 +96,88 @@ export default {
     };
   },
   computed: {
-    
+    updatesem() {
+      let allsems = this.semlist;
+      var semesters = [];
+      for (var k = 0; k < this.semnum; k++) {
+        semesters.push(allsems[k]);
+      }
+      return semesters;
+    },
+    showbutton() {
+      if (this.semnum == 8) {
+        return false;
+      }
+      return true;
+    }
   },
   methods: {
-      filtersem() {
+    filtersem() {
       var sem = ["Semester 2", "Semester 1"];
       var semesters = [];
-
-      for (var k = 1; k <= this.semnum; k++) {
+      for (var k = 1; k <= 8; k++) {
         if (k <= 2) {
           //Year 1
           semesters.push({
             year: 1,
-            semester: sem[k % 2]
+            semester: sem[k % 2],
+            mods: []
           });
         } else if (k > 2 && k <= 4) {
           //Year 2
           semesters.push({
             year: 2,
-            semester: sem[k % 2]
+            semester: sem[k % 2],
+            mods: []
           });
         } else if (k > 4 && k <= 6) {
           //Year 3
           semesters.push({
             year: 3,
-            semester: sem[k % 2]
+            semester: sem[k % 2],
+            mods: []
           });
         } else if (k > 6 && k <= 8) {
-          //Year 2
+          //Year 4
           semesters.push({
             year: 4,
-            semester: sem[k % 2]
+            semester: sem[k % 2],
+            mods: []
           });
         }
       }
 
       this.semlist = semesters;
+    },
+    addsem() {
+      this.semnum++;
+    },
+    showmod: function(mods) {
+      if (Object.keys(mods).length > 0) {
+        return false;
+      }
+      return true;
+    },
+    addmod(sem) {
+      var code = "BT2101";
+      var grade = "A";
+      let currentsems = this.semlist;
+      for (var i = 0; i < currentsems.length; i++) {
+        if (
+          currentsems[i].year == sem.year &&
+          currentsems[i].semester == sem.semester
+        ) {
+          currentsems[i].mods.push({
+            code: code,
+            grade: grade
+          });
+        }
+      }
+      this.semlist = currentsems;
     }
+  },
+  created() {
+    this.filtersem();
   }
 };
 </script>
@@ -211,6 +276,26 @@ body {
 .btn-facebook {
   color: white;
   background-color: #3b5998;
+}
+.md-button.addsem {
+  background-color: #17a589 !important;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+.reg-header {
+  font-weight: 600;
+  font-size: 130%;
+}
+.sem-header {
+  font-weight: 600;
+  font-size: 130%;
+  color: #707b7c;
+}
+.empty {
+  font-weight: 600;
+  font-size: 120%;
+  color: #707b7c;
 }
 /* Fallback for Edge
 -------------------------------------------------- */

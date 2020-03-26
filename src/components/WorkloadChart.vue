@@ -2,9 +2,9 @@
   <div>
     
       <apexchart
-        style="background-color:white;width:350px;padding:10px"
+        style="background-color:white;width:400px;margin-top:-2%"
         type="bar"
-        height="150"
+        height="170"
         :options="chartOptions"
         :series="seriesStats"
       ></apexchart>
