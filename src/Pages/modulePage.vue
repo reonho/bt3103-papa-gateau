@@ -195,7 +195,6 @@ import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
   components: {
     PieChart,
@@ -219,7 +218,6 @@ export default {
       console.log(num);
       return Math.floor(num / 1);
     },
-
     formatwork(workload) {
       var series = [];
       series.push({
@@ -228,7 +226,6 @@ export default {
       });
       return series;
     },
-
     checkSemester(arr) {
       var semesters = [
         { semester: "Semester 1", disabled: "disabledTab" },
@@ -251,7 +248,6 @@ export default {
       return semesters;
     }
   },
-
   created() {
     //replace this with a query by module code
     console.log("created");
@@ -302,14 +298,12 @@ export default {
   cursor: pointer;
   margin: 10px;
 }
-
 .button span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-
 .button span:after {
   content: "\00bb";
   position: absolute;
@@ -318,11 +312,9 @@ export default {
   right: -20px;
   transition: 0.5s;
 }
-
 .button:hover span {
   padding-right: 25px;
 }
-
 .button:hover span:after {
   opacity: 1;
   right: 0;
@@ -332,7 +324,6 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
