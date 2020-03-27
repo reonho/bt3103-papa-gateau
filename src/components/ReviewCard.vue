@@ -105,7 +105,6 @@ import database from "../firebase";
 export default {
   name: "ReviewCard",
   props: {
-    msg: String,
     review: Object //renders the review object passed from ReviewSection
   },
   data: () => ({
