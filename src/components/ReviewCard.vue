@@ -105,7 +105,6 @@ import database from "../firebase";
 export default {
   name: "ReviewCard",
   props: {
-    msg: String,
     review: Object //renders the review object passed from ReviewSection
   },
   data: () => ({
@@ -117,6 +116,12 @@ export default {
   }),
 
   created() {
+    var self = this
+    database.firebase_data.collection("reviews")
+    .doc(this.review)
+    .onSnapshot(doc =>{
+      self.review = doc.data()
+    })
     var ul = Object.values(this.review.users_liked)
     var ud = Object.values(this.review.users_disliked)
 

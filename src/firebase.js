@@ -104,14 +104,35 @@ var database = {
   //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
-  //in progress
-  getModuleReview(module_){
+  async getModuleReviewID(module_){
     var promise = new Promise(function(resolve) {
-      var doc_name = module_ + ".R"
-      database.firebase_data.collection("reviews").doc(doc_name)
-      .get().then(function(doc) {
-        database.data = doc.data()
-        resolve(database.data)
+      var reviews = []
+      database.firebase_data.collection("reviews")
+      .where("module_code", "==", module_)
+      .get().then(function(snapshot) {
+        snapshot.forEach(doc =>{
+          reviews.push(doc.id)
+        })
+        resolve(reviews)
+
+      });
+    })
+    return promise
+  },
+
+  //=====================================//
+  //----------- getUserReview----------//
+  //=====================================//
+  async getUserReviewID(user){
+    var promise = new Promise(function(resolve) {
+      var reviews = []
+      database.firebase_data.collection("reviews")
+      .where("userid", "==", user)
+      .get().then(function(snapshot) {
+        snapshot.forEach(doc =>{
+          reviews.push(doc.id)
+        })
+        resolve(reviews)
       });
     })
     return promise

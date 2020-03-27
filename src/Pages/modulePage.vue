@@ -171,7 +171,7 @@
       </div>
       <br />
       <div>
-        <ReviewSection :reviewData="reviewData" />
+        <ReviewSection :mod= "this.Modules[0].info.moduleCode" :userid= null />
       </div>
     </div>
   </div>
@@ -204,18 +204,6 @@ export default {
   methods: {
     review(){
       this.$router.push({name: "ReviewForm", params: {mod: this.Modules[0].info.moduleCode}})
-    },
-    readDatabase: function() {
-      database.firebase_data
-        .collection("modules_")
-        .doc(this.code)
-        .get()
-        .then(function(doc) {
-          this.Modules.push(doc.data());
-          this.test = doc.id;
-        });
-      console.log(this.code);
-      console.log(this.Modules);
     },
     formatwork(workload) {
       var series = [];
@@ -359,6 +347,7 @@ export default {
   data: () => ({
     totalsems: "",
     reviewData: [],
+    infodes: null,
     module_code: '', //testing purposes, replace with passed module code
     seriesStats: [
       {

@@ -473,7 +473,7 @@ export default {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
         // this.goback()
-        database.getUser().then(user =>{
+        database.getUser().then(user =>{ 
           db.collection("reviews").add({
           userid: user, //change this to the user id
           module_code: this.mod, //change this to the passed props from moduleinfo page
@@ -545,7 +545,7 @@ export default {
 
   created() {
     var self = this
-    database.getUser().then(user =>{
+    database.getUser().then(user =>{ 
       database.ifAddedModule(self.mod, user).then(mod =>{
         this.faculties = [{id: 1, title: mod.faculty}]
         this.grades = [{id: 1, title: mod.grade}]
