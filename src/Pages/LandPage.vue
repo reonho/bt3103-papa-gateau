@@ -306,7 +306,7 @@ export default {
             item = doc.data();
             item.id = doc.id;
             this.reviewData.push(item);
-            console.log(doc.id);
+            console.log(this.reviewData);
           });
         });
     });
