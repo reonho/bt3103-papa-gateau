@@ -1,6 +1,6 @@
 <template>
 <div class="landPage" style=" padding: 40px 0 0 0;">
-    <NavBarLandpage class="fixed-top" @scroll = "scrolltoView"/>
+    <NavBar class="fixed-top" @scroll = "scrolltoView"/>
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
@@ -23,7 +23,7 @@
                             <img src="../assets/deg.svg" alt="">
                         </md-card-media>
                         <md-card-header-text>
-                            <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">ENROLLED COURSE:</div>
+                            <div class="md-title" style="font-family: 'Montserrat', sans-serif;">ENROLLED COURSE:</div>
                             <div class="md-title">{{User.faculty}}, {{User.dept}} - {{User.course}}</div>
                         </md-card-header-text>
                     </md-card-header>
@@ -37,7 +37,7 @@
                             <img src="../assets/grade.svg" alt="">
                         </md-card-media>
                         <md-card-header-text>
-                            <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">CAP:</div>
+                            <div class="md-title" style="font-family: 'Montserrat', medium; font-weight: 400;">CAP:</div>
                             <div class="md-title">{{User.overall_cap}}</div>
                         </md-card-header-text>
                     </md-card-header>
@@ -89,20 +89,13 @@
         </div >
 
         <div>
-            <div id = "DegreeProgressCard" >
-            
-            <md-card style="height:90vh; margin-bottom:0vh; padding:2vh; margin-top:5vh; height:50vh" md-with-hover>
+            <div id = "DegreeProgressCard"  >
 
-                <md-card style="background:#1ABC9C;color:white; margin-bottom:0vh" >
-                    <md-card-header>
-                        <div class="md-title">My Degree Progress</div>
-                    </md-card-header>
-                </md-card>
+               <br>
                 
-                <div id="treechart" class="container-fluid" >
-                    <coursetree></coursetree>
-                </div>
-                </md-card>
+                    <Feed :modules='dummymodules' :course="User.course" :sem="sem"></Feed>
+             
+                
             </div>
 
         
@@ -134,13 +127,13 @@
     import RadarChart from "../components/RadarChart.vue"
     //import TreeChart from "../components/TreeCharts/TreeChart"
     //import OverallProgress from "../components/OverallProgress"
-    import NavBarLandpage from '../components/NavBarLandpage'
+    import NavBar from '../components/NavBar'
     import capline from '../components/capline'
-    // import Feed from '../components/Feed'
+    import Feed from '../components/Feed'
     // import Ratings from '../components/Ratings'
     import ReviewSection from '../components/ReviewSection'
     import database from '../firebase.js'
-    import coursetree from '../components/coursetree'
+    //import coursetree from '../components/coursetree'
 
     export default {
     name: 'LandPage',
@@ -150,11 +143,12 @@
     components:{
         AddModulesModal,
         RadarChart,
-        coursetree,
+        //coursetree,
+        Feed,
         //TreeChart,
         //OverallProgress,
         capline,
-        NavBarLandpage,
+        NavBar,
         // Feed
         ReviewSection,
         // Ratings
@@ -222,6 +216,7 @@
             Data: this.findModule("CS2030",DataObject),
             User: {},
             sem: null,
+            dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
             // treeData: [ {
             //     "name" : "General Modules",
