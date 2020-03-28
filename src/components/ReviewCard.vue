@@ -1,6 +1,6 @@
 <template>
   <div id="ReviewCard">
-    <md-card>
+    <md-card v-if="anyComments ===true">
       <md-card-header class="md-gutter">
         <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
         <!-- <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedSemester}})</b> -->
@@ -14,31 +14,31 @@
           <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
         </div>
         <!-- <br/> -->
-        <div class="para">
+        <div v-if="hasComment(review.lectureForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Lectures</div> -->
           <b>Lectures</b>
           <p class="comments">{{review.lectureForm.comments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Tutorials</b>
           <p class="comments">{{review.tutorialForm.comments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.apcomments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Assignments & Projects</b>
           <p class="comments">{{review.tutorialForm.apcomments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.examcomments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Examinations</b>
           <p class="comments">{{review.tutorialForm.examcomments}}</p>
         </div>
 
-        <div v-if="review.commentForm.comments != null" div class="para">
+        <div v-if="hasComment(review.commentForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Comments</div> -->
           <b>Comments</b>
           <p class="comments">{{review.commentForm.comments}}</p>
@@ -112,10 +112,20 @@ export default {
     disliked: null, //to find from backend
     showDialog: false,
     showDetail: false, //toggle visibility of hidden content,
-    userid: null
+    userid: null,
+    anyComments: true
   }),
 
   created() {
+    ///card will not be rendered if all comment fields are empty
+    if (
+      !this.hasComment(this.review.lectureForm.comments) &&
+      !this.hasComment(this.review.tutorialForm.comments) &&
+      !this.hasComment(this.review.tutorialForm.apcomments) &&
+      !this.hasComment(this.review.tutorialForm.examcomments)
+    ) {
+      this.anyComments = false;
+    }
     database.getUser().then(user => {
       this.userid = user;
       var ul = Object.values(this.review.users_liked);
@@ -143,6 +153,10 @@ export default {
       if (index > -1) {
         array.splice(index, 1);
       }
+    },
+
+    hasComment(field) {
+      return field !== null && field !== undefined
     },
 
     like() {
