@@ -29,15 +29,14 @@
               <md-card-content>
                 <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
                   <label>Your faculty</label>
-                  <md-input v-model = 'detailsForm.selectedFaculty' :disabled = 'this.added'/>
-                  <!-- <md-select  v-model="detailsForm.selectedFaculty">
-                    <md-option value = 'detailsForm.selectedFaculty'>{{detailsForm.selectedFaculty}}</md-option>
+                  <md-input v-if='added===true' v-model="detailsForm.selectedFaculty" :disabled="this.added" />
+                  <md-select v-if='added===false'  v-model="detailsForm.selectedFaculty">
                     <md-option
                       v-for="fac in faculties"
                       v-bind:key="fac.id"
                       v-bind:value="fac.title"
                     >{{fac.title}}</md-option>
-                  </md-select> -->
+                  </md-select>
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedFaculty.required"
@@ -46,14 +45,14 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
                   <label>Academic year</label>
-                  <md-input v-model = 'detailsForm.selectedYear' :disabled = 'this.added'/>
-                  <!-- <md-select v-model="detailsForm.selectedYear">
+                  <md-input v-if='added===true' v-model="detailsForm.selectedYear" :disabled="this.added" />
+                  <md-select v-if='added===false' v-model="detailsForm.selectedYear">
                     <md-option
                       v-for="yr in years"
                       v-bind:key="yr.id"
                       v-bind:value="yr.title"
                     >{{yr.title}}</md-option>
-                  </md-select> -->
+                  </md-select>
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedYear.required"
@@ -62,14 +61,14 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
-                  <md-input v-model = 'detailsForm.selectedSemester' :disabled = 'this.added'/>
-                  <!-- <md-select  v-model="detailsForm.selectedSemester">
+                  <md-input v-if='added===true' v-model="detailsForm.selectedSemester" :disabled="this.added" />
+                  <md-select v-if='added===false'  v-model="detailsForm.selectedSemester">
                     <md-option
                       v-for="sem in semesters"
                       v-bind:key="sem.id"
                       v-bind:value="sem.title"
                     >{{sem.title}}</md-option>
-                  </md-select> -->
+                  </md-select>
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedSemester.required"
@@ -89,14 +88,14 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
                   <label>Grade obtained</label>
-                  <md-input v-model = 'detailsForm.selectedGrade' :disabled = 'this.added'/>
-                  <!-- <md-select  v-model="detailsForm.selectedGrade">
+                  <md-input v-if='added===true' v-model="detailsForm.selectedGrade" :disabled="this.added" />
+                  <md-select v-if='added===false'  v-model="detailsForm.selectedGrade">
                     <md-option
                       v-for="g in grades"
                       v-bind:key="g.id"
                       v-bind:value="g.title"
                     >{{g.title}}</md-option>
-                  </md-select> -->
+                  </md-select>
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedGrade.required"
@@ -384,6 +383,7 @@
             </md-step>
           </md-steppers>
           <md-dialog-confirm
+            :md-click-outside-to-close="false"
             :md-active.sync="showSubmitMessage"
             md-title="Review Submitted!"
             md-content="Thanks for submitting a review!"
@@ -391,6 +391,7 @@
             md-cancel-text
             md-confirm-text="Okay"
           />
+
         </form>
       </div>
     </div>
@@ -404,9 +405,10 @@ import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
+import DataObject from '../Database.js'
 export default {
   name: "ReviewForm",
-  props: ['mod'],
+  props: ["mod"],
   components: {
     Ratings,
     NavBar
@@ -438,7 +440,7 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       }
     },
     tutorialForm: {
@@ -446,16 +448,16 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       },
       tutor: {
         required
       },
       apcomments: {
-        required
+        // required
       },
       examcomments: {
-        required
+        // required
       }
     },
     commentForm: {
@@ -479,23 +481,22 @@ export default {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
         // this.goback()
-        database.getUser().then(user =>{ 
+        database.getUser().then(user => {
           db.collection("reviews").add({
-          userid: user, //change this to the user id
-          module_code: this.mod, //change this to the passed props from moduleinfo page
-          likes: 0,
-          users_liked: [],
-          dislikes: 0,
-          users_disliked: [],
-          detailsForm: this.detailsForm,
-          lectureForm: this.lectureForm,
-          tutorialForm: this.tutorialForm,
-          commentForm: this.commentForm
-        });
-        
-        // this.setDone("first", "second");
+            userid: user, //change this to the user id
+            module_code: this.mod, //change this to the passed props from moduleinfo page
+            likes: 0,
+            users_liked: [],
+            dislikes: 0,
+            users_disliked: [],
+            detailsForm: this.detailsForm,
+            lectureForm: this.lectureForm,
+            tutorialForm: this.tutorialForm,
+            commentForm: this.commentForm
+          });
 
-        })
+          // this.setDone("first", "second");
+        });
         console.log("form submitted!");
       } else {
         this.submitStatus = "INVALID";
@@ -546,31 +547,37 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      window.location.href = "/#/module";
+      this.$router.push({name: 'modulePage', params: {code:this.mod}})
+      // window.location.href = "/#/module";
     }
   },
 
   created() {
     // var self = this
-    let self = this
-    database.getUser().then(user =>{
-      database.ifAddedModule(this.mod, user).then(mod =>{
-        console.log(mod)
-        self.added = true
+    let self = this;
+    database.getUser().then(user => {
+      database.ifAddedModule(this.mod, user).then(mod => {
+        console.log(mod);
+        self.added = true;
         // this.added = true
         // this.faculties = [{id: 1, title: mod.faculty}]
         // this.grades = [{id: 1, title: mod.grade}]
         // this.years = [{id: 1, title: mod.year}]
         // this.semesters = [{id: 1, title: mod.sem}]
         // this.added = true
-        var df = self.detailsForm
-        df.selectedFaculty = mod.faculty
-        df.selectedGrade = mod.grade
-        df.selectedYear = mod.year
-        df.selectedSemester = mod.sem
-
-      })
-    })
+        var df = self.detailsForm;
+        df.selectedFaculty = mod.faculty;
+        df.selectedGrade = mod.grade;
+        df.selectedYear = mod.year;
+        df.selectedSemester = mod.sem;
+      });
+      if (this.added === false) {
+        this.faculties = DataObject.faculties
+        this.grades = DataObject.grades
+        this.years = DataObject.years
+        this.semesters = DataObject.semesters
+      }
+    });
     // database.collection('faculties').get().then((querySnapShot) => {
     //   let item = {}
     //   querySnapShot.forEach(doc => {
@@ -597,7 +604,7 @@ export default {
 
   data: () => ({
     detailsForm: {
-      selectedYear: 2019,
+      selectedYear: null,
       selectedSemester: null,
       selectedStaff: null,
       selectedGrade: null,
@@ -638,7 +645,7 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    added: true,
+    added: false,
     grades: [],
     years: [],
     semesters: [],
@@ -652,7 +659,7 @@ export default {
       {
         id: 2,
         name: "Ben Leong"
-      },
+      }
     ]
   })
 };
@@ -708,7 +715,7 @@ Tentative fix to css background
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 80vmax;
+  height: 100vmax;
   padding: 0px;
 }
 </style>
