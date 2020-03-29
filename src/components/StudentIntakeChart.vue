@@ -50,7 +50,6 @@ export default {
             }
           }
         },
-       
         plotOptions: {
           bar: {
             horizontal: false
@@ -61,8 +60,7 @@ export default {
         },
         stroke: {
           curve: "smooth",
-          width: 3,
-          colors: ['#1ABC9C']
+          width: 3
         },
         xaxis: {
           categories: ["Aug 2018", "Jan 2019", "Aug 2019", "Jan 2020"]
