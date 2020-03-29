@@ -4,7 +4,6 @@
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
-
             <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.name}}! Welcome to your dashboard.
             <!--button v-on:click="readDatabase">Greet</button-->
             </h1></div>
@@ -63,9 +62,6 @@
                  </div>
         </div>
 
-
-
-
         <!--div style="display:flex" class= "container-fluid p-3"-->
         <div  class="md-layout md-gutter " >
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
@@ -83,7 +79,8 @@
             <div class="md-layout-item"  >   
                      <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh; margin-bottom:1vh">
                         <h1>My Reviews</h1> </md-card>
-                    <ReviewSection class="ReviewSection"/>
+                    <ReviewSection :reviewData="reviewData" class="ReviewSection" />
+
             </div>
 
         </div >
@@ -179,10 +176,7 @@
 
             var year = Math.ceil(sem_no/2)
             var sem = sem_no%2
-
             this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
-
-
 
         },
         readUser(){ // this is a function for testing the queries only. for reference
@@ -195,8 +189,6 @@
             //     this.User = e
             //     console.log(e)
             // })
-
-        },
 
         scrolltoView(elementPosition){
             var headerOffset = 90;
@@ -215,6 +207,9 @@
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: {},
+
+            reviewData:[],
+
             sem: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
@@ -256,7 +251,6 @@
             //             'value': 0.7,
             //             "word" : "Not Completed!",
             //         },
-
             //             ]
             //         }
             //     ] 
@@ -284,12 +278,24 @@
 
         const self = this
 
-        database.getStudentInfo().then(function(user){
-            self.User = user
-        })
+        database.getUser().then(user => {
+          console.log(user);
+          database.firebase_data
+            .collection("reviews")
+            .where("userid", "==", user)
+            .onSnapshot(querySnapShot => {
+              this.reviewData = [];
+              querySnapShot.forEach(doc => {
+                let item = {};
+                item = doc.data();
+                item.id = doc.id;
+                this.reviewData.push(item);
+                console.log(this.reviewData);
+              });
+            });
+        });
 
         // query database for user info
-
         database.firebase_data.collection("students").doc(database.user)
         .onSnapshot(function(user){ 
             var userData = user.data()
@@ -308,7 +314,6 @@
             self.User = result
             console.log("User info:")
             console.log(self.User) // console log result for reference
-
 
             // query database for course attributes
             var attributes = []
@@ -330,12 +335,9 @@
             })
         
 
-
             self.get_currentsem(self.User.sap_by_sem)
         })
        
-        
-
         
 
     },
@@ -358,7 +360,6 @@
     padding:2%;
 }
 
-
 .landPage{
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(176,176,176,0.7959558823529411) 100%);
@@ -369,6 +370,5 @@
     overflow:scroll;
 }
 
-
-
 </style>
+
