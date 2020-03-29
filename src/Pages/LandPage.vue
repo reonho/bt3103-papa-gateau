@@ -189,27 +189,16 @@
             //     this.User = e
             //     console.log(e)
             // })
-
-        scrolltoView(elementPosition){
-            var headerOffset = 90;
-            //227.578125
-            //863.828125
-            var offsetPosition = elementPosition - headerOffset;
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-            
         }
+
+
     },  
     data: function(){ 
         return {
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: {},
-
             reviewData:[],
-
             sem: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
