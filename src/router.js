@@ -5,6 +5,7 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+// import EditForm from './components/EditForm'
 import database from './firebase.js'
 
 
@@ -12,6 +13,14 @@ Vue.use(Router)
 
 let router = new Router({
   routes: [
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList,
+      meta: {
+        requiresAuth: true
+      }
+    },
     {
       path: '/',
       name: 'LandPage',
@@ -22,25 +31,19 @@ let router = new Router({
       }
     },
     // comment this block to test components
-    {
-      path: '/ModuleList',
-      name: 'ModuleList',
-      component: ModuleList,
-      meta: {
-        requiresAuth: true
-      }
-    },
+   
     {
       path: '/loginPage',
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: true
+        requiresGuest: false
       }
     },
     {
-      path: '/module',
+      path: '/:code',
       name: 'modulePage',
+      props: true,
       component: modulePage,
       meta: {
         requiresAuth: true
@@ -48,8 +51,9 @@ let router = new Router({
     },
     {
       path:'/review',
-      name: 'reviewForm',
+      name: 'ReviewForm',
       component: ReviewForm,
+      props: true,
       meta: {
         requiresAuth: true
       }

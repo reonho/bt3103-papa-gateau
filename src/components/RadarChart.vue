@@ -1,8 +1,8 @@
 <template>
-<div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
-    <apexchart type="radar" :options="chartOptions2" :series="series1"></apexchart>
+<div id = "Radar" style="text-align:center">
+     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Strengths</h1> </md-card>
+     <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
 </div>
 </template>
 
@@ -50,7 +50,7 @@
                         colors: ''
                     }
                     },
-                    categories: [1,2,3,4]
+                    categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
                 },
                 colors:['#00aaff', '#ff9900', '#2cab93', "#77cbed", '#E91E63', '#FF9800',],
                 fill: {

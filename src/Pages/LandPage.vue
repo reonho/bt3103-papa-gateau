@@ -4,6 +4,7 @@
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
+
             <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.name}}! Welcome to your dashboard.
             <!--button v-on:click="readDatabase">Greet</button-->
             </h1></div>
@@ -62,6 +63,9 @@
                  </div>
         </div>
 
+
+
+
         <!--div style="display:flex" class= "container-fluid p-3"-->
         <div  class="md-layout md-gutter " >
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
@@ -80,7 +84,6 @@
                      <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh; margin-bottom:1vh">
                         <h1>My Reviews</h1> </md-card>
                     <ReviewSection :reviewData="reviewData" class="ReviewSection" />
-
             </div>
 
         </div >
@@ -131,7 +134,6 @@
     import ReviewSection from '../components/ReviewSection'
     import database from '../firebase.js'
     //import coursetree from '../components/coursetree'
-
     export default {
     name: 'LandPage',
     props: [
@@ -160,7 +162,6 @@
                 }
             }
         },
-
         get_currentsem(obj_array){
             var keys = ["one","two","three","four","five", "six", "seven", "eight"]
             var sem_no = 1
@@ -173,11 +174,9 @@
                     break
                 }
             }
-
             var year = Math.ceil(sem_no/2)
             var sem = sem_no%2
             this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
-
         },
         readUser(){ // this is a function for testing the queries only. for reference
             database.getStudentInfo().then((e)=>{
@@ -206,7 +205,6 @@
         };
     },
     created(){
-
         const self = this
 
         database.getUser().then(user => {
@@ -240,12 +238,10 @@
             overall_cap: userData.overall_cap,
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
-
             
             self.User = result
             console.log("User info:")
             console.log(self.User) // console log result for reference
-
             // query database for course attributes
             var attributes = []
             database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
@@ -265,12 +261,11 @@
                 self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
             })
         
-
             self.get_currentsem(self.User.sap_by_sem)
         })
        
         
-
+        
     },
     mounted() {
         
@@ -290,16 +285,12 @@
     color:white;
     padding:2%;
 }
-
 .landPage{
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(176,176,176,0.7959558823529411) 100%);
 }
-
 .ReviewSection{
     max-height:95vh;
     overflow:scroll;
 }
-
 </style>
-

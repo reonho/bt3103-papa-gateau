@@ -237,11 +237,37 @@ var DataObject = {
   semesters: [
     {
       id: 1,
-      title: "AY1819 Semester 2"
+      title: "Semester 1"
     },
     {
       id: 2,
-      title: "AY1819 Semester 1"
+      title: "Semester 2"
+    },
+    {
+      id: 3,
+      title: "Special Term 1"
+    },
+    {
+      id: 4,
+      title: "Special Term 2"
+    }
+  ],
+  years: [
+    {
+      id: 1,
+      title: "AY1920"
+    },
+    {
+      id: 2,
+      title: "AY1819"
+    },
+    {
+      id: 3,
+      title: "AY1718"
+    },
+    {
+      id: 4,
+      title: "AY1617"
     }
   ],
   staff: [
