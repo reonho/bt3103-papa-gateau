@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import 'firebase/firestore'
+import 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
@@ -56,16 +56,46 @@ var database = {
     })
     return promise
   },
+  async getModuleReviews() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('reviews').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+    })
+    return promise
+  },
+  
 
   logout(){
     var promise = new Promise(function(resolve){
       firebase.auth().signOut().then(function(){
         resolve(true)
       })
-
     })
     return promise
   },
+  // async getFaculties() {
+  //   var promise = new Promise(resolve => {
+  //     let list = []
+  //     database.firebase_data.collection('faculties').onSnapshot(snapshot => {
+  //       let item = {}
+  //       snapshot.forEach(doc => {
+  //         item = doc.data()
+  //         item.id = doc.id
+  //         list.push(item)
+  //       })
+  //     })
+  //     resolve(list)
+  //   })
+  //   return promise
+  // },
 
 
 
@@ -74,14 +104,35 @@ var database = {
   //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
-  //in progress
-  getModuleReview(module_){
+  async getModuleReviewID(module_){
     var promise = new Promise(function(resolve) {
-      var doc_name = module_ + ".R"
-      database.firebase_data.collection("reviews").doc(doc_name)
-      .get().then(function(doc) {
-        database.data = doc.data()
-        resolve(database.data)
+      var reviews = []
+      database.firebase_data.collection("reviews")
+      .where("module_code", "==", module_)
+      .get().then(function(snapshot) {
+        snapshot.forEach(doc =>{
+          reviews.push(doc.id)
+        })
+        resolve(reviews)
+
+      });
+    })
+    return promise
+  },
+
+  //=====================================//
+  //----------- getUserReview----------//
+  //=====================================//
+  async getUserReviewID(user){
+    var promise = new Promise(function(resolve) {
+      var reviews = []
+      database.firebase_data.collection("reviews")
+      .where("userid", "==", user)
+      .get().then(function(snapshot) {
+        snapshot.forEach(doc =>{
+          reviews.push(doc.id)
+        })
+        resolve(reviews)
       });
     })
     return promise
@@ -111,11 +162,92 @@ var database = {
     return promise
   },
 
+  // async getGrades() {
+  //   var promise = new Promise(resolve => {
+  //     let list = []
+  //     database.firebase_data.collection('grades').orderBy('id').onSnapshot(snapshot => {
+  //       let item = {}
+  //       snapshot.forEach(doc => {
+  //         item = doc.data()
+  //         item.id = doc.id
+  //         list.push(item)
+  //       })
+  //     })
+  //     resolve(list)
+
+  //   })
+  //   return promise
+  // },
+  // async getYears() {
+  //   var promise = new Promise(resolve => {
+  //     let list = []
+  //     database.firebase_data.collection('years').orderBy('id').onSnapshot(snapshot => {
+  //       let item = {}
+  //       snapshot.forEach(doc => {
+  //         item = doc.data()
+  //         item.id = doc.id
+  //         list.push(item)
+  //       })
+  //     })
+  //     resolve(list)
+
+  //   })
+  //   return promise
+  // },
+  // async getSemesters() {
+  //   var promise = new Promise(resolve => {
+  //     let list = []
+  //     database.firebase_data.collection('semesters').orderBy('id').onSnapshot(snapshot => {
+  //       let item = {}
+  //       snapshot.forEach(doc => {
+  //         item = doc.data()
+  //         item.id = doc.id
+  //         list.push(item)
+  //       })
+  //     })
+  //     resolve(list)
+
+  //   })
+  //   return promise
+  // },
+
 
   //=====================================//
   //----------- getModules---------------//
   //=====================================//
+  async getModules(module){
+    var promise = new Promise(resolve => {
+      database.firebase_data.collection("modules")
+      .doc(module)
+      .get()
+      .then(doc => {
+        resolve(doc.data())
+      })
+    })
+    return promise
+  },
 
+  //=====================================//
+  //----------- ifAddedModule------------//
+  //=====================================//
+  async ifAddedModule(module,user){
+    var promise = new Promise(resolve =>{
+      database.firebase_data.collection("module_grades")
+      .where("studentID", "==", user)
+      .where("module", "==", module)
+      .get().then(snapshot =>{
+        snapshot.forEach(doc =>{
+          if (doc){
+            resolve(doc.data())
+          } else {
+            resolve(null)
+          }
+        })
+      })
+    })
+    return promise
+
+  }
 
 
 
@@ -248,4 +380,3 @@ export default database;
   //   //returning promise object
   //   return promise
   // },
-

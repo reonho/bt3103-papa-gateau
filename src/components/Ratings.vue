@@ -95,7 +95,8 @@ export default {
     },
 
 
-  }
+  },
+
 };
 </script>
 

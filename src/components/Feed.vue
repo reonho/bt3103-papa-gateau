@@ -57,7 +57,6 @@
 
 <script>
 import VueApexCharts from 'vue-apexcharts'
-
     export default {
         name: 'Feed',
         props: {
@@ -109,16 +108,12 @@ import VueApexCharts from 'vue-apexcharts'
   grid-auto-rows: auto;
   overflow: scroll;
 }
-
 .grid-item {
   text-align: center;
   padding:2%
-
 }
-
 .chart{
   overflow:scroll; 
   max-height:50vh
 }
-
 </style>

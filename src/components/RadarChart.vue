@@ -1,8 +1,8 @@
 <template>
-<div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
-    <apexchart type="radar" :options="chartOptions2" :series="series1"></apexchart>
+<div id = "Radar" style="text-align:center">
+     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Strengths</h1> </md-card>
+     <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
 </div>
 </template>
 
@@ -18,7 +18,6 @@
             my_attr: Array,
             fac_attr: Array,
         },
-
         data: function(){ 
             return {
                 series1: [{ name: 'My Attributes', data: [5,0],},
@@ -51,7 +50,7 @@
                         colors: ''
                     }
                     },
-                    categories: [1,2,3,4]
+                    categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
                 },
                 colors:['#00aaff', '#ff9900', '#2cab93', "#77cbed", '#E91E63', '#FF9800',],
                 fill: {
@@ -72,13 +71,11 @@
     },
         methods:{
             parse_attr: function(my_attr, fac_attr){
-
                 var my_attrs = []
                 var attr_labels = []
                 var fac_attrs = []
                 var len = my_attr.length
                 var lenf = fac_attr.length
-
                 for(let i=0; i < len; i++){
                     var m_code = my_attr[i].attribute
                     attr_labels.push(m_code)

@@ -71,7 +71,7 @@
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
             
                  <md-card  md-with-hover  >    
-                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 } ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 } ] ' ></RadarChart>
+                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 },{ "attribute": "EC", "score": 4 }  ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 }, { "attribute": "EC", "score": 3.67 }  ] ' ></RadarChart>
                  </md-card>
                  <br>
 
@@ -83,7 +83,7 @@
             <div class="md-layout-item"  >   
                      <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh; margin-bottom:1vh">
                         <h1>My Reviews</h1> </md-card>
-                    <ReviewSection class="ReviewSection"/>
+                    <ReviewSection :reviewData="reviewData" class="ReviewSection" />
             </div>
 
         </div >
@@ -134,7 +134,6 @@
     import ReviewSection from '../components/ReviewSection'
     import database from '../firebase.js'
     //import coursetree from '../components/coursetree'
-
     export default {
     name: 'LandPage',
     props: [
@@ -163,7 +162,6 @@
                 }
             }
         },
-
         get_currentsem(obj_array){
             var keys = ["one","two","three","four","five", "six", "seven", "eight"]
             var sem_no = 1
@@ -176,14 +174,9 @@
                     break
                 }
             }
-
             var year = Math.ceil(sem_no/2)
             var sem = sem_no%2
-
             this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
-
-
-
         },
         readUser(){ // this is a function for testing the queries only. for reference
             database.getStudentInfo().then((e)=>{
@@ -195,101 +188,43 @@
             //     this.User = e
             //     console.log(e)
             // })
-
-        },
-
-        scrolltoView(elementPosition){
-            var headerOffset = 90;
-            //227.578125
-            //863.828125
-            var offsetPosition = elementPosition - headerOffset;
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-            
         }
+
+
     },  
     data: function(){ 
         return {
             // assign data into Data attribute
             Data: this.findModule("CS2030",DataObject),
             User: {},
+            reviewData:[],
             sem: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
-            // treeData: [ {
-            //     "name" : "General Modules",
-            //     "off": true,
-            //     "value": 0,
-            //     "word" : "",
-            //     "children": [
-            //          {
-            //             'name': "GER1000",
-            //             'value': 0,
-            //             "word" : ""
-            //         },
-            //         {
-            //             'name': "GET1001",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         }
-            //     ] 
-            // },{
-            //     "name" : "Core Modules",
-            //     "value": 0,
-            //     "off": true,
-            //     "word" : "",
-            //     "children": [
-            //         {
-            //             'name': "BT2101",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //             "children":[
-            //                 {
-            //             'name': "BT1101",
-            //             'value': 0,
-            //             "word" : "",
-            //             },
-            //              {
-            //             'name': "MA1521",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         },
 
-            //             ]
-            //         }
-            //     ] 
-            // },{
-            //     "name" : "Programme Modules",
-            //     "value": 0,
-            //     "off": true,
-            //     "word" : "",
-            //     "children": [
-            //          {
-            //             'name': "BT4222",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         },
-            //         {
-            //             'name': "BT4102",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         }
-            //     ] 
-            // },]
         };
     },
     created(){
-
         const self = this
 
-        database.getStudentInfo().then(function(user){
-            self.User = user
-        })
+        database.getUser().then(user => {
+          console.log(user);
+          database.firebase_data
+            .collection("reviews")
+            .where("userid", "==", user)
+            .onSnapshot(querySnapShot => {
+              this.reviewData = [];
+              querySnapShot.forEach(doc => {
+                let item = {};
+                item = doc.data();
+                item.id = doc.id;
+                this.reviewData.push(item);
+                console.log(this.reviewData);
+              });
+            });
+        });
 
         // query database for user info
-
         database.firebase_data.collection("students").doc(database.user)
         .onSnapshot(function(user){ 
             var userData = user.data()
@@ -303,13 +238,10 @@
             overall_cap: userData.overall_cap,
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
-
             
             self.User = result
             console.log("User info:")
             console.log(self.User) // console log result for reference
-
-
             // query database for course attributes
             var attributes = []
             database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
@@ -329,15 +261,11 @@
                 self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
             })
         
-
-
             self.get_currentsem(self.User.sap_by_sem)
         })
        
         
-
         
-
     },
     mounted() {
         
@@ -357,18 +285,12 @@
     color:white;
     padding:2%;
 }
-
-
 .landPage{
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(176,176,176,0.7959558823529411) 100%);
 }
-
 .ReviewSection{
     max-height:95vh;
     overflow:scroll;
 }
-
-
-
 </style>

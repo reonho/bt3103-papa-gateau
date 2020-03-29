@@ -51,7 +51,7 @@
                                 return val.toFixed(2)
                             }
                     },
-                    colors:['#00aaff', "#9500ff",'#ff9900', '#2cab93',  '#E91E63', '#FF9800',],
+                    colors:['#00aaff', '#ff9900', '#2cab93', "#9500ff", '#E91E63', '#FF9800',],
                     fill: {
                         opacity: 0.5,
                         colors: []
