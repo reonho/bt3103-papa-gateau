@@ -639,7 +639,7 @@ label {
 .filter-header {
   margin-bottom: 20px;
   margin-top: 20px;
-  width: 50%;
+  width: 100%;
 }
 .filter-head {
   font-size: 130%;
@@ -657,7 +657,8 @@ label {
 .md-button.clear-filter {
   background-color: #17a589 !important;
   font-weight: bold;
-  margin-left: 30%;
+  float: right;
+  margin-right: 0;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -704,7 +705,7 @@ label {
 }
 /* Module Card css */
 #ModuleItem {
-  margin-top: 20%;
+  margin-top: 18%;
 }
 .modulecard {
   margin: 30px;
@@ -733,11 +734,11 @@ label {
 .module-header {
   position: fixed;
   background-color: white;
-  left: 27%;
+  margin-right: 2%;
   top: 0;
   right: 0;
   z-index: 5;
-  width: 71%;
+  width: 71.5%;
 }
 .activetab {
   background-color: #1abc9c !important;

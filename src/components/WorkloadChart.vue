@@ -2,7 +2,7 @@
   <div>
     
       <apexchart
-        style="background-color:white;width:400px;margin-top:-2%"
+        style="background-color:white;width:100%;margin-top:-2%"
         type="bar"
         height="170"
         :options="chartOptions"
