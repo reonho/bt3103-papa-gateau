@@ -63,14 +63,11 @@
     import database from '../firebase.js'
     export default {
         name: 'NavBar',
-        props: {
-            msg: String,
-        },
+        props: ['User'],
         components:{
         },
         data: function(){ 
             return {
-                
             };
         },
         methods: {
