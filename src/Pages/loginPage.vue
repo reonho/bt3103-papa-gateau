@@ -71,7 +71,6 @@
       //   this.$router.push({ path: "/", params: {userPassed: this.userObject}})
       // },
       login(){
-        
         const self = this
         database.login(this.user, this.password).then(function(e){
           if (e){
