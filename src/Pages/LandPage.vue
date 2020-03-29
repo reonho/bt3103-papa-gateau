@@ -71,7 +71,7 @@
             <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
             
                  <md-card  md-with-hover  >    
-                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 } ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 } ] ' ></RadarChart>
+                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 },{ "attribute": "EC", "score": 4 }  ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 }, { "attribute": "EC", "score": 3.67 }  ] ' ></RadarChart>
                  </md-card>
                  <br>
 
@@ -210,65 +210,7 @@
             sem: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
-            // treeData: [ {
-            //     "name" : "General Modules",
-            //     "off": true,
-            //     "value": 0,
-            //     "word" : "",
-            //     "children": [
-            //          {
-            //             'name': "GER1000",
-            //             'value': 0,
-            //             "word" : ""
-            //         },
-            //         {
-            //             'name': "GET1001",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         }
-            //     ] 
-            // },{
-            //     "name" : "Core Modules",
-            //     "value": 0,
-            //     "off": true,
-            //     "word" : "",
-            //     "children": [
-            //         {
-            //             'name': "BT2101",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //             "children":[
-            //                 {
-            //             'name': "BT1101",
-            //             'value': 0,
-            //             "word" : "",
-            //             },
-            //              {
-            //             'name': "MA1521",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         },
-            //             ]
-            //         }
-            //     ] 
-            // },{
-            //     "name" : "Programme Modules",
-            //     "value": 0,
-            //     "off": true,
-            //     "word" : "",
-            //     "children": [
-            //          {
-            //             'name': "BT4222",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         },
-            //         {
-            //             'name': "BT4102",
-            //             'value': 0.7,
-            //             "word" : "Not Completed!",
-            //         }
-            //     ] 
-            // },]
+
         };
     },
     created(){

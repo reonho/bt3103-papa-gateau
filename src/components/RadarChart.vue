@@ -1,31 +1,28 @@
 <template>
-<div id = "Radar" style="text-align:center">
-     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Strengths</h1> </md-card>
-     <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
+<div style="text-align:center">
+    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Grades</h1> </md-card>
+    <apexchart type="radar" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
 
 
 <script>
-import VueApexCharts from 'vue-apexcharts'
-    
-export default {
-    mounted(){
-        this.update()
-        //this.$refs.strengths.toggleSeries('My Average')
-    },
-    name: 'RadarChart',
-    components:{
-        apexchart: VueApexCharts
-    },
-    props: {
-        msg: String
-    },
-    data: function(){ 
-        return {
-            series1: [{ name: 'My Average',data: [5, 4.5, 4, 5, 3, 4],}, { name: 'NUS Average',data: [3.6, 3, 4, 3.5, 4, 4],}, { name: 'Course Average',data: [4, 4.1, 4, 4.3, 4.2, 4],}],
-            chartOptions2: {
+    import VueApexCharts from 'vue-apexcharts'
+    export default {
+        name: 'radar',
+        components:{
+            apexchart: VueApexCharts
+        },
+        props: {
+            my_attr: Array,
+            fac_attr: Array,
+        },
+        data: function(){ 
+            return {
+                series1: [{ name: 'My Attributes', data: [5,0],},
+                 { name: 'Faculty Average', data: [0,5],}],
+                chartOptions2: {
                 chart: {
                     id:"strengths",
                     height: 350,
@@ -53,7 +50,7 @@ export default {
                         colors: ''
                     }
                     },
-                    categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
+                    categories: [1,2,3,4]
                 },
                 colors:['#00aaff', '#ff9900', '#2cab93', "#77cbed", '#E91E63', '#FF9800',],
                 fill: {
@@ -72,17 +69,39 @@ export default {
             },   
         }
     },
-    methods:{
-        update: function() {
-            this.$refs.strengths.toggleSeries('Course Average')
-    },
-    
-  }
-}
-
-   
-
-
+        methods:{
+            parse_attr: function(my_attr, fac_attr){
+                var my_attrs = []
+                var attr_labels = []
+                var fac_attrs = []
+                var len = my_attr.length
+                var lenf = fac_attr.length
+                for(let i=0; i < len; i++){
+                    var m_code = my_attr[i].attribute
+                    attr_labels.push(m_code)
+                    var m_val = my_attr[i].score
+                    my_attrs.push(m_val)
+                    for(let u=0; u < lenf; u++){
+                        var f_code = fac_attr[u].attribute
+                        if (f_code == m_code){
+                            fac_attrs.push(fac_attr[u].score)
+                        }
+                    }
+                }
+                this.series1[0].data = my_attrs
+                this.series1[1].data = fac_attrs
+                this.chartOptions2.xaxis.categories = attr_labels
+                console.log(attr_labels)
+            }
+        },
+        created(){
+            console.log("test")
+            console.log(this.fac_attr[0])
+            this.parse_attr(this.my_attr, this.fac_attr)
+            
+        },
+        
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

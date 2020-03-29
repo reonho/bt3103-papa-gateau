@@ -1,91 +1,119 @@
 <template>
-<div class="container-fluid py-5">
-    <h3 style="text-align:center"> My Reviews </h3>
-  <!-- For Demo Purpose -->
+  <div>
 
-  <div class="py-5">
-    <div class="row">
-      <div class="col-lg-9 mx-auto">
-        <md-card class="md-primary" md-with-hover>
-            <md-ripple>
-                <md-card-header>
-                <div class="md-title">Reviews</div>
-                <div class="md-subhead">With hover and ripple effects</div>
-                </md-card-header>
-            </md-ripple>
-        </md-card>
-        
-        <div class="card shadow mb-4">
-          <div class="card-body shadow-sm p-5">
-            <!-- Default breadcrumb-->
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">21 LIKES</li>
-                <li class="breadcrumb-item">2 COMMENTS</li>
-                <li class="breadcrumb-item">3000 VIEWS</li>
-                <!--li aria-current="page" class="breadcrumb-item active text-uppercase">Data</li-->
-              </ol>
-            </nav>
-            <h5 class="text-muted">BT3103 Application Development for Business Analytics </h5>
-            <p class="font-italic text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-          </div>
-        </div>
 
-        <div class="card shadow mb-4">
-          <div class="card-body shadow-sm p-5">
-            <!-- Default breadcrumb-->
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">2 LIKES</li>
-                <li class="breadcrumb-item">2 COMMENTS</li>
-                <li class="breadcrumb-item">920 VIEWS</li>
-                <!--li aria-current="page" class="breadcrumb-item active text-uppercase">Data</li-->
-              </ol>
-            </nav>
-            <h5 class="text-muted">BT3102 Computational Methods for Business Analytics </h5>
-            <p class="font-italic text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-          </div>
-        </div>
+     <b-row>
+           
+            <b-col>
+             
+               <md-card class="completed" style = "padding:2vh; background:whitesmoke"> 
+                    <md-card style="color:whitesmoke; background-color:#1ABC9C; padding:1vh; margin-bottom:1vh; text-align:center">
+                    <h1>Cohort Top Modules</h1> </md-card>
+                    <br>
+                    <h2>Top modules for {{course}} students now in {{sem}}</h2>
+                    <div id="chart">
+                      <apexchart type="bar" :options="chartOptions" :series="series" style=""></apexchart>
+                    </div>
+    
+                    
+                </md-card>
+                    
+            </b-col>
 
-        <div class="card shadow mb-4">
-          <div class="card-body shadow-sm p-5">
-            <!-- Default breadcrumb-->
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">10 LIKES</li>
-                <li class="breadcrumb-item">3 COMMENTS</li>
-                <li class="breadcrumb-item">1050 VIEWS</li>
-                <!--li aria-current="page" class="breadcrumb-item active text-uppercase">Data</li-->
-              </ol>
-            </nav>
-            <h5 class="text-muted">CS1010S </h5>
-            <p class="font-italic text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-          </div>
-        </div>
-        
-     
-      </div>
-    </div>
+             <b-col cols="4">
+         
+                <md-card class="completed" style = "padding:2vh; background:whitesmoke"> 
+                        <md-card style="color:whitesmoke; background-color:#1ABC9C; padding:1vh; margin-bottom:1vh; text-align:center">
+                    <h1>Completed Modules</h1> </md-card>
+                  
+                    <br>
+                    <b-row>
+                      <b-col> 
+                         
+                           <div class="grid-container">
+                             <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
+                              <b-button variant="outline-info" >
+                                <h1>{{mod}}</h1>
+                              </b-button>
+                            </div>
+                            </div>
+                       
+                      </b-col>
+                    </b-row>
+                </md-card>
+            </b-col>
+
+
+     </b-row>
+
+  
+
+
+
+   
   </div>
-</div>
 </template>
 
 
 <script>
+import VueApexCharts from 'vue-apexcharts'
     export default {
         name: 'Feed',
         props: {
-            msg: String
+            modules: Array ,
+            course:String,
+            sem:String
         },
-        components:{
+               components: {
+          apexchart: VueApexCharts,
         },
-        data: function(){ 
-            return {
-            };
+        data: function() {
+          return{
+          
+          series: [{
+            data: [100,80,80,75,75,60,55,50,50,40,40,30,15]
+          }],
+          chartOptions: {
+            chart: {
+              type: 'bar',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true,
+                color:["teal"]
+              }
+            },
+            dataLabels: {
+              enabled: true
+            },
+            xaxis: {
+              categories: [ "MA1101R","EC1301","GER1000","BT1101","IS1103","ST2334", "MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030",]
+            }
+          },
+          
+          
+        }
         }
     }
+    
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto ;
+  padding: 2%;
+  grid-column-gap: 2%;
+  grid-auto-rows: auto;
+  overflow: scroll;
+}
+.grid-item {
+  text-align: center;
+  padding:2%
+}
+.chart{
+  overflow:scroll; 
+  max-height:50vh
+}
 </style>
