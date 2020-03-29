@@ -2,20 +2,20 @@
   <md-card>
     <form>
     <md-card-content>
-      <span :class="getValidationClass('detailsForm', 'selectedModule')">
-        
-        <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist" @md-changed="getModules" @md-opened="getModules">
+      <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
-        </md-autocomplete>
-        
-        <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.name }}</template>
+        <md-select v-model="detailsForm.selectedModule">
+          <md-option
+            v-for="mod in modules"
+            v-bind:key="mod.id"
+            v-bind:value="mod.Name"
+          >{{mod.Name}}</md-option>
+        </md-select>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
         >This field is required</span>
-        </span>
-      <!-- </md-field> -->
-
+      </md-field>
       <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
         <label>Your faculty</label>
         <md-select v-model="detailsForm.selectedFaculty">
@@ -93,7 +93,6 @@ export default {
   data: function() {
     return {
       showModal: false,
-      searchlist: [],
       modules: DataObject.Modules,
       faculties: DataObject.faculties,
       staff: DataObject.staff,
@@ -105,7 +104,7 @@ export default {
         selectedSemester: null,
         selectedStaff: null,
         selectedGrade: null,
-        selectedFaculty: null,
+        selectedFaculty: null
       }
     };
   },
@@ -144,20 +143,9 @@ export default {
         this.$root.$emit('closeModal');
 
       }
-    },
-    getModules (searchTerm) {
-        this.searchlist = new Promise(resolve => {
-          window.setTimeout(() => {
-            if (!searchTerm) {
-              resolve(this.modules)
-            } else {
-              const term = searchTerm.toLowerCase()
+
       
-              resolve(this.modules.filter(({ Name }) => Name.toLowerCase().includes(term)))
-            }
-          }, 500)
-        })
-      }
+    }
   }
 };
 </script>
