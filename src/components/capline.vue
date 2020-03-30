@@ -1,6 +1,8 @@
 <template>
-<div id = "Radar">
-     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
+<div style="text-align:center">
+    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Grades</h1> </md-card>
+    <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
 
@@ -13,35 +15,81 @@
             apexchart: VueApexCharts
         },
         props: {
-            msg: String
+            msg: String,
+            sap: Array
         },
+
         data: function(){ 
             return {
-                series1: [{ name: 'My Average',data: [4.9, 4.5, 4, 4.2, 4.1, 4.3],}, { name: 'NUS Average',data: [4, 3.9, 3.71, 3.70, 3.69, 3.67],}],
+                series1: [{ name: 'Semester Grade', data: [0,0],},
+                 { name: 'Cumulative Grade', data: [0,0],}],
                 chartOptions2: {
                     chart: {
-                        type: 'line',
-                        height: 350,
-                          toolbar: {
+                        type: 'area',
+                        toolbar: {
                             show: false,
-                          }
+                          },
+                        selection:false
                     },
                     stroke: {
                     curve: 'smooth',
                     },
                     yaxis: [
                             {
-                            min: 2.5,
+                            min: 3,
                             max: 5,
+                            "labels": {
+                                "formatter": function (val) {
+                                    return val.toFixed(2)
+                                }
+                            }
                             }],
 
                     dataLabels: {
                         enabled: true,
+                        "formatter": function (val) {
+                                return val.toFixed(2)
+                            }
                     },
+                    colors:['#00aaff', "#9500ff",'#ff9900', '#2cab93',  '#E91E63', '#FF9800',],
+                    fill: {
+                        opacity: 0.5,
+                        colors: []
+                        }
 
                 },   
             }
-        }
+        },
+        methods:{
+            parse_sap: function(obj_array){
+                console.log(obj_array[0].one)
+                var sap_series = []
+                var cum_series = []
+                var keys = ["one","two","three","four","five", "six", "seven", "eight"]
+                for(let i=0; i < 8; i++){
+                    var key = keys[i]
+                    //console.log(obj_array[0][key])
+                    var value = obj_array[i][key]
+                    
+                    if (!value){
+                        break
+                    }
+                    
+                    
+                    sap_series.push(value)
+                    const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
+                    cum_series.push(average(sap_series))
+                    
+                }
+                this.series1[0].data = sap_series
+                this.series1[1].data = cum_series
+            }
+        },
+        created(){
+            this.parse_sap(this.sap)
+            
+        },
+        
     }
 </script>
 
