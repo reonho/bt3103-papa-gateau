@@ -73,7 +73,7 @@
                 var self = this
                 database.logout().then(function(e){
                     if(e){
-                        self.$router.push("/")
+                        self.$router.push("/loginPage")
                     }
                 })
             }
