@@ -102,6 +102,45 @@ var database = {
   //==================Use methods from here onwards==========================//
 
   //=====================================//
+  //----------- addModuleResults---------//
+  //=====================================//
+  async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
+    var result = module_result
+    var promise = new Promise(resolve =>{
+      database.getUser().then(user =>{
+        database.firebase_data.collection('students').doc(user)
+        .get().then(userData =>{
+          var user_ = userData.data()
+          //check if module is added
+          database.firebase_data.collection('module_grades')
+          .where('module' ,"==",result.selectedModule)
+          .where('studentID', '==', user)
+          .get().then(snapshot =>{
+            if(snapshot.empty){
+              //add module_results
+              database.firebase_data.collection('module_grades').add({
+                SU: false,
+                attribute: result.selectedModule.slice(0,2),
+                course: user_.course,
+                faculty: user_.faculty,
+                grade: result.selectedGrade,
+                module: result.selectedModule,
+                sem: 1,
+                studentID: user,
+                year: 2019
+              })
+              resolve(snapshot.empty)
+            } else {
+              resolve(snapshot.empty)
+            }
+          })   
+        })
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
   async getModuleReviewID(module_){

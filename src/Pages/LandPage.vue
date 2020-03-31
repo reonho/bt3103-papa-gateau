@@ -206,7 +206,7 @@
     },
     created(){
         const self = this
-
+        // query database for review data
         database.getUser().then(user => {
           console.log(user);
           database.firebase_data
