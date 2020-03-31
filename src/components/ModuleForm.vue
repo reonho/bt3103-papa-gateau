@@ -2,20 +2,21 @@
   <md-card>
     <form>
     <md-card-content>
-      <span :class="getValidationClass('detailsForm', 'selectedModule')">
-        
-        <md-autocomplete v-model="detailsForm.selectedModule" :md-options="searchlist" @md-changed="getModules" @md-opened="getModules">
+      <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
-        </md-autocomplete>
-        
-        <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.name }}</template>
+        <md-select v-model="detailsForm.selectedModule">
+          <md-option
+            v-for="mod in modules"
+            v-bind:key="mod.id"
+            v-bind:value="mod.Name"
+          >{{mod.Name}}</md-option>
+        </md-select>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
         >This field is required</span>
-        </span>
-      <!-- </md-field> -->
-
+      </md-field>
+ 
       <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
         <label>Semester taken</label>
         <md-select v-model="detailsForm.selectedSemester">
@@ -28,6 +29,21 @@
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedSemester.required"
+        >This field is required</span>
+      </md-field>
+
+      <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
+        <label>Year taken</label>
+        <md-select v-model="detailsForm.selectedYear">
+          <md-option
+            v-for="year in Years"
+            v-bind:key="year.id"
+            v-bind:value="year.title"
+          >{{year.title}}</md-option>
+        </md-select>
+        <span
+          class="md-error"
+          v-if="!$v.detailsForm.selectedYear.required"
         >This field is required</span>
       </md-field>
 
@@ -76,6 +92,7 @@ export default {
     return {
       showModal: false,
       searchlist: [],
+      Years: [{id:1, title: 2017}, {id:1, title: 2018}, {id:1, title: 2019}, {id:1, title: 2020}],
       modules: [
     {
      id: 1,
@@ -252,7 +269,8 @@ export default {
         selectedStaff: null,
         selectedGrade: null,
         selectedFaculty: null,
-        selectedSU: null
+        selectedSU: null,
+        selectedYear: null,
       }
     };
   },
@@ -276,6 +294,9 @@ export default {
       },
       selectedSU:{
         required
+      },
+      selectedYear:{
+        required
       }
     }
   },
@@ -294,20 +315,9 @@ export default {
         this.$root.$emit('closeModal');
 
       }
-    },
-    getModules (searchTerm) {
-        this.searchlist = new Promise(resolve => {
-          window.setTimeout(() => {
-            if (!searchTerm) {
-              resolve(this.modules)
-            } else {
-              const term = searchTerm.toLowerCase()
+
       
-              resolve(this.modules.filter(({ Name }) => Name.toLowerCase().includes(term)))
-            }
-          }, 500)
-        })
-      }
+    }
   }
 };
 </script>
