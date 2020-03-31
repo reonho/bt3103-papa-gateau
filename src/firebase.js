@@ -154,6 +154,38 @@ var database = {
           module: module_results.module
         })
       })
+      //update sam_by_sem
+      if(!module_results.SU){
+        var arr = user.data().sam_by_sem
+        var z;
+        var flag_ = 0;
+        for (z in arr){
+          if (arr[z].year == module_results.year && arr[z].sem == module_results.sem){
+            flag_ = false
+            arr[z].cap = ((arr[z].cap*arr[z].amt) + database.convertCap(module_results.grade))/(arr[z].amt +1)
+            arr[z].amt += 1
+            console.log(z)
+            break;
+          } else if (arr[z].year == null){
+            flag_ = z;
+            console.log(z)
+            break;
+          }
+        }
+        if (flag_){
+          arr[flag_] = {
+            year: module_results.year,
+            sem: module_results.sem,
+            amt: 1,
+            cap: database.convertCap(module_results.grade)
+          }
+        }
+        console.log(arr)
+        database.firebase_data.collection('students').doc(module_results.studentID)
+        .update({
+          sam_by_sem: arr
+        })
+      }
     })
   },
 
@@ -234,11 +266,10 @@ var database = {
                 module: result.selectedModule,
                 sem: 1, // need to change
                 studentID: user,
-                year: 2019 // need to change
+                year: 2021 // need to change
               }
               database.firebase_data.collection('module_grades').add(results)
               //update student overall cap, modules taken, attributes, cap per semester
-              console.log(results.module)
               database.updateStudentInfo(results)
               //update faculty attributes and number of students taken
               resolve(snapshot.empty)
