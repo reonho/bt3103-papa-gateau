@@ -129,6 +129,8 @@ var database = {
                 studentID: user,
                 year: 2019
               })
+              //update student overall cap, modules taken, attributes, cap per semester
+              //update faculty attributes and number of students taken
               resolve(snapshot.empty)
             } else {
               resolve(snapshot.empty)
