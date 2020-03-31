@@ -6,6 +6,7 @@ import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
 import Registration from './Pages/Registration'
+// import EditForm from './components/EditForm'
 import database from './firebase.js'
 
 

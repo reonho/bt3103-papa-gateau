@@ -1,6 +1,6 @@
 <template>
   <div id="ReviewCard">
-    <md-card>
+    <md-card v-if="anyComments ===true">
       <md-card-header class="md-gutter">
         <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
         <!-- <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedSemester}})</b> -->
@@ -14,31 +14,31 @@
           <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
         </div>
         <!-- <br/> -->
-        <div class="para">
+        <div v-if="hasComment(review.lectureForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Lectures</div> -->
           <b>Lectures</b>
           <p class="comments">{{review.lectureForm.comments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Tutorials</b>
           <p class="comments">{{review.tutorialForm.comments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.apcomments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Assignments & Projects</b>
           <p class="comments">{{review.tutorialForm.apcomments}}</p>
         </div>
 
-        <div class="para">
+        <div v-if="hasComment(review.tutorialForm.examcomments)" class="para">
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <b>Examinations</b>
           <p class="comments">{{review.tutorialForm.examcomments}}</p>
         </div>
 
-        <div v-if="review.commentForm.comments != null" div class="para">
+        <div v-if="hasComment(review.commentForm.comments)" class="para">
           <!-- <div class = 'md-subheading'>Comments</div> -->
           <b>Comments</b>
           <p class="comments">{{review.commentForm.comments}}</p>
@@ -105,7 +105,6 @@ import database from "../firebase";
 export default {
   name: "ReviewCard",
   props: {
-    msg: String,
     review: Object //renders the review object passed from ReviewSection
   },
   data: () => ({
@@ -113,53 +112,65 @@ export default {
     disliked: null, //to find from backend
     showDialog: false,
     showDetail: false, //toggle visibility of hidden content,
-    userid: 'e0123451'
+    userid: null,
+    anyComments: true
   }),
 
   created() {
-    var ul = Object.values(this.review.users_liked)
-    var ud = Object.values(this.review.users_disliked)
-
-    //if user has liked the review
-    if (ul.indexOf(this.userid) != -1) {
-      this.liked = true;
-      this.disliked = false;
-    } else {
-      this.liked = false;
+    ///card will not be rendered if all comment fields are empty
+    if (
+      !this.hasComment(this.review.lectureForm.comments) &&
+      !this.hasComment(this.review.tutorialForm.comments) &&
+      !this.hasComment(this.review.tutorialForm.apcomments) &&
+      !this.hasComment(this.review.tutorialForm.examcomments)
+    ) {
+      this.anyComments = false;
     }
-    // if user has disliked the review
-    if (ud.indexOf(this.userid) != -1) {
-      this.disliked = true;
-      this.liked = false;
-    } else {
-      this.disliked = false;
-    }
-    
-
+    database.getUser().then(user => {
+      this.userid = user;
+      var ul = Object.values(this.review.users_liked);
+      var ud = Object.values(this.review.users_disliked);
+      console.log(this.userid);
+      //if user has liked the review
+      if (ul.indexOf(this.userid) != -1) {
+        this.liked = true;
+        this.disliked = false;
+      } else {
+        this.liked = false;
+      }
+      // if user has disliked the review
+      if (ud.indexOf(this.userid) != -1) {
+        this.disliked = true;
+        this.liked = false;
+      } else {
+        this.disliked = false;
+      }
+    });
   },
   methods: {
     remove(array, item) {
-      const index = array.indexOf(item)
+      const index = array.indexOf(item);
       if (index > -1) {
         array.splice(index, 1);
       }
+    },
 
+    hasComment(field) {
+      return field !== null && field !== undefined
     },
 
     like() {
-      let db = database.firebase_data
+      let db = database.firebase_data;
       //if user has neither liked nor disliked yet
       if (this.liked === false && this.disliked === false) {
-        this.review.users_liked.push(this.userid)
+        this.review.users_liked.push(this.userid);
         this.liked = true;
-        db
-          .collection("reviews")
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             likes: this.review.users_liked.length,
             users_liked: this.review.users_liked
           });
-
       }
       //replace this.liked with some variable that stores whether the user has liked/disliked the post already. Probably a backend call to the list of likers/dislikers
       //possibly can add the user to the list of likers for a review too, all depends on how we store this
@@ -168,70 +179,61 @@ export default {
         this.liked = false;
 
         //remove user from users_liked
-        this.remove(this.review.users_liked, this.userid)
-        db
-          .collection('reviews')
+        this.remove(this.review.users_liked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_liked: this.review.users_liked,
             likes: this.review.users_liked.length
-          })
-
+          });
       } else {
         //else like the post
         this.liked = true;
         //add user to users_liked
-        this.review.users_liked.push(this.userid)
-        db
-          .collection("reviews")
+        this.review.users_liked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             likes: this.review.users_liked.length,
             users_liked: this.review.users_liked
-          })
+          });
 
         if (this.disliked === true) {
           //if user previously disliked, remove the dislike
           this.disliked = false;
 
           //remove user from users_disliked
-          this.remove(this.review.users_disliked, this.userid)
-          db
-            .collection('reviews')
+          this.remove(this.review.users_disliked, this.userid);
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_disliked: this.review.users_disliked,
               dislikes: this.review.users_disliked.length
-            })
+            });
         }
         //update count in db
       }
     },
 
     dislike() {
-      let db = database.firebase_data
+      let db = database.firebase_data;
       //if user has yet to like/dislike the review
       if (this.liked === false && this.disliked === false) {
-        this.review.users_disliked.push(this.userid)
-        db
-          .collection("reviews")
+        this.review.users_disliked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
             dislikes: this.review.users_disliked.length
-
           });
 
         this.disliked = true;
-
-      }
-      else if (this.disliked === true) {
+      } else if (this.disliked === true) {
         //if post already disliked, clear it
         this.disliked = false;
         //update count in db
-        this.remove(this.review.users_disliked,this.userid)
-        db
-          .collection("reviews")
+        this.remove(this.review.users_disliked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
@@ -240,22 +242,19 @@ export default {
       } else {
         //else dislike the post
         this.disliked = true;
-        this.review.users_disliked.push(this.userid)
-        db
-          .collection("reviews")
+        this.review.users_disliked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
             dislikes: this.review.users_disliked.length
           });
 
-        
         if (this.liked === true) {
           //if user previously liked the review, remove the like
-          this.remove(this.review.users_liked, this.userid)
+          this.remove(this.review.users_liked, this.userid);
           this.liked = false;
-          db
-            .collection("reviews")
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_liked: this.review.users_liked,
@@ -274,7 +273,7 @@ export default {
     deleteReview() {
       // let self = this
       // console.log(this.review.commentForm.comments)
-      database
+      database.firebase_data
         .collection("reviews")
         .doc(this.review.id)
         .delete();

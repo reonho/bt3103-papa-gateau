@@ -10,13 +10,17 @@
 <script>
 // import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
-// import database from '../firebase';
+// import database from '../firebase.js';
 export default {
   name: "ReviewSection",
   props: {
-    user: String,
-    reviewData: Array //should be an array of reviews from the backend
-  },
+    userid: String,
+    mod: String,
+    reviewData: Array,
+  }, 
+  // {
+  //   reviewData: Array //should be an array of reviews from the backend
+  // },
   data: () => ({
     // reviewData: DataObject.reviewData
     // reviewData: [],
@@ -24,10 +28,23 @@ export default {
   }),
 
   components: {
-    ReviewCard
+    ReviewCard,
   },
 
   created() {
+    // if (this.userid != null){
+    //   database.getUserReview(this.userid).then(reviews=>{
+    //     this.reviewData = reviews
+    //     console.log(this.userid)
+    //     console.log(this.reviewData)
+    //   })
+    // } else if (this.mod != null){
+    //   database.getModuleReviewID(this.mod).then(reviews =>{
+    //     this.reviewData = reviews
+    //     console.log(this.mod)
+    //     console.log(this.reviewData[0])
+    //   })
+    // }
     //query all reviews written by user
      // console.log(this.reviewData)
       

@@ -171,7 +171,15 @@
       </div>
       <br />
       <div>
-        <ReviewSection :reviewData="reviewData" />
+        <ReviewSection
+          :reviewData="reviewData"
+        />
+        <md-dialog-alert
+          :md-active.sync="showDialog"
+          md-content="You have already submitted a review for this module."
+          md-confirm-text="Okay"
+          md-title="Review already exists"
+        />
       </div>
     </div>
   </div>
@@ -202,19 +210,25 @@ export default {
     ReviewSection
   },
   methods: {
-    review(){
-      this.$router.push({name: "ReviewForm", params: {mod: this.Modules[0].info.moduleCode}})
-    },
-    readDatabase: function() {
-      database.firebase_data
-        .collection("modules_")
-        .doc(this.code)
-        .get()
-        .then(function(doc) {
-          this.Modules.push(doc.data());
-          this.test = doc.id;
-        });
-
+    review() {
+      //prevents user from submitting multiple reviews
+      // database.getUser().then(user => {
+      //   database
+      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
+      //     .then(mod => {
+      //       if (mod === null) {
+      //         this.$router.push({
+      //           name: "ReviewForm",
+      //           params: { mod: this.Modules[0].info.moduleCode }
+      //         });
+      //       } else {
+      //         this.showDialog = true
+      //       }
+      //     });
+      this.$router.push({
+        name: "ReviewForm",
+        params: { mod: this.Modules[0].info.moduleCode }
+      });
     },
     formatwork(workload) {
       var series = [];
@@ -336,30 +350,33 @@ export default {
   created() {
     //replace this with a query by module code
     console.log("created");
-    
-    // database.collection("reviews").onSnapshot(querySnapShot => {
-    //   this.reviewData = [];
-    //   querySnapShot.forEach(doc => {
-    //     let item = {};
-    //     item = doc.data();
-    //     item.id = doc.id;
-    //     this.reviewData.push(item);
-    //     // console.log(doc.id)
-    //   });
-    //   // console.log(this.reviewData)
-    // });
+    console.log(this.code);
+    database.firebase_data
+      .collection("reviews")
+      .where("module_code", "==", this.code)
+      .onSnapshot(querySnapShot => {
+        this.reviewData = [];
+        querySnapShot.forEach(doc => {
+          let item = {};
+          item = doc.data();
+          item.id = doc.id;
+          this.reviewData.push(item);
+          // console.log(doc.id)
+        });
+        console.log(this.reviewData)
+      });
 
     //get module details
-    database.getModules(this.code).then(item =>{
+    database.getModules(this.code).then(item => {
       this.Modules.push(item);
-    })
-    
-
+    });
   },
   data: () => ({
+    showDialog: false,
     totalsems: "",
     reviewData: [],
-    module_code: '', //testing purposes, replace with passed module code
+    infodes: null,
+    module_code: "", //testing purposes, replace with passed module code
     seriesStats: [
       {
         name: "Intake",
@@ -429,7 +446,7 @@ export default {
   })
 };
 
-// archive 
+// archive
 // <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
 //         Reviews
 //         <a
