@@ -295,6 +295,7 @@ export default {
 }
 .landPage {
   background: #e5e8e8;
+   font-family: 'Helvetica', sans-serif;
 }
 /* Header card css */
 .header-card {
@@ -306,7 +307,8 @@ export default {
 }
 .header {
   color: #ffffff;
-  font-size: 220%;
+  font-size: 3vh;
+  font-weight: bold;
 }
 .sub-header-title {
   font-size: 150%;
@@ -314,7 +316,7 @@ export default {
   text-align: left;
   padding: 25px;
   background-color: #17a2b8;
-  color:white
+  color:white;
 
 }
 .sub-header-content {

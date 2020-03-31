@@ -21,7 +21,7 @@
               <div class="grid-container">
                 <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
                   <b-button class="mod-btn" variant="outline-info">
-                    <h1>{{mod}}</h1>
+                    <h1 style="font-size:2.5vh">{{mod}}</h1>
                   </b-button>
                 </div>
               </div>
@@ -59,12 +59,11 @@ export default {
         },
         plotOptions: {
           bar: {
-            horizontal: true,
-           
+            horizontal: true
           }
         },
-        fill : {
-            colors : ["#17a2b8"]
+        fill: {
+          colors: ["#17a2b8"]
         },
         dataLabels: {
           enabled: true
@@ -109,27 +108,29 @@ export default {
 }
 .chart {
   overflow: scroll;
-  max-height: 50vh;
+  max-height: 100vh;
 }
 
 .sub-header-title {
-
+  font-family: "Open Sans", sans-serif;
   font-size: 150%;
   font-weight: bold;
   text-align: left;
   padding: 25px;
+  background-color: #17a2b8;
+  color: white;
 }
 .sub-header-content {
+  font-family: "Open Sans", sans-serif;
   background: white;
   font-weight: bold;
   text-align: left;
   padding: 0;
   padding-left: 25px;
   max-height: 100vh;
-  min-height: 52vh;
+  min-height: 68vh;
 }
 .sub-content-title {
-
   font-size: 2.5vh;
   font-weight: bold;
   text-align: left;
@@ -143,6 +144,6 @@ export default {
 }
 
 .mod-btn {
-    width: 15vh;
+  width: 15vh;
 }
 </style>
