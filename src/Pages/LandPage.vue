@@ -102,7 +102,6 @@ export default {
     AddModulesModal,
     RadarChart,
     // //coursetree,
-    // Feed,
     // //TreeChart,
     // //OverallProgress,
     capline,
@@ -212,78 +211,80 @@ export default {
       ]
     };
   },
-  created() {
-    const self = this;
-
-    database.getUser().then(user => {
-      console.log(user);
-      database.firebase_data
-        .collection("reviews")
-        .where("userid", "==", user)
-        .onSnapshot(querySnapShot => {
-          this.reviewData = [];
-          querySnapShot.forEach(doc => {
-            let item = {};
-            item = doc.data();
-            item.id = doc.id;
-            this.reviewData.push(item);
-            console.log(this.reviewData);
-          });
-        });
-    });
-
-    // query database for user info
-    database.firebase_data
-      .collection("students")
-      .doc(database.user)
-      .onSnapshot(function(user) {
-        var userData = user.data();
-        var result = {
-          name: userData.name,
-          faculty: userData.faculty,
-          dept: userData.dept,
-          course: userData.course,
-          modules: userData.modules_taken,
-          sap_by_sem: userData.sap_by_sem,
-          overall_cap: userData.overall_cap,
-          attributes: userData.attributes //individual attributes can be found in self.User.attributes
-        };
-
-        self.User = result;
-        console.log("User info:");
-        console.log(self.User); // console log result for reference
-        // query database for course attributes
-        var attributes = [];
-        database.firebase_data
-          .collection("faculties")
-          .where("name", "==", self.User.faculty)
-          .onSnapshot(function(onSnapshot) {
-            onSnapshot.forEach(function(doc) {
-              var attr = doc.data().attributes;
-              var x;
-              for (x of attr) {
-                attributes.push({
-                  attribute: x.name,
-                  score: x.avg_score
-                });
-              }
+    created(){
+        const self = this
+        // query database for review data
+        database.getUser().then(user => {
+          console.log(user);
+          database.firebase_data
+            .collection("reviews")
+            .where("userid", "==", user)
+            .onSnapshot(querySnapShot => {
+              this.reviewData = [];
+              querySnapShot.forEach(doc => {
+                let item = {};
+                item = doc.data();
+                item.id = doc.id;
+                this.reviewData.push(item);
+              });
             });
-            //console.log("Attribute info according to user's faculty:")
-            //console.log(attributes) // console log result for reference
-            self.facultyAttributes = attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
-          });
+        });
 
-        self.get_currentsem(self.User.sap_by_sem);
-      });
-  },
-  mounted() {
-    if (this.userPassed) {
-      //this.User = this.userPassed
-    } else {
-      this.User = { User: "there" };
+        // query database for user info
+        database.firebase_data.collection("students").doc(database.user)
+        .onSnapshot(function(user){ 
+            var userData = user.data()
+            var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sap_by_sem,
+            overall_cap: userData.overall_cap,
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
+            }
+            
+            self.User = result
+            console.log("User info:")
+            console.log(self.User) // console log result for reference
+            // query database for course attributes
+            var attributes = []
+            database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
+            .onSnapshot(function(onSnapshot){
+                onSnapshot.forEach(function(doc){
+                    var attr= doc.data().attributes
+                    var x
+                    for (x of attr){
+                        attributes.push({
+                            attribute: x.name,
+                            score: x.avg_score
+                        })
+                    }
+                })
+                //console.log("Attribute info according to user's faculty:")
+                //console.log(attributes) // console log result for reference
+                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
+            })
+        
+            self.get_currentsem(self.User.sap_by_sem)
+        })
+       
+        
+        
+    },
+    mounted() {
+        
+        if (this.userPassed) {
+            //this.User = this.userPassed  
+        }
+        else{
+            this.User = {User:"there"}
+        }
     }
-  }
-};
+}
+    
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -312,6 +313,8 @@ export default {
   font-weight: bold;
   text-align: left;
   padding: 25px;
+  background-color: #17a2b8;
+  color:white
 
 }
 .sub-header-content {
