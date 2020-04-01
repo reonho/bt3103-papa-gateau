@@ -55,8 +55,8 @@
         <b-tabs
           active-nav-item-class="activetab"
           class="semtabs"
+          v-model="chosenSem"
           content-class="mt-3"
-          no-fade="false"
           lazy
         >
           <b-tab
@@ -76,16 +76,24 @@
                       <h3 style="padding-top: 10px;color:#0B5345">Student reviews</h3>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star-half-alt"></i>
+                          <span>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                          </span>
                         </span>
-                        <span style="padding:10px;font-size: 15px">4.4 out of 5</span>
+                        <span style="color: lightgrey;font-size:16px;" class="star">
+                          <i class="fa fa-star"></i>
+                        </span>
+                        <span style="padding:10px;font-size: 15px">
+                          <span id="avg"></span> out of 5
+                        </span>
                       </p>
-                      <h5 style="font-weight:400">10 student ratings</h5>
-                      <bar-chart :chart-data="datacollection1" :options="chartOptions1"></bar-chart>
+                      <h5 style="font-weight:400">
+                        <span id="ratings"></span> student ratings
+                      </h5>
+                      <bar-chart :semester="chosenSem"></bar-chart>
                     </div>
                     <div class="col-7">
                       <h4 style="padding-top: 10px;color:#0B5345">Features</h4>
@@ -99,12 +107,12 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
                             </span>
                             <span style="color: lightgrey;" class="star">
                               <i class="fa fa-star"></i>
+                              <i class="fa fa-star"></i>
                             </span>
-                            <span style="padding:10px;font-size: 12px">4.0</span>
+                            <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
                       </div>
@@ -123,7 +131,7 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                             </span>
-                            <span style="padding:10px;font-size: 12px">2.9</span>
+                            <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
@@ -132,7 +140,6 @@
                     </div>
                   </div>
                   <br />
-                  <intakechart :seriesStats="seriesStats"></intakechart>
                 </div>
               </div>
             </div>
@@ -171,9 +178,7 @@
       </div>
       <br />
       <div>
-        <ReviewSection
-          :reviewData="reviewData"
-        />
+        <ReviewSection :reviewData="reviewData" />
         <md-dialog-alert
           :md-active.sync="showDialog"
           md-content="You have already submitted a review for this module."
@@ -186,7 +191,6 @@
 </template>
 
 <script>
-//import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import StudentIntakeChart from "../components/StudentIntakeChart";
@@ -196,7 +200,7 @@ import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 export default {
-  props: {
+   props: {
     code: String
   },
   components: {
@@ -229,6 +233,19 @@ export default {
         params: { mod: this.Modules[0].info.moduleCode }
       });
     },
+    numWholeStars(ele) {
+      var num = 0;
+      if (ele == "easy") {
+        num = Number(document.getElementById("easy").innerHTML);
+      } else if (ele == "manag") {
+        num = Number(document.getElementById("manageable").innerHTML);
+      } else {
+        num = Number(document.getElementById("ratings").innerHTML);
+      }
+      console.log(num);
+      return Math.floor(num / 1);
+    },
+
     formatwork(workload) {
       var series = [];
       series.push({
@@ -237,6 +254,7 @@ export default {
       });
       return series;
     },
+
     checkSemester(arr) {
       var semesters = [
         { semester: "Semester 1", disabled: "disabledTab" },
@@ -358,7 +376,7 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
-        console.log(this.reviewData)
+        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {
@@ -371,6 +389,7 @@ export default {
     reviewData: [],
     infodes: null,
     module_code: "", //testing purposes, replace with passed module code
+    chosenSem: 0,
     seriesStats: [
       {
         name: "Intake",
@@ -439,6 +458,7 @@ export default {
     }
   })
 };
+
 // archive
 // <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
 //         Reviews

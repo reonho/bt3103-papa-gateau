@@ -375,7 +375,6 @@ export default {
       this.chosenlevel = [];
       this.chosenmc = [];
     },
-
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -428,7 +427,6 @@ export default {
             semesters[3].active = true;
           }
           flag = true;
-
           if (Object.keys(arr[i]).length > 1) {
             semesters[3].examDate = arr[i].examDate;
             semesters[3].examDuration = arr[i].examDuration / 60;
@@ -439,7 +437,6 @@ export default {
             semesters[1].active = true;
           }
           flag = true;
-
           if (Object.keys(arr[i]).length > 1) {
             semesters[1].examDate = arr[i].examDate;
             semesters[1].examDuration = arr[i].examDuration / 60;
@@ -450,17 +447,14 @@ export default {
             semesters[0].active = true;
           }
           flag = true;
-
           if (Object.keys(arr[i]).length > 1) {
             semesters[0].examDate = arr[i].examDate;
             semesters[0].examDuration = arr[i].examDuration / 60;
           }
         }
       }
-
       return semesters;
     },
-
     checkSemester(arr) {
       var semesters = [];
       arr = arr.info.semesterData;

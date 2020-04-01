@@ -49,7 +49,6 @@ let router = new Router({
         requiresAuth: true
       }
     },
-
     {
       path: '/loginPage',
       name: 'loginPage',
