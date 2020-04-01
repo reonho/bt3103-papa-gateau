@@ -49,15 +49,7 @@ let router = new Router({
         requiresAuth: true
       }
     },
-    // comment this block to test components
-    {
-      path: '/ModuleList',
-      name: 'ModuleList',
-      component: ModuleList,
-      meta: {
-        requiresAuth: true
-      }
-    },
+
     {
       path: '/loginPage',
       name: 'loginPage',
@@ -67,7 +59,8 @@ let router = new Router({
       }
     },
     {
-      path: '/module',
+      path: '/:code',
+      props: true,
       name: 'modulePage',
       component: modulePage,
       meta: {

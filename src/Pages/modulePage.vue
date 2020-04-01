@@ -3,12 +3,12 @@
     <NavBar />
     <div id="modulePage" style="margin-left:15vw;margin-right:15vw;margin-top:5vh">
       <title id="details">{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
-      <div style="color:#0B5345; margin-left: 20px; margin-top:20px" class="header">
+      <div style="color:#B82D17; margin-left: 20px; margin-top:20px" class="header">
         <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
       <button
         class="button"
-        style="float: right; margin-right: 20px;background-color:#0B5345"
+        style="float: right; margin-right: 20px;background-color:#17a2b8"
         onclick="window.location.href = '/#/ModuleList';"
       >
         <span>Back To All Modules</span>
@@ -68,7 +68,7 @@
             <div id="container">
               <div class="row">
                 <div class="col-4">
-                  <pie-chart :chart-data="datacollection" :options="chartOptions"></pie-chart>
+                  <pie-chart :semester="chosenSem"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
