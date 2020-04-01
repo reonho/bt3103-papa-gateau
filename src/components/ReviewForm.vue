@@ -530,6 +530,7 @@ export default {
       } else {
         this[formName].error = "Error!";
       }
+      window.scrollTo(0, 0)
     },
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];

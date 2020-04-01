@@ -325,7 +325,7 @@ export default {
   padding: 0;
   padding-left: 25px;
   max-height: 100vh;
-  min-height: 52vh;
+  min-height: 47vh;
 }
 .sub-content-title {
   font-size: 2.5vh;

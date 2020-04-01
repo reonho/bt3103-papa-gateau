@@ -50,19 +50,25 @@ let router = new Router({
       }
     },
     // comment this block to test components
-   
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList,
+      meta: {
+        requiresAuth: true
+      }
+    },
     {
       path: '/loginPage',
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
-      path: '/:code',
+      path: '/module',
       name: 'modulePage',
-      props: true,
       component: modulePage,
       meta: {
         requiresAuth: true

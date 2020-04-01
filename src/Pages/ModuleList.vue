@@ -12,7 +12,6 @@
             <tr>
               <td>
                 <span class="filter-head">FILTERS</span>
-                
               </td>
               <td>
                 <span>
@@ -100,18 +99,16 @@
 
             <div class="module-numberdiv">
               <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
-              
               <hr />
             </div>
           </div>
           <div id="ModuleItem">
-          
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
                 <router-link
                   class="module-name"
                   :to="'/'+post.info.moduleCode"
-                  style="color:#B82D17;"
+                  style="color:#0B5345;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
                 <br />
                 <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
@@ -202,16 +199,13 @@ import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
 import VueApexCharts from "vue-apexcharts";
-
 export default {
   components: {
     NavBar,
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
     //intakechart: StudentIntakeChart,
-    workloadchart: WorkloadChart,
-
-
+    workloadchart: WorkloadChart
   },
   props: {
     test: {
@@ -261,7 +255,6 @@ export default {
   computed: {
     filteredList: function() {
       let filterData = this.modulesData;
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       if (this.chosensems.length > 0) {
         filterData = filterData.filter(item => {
           for (var i = 0; i < item.info.semesterData.length; i++) {
@@ -329,8 +322,6 @@ export default {
       }
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
- 
       return filterData;
     }
   },
@@ -584,8 +575,7 @@ export default {
     formatwork(workload) {
       var series = [];
       series.push({
-        data: workload,
-       
+        data: workload
       });
       return series;
     },
@@ -605,7 +595,6 @@ export default {
   mounted() {
     //this.writeDatabase();
     this.readDatabase();
-    
     //console.log(this.modulesData);
   }
 };
@@ -659,14 +648,14 @@ label {
   margin-right: 80px;
 }
 .minihead {
-  color: #616a6b;
+  color: #0b5345;
   font-size: 80%;
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
 }
 .md-button.clear-filter {
-  background-color: #17a2b8 !important;
+  background-color: #17a589 !important;
   font-weight: bold;
   float: right;
   margin-right: 0;
@@ -679,11 +668,11 @@ label {
 }
 .modnum {
   margin-right: 30px;
-  color: #B82D17;
+  color: #0b5345;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #EC7663 !important;
+  background-color: #0b5345 !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -710,7 +699,7 @@ label {
   background-color: white !important;
 }
 .mod-chips .md-chip.md-theme-default {
-  background-color: #EC7663 !important;
+  background-color: #0b5345 !important;
   color: white !important;
   font-weight: bold !important;
 }
@@ -724,6 +713,7 @@ label {
 }
 .module-name {
   font-size: 150%;
+  color: #1abc9c;
   font-weight: bold;
 }
 .module-preclusionhead {
@@ -751,11 +741,11 @@ label {
   width: 71.5%;
 }
 .activetab {
-  background-color: #17a2b8 !important;
+  background-color: #1abc9c !important;
   font-weight: bold !important;
 }
 .md-theme-default .nav-link:not(.md-button) {
-  color: #17a2b8 !important;
+  color: #17a589 !important;
   font-weight: bold !important;
 }
 .md-theme-default .nav-link.active:not(.md-button) {

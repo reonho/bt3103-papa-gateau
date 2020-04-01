@@ -195,7 +195,6 @@ import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
   props: {
     code: String
@@ -246,7 +245,6 @@ export default {
         { semester: "Special Term II", disabled: "disabledTab" }
       ];
       var num = arr.length;
-
       for (var i = 0; i < num; i++) {
         if (arr[i].semester == 3) {
           semesters[2].disabled = "";
@@ -258,7 +256,6 @@ export default {
           semesters[0].disabled = "";
         }
       }
-
       return semesters;
     },
     showsem(sem) {
@@ -310,7 +307,6 @@ export default {
           time[1],
           time[2]
         );
-
         var hours = finishDate.getHours();
         var minutes = finishDate.getMinutes();
         var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
@@ -346,7 +342,6 @@ export default {
       return num;
     }
   },
-
   created() {
     //replace this with a query by module code
     console.log("created");
@@ -365,7 +360,6 @@ export default {
         });
         console.log(this.reviewData)
       });
-
     //get module details
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
@@ -445,7 +439,6 @@ export default {
     }
   })
 };
-
 // archive
 // <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
 //         Reviews
@@ -504,14 +497,12 @@ export default {
   cursor: pointer;
   margin: 10px;
 }
-
 .button span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-
 .button span:after {
   content: "\00bb";
   position: absolute;
@@ -520,11 +511,9 @@ export default {
   right: -20px;
   transition: 0.5s;
 }
-
 .button:hover span {
   padding-right: 25px;
 }
-
 .button:hover span:after {
   opacity: 1;
   right: 0;
@@ -534,13 +523,9 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
 </style>
-
-
-

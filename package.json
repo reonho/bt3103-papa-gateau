@@ -25,7 +25,6 @@
     "vue-chartjs": "^3.5.0",
     "vue-material": "^1.0.0-beta-11",
     "vue-router": "^3.1.5",
-    "vue-spinner": "^1.0.3",
     "vuelidate": "^0.7.5"
   },
   "devDependencies": {

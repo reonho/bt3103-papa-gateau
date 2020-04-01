@@ -7,7 +7,6 @@
         height="170"
         :options="chartOptions"
         :series="seriesStats"
-        
       ></apexchart>
     
   </div>
@@ -35,17 +34,18 @@ export default {
             show: false,
           }
         },
-        
+        fill: {
+            colors: ['#1ABC9C']
+        },
         plotOptions: {
           bar: {
             horizontal: true
           }
         },
-        colors: ['#EC7663'],
         dataLabels: {
           enabled: false
         },
- 
+        colors: ['#1ABC9C'],
         xaxis: {
           categories: [
             "Lectures",
