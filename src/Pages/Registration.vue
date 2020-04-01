@@ -6,16 +6,27 @@
         <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body p-5">
-              <h1 class="text-center" style="color:#1ABC9C; font-size:500%">MODEAUX</h1>
+              <h1 class="text-center" style="color:#17a2b8; font-size:500%">MODEAUX</h1>
               <h1 class="card-title text-center">Registration</h1>
               <br />
               <p class="reg-header">User Info</p>
 
-              <md-field>
-                <label>Email</label>
-                <md-input type="username" id="username" v-model="user"></md-input>
-                <span class="md-suffix">@u.nus.edu</span>
-              </md-field>
+              <div class="md-layout">
+                <div class="md-layout-item md-size-45">
+                  <md-field>
+                    <label>Email</label>
+                    <md-input type="username" id="username" v-model="user"></md-input>
+                    <span class="md-suffix">@u.nus.edu</span>
+                  </md-field>
+                </div>
+                <div class="md-layout-item md-size-10"></div>
+                <div class="md-layout-item md-size-45">
+                  <md-field>
+                    <label>Name</label>
+                    <md-input type="name" id="name" v-model="name"></md-input>
+                  </md-field>
+                </div>
+              </div>
               <md-field>
                 <label>Password</label>
                 <md-input type="password" id="password" v-model="password"></md-input>
@@ -57,9 +68,7 @@
                 </md-empty-state>
                 <AddModulesModal />
                 <md-list v-for="mod in post.mods" v-bind:key="mod.index">{{mod.code}} {{mod.grade}}</md-list>
-                <p>
-                  Total CAP : 4.00
-                </p>
+                <p>Total CAP : 4.00</p>
               </md-list>
 
               <md-button
@@ -87,6 +96,7 @@ export default {
   data: function() {
     return {
       username: "",
+      name: "",
       password: "",
       cfmpassword: "",
       course: "",
@@ -189,8 +199,8 @@ export default {
   --input-padding-y: 2rem;
 }
 body {
-  background: #1abc9c;
-  background: linear-gradient(to right, teal, #1abc9c);
+  background: #17a2b8;
+  background: linear-gradient(to right, teal, #17a2b8);
   min-height: 300vh;
 }
 .card-signin {
@@ -278,7 +288,7 @@ body {
   background-color: #3b5998;
 }
 .md-button.addsem {
-  background-color: #17a589 !important;
+  background-color: #17a2b8 !important;
   font-weight: bold;
   color: white;
   margin: 0;
@@ -286,6 +296,7 @@ body {
 .reg-header {
   font-weight: 600;
   font-size: 130%;
+  color: #B82D17
 }
 .sem-header {
   font-weight: 600;
