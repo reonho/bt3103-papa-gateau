@@ -9,12 +9,16 @@
           <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>
         <md-menu md-size="medium" md-align-trigger>
         </md-menu>
-        <router-link class="nav-link" to="/LandPage">
+        <router-link class="nav-link" to="/">
           <md-button style="color:white;font-weight:bold">Dashboard</md-button>
         </router-link>
 
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
+        </router-link>
+
+        <router-link class="nav-link" to="/Registration">
+          <md-button style="color:white;font-weight:bold" class="md-primary">Registration</md-button>
         </router-link>
         
     </md-toolbar>

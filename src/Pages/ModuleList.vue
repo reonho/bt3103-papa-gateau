@@ -108,7 +108,7 @@
                 <router-link
                   class="module-name"
                   :to="'/'+post.info.moduleCode"
-                  style="color:#B82D17;"
+                  style="color:#EC7663;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
                 <br />
                 <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
@@ -455,56 +455,7 @@ export default {
       }
       return semesters;
     },
-    checkSemester(arr) {
-      var semesters = [];
-      arr = arr.info.semesterData;
-      var num = arr.length;
-      for (var i = 1; i <= 4; i++) {
-        var semname;
-        var examDate;
-        var examDuration;
-        var disabled = "";
-        if (i === 3) {
-          semname = "Special Term 1";
-        } else if (i === 4) {
-          semname = "Special Term 2";
-        } else {
-          semname = "Sem " + i;
-        }
-        if (i > num) {
-          //leftover
-          examDate = null;
-          examDuration = 0;
-          disabled = "disabledTab";
-        } else {
-          if (Object.keys(arr[i - 1]).length > 1) {
-            examDate = arr[i - 1].examDate;
-            examDuration = arr[i - 1].examDuration / 60;
-          } else {
-            examDate = null;
-            examDuration = 0;
-          }
-        }
-        semesters.push({
-          semester: semname,
-          examDate: examDate,
-          examDuration: examDuration,
-          disabled: disabled
-        });
-      }
-      return semesters;
-    },
-    // formatprereq: function(arr) {
-    //   var str = "";
-    //   for (var i = 0; i < arr.length; i++) {
-    //     if (i === arr.length - 1) {
-    //       str = str + arr[i];
-    //     } else {
-    //       str = str + arr[i] + ", ";
-    //     }
-    //   }
-    //   return str;
-    // },
+    
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -662,7 +613,7 @@ label {
 }
 .modnum {
   margin-right: 30px;
-  color: #B82D17;
+  color: #EC7663;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {

@@ -294,16 +294,21 @@ export default {
   padding: 2%;
 }
 .landPage {
-  background: #e5e8e8;
+  background: #EAECEE;
    font-family: 'Helvetica', sans-serif;
 }
 /* Header card css */
 .header-card {
-  margin-top: 5%;
+  margin-top:13vh;
+  margin-bottom: 3vh !important;
   padding: 4vh;
   margin-bottom: 1vh;
   color: whitesmoke;
+  border: 1px solid #17a2b8;
+  border-radius: 25px;
   background-color: #17a2b8 !important;
+  
+
 }
 .header {
   color: #ffffff;
@@ -311,7 +316,7 @@ export default {
   font-weight: bold;
 }
 .sub-header-title {
-  font-size: 150%;
+  font-size: 2.3vh;
   font-weight: bold;
   text-align: left;
   padding: 25px;
@@ -325,13 +330,13 @@ export default {
   padding: 0;
   padding-left: 25px;
   max-height: 100vh;
-  min-height: 47vh;
+  min-height: 52vh;
 }
 .sub-content-title {
-  font-size: 2.5vh;
+  font-size: 2.1vh;
   font-weight: bold;
   text-align: left;
-  color: #17a2b8;
+  color: #EC7663;
 }
 .sub-content-text {
   font-size: 2vh;
@@ -344,4 +349,5 @@ export default {
   max-height: 50vh;
   overflow: scroll;
 }
+
 </style>

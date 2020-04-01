@@ -6,7 +6,7 @@
             <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
                 <div class="card card-signin my-5 ">
                 <div class="card-body p-5">
-                    <h1 class="text-center" style="color:#1ABC9C; font-size:500%">MODEAUX</h1>
+                    <h1 class="text-center" style="color:#17a2b8; font-size:500%">MODEAUX</h1>
                     <h1 class="card-title text-center">Login Page</h1>
                     <!---form>
                       <div class="form-group">
@@ -31,7 +31,7 @@
                     </md-field>
 
                     
-                    <button class="btn btn-lg btn-block text-uppercase" type="submit" v-on:click = "login" style="background-color:#1ABC9C; color:white">Sign In</button>
+                    <button class="btn btn-lg btn-block text-uppercase" type="submit" v-on:click = "login" style="background-color:#17a2b8; color:white">Sign In</button>
                 </div>
                 </div>
             </div>
@@ -109,8 +109,8 @@
   --input-padding-y: 2rem;
 }
 body {
-  background: #1ABC9C;
-  background: linear-gradient(to right, teal,#1ABC9C);
+  background: #17a2b8;
+  background: linear-gradient(to right, teal,#17a2b8);
   min-height: 100vh ;
 }
 .card-signin {

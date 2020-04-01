@@ -6,7 +6,7 @@
           <div>
             <div class="sub-header-title">TOP COHORT</div>
 
-            <div class="sub-header-content" style="padding-top:2vw;">
+            <div class="sub-header-content" style="padding-top:1vw;">
               <div id="chart">
                 <apexchart type="bar" :options="chartOptions" :series="series" style></apexchart>
               </div>
@@ -127,8 +127,8 @@ export default {
   text-align: left;
   padding: 0;
   padding-left: 25px;
-  max-height: 100vh;
-  min-height: 68vh;
+  min-height:67vh;
+
 }
 .sub-content-title {
   font-size: 2.5vh;
