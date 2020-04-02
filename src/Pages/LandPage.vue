@@ -11,6 +11,9 @@
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
+            <div>
+                <button v-on:click="test">Add 1</button>
+            </div>
             </div>
         </md-card>
 
@@ -153,6 +156,11 @@
         // Ratings
     },
     methods: {
+        test(){ //for testing purposes
+            database.getCohortTopModules({sem:1,year:2019}).then(e=>{
+                console.log(e)
+            })
+        },
         //use this method to find data of a specific module
         findModule(mod,database){
             var data = database.Modules
@@ -235,13 +243,12 @@
             modules: userData.modules_taken,
             sap_by_sem: userData.sap_by_sem,
             overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
             modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
             
             self.User = result
-            console.log("User info:")
-            console.log(self.User) // console log result for reference
             // query database for course attributes
             var attributes = []
             database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)

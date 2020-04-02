@@ -311,6 +311,40 @@ var database = {
   },
 
   //=====================================//
+  //----------- getCohortTopModules------//
+  //=====================================//
+  async getCohortTopModules(batch){
+    var promise = new Promise(resolve =>{
+      var modules = []
+      var amt = []
+      var students = [];
+      database.firebase_data.collection('students')
+      .where("batch","==",batch).get()
+      .then(snapshot =>{
+        snapshot.forEach(user =>{
+          students.push(user.id)
+        })
+        database.firebase_data.collection('module_grades')
+        .where('studentID', 'in', students)
+        .get().then(snapshot=>{
+          snapshot.forEach(result =>{
+            var result_ = result.data()
+            if (modules.includes(result_.module)){
+              var index = modules.indexOf(result_.module)
+              amt[index] += 1
+            } else {
+              modules.push(result_.module)
+              amt.push(1)
+            }
+          })
+          resolve({module: modules, amount: amt})
+        })
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
   async getModuleReviewID(module_){
