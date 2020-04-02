@@ -199,6 +199,7 @@
             User: {},
             reviewData:[],
             sem: null,
+            cohortTopMods: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
 
@@ -235,32 +236,23 @@
             modules: userData.modules_taken,
             sap_by_sem: userData.sap_by_sem,
             overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
             modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
             
             self.User = result
-            console.log("User info:")
-            console.log(self.User) // console log result for reference
-            // query database for course attributes
-            var attributes = []
-            database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
-            .onSnapshot(function(onSnapshot){
-                onSnapshot.forEach(function(doc){
-                    var attr= doc.data().attributes
-                    var x
-                    for (x of attr){
-                        attributes.push({
-                            attribute: x.name,
-                            score: x.avg_score
-                        })
-                    }
-                })
-                //console.log("Attribute info according to user's faculty:")
-                //console.log(attributes) // console log result for reference
-                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
+
+            //query database for cohort top modules
+            database.getCohortTopModules(result.batch).then(doc =>{
+                self.cohortTopMods = doc
             })
-        
+
+            // query database for course attributes
+            database.getFacultyAttributes(result.faculty).then(attributes =>{
+                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+            })      
+
             self.get_currentsem(self.User.sap_by_sem)
         })
        
