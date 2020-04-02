@@ -330,6 +330,7 @@ var database = {
     })
     return promise
   },
+  
 
   //=====================================//
   //----------- getCohortTopModules------//
@@ -455,6 +456,23 @@ var database = {
       .get()
       .then(doc => {
         resolve(doc.data())
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
+  //----------- getAllModuleCodes--------//
+  //=====================================//
+  async getAllModuleCodes(){
+    var promise = new Promise(resolve =>{
+      var modules = []
+      database.firebase_data.collection('modules')
+      .get().then(snapshot =>{
+        snapshot.forEach(doc =>{
+          modules.push(doc.id)
+        })
+        resolve(modules)
       })
     })
     return promise
