@@ -4,13 +4,9 @@
     <md-card-content>
       <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
-        <md-select v-model="detailsForm.selectedModule">
-          <md-option
-            v-for="mod in modules"
-            v-bind:key="mod.id"
-            v-bind:value="mod.Name"
-          >{{mod.Name}}</md-option>
-        </md-select>
+        <md-input v-model="detailsForm.selectedModule">
+          
+        </md-input>
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
@@ -120,74 +116,6 @@ export default {
       Details: "This module is taught by proZ"
     }
   ],
-      faculties: [
-    {
-      id: 1,
-      title: "Arts & Social Sciences"
-    },
-    {
-      id: 2,
-      title: "Business"
-    },
-    {
-      id: 3,
-      title: "Computing"
-    },
-    {
-      id: 4,
-      title: "Continuing and Lifelong Education"
-    },
-    {
-      id: 5,
-      title: "Dentistry"
-    },
-    {
-      id: 6,
-      title: "Design & Environment"
-    },
-    {
-      id: 7,
-      title: "Engineering"
-    },
-    {
-      id: 8,
-      title: "Interactive Sciences & Engineering"
-    },
-    {
-      id: 9,
-      title: "Law"
-    },
-    {
-      id: 10,
-      title: "Medicine"
-    },
-    {
-      id: 11,
-      title: "Music"
-    },
-    {
-      id: 12,
-      title: "Public Health"
-    },
-    {
-      id: 13,
-      title: "Public Policy"
-    },
-    {
-      id: 14,
-      title: "Science"
-    }
-  ],
-      staff: [
-    {
-      id: 1,
-      name: "Leong Wai Kay"
-    },
-    {
-      id: 2,
-      name: "Ben Leong"
-    }
-  ],
       grades: [
     {
       id: 1,
@@ -267,9 +195,7 @@ export default {
       detailsForm: {
         selectedModule: null,
         selectedSemester: null,
-        selectedStaff: null,
         selectedGrade: null,
-        selectedFaculty: null,
         selectedSU: null,
         selectedYear: null,
       }
@@ -284,13 +210,7 @@ export default {
       selectedSemester: {
         required
       },
-      selectedStaff: {
-        required
-      },
       selectedGrade: {
-        required
-      },
-      selectedFaculty: {
         required
       },
       selectedSU:{
@@ -313,14 +233,14 @@ export default {
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
+        console.log("ok");
         database.addModuleResults(this.detailsForm).then(e=>{
           console.log(e)
+          // create an alert saying you have already added this module
         })
         this.$root.$emit('closeModal');
 
       }
-
-      
     }
   }
 };
