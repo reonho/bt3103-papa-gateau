@@ -11,9 +11,6 @@
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
-            <div>
-                <button v-on:click="test">Add 1</button>
-            </div>
             </div>
         </md-card>
 
@@ -156,11 +153,6 @@
         // Ratings
     },
     methods: {
-        test(){ //for testing purposes
-            database.getCohortTopModules({sem:1,year:2019}).then(e=>{
-                console.log(e)
-            })
-        },
         //use this method to find data of a specific module
         findModule(mod,database){
             var data = database.Modules
@@ -207,6 +199,7 @@
             User: {},
             reviewData:[],
             sem: null,
+            cohortTopMods: null,
             dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
 
@@ -249,25 +242,17 @@
             }
             
             self.User = result
-            // query database for course attributes
-            var attributes = []
-            database.firebase_data.collection("faculties").where("name", "==", self.User.faculty)
-            .onSnapshot(function(onSnapshot){
-                onSnapshot.forEach(function(doc){
-                    var attr= doc.data().attributes
-                    var x
-                    for (x of attr){
-                        attributes.push({
-                            attribute: x.name,
-                            score: x.avg_score
-                        })
-                    }
-                })
-                //console.log("Attribute info according to user's faculty:")
-                //console.log(attributes) // console log result for reference
-                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{attribute: "BT", score: 4},{attribute: "CS", score: 4.5}]
+
+            //query database for cohort top modules
+            database.getCohortTopModules(result.batch).then(doc =>{
+                self.cohortTopMods = doc
             })
-        
+
+            // query database for course attributes
+            database.getFacultyAttributes(result.faculty).then(attributes =>{
+                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+            })      
+
             self.get_currentsem(self.User.sap_by_sem)
         })
        

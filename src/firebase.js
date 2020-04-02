@@ -212,6 +212,42 @@ var database = {
           })
         }
       }
+      //update faculty attributes
+      if (!module_results.SU){
+        database.firebase_data.collection('faculties')
+        .where('name', '==', module_results.faculty)
+        .get().then(snapshot =>{
+          snapshot.forEach(faculty =>{
+            var attr = faculty.data().attributes
+            if (!attr.empty){
+              var flag = false
+              for (var x in attr){
+                if (attr[x].att == module_results.attribute){
+                  attr[x].grade = (attr[x].grade*attr[x].amt + database.convertCap(module_results.grade))/(attr[x].amt + 1)
+                  attr[x].amt += 1
+                }
+              }
+              if (!flag){
+                attr.push({
+                  att: module_results.attribute,
+                  amt: 1,
+                  grade: database.convertCap(module_results.grade)
+                })                
+              }
+            } else {
+              attr.push({
+                att: module_results.attribute,
+                amt: 1,
+                grade: database.convertCap(module_results.grade)
+              })
+            }
+            database.firebase_data.collection('faculties').doc(faculty.id)
+            .update({
+              attributes: attr
+            })
+          })
+        })
+      }
     })
   },
 
@@ -338,6 +374,25 @@ var database = {
             }
           })
           resolve({module: modules, amount: amt})
+        })
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
+  //----------- getFacultyAttributes-----//
+  //=====================================//
+  async getFacultyAttributes(faculty){
+    var promise = new Promise(resolve=>{
+      database.firebase_data.collection('faculties')
+      .where('name', '==', faculty)
+      .get().then(snapshot=>{
+        snapshot.forEach(faculty=>{
+          database.firebase_data.collection('faculties').doc(faculty.id)
+          .get().then(doc =>{
+            resolve(doc.data())
+          })
         })
       })
     })
