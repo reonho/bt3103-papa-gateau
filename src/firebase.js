@@ -285,15 +285,15 @@ var database = {
             if(snapshot.empty){
               //add module_results
               var results = {
-                SU: false, //need to change
+                SU: result.selectedSU,
                 attribute: result.selectedModule.slice(0,2),
                 course: user_.course,
                 faculty: user_.faculty,
                 grade: result.selectedGrade,
                 module: result.selectedModule,
-                sem: 1, // need to change
+                sem: result.selectedSemester, 
                 studentID: user,
-                year: 2021 // need to change
+                year: result.selectedYear 
               }
               database.firebase_data.collection('module_grades').add(results)
               //update student overall cap, modules taken, attributes, cap per semester
