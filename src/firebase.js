@@ -164,11 +164,9 @@ var database = {
             flag_ = false
             arr[z].cap = ((arr[z].cap*arr[z].amt) + database.convertCap(module_results.grade))/(arr[z].amt +1)
             arr[z].amt += 1
-            console.log(z)
             break;
           } else if (arr[z].year == null){
             flag_ = z;
-            console.log(z)
             break;
           }
         }
@@ -180,14 +178,43 @@ var database = {
             cap: database.convertCap(module_results.grade)
           }
         }
-        console.log(arr)
         database.firebase_data.collection('students').doc(module_results.studentID)
         .update({
           sam_by_sem: arr
         })
+        //update current_sem
+        var year = 0;
+        var semester = 0;
+        var total_sems = arr
+        console.log(total_sems)
+        console.log('yay')
+        for (var sem in total_sems){
+          if (total_sems[sem].year != null){
+            if (total_sems[sem].year > year){
+              year = total_sems[sem].year
+              semester = total_sems[sem].sem
+            } else if (total_sems[sem].year == year && total_sems[sem].sem > semester){
+              year = total_sems[sem].year
+              semester = total_sems[sem].sem
+            }
+          } else if (total_sems[sem].year == null && sem != 0){
+            break
+          }
+        }
+        if (year != 0 && semester != 0){
+          var current_sem = {
+            sem: semester,
+            year: year
+          }
+          database.firebase_data.collection('students').doc(module_results.studentID)
+          .update({
+            batch: current_sem
+          })
+        }
       }
     })
   },
+
 
   convertCap(grade){
     if (grade == "A"|| grade == "A+"){
