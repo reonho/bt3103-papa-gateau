@@ -71,6 +71,145 @@ var database = {
     })
     return promise
   },
+
+  async updateStudentInfo(module_results){
+    //update overall cap
+    database.firebase_data.collection('students').doc(module_results.studentID)
+    .get().then(user =>{
+      var cap = user.data().overall_cap
+      var mod_taken = user.data().modules_taken
+      var mod_counted = 0
+      var x;
+      if (!mod_taken.empty){
+        for (x in mod_taken){
+          if (!mod_taken[x].SU){
+            mod_counted ++
+          }
+        }
+        if (!module_results.SU) {
+          database.firebase_data.collection('students').doc(module_results.studentID)
+          .update({
+            overall_cap: ((cap*mod_counted) + database.convertCap(module_results.grade))/(mod_counted+1)
+          })
+          //update attributes
+          var att = user.data().attributes
+          var y;
+          if (!att.empty){
+            var flag = false
+            for (y in att){
+              if (att[y].att == module_results.attribute){
+                flag = true
+                att[y].grade = ((att[y].grade*att[y].amt) + database.convertCap(module_results.grade))/(att[y].amt+1)
+                att[y].amt += 1;
+              }
+            }
+            if (!flag){        
+              database.firebase_data.collection('students').doc(module_results.studentID)
+              .update({
+                attributes : firebase.firestore.FieldValue.arrayUnion({
+                  att: module_results.attribute,
+                  amt: 1,
+                  grade: database.convertCap(module_results.grade)
+                })
+              })
+            } else {
+              database.firebase_data.collection('students').doc(module_results.studentID)
+              .update({
+                attributes: att
+              })
+            }
+          } else {
+            database.firebase_data.collection('students').doc(module_results.studentID)
+            .update({
+              attributes : firebase.firestore.FieldValue.arrayUnion({
+                att: module_results.attribute,
+                amt: 1,
+                grade: database.convertCap(module_results.grade)
+              })
+            })
+          }
+        }
+  
+      } else{
+        if (!module_results.SU) {
+          database.firebase_data.collection('students').doc(module_results.studentID)
+          .update({
+            overall_cap: database.convertCap(module_results.grade)
+          })
+          database.firebase_data.collection('students').doc(module_results.studentID)
+          .update({
+            attributes : firebase.firestore.FieldValue.arrayUnion({
+              att: module_results.attribute,
+              amt: 1,
+              grade: database.convertCap(module_results.grade)
+            })
+          })
+        }
+      }
+      //addmodule into modules_taken
+      database.firebase_data.collection('students').doc(module_results.studentID)
+      .update({
+        modules_taken: firebase.firestore.FieldValue.arrayUnion({
+          SU: module_results.SU,
+          module: module_results.module
+        })
+      })
+      //update sam_by_sem
+      if(!module_results.SU){
+        var arr = user.data().sam_by_sem
+        var z;
+        var flag_ = 0;
+        for (z in arr){
+          if (arr[z].year == module_results.year && arr[z].sem == module_results.sem){
+            flag_ = false
+            arr[z].cap = ((arr[z].cap*arr[z].amt) + database.convertCap(module_results.grade))/(arr[z].amt +1)
+            arr[z].amt += 1
+            console.log(z)
+            break;
+          } else if (arr[z].year == null){
+            flag_ = z;
+            console.log(z)
+            break;
+          }
+        }
+        if (flag_){
+          arr[flag_] = {
+            year: module_results.year,
+            sem: module_results.sem,
+            amt: 1,
+            cap: database.convertCap(module_results.grade)
+          }
+        }
+        console.log(arr)
+        database.firebase_data.collection('students').doc(module_results.studentID)
+        .update({
+          sam_by_sem: arr
+        })
+      }
+    })
+  },
+
+  convertCap(grade){
+    if (grade == "A"|| grade == "A+"){
+      return 5
+    } else if (grade == "A-"){
+      return 4.5
+    } else if ( grade == "B+"){
+      return 4
+    } else if (grade == "B") {
+      return 3.5
+    } else if (grade == "B-"){
+      return 3
+    } else if (grade == "C+"){
+      return 2.5
+    } else if (grade == "C"){
+      return 2
+    } else if (grade == "D"){
+      return 1
+    } else {
+      return 0
+    }
+  },
   
 
   logout(){
@@ -100,6 +239,49 @@ var database = {
 
 
   //==================Use methods from here onwards==========================//
+
+  //=====================================//
+  //----------- addModuleResults---------//
+  //=====================================//
+  async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
+    var result = module_result
+    var promise = new Promise(resolve =>{
+      database.getUser().then(user =>{
+        database.firebase_data.collection('students').doc(user)
+        .get().then(userData =>{
+          var user_ = userData.data()
+          //check if module is added
+          database.firebase_data.collection('module_grades')
+          .where('module' ,"==",result.selectedModule)
+          .where('studentID', '==', user)
+          .get().then(snapshot =>{
+            if(snapshot.empty){
+              //add module_results
+              var results = {
+                SU: false, //need to change
+                attribute: result.selectedModule.slice(0,2),
+                course: user_.course,
+                faculty: user_.faculty,
+                grade: result.selectedGrade,
+                module: result.selectedModule,
+                sem: 1, // need to change
+                studentID: user,
+                year: 2021 // need to change
+              }
+              database.firebase_data.collection('module_grades').add(results)
+              //update student overall cap, modules taken, attributes, cap per semester
+              database.updateStudentInfo(results)
+              //update faculty attributes and number of students taken
+              resolve(snapshot.empty)
+            } else {
+              resolve(snapshot.empty)
+            }
+          })   
+        })
+      })
+    })
+    return promise
+  },
 
   //=====================================//
   //----------- getModuleReview----------//

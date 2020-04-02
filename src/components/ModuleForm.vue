@@ -80,6 +80,7 @@
 // import FollowUpModal from "./FollowUpModal.vue"
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import database from "../firebase.js"
 export default {
   name: "ModuleForm",
   props: {
@@ -312,6 +313,9 @@ export default {
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
+        database.addModuleResults(this.detailsForm).then(e=>{
+          console.log(e)
+        })
         this.$root.$emit('closeModal');
 
       }

@@ -206,7 +206,7 @@
     },
     created(){
         const self = this
-
+        // query database for review data
         database.getUser().then(user => {
           console.log(user);
           database.firebase_data
@@ -219,7 +219,6 @@
                 item = doc.data();
                 item.id = doc.id;
                 this.reviewData.push(item);
-                console.log(this.reviewData);
               });
             });
         });
@@ -236,6 +235,7 @@
             modules: userData.modules_taken,
             sap_by_sem: userData.sap_by_sem,
             overall_cap: userData.overall_cap,
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
             }
             
