@@ -1,125 +1,86 @@
 
 <template>
-<div class="landPage" style=" padding: 40px 0 0 0;">
-    <NavBar class="fixed-top" @scroll = "scrolltoView"/>
-    <div class = "container-fluid" style="width:90%">
-        <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
-            <div class="md-layout md-gutter md-alignment-center-right">
-
-            <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.name}}! Welcome to your dashboard.
-            <!--button v-on:click="readDatabase">Greet</button-->
-            </h1></div>
-            <div class = "md-layout-item" style="text-align:right">
-                <AddModulesModal/>
-            </div>
-            </div>
-        </md-card>
-
-
-        <div  class="md-layout md-gutter md-alignment-center dashboard" style="" >
-            <div class = "md-layout-item  ">
-                 <md-card style='background:#1ABC9C;; color:whitesmoke' md-with-hover>
-                    <md-card-header>
-                        <md-card-media md-small style="padding:1vh">
-                            <img src="../assets/deg.svg" alt="">
-                        </md-card-media>
-                        <md-card-header-text>
-                            <div class="md-title" style="font-family: 'Montserrat', sans-serif;">ENROLLED COURSE:</div>
-                            <div class="md-title">{{User.faculty}}, {{User.dept}} - {{User.course}}</div>
-                        </md-card-header-text>
-                    </md-card-header>
-                 </md-card>
-            </div>
-
-             <div class = "md-layout-item md-size-20">
-                 <md-card style='background: #1ABC9C; color:whitesmoke' md-with-hover>
-                    <md-card-header>
-                        <md-card-media md-small style="padding:1vh">
-                            <img src="../assets/grade.svg" alt="">
-                        </md-card-media>
-                        <md-card-header-text>
-                            <div class="md-title" style="font-family: 'Montserrat', medium; font-weight: 400;">CAP:</div>
-                            <div class="md-title">{{User.overall_cap}}</div>
-                        </md-card-header-text>
-                    </md-card-header>
-                 </md-card>
-                
-           
-               
-                  
-            </div>
-
-             <div class = "md-layout-item md-size-30" v-if="sem">
-                    <md-card style='background: #1ABC9C;; color:whitesmoke' md-with-hover>
-                        <md-card-header>
-                            <md-card-media md-small style="padding:1vh">
-                                <img src="../assets/prog.svg" alt="">
-                            </md-card-media>
-                            <md-card-header-text>
-                                <div class="md-title" style="font-family: 'Montserrat', sans-serif; font-weight: 400;">SEMESTER:</div>
-                                <div class="md-title"  >{{sem}}</div>
-                            </md-card-header-text>
-                        </md-card-header>
-                    </md-card>
-                 </div>
+  <div class="landPage">
+    <NavBar class="fixed-top" @scroll="scrolltoView" />
+    <div class="container-fluid" style="width:90%">
+      <md-card class="header-card" md-with-hover>
+        <div class="md-layout md-gutter md-alignment-center-right">
+          <div class="md-layout-item md-size-80">
+            <h1 class="header">
+              Hello {{User.name}}! Welcome to your dashboard.
+              <!--button v-on:click="readDatabase">Greet</button-->
+            </h1>
+          </div>
+          <div class="md-layout-item md-size-20" style="text-align:right">
+            <AddModulesModal />
+          </div>
         </div>
+      </md-card>
+      <br />
+      <table style="width:100%">
+        <tr>
+          <td style="width: 55%;padding:0;">
+            <div>
+              <div class="sub-header-title">ENROLLED DEGREE</div>
 
-
-
-
-        <!--div style="display:flex" class= "container-fluid p-3"-->
-        <div  class="md-layout md-gutter " >
-            <div class = "md-layout-item md-size-40 md-gutter" id = "StatsCard" >
-            
-                 <md-card  md-with-hover  >    
-                    <RadarChart style="padding:2%"  :my_attr='[ { "attribute": "BT", "score": 4 }, { "attribute": "CS", "score": 4 }, { "attribute": "MA", "score": 4 }, { "attribute": "IS", "score": 4.5 },{ "attribute": "EC", "score": 4 }  ] ' :fac_attr='[ { "attribute": "BT", "score": 3.5 }, { "attribute": "CS", "score": 3.7 }, { "attribute": "MA", "score": 3.6 }, { "attribute": "IS", "score": 4.2 }, { "attribute": "EC", "score": 3.67 }  ] ' ></RadarChart>
-                 </md-card>
-                 <br>
-
-                 <md-card  md-with-hover  >         
-                    <capline v-if='User.sap_by_sem'  :sap="User.sap_by_sem" style="padding:2%"/>
-                </md-card>                   
+              <div class="sub-header-content" style="padding-top:2vw;">
+                <p class="sub-content-title">Faculty and Department</p>
+                <p class="sub-content-text">{{User.faculty}}, {{User.dept}}</p>
+                <p class="sub-content-title">Course Programme</p>
+                <p class="sub-content-text">{{User.course}}</p>
+                <p class="sub-content-title">Current Semester</p>
+                <p class="sub-content-text">Year 1 Semester 2</p>
+                <p class="sub-content-title">CAP</p>
+                <p class="sub-content-text">4.5</p>
+              </div>
             </div>
-
-            <div class="md-layout-item"  >   
-                     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh; margin-bottom:1vh">
-                        <h1>My Reviews</h1> </md-card>
-                    <ReviewSection :reviewData="reviewData" class="ReviewSection" />
+          </td>
+          <td style="width: 5%"></td>
+          <td style="width: 40%;padding:0">
+            <div>
+              <div class="sub-header-title">STRENGTHS</div>
+              <div class="sub-header-content">
+                <RadarChart :my_attr="userattrbutes" :fac_attr="facultyAttributes"></RadarChart>
+              </div>
             </div>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <br />
+      <table style="width:100%">
+        <tr>
+          <td style="width: 35%;padding:0;">
+            <div>
+              <div class="sub-header-title">GRADES</div>
 
-        </div >
-
-        <div>
-            <div id = "DegreeProgressCard"  >
-
-               <br>
-                
-                    <Feed :modules='dummymodules' :course="User.course" :sem="sem"></Feed>
-             
-                
+              <div class="sub-header-content" style="padding-top:2vw;">
+                <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="padding:2%" />
+              </div>
             </div>
-
-        
-        <!--/div-->
-        <!-- <md-tabs class="md-transparent" md-alignment="fixed">
-            <md-tab id="tab-home" md-label="Home"></md-tab>
-            <md-tab id="tab-pages" md-label="Pages"></md-tab>
-            <md-tab id="tab-posts" md-label="Posts"></md-tab>
-            <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
-        </md-tabs> -->
-        <!-- <p>{{this.Data}}</p> -->
-        <!-- <Feed/> -->
-        <br>
-
-            <!-- <ReviewCard/> -->
-            
-        </div>
+          </td>
+          <td style="width: 5%"></td>
+          <td style="width: 60%;padding:0">
+            <div>
+              <div class="sub-header-title">MY REVIEWS</div>
+              <div class="sub-header-content" style="padding:0;background-color:#e5e8e8;">
+                <ReviewSection
+                  style="min-height:52vh"
+                  :reviewData="reviewData"
+                  class="ReviewSection"
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <br />
+      <Feed :modules="dummymodules" :course="User.course" :sem="sem"></Feed>
     </div>
-</div>
-
-
+    <div style="height:200px"></div>
+  </div>
 </template>
-
 <script>
 import DataObject from "../Database.js";
 import AddModulesModal from "../components/AddModuleModal";
