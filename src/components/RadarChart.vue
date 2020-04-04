@@ -50,7 +50,7 @@
                         colors: ''
                     }
                     },
-                    categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
+                    categories: []
                 },
                 colors:['#00aaff', '#ff9900', '#2cab93', "#77cbed", '#E91E63', '#FF9800',],
                 fill: {
@@ -91,12 +91,10 @@
                 this.series1[0].data = my_attrs
                 this.series1[1].data = fac_attrs
                 this.chartOptions2.xaxis.categories = attr_labels
-                console.log(attr_labels)
             }
         },
         created(){
-            console.log("test")
-            console.log(this.fac_attr[0])
+            console.log(this.fac_attr)
             this.parse_attr(this.my_attr, this.fac_attr)
             
         },

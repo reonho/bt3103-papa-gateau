@@ -62,14 +62,13 @@
         },
         methods:{
             parse_sap: function(obj_array){
-                console.log(obj_array[0].one)
+                
                 var sap_series = []
                 var cum_series = []
-                var keys = ["one","two","three","four","five", "six", "seven", "eight"]
                 for(let i=0; i < 8; i++){
-                    var key = keys[i]
+                    
                     //console.log(obj_array[0][key])
-                    var value = obj_array[i][key]
+                    var value = obj_array[i]["cap"]
                     
                     if (!value){
                         break

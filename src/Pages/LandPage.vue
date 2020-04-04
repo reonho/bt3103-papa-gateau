@@ -1,6 +1,6 @@
 <template>
 <div class="landPage" style=" padding: 40px 0 0 0;">
-    <NavBar class="fixed-top" @scroll = "scrolltoView"/>
+    <NavBar class="fixed-top"/>
     <div class = "container-fluid" style="width:90%">
         <md-card style = "margin-top:5%; padding:4vh; margin-bottom:1vh; color: whitesmoke; background-color:#1ABC9C;} " md-with-hover> 
             <div class="md-layout md-gutter md-alignment-center-right">
@@ -93,7 +93,7 @@
 
                <br>
                 
-                    <Feed :modules='dummymodules' :course="User.course" :sem="sem"></Feed>
+                    <Feed v-if='User.modules_taken' :modules='modules' :course="User.course" :sem="sem"></Feed>
              
                 
             </div>
@@ -163,20 +163,27 @@
             }
         },
         get_currentsem(obj_array){
-            var keys = ["one","two","three","four","five", "six", "seven", "eight"]
+
             var sem_no = 1
             for(let i=0; i < 8; i++){
-                var key = keys[i]
                 //console.log(obj_array[0][key])
-                var value = obj_array[i][key]
-                if (!value){
-                    sem_no = i+1
+                var value = obj_array[i]
+                if (Object.entries(value).length === 0){
+                    sem_no = i
                     break
                 }
             }
-            var year = Math.ceil(sem_no/2)
-            var sem = sem_no%2
+            var year = Math.floor(sem_no/2)+1
+            var sem = sem_no%2+1
             this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
+        },
+
+        get_modules(modules){
+            var mods = []
+            for(let i =0; i < modules.length; i++){
+                mods.push(modules[i]["module"])
+            }
+            this.modules = mods
         },
         readUser(){ // this is a function for testing the queries only. for reference
             database.getStudentInfo().then((e)=>{
@@ -199,7 +206,7 @@
             User: {},
             reviewData:[],
             sem: null,
-            dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
+            modules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
             facultyAttributes: [],
 
         };
@@ -233,7 +240,7 @@
             dept: userData.dept,
             course: userData.course,
             modules: userData.modules_taken,
-            sap_by_sem: userData.sap_by_sem,
+            sap_by_sem: userData.sam_by_sem,
             overall_cap: userData.overall_cap,
             modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
             attributes: userData.attributes //individual attributes can be found in self.User.attributes
@@ -262,6 +269,8 @@
             })
         
             self.get_currentsem(self.User.sap_by_sem)
+            self.get_modules(self.User.modules_taken)
+            
         })
        
         
