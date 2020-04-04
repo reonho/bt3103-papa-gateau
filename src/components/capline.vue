@@ -1,7 +1,5 @@
 <template>
 <div style="text-align:center">
-    <!-- <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card> -->
     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
@@ -20,8 +18,7 @@
         },
         data: function(){ 
             return {
-                series1: [{ name: 'Semester Grade', data: [0,0],},
-                 { name: 'Cumulative Grade', data: [0,0],}],
+                series1: [{ name: 'My Average',data: [4.9, 4.5, 4, 4.2, 4.1, 4.3],}, { name: 'NUS Average',data: [4, 3.9, 3.71, 3.70, 3.69, 3.67],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
@@ -59,14 +56,13 @@
         },
         methods:{
             parse_sap: function(obj_array){
-                console.log(obj_array[0].one)
+                
                 var sap_series = []
                 var cum_series = []
-                var keys = ["one","two","three","four","five", "six", "seven", "eight"]
                 for(let i=0; i < 8; i++){
-                    var key = keys[i]
+                    
                     //console.log(obj_array[0][key])
-                    var value = obj_array[i][key]
+                    var value = obj_array[i]["cap"]
                     
                     if (!value){
                         break
