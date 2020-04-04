@@ -50,7 +50,7 @@ let router = new Router({
       }
     },
     {
-      path:'/review',
+      path:'/review/:mod',
       name: 'ReviewForm',
       component: ReviewForm,
       props: true,
