@@ -96,15 +96,56 @@ export default {
           }
         }
       }
+
+
+
       this.series1[0].data = my_attrs;
       this.series1[1].data = fac_attrs;
+      this.chartOptions2.xaxis.categories = attr_labels;
+    },
+
+    parse_attr2: function(my_attr, fac_attr) {
+      var attr_labels = [];
+      var fac_attrs = {};
+      var m_list = []
+      var f_list = []
+      var lenf = fac_attr.length;
+
+      for (let i = 0; i < lenf; i++) {
+        var f_code = fac_attr[i].att;
+        if(fac_attrs[f_code] == undefined){
+          fac_attrs[f_code] = [fac_attr[i].grade]
+        }
+      }
+
+      my_attr.sort(function(a,b){
+        return b.grade - a.grade
+      })
+
+      
+
+      var len = my_attr.length
+      if(len > 6){
+        len = 6
+      }
+      for (let i = 0; i < len; i++) {
+        var m_code = my_attr[i].att;
+        m_list .push(my_attr[i].grade)
+        attr_labels.push(m_code)
+        f_list.push(fac_attrs[m_code])
+      }
+      
+
+        
+      this.series1[0].data = m_list;
+      this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
     }
   },
   created() {
-    console.log("test");
-    console.log(this.fac_attr);
-    this.parse_attr(this.my_attr, this.fac_attr);
+   
+   //console.log(this.fac_attr);
+    this.parse_attr2(this.my_attr, this.fac_attr);
   }
 };
 </script>

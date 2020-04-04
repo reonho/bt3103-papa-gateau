@@ -41,7 +41,7 @@ export default {
   name: "Feed",
   props: {
     modules: Array,
-    course: String,
+    course: Object,
     sem: String
   },
   components: {
@@ -51,7 +51,7 @@ export default {
     return {
       series: [
         {
-          data: [100, 80, 80, 75, 75, 60, 55, 50, 50, 40, 40, 30, 15]
+          data: []
         }
       ],
       chartOptions: {
@@ -68,32 +68,40 @@ export default {
           colors: ["#17a2b8"]
         },
         dataLabels: {
-          enabled: true
+          enabled: false
         },
         xaxis: {
           categories: [
-            "MA1101R",
-            "EC1301",
-            "GER1000",
-            "BT1101",
-            "IS1103",
-            "ST2334",
-            "MA1521",
-            "BT2101",
-            "CS1010S",
-            "IS2101",
-            "BT2102",
-            "BT3103",
-            "BT3102",
-            "CS2030"
+           
           ]
 
         }
       }
     };
+  },
+  created(){
+    var modlst = []
+    
+    for(let  i = 0; i < this.course.module.length; i++){
+      var mod = {}
+      mod["amt"] = this.course.amount[i]
+      mod["mod"] = this.course.module[i]
+      modlst.push(mod)
+    }
+    modlst = modlst.sort((a,b) => a.amt - b.amt)
+
+    for(let  i = 0; i < this.course.module.length; i++){
+      this.series[0].data.push(modlst[i].amt)
+      this.chartOptions.xaxis.categories.push(modlst[i].mod)
+    }
+    
+
+
+    console.log(this.series[0].data)
   }
 };
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

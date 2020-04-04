@@ -77,7 +77,7 @@
       </table>
       <br />
       <br />
-      <Feed :modules="modules" :course="User.course" :sem="sem"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem"  v-if="cohortTopMods"></Feed>
     </div>
     <div style="height:200px"></div>
   </div>
@@ -155,6 +155,7 @@ export default {
       facultyAttributes: null,
       modules: [],
       sem: null,
+      cohortTopMods: null
     };
   },
     created(){
