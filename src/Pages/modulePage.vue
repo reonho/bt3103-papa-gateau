@@ -146,9 +146,8 @@
         <a
           class="btn btn-primary btn-lg mr-4"
           style="color: white; font-size: 15px; float:right"
-          href="#"
           id="addReview"
-          @click="review"
+          v-on:click="review"
         >New Review</a>
         <b-dropdown
           size="lg"
@@ -171,14 +170,18 @@
       </div>
       <br />
       <div>
-        <ReviewSection
-          :reviewData="reviewData"
-        />
+        <ReviewSection :reviewData="reviewData" />
         <md-dialog-alert
           :md-active.sync="showDialog"
           md-content="You have already submitted a review for this module."
           md-confirm-text="Okay"
           md-title="Review already exists"
+        />
+        <md-dialog-alert
+          :md-active.sync="showAddDialog"
+          md-content="Please add the module before writing a review."
+          md-confirm-text="Okay"
+          md-title="Module not yet added"
         />
       </div>
     </div>
@@ -197,6 +200,7 @@ import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 
 export default {
+  name: "ModulePage",
   props: {
     code: String
   },
@@ -211,24 +215,32 @@ export default {
   },
   methods: {
     review() {
-      //prevents user from submitting multiple reviews
-      // database.getUser().then(user => {
-      //   database
-      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
-      //     .then(mod => {
-      //       if (mod === null) {
-      //         this.$router.push({
-      //           name: "ReviewForm",
-      //           params: { mod: this.Modules[0].info.moduleCode }
-      //         });
-      //       } else {
-      //         this.showDialog = true
-      //       }
-      //     });
-      this.$router.push({
-        name: "ReviewForm",
-        params: { mod: this.Modules[0].info.moduleCode }
+      database.getUser().then(user => {
+        //check if user has added module
+        database.ifAddedModule(this.code, user).then(mod => {
+          console.log(mod);
+          if (mod === null) {
+            this.showAddDialog = true;
+          } else {
+            database.ifAddedReview(this.code, user).then(rev => {
+              //if user has not written review yet
+              if (rev === null) {
+                this.$router.push({
+                  name: "ReviewForm",
+                  params: { mod: this.Modules[0].info.moduleCode }
+                });
+              } else { //user has already written a review, prompt them
+                this.showDialog = true;
+              }
+            });
+          }
+        });
       });
+
+      // this.$router.push({
+      //   name: "ReviewForm",
+      //   params: { mod: this.Modules[0].info.moduleCode }
+      // });
     },
     formatwork(workload) {
       var series = [];
@@ -363,7 +375,7 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
-        console.log(this.reviewData)
+        console.log(this.reviewData);
       });
 
     //get module details
@@ -372,6 +384,7 @@ export default {
     });
   },
   data: () => ({
+    showAddDialog: false,
     showDialog: false,
     totalsems: "",
     reviewData: [],
