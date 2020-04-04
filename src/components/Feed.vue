@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <table style="width:100%">
@@ -7,7 +8,7 @@
             <div class="sub-header-title">TOP COHORT</div>
             <div class="sub-header-content" style="padding-top:1vw;">
               <div id="chart">
-                <apexchart type="bar" :options="chartOptions" :series="series" style></apexchart>
+                <apexchart type="bar" :options="chartOptionsYear" :series="series" style></apexchart>
               </div>
             </div>
           </div>
@@ -92,12 +93,58 @@ export default {
 
     for(let  i = 0; i < this.course.module.length; i++){
       this.series[0].data.push(modlst[i].amt)
-      this.chartOptions.xaxis.categories.push(modlst[i].mod)
+      this.chartOptionsYear.xaxis.categories.push(modlst[i].mod)
     }
     
 
 
     console.log(this.series[0].data)
+  },
+
+  methods:{
+    redirect : function(mod){
+      this.$router.push("/" + mod)
+    }
+
+  },
+  computed:{
+      chartOptionsYear: function() {
+      return {
+        chart: {
+          type: "bar",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              // you can call Vue methods now as "this" will point to the Vue instance when you use ES6 arrow function
+              //console.log(e)
+              var mod = this.chartOptionsYear.xaxis.categories[opts.dataPointIndex]
+              console.log('#/' + mod)
+              this.redirect(mod)
+              
+              
+            }
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true
+          }
+        },
+
+        fill: {
+          colors: ["#17a2b8"]
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: [
+           
+          ]
+
+        },
+      }
+    }
+
   }
 };
 </script>
