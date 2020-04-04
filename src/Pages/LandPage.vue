@@ -1,7 +1,7 @@
 
 <template>
   <div class="landPage">
-    <NavBar class="fixed-top" @scroll="scrolltoView" />
+    <NavBar class="fixed-top"/>
     <div class="container-fluid" style="width:90%">
       <md-card class="header-card" md-with-hover>
         <div class="md-layout md-gutter md-alignment-center-right">
@@ -29,9 +29,9 @@
                 <p class="sub-content-title">Course Programme</p>
                 <p class="sub-content-text">{{User.course}}</p>
                 <p class="sub-content-title">Current Semester</p>
-                <p class="sub-content-text">Year 1 Semester 2</p>
-                <p class="sub-content-title">{{User.overall_cap}}</p>
-                <p class="sub-content-text">4.5</p>
+                <p class="sub-content-text">{{sem}}</p>
+                <p class="sub-content-title">Overall Cap</p>
+                <p class="sub-content-text">{{User.overall_cap}}</p>
               </div>
             </div>
           </td>
@@ -40,7 +40,7 @@
             <div>
               <div class="sub-header-title">STRENGTHS</div>
               <div class="sub-header-content">
-                <RadarChart :my_attr="User.attrbutes" :fac_attr="facultyAttributes"></RadarChart>
+                <RadarChart  v-if="facultyAttributes" :my_attr="User.attributes" :fac_attr="facultyAttributes"></RadarChart>
               </div>
             </div>
           </td>
@@ -77,7 +77,7 @@
       </table>
       <br />
       <br />
-      <Feed :modules="dummymodules" :course="User.course" :sem="sem"></Feed>
+      <Feed :modules="modules" :course="User.course" :sem="sem"></Feed>
     </div>
     <div style="height:200px"></div>
   </div>
@@ -111,16 +111,6 @@ export default {
     ReviewSection
     // // Ratings
   },
-  methods: {
-    //use this method to find data of a specific module
-    findModule(mod, database) {
-      var data = database.Modules;
-      for (var i = 0; i < data.length; ++i) {
-        if (data[i].Name == mod) {
-          return data[i];
-        }
-      }
-    },
     methods: {
         //use this method to find data of a specific module
         findModule(mod,database){
@@ -154,86 +144,17 @@ export default {
             }
             this.modules = mods
         },
-        readUser(){ // this is a function for testing the queries only. for reference
-            database.getStudentInfo().then((e)=>{
-                this.User = e
-                console.log(e)
-                this.get_currentsem(e.sap_by_sem)
-            })
-            // database.getStudentInfo().then(function(e){
-            //     this.User = e
-            //     console.log(e)
-            // })
-        }
-    }, 
-    data: function(){ 
-        return {
-            // assign data into Data attribute
-            Data: this.findModule("CS2030",DataObject),
-            User: {},
-            reviewData:[],
-            sem: null,
-            modules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
-            facultyAttributes: [],
 
-        };
-    },
-    readUser() {
-      // this is a function for testing the queries only. for reference
-      database.getStudentInfo().then(e => {
-        this.User = e;
-        console.log(e);
-        this.get_currentsem(e.sap_by_sem);
-      });
-      // database.getStudentInfo().then(function(e){
-      //     this.User = e
-      //     console.log(e)
-      // })
-    }
-  },
+    }, 
   data: function() {
     return {
       // assign data into Data attribute
       Data: this.findModule("CS2030", DataObject),
       User: {},
       reviewData: [],
-      userattrbutes: [
-      
-      ],
-      facultyAttributes: [
-       
-      ],
-
+      facultyAttributes: null,
+      modules: [],
       sem: null,
-      dummymodules: [
-        "MA1521",
-        "BT2101",
-        "CS1010S",
-        "IS2101",
-        "BT2102",
-        "BT3103",
-        "BT3102",
-        "CS2030",
-        "MA1101R",
-        "EC1301",
-        "GER1000",
-        "BT1101",
-        "IS1103",
-        "ST2334",
-        "BT2101",
-        "CS1010S",
-        "IS2101",
-        "BT2102",
-        "BT3103",
-        "BT3102",
-        "CS2030",
-        "MA1101R",
-        "EC1301",
-        "GER1000",
-        "BT1101",
-        "IS1103",
-        "ST2334"
-      ]
     };
   },
     created(){
@@ -281,7 +202,8 @@ export default {
 
             // query database for course attributes
             database.getFacultyAttributes(result.faculty).then(attributes =>{
-                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+              console.log(attributes.attributes)
+              self.facultyAttributes = attributes.attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
             })      
 
             self.get_currentsem(self.User.sap_by_sem)

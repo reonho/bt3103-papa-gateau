@@ -51,7 +51,7 @@ export default {
               colors: ""
             }
           },
-          categories: ["CS", "BT", "EC", "MA", "IS", "CNM"]
+          categories: []
         },
         colors: [
           "#00aaff",
@@ -85,26 +85,25 @@ export default {
       var len = my_attr.length;
       var lenf = fac_attr.length;
       for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].attribute;
+        var m_code = my_attr[i].att;
         attr_labels.push(m_code);
-        var m_val = my_attr[i].score;
+        var m_val = my_attr[i].grade;
         my_attrs.push(m_val);
         for (let u = 0; u < lenf; u++) {
-          var f_code = fac_attr[u].attribute;
+          var f_code = fac_attr[u].att;
           if (f_code == m_code) {
-            fac_attrs.push(fac_attr[u].score);
+            fac_attrs.push(fac_attr[u].grade);
           }
         }
       }
       this.series1[0].data = my_attrs;
       this.series1[1].data = fac_attrs;
       this.chartOptions2.xaxis.categories = attr_labels;
-      console.log(attr_labels);
     }
   },
   created() {
     console.log("test");
-    console.log(this.fac_attr[0]);
+    console.log(this.fac_attr);
     this.parse_attr(this.my_attr, this.fac_attr);
   }
 };
