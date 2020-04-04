@@ -69,7 +69,7 @@
             <div id="container">
               <div class="row">
                 <div class="col-4">
-                  <pie-chart :semester="chosenSem"></pie-chart>
+                  <pie-chart :semester="chosenSem" :code="code"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
@@ -87,7 +87,7 @@
                       <h5 style="font-weight:400">
                         <span id="ratings"></span> student ratings
                       </h5>
-                      <bar-chart :semester="chosenSem"></bar-chart>
+                      <bar-chart :semester="chosenSem" :code="code"></bar-chart>
                     </div>
                     <div class="col-7">
                       <h4 style="padding-top: 10px;color:#616a6b">Features</h4>

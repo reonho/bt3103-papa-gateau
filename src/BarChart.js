@@ -3,7 +3,7 @@ import database from "./firebase.js"
 
 export default {
   extends: HorizontalBar,
-  props: ['semester'],
+  props: ['semester', 'code'],
   data: function () {
     return {
       datacollection: {
@@ -61,7 +61,8 @@ export default {
         var display = false
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
-          if (sem.includes("Semester " + (this.semester + 1))) {
+          var modCode = doc.data().module_code
+          if (sem.includes("Semester " + (this.semester + 1)) && modCode == this.code) {
             display = true
             var rating = doc.data().commentForm.rating
             numbers[rating - 1] += 1

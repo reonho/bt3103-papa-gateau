@@ -34,7 +34,7 @@ export default {
       }
     }
   },
-  props: ['semester'],
+  props: ['semester', 'code'],
   methods: {
     fetchItems: function () {
       database.firebase_data.collection('reviews').get().then(querySnapShot => {
@@ -42,7 +42,8 @@ export default {
         var display = false
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
-          if (sem.includes("Semester " + (this.semester + 1))) {
+          var modCode = doc.data().module_code
+          if (sem.includes("Semester " + (this.semester + 1)) && modCode == this.code) {
             display = true
             var fac = doc.data().detailsForm.selectedFaculty
             if (!Object.prototype.hasOwnProperty.call(faculties, fac)) {
