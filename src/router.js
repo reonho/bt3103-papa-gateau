@@ -7,7 +7,6 @@ import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
 import EditForm from './components/EditForm'
 import database from './firebase.js'
-import Registration from './Pages/Registration'
 
 
 Vue.use(Router)
