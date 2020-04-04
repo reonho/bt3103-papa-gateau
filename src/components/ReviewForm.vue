@@ -530,7 +530,6 @@ export default {
       } else {
         this[formName].error = "Error!";
       }
-      window.scrollTo(0, 0)
     },
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
@@ -688,7 +687,7 @@ export default {
 }
 
 .md-button.okaybtn {
-  background-color: #17a2b8 !important;
+  background-color: #007bff !important;
   font-weight: bold;
   color: white !important;
 }
@@ -697,7 +696,6 @@ export default {
   font-weight: bold;
   color: white !important;
 }
-
 
 /* .html .body {
   height:100vh !important;
@@ -719,21 +717,5 @@ Tentative fix to css background
   ) !important;
   height: 100vmax;
   padding: 0px;
-}
-</style>
-<style>
-.md-steppers.md-theme-default .md-stepper-header.md-active .md-stepper-number  {
-  background-color: #17a2b8 !important;
-}
-.md-steppers.md-theme-default .md-stepper-header.md-done .md-stepper-number  {
-  background-color: #17a2b8 !important;
-}
-
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container {
-  border-color: #EC7663 !important;
-}
-
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container:after {
-    background-color: #EC7663 !important;
 }
 </style>

@@ -1,116 +1,91 @@
 <template>
-  <div id="Radar">
-    <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
-  </div>
+<div id = "Radar" style="text-align:center">
+     <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Strengths</h1> </md-card>
+     <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
+</div>
 </template>
 
 
 <script>
-import VueApexCharts from "vue-apexcharts";
+import VueApexCharts from 'vue-apexcharts'
+    
 export default {
-  name: "radar",
-  components: {
-    apexchart: VueApexCharts
-  },
-  props: {
-    my_attr: Array,
-    fac_attr: Array
-  },
-  data: function() {
-    return {
-      series1: [
-        { name: "My Attributes", data: [5, 0] },
-        { name: "Faculty Average", data: [0, 5] }
-      ],
-      chartOptions2: {
-        chart: {
-          id: "strengths",
-
-          type: "radar",
-          dropShadow: {
-            enabled: false,
-            enabledOnSeries: undefined,
-            top: 5,
-            left: 5,
-            blur: 3,
-            color: "#000",
-            opacity: 0.3
-          }
-        },
-        dataLabels: {
-          enabled: true
-        },
-       
-        title: {
-          text: ""
-        },
-        xaxis: {
-          labels: {
-            style: {
-              fontSize: "15px",
-              colors: ""
-            }
-          },
-          categories: []
-        },
-        colors: [
-          "#00aaff",
-          "#ff9900",
-          "#2cab93",
-          "#77cbed",
-          "#E91E63",
-          "#FF9800"
-        ],
-        fill: {
-          opacity: 0.05
-        },
-        plotOptions: {
-          radar: {
-            polygons: {
-              strokeColor: "#e8e8e8",
-              fill: {
-                colors: ["#f8f8f8", "#fff"]
-              }
-            }
-          }
+    mounted(){
+        this.update()
+        //this.$refs.strengths.toggleSeries('My Average')
+    },
+    name: 'RadarChart',
+    components:{
+        apexchart: VueApexCharts
+    },
+    props: {
+        msg: String
+    },
+    data: function(){ 
+        return {
+            series1: [{ name: 'My Average',data: [5, 4.5, 4, 5, 3, 4],}, { name: 'NUS Average',data: [3.6, 3, 4, 3.5, 4, 4],}, { name: 'Course Average',data: [4, 4.1, 4, 4.3, 4.2, 4],}],
+            chartOptions2: {
+                chart: {
+                    id:"strengths",
+                    height: 350,
+                    type: 'radar',
+                    dropShadow: {
+                        enabled: false,
+                        enabledOnSeries: undefined,
+                        top: 5,
+                        left: 5,
+                        blur: 3,
+                        color: '#000',
+                        opacity: 0.3
+                    },
+                },
+                dataLabels: {
+                    enabled: true,
+                },
+                title: {
+                    text: ''
+                },
+                xaxis: {
+                    labels: {
+                    style: {
+                        fontSize: '15px',
+                        colors: ''
+                    }
+                    },
+                    categories: ['CS', 'BT', 'EC', 'MA', 'IS', 'CNM']
+                },
+                colors:['#00aaff', '#ff9900', '#2cab93', "#77cbed", '#E91E63', '#FF9800',],
+                fill: {
+                    opacity: 0.05
+                },
+                plotOptions: {
+                    radar: {
+                        polygons: {
+                        strokeColor: '#e8e8e8',
+                        fill: {
+                            colors: ['#f8f8f8', '#fff']
+                        }
+                        }
+                    }
+                    }
+            },   
         }
-      }
-    };
-  },
-  methods: {
-    parse_attr: function(my_attr, fac_attr) {
-      var my_attrs = [];
-      var attr_labels = [];
-      var fac_attrs = [];
-      var len = my_attr.length;
-      var lenf = fac_attr.length;
-      for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].att;
-        attr_labels.push(m_code);
-        var m_val = my_attr[i].grade;
-        my_attrs.push(m_val);
-        for (let u = 0; u < lenf; u++) {
-          var f_code = fac_attr[u].att;
-          if (f_code == m_code) {
-            fac_attrs.push(fac_attr[u].grade);
-          }
-        }
-      }
-      this.series1[0].data = my_attrs;
-      this.series1[1].data = fac_attrs;
-      this.chartOptions2.xaxis.categories = attr_labels;
-    }
-  },
-  created() {
-    console.log("test");
-    console.log(this.fac_attr);
-    this.parse_attr(this.my_attr, this.fac_attr);
+    },
+    methods:{
+        update: function() {
+            this.$refs.strengths.toggleSeries('Course Average')
+    },
+    
   }
-};
+}
+
+   
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "./style.css";
-
+@import './style.css';
 </style>

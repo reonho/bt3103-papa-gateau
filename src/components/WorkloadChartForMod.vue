@@ -35,7 +35,7 @@ export default {
           }
         },
         fill: {
-            colors: ['#B82D17']
+            colors: ['#1ABC9C']
         },
         plotOptions: {
           bar: {
@@ -45,7 +45,7 @@ export default {
         dataLabels: {
           enabled: false
         },
-        colors: ['#B82D17'],
+        colors: ['#1ABC9C'],
         xaxis: {
           categories: [
             "Lectures",

@@ -10,7 +10,7 @@
 <script>
 // import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
-import database from '../firebase.js';
+// import database from '../firebase.js';
 export default {
   name: "ReviewSection",
   props: {
@@ -32,22 +32,26 @@ export default {
   },
 
   created() {
-    database.firebase_data.collection('reviews').onSnapshot((querySnapShot)=> {
-      this.reviewData = []
-      querySnapShot.forEach(doc => {
-        let item = {}
-        item = doc.data()
-        item.id = doc.id
-        this.reviewData.push(item)
-        // console.log(doc.id)
-      })
-      // console.log(this.reviewData)
+    // if (this.userid != null){
+    //   database.getUserReview(this.userid).then(reviews=>{
+    //     this.reviewData = reviews
+    //     console.log(this.userid)
+    //     console.log(this.reviewData)
+    //   })
+    // } else if (this.mod != null){
+    //   database.getModuleReviewID(this.mod).then(reviews =>{
+    //     this.reviewData = reviews
+    //     console.log(this.mod)
+    //     console.log(this.reviewData[0])
+    //   })
+    // }
+    //query all reviews written by user
+     // console.log(this.reviewData)
       
     
 
-  })
   }
-}
+};
 </script>
 
 

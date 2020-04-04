@@ -71,7 +71,7 @@
             <md-icon>thumb_up</md-icon>
           </md-button>
           <md-button v-if="this.liked===true" class="md-icon-button md-primary" v-on:click="like">
-            <md-icon style="color: #27AE60">thumb_up</md-icon>
+            <md-icon>thumb_up</md-icon>
           </md-button>
           {{review.likes}}
           <md-button v-if="this.disliked===false" class="md-icon-button" v-on:click="dislike">
@@ -82,7 +82,7 @@
             class="md-icon-button md-primary"
             v-on:click="dislike"
           >
-            <md-icon style="color: #B82D17">thumb_down</md-icon>
+            <md-icon>thumb_down</md-icon>
           </md-button>
           {{review.dislikes}}
         </span>
@@ -177,8 +177,10 @@ export default {
       else if (this.liked === true) {
         //if post already liked, unlike it
         this.liked = false;
-        //update count in db
-        database.firebase_data.collection("reviews")
+
+        //remove user from users_liked
+        this.remove(this.review.users_liked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_liked: this.review.users_liked,
@@ -187,8 +189,9 @@ export default {
       } else {
         //else like the post
         this.liked = true;
-        // this.like_count += 1;
-        database.firebase_data.collection("reviews")
+        //add user to users_liked
+        this.review.users_liked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             likes: this.review.users_liked.length,
@@ -198,9 +201,10 @@ export default {
         if (this.disliked === true) {
           //if user previously disliked, remove the dislike
           this.disliked = false;
-          this.dislike_count = Math.max(this.dislike_count - 1, 0);
-          //decrement dislike count in db
-          database.firebase_data.collection("reviews")
+
+          //remove user from users_disliked
+          this.remove(this.review.users_disliked, this.userid);
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_disliked: this.review.users_disliked,
@@ -228,7 +232,8 @@ export default {
         //if post already disliked, clear it
         this.disliked = false;
         //update count in db
-        database.firebase_data.collection("reviews")
+        this.remove(this.review.users_disliked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
@@ -237,7 +242,8 @@ export default {
       } else {
         //else dislike the post
         this.disliked = true;
-        database.firebase_data.collection("reviews")
+        this.review.users_disliked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
@@ -248,7 +254,7 @@ export default {
           //if user previously liked the review, remove the like
           this.remove(this.review.users_liked, this.userid);
           this.liked = false;
-          database.firebase_data.collection("reviews")
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_liked: this.review.users_liked,
@@ -268,11 +274,12 @@ export default {
     deleteReview() {
       // let self = this
       // console.log(this.review.commentForm.comments)
-      database.firebase_data.collection("reviews")
+      database.firebase_data
+        .collection("reviews")
         .doc(this.review.id)
         .delete();
       //find review id in collection
-      // database.firebase_data.collection('reviews').doc(reviewid).delete();
+      // database.collection('reviews').doc(reviewid).delete();
       //delete
       // update list of reviews (to be done in reviewsection)
     }
@@ -338,6 +345,5 @@ export default {
 .footerLeft {
   float: left;
 }
-
 </style>
 
