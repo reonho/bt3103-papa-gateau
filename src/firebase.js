@@ -2,15 +2,15 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
-    authDomain: "papa-gateau.firebaseapp.com",
-    databaseURL: "https://papa-gateau.firebaseio.com",
-    projectId: "papa-gateau",
-    storageBucket: "papa-gateau.appspot.com",
-    messagingSenderId: "945138208035",
-    appId: "1:945138208035:web:146ed078c96f9f09b81096",
-    measurementId: "G-B09D9JVQ0B"
-  };
+  apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
+  authDomain: "papa-gateau.firebaseapp.com",
+  databaseURL: "https://papa-gateau.firebaseio.com",
+  projectId: "papa-gateau",
+  storageBucket: "papa-gateau.appspot.com",
+  messagingSenderId: "945138208035",
+  appId: "1:945138208035:web:146ed078c96f9f09b81096",
+  measurementId: "G-B09D9JVQ0B"
+};
 
 firebase.initializeApp(firebaseConfig);
 
@@ -20,13 +20,13 @@ var database = {
   firebase_data: firebase.firestore(),
   user: null,
 
-  setUser (user) {
+  setUser(user) {
     this.user = user
   },
 
-  getUser(){
-    var promise = new Promise(function(resolve){
-      firebase.auth().onAuthStateChanged(function(user) {
+  getUser() {
+    var promise = new Promise(function (resolve) {
+      firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           database.user = user.uid
           resolve(database.user)
@@ -39,20 +39,20 @@ var database = {
     return promise
   },
 
-  login(email,password) {
-    var promise = new Promise(function(resolve){
+  login(email, password) {
+    var promise = new Promise(function (resolve) {
       firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(
-        user => {
-          database.user = user.uid
-          resolve(true)
-        },
-        err => {
-          resolve(err)
-        }
-      );
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(
+          user => {
+            database.user = user.uid
+            resolve(true)
+          },
+          err => {
+            resolve(err)
+          }
+        );
     })
     return promise
   },
@@ -71,11 +71,11 @@ var database = {
     })
     return promise
   },
-  
 
-  logout(){
-    var promise = new Promise(function(resolve){
-      firebase.auth().signOut().then(function(){
+
+  logout() {
+    var promise = new Promise(function (resolve) {
+      firebase.auth().signOut().then(function () {
         resolve(true)
       })
     })
@@ -104,18 +104,18 @@ var database = {
   //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
-  async getModuleReviewID(module_){
-    var promise = new Promise(function(resolve) {
+  async getModuleReviewID(module_) {
+    var promise = new Promise(function (resolve) {
       var reviews = []
       database.firebase_data.collection("reviews")
-      .where("module_code", "==", module_)
-      .get().then(function(snapshot) {
-        snapshot.forEach(doc =>{
-          reviews.push(doc.id)
-        })
-        resolve(reviews)
+        .where("module_code", "==", module_)
+        .get().then(function (snapshot) {
+          snapshot.forEach(doc => {
+            reviews.push(doc.id)
+          })
+          resolve(reviews)
 
-      });
+        });
     })
     return promise
   },
@@ -123,17 +123,17 @@ var database = {
   //=====================================//
   //----------- getUserReview----------//
   //=====================================//
-  async getUserReviewID(user){
-    var promise = new Promise(function(resolve) {
+  async getUserReviewID(user) {
+    var promise = new Promise(function (resolve) {
       var reviews = []
       database.firebase_data.collection("reviews")
-      .where("userid", "==", user)
-      .get().then(function(snapshot) {
-        snapshot.forEach(doc =>{
-          reviews.push(doc.id)
-        })
-        resolve(reviews)
-      });
+        .where("userid", "==", user)
+        .get().then(function (snapshot) {
+          snapshot.forEach(doc => {
+            reviews.push(doc.id)
+          })
+          resolve(reviews)
+        });
     })
     return promise
   },
@@ -141,23 +141,23 @@ var database = {
   //=====================================//
   //----------- getStudentInfo-----------//
   //=====================================//
-  getStudentInfo(){
-    var promise = new Promise(function(resolve){
+  getStudentInfo() {
+    var promise = new Promise(function (resolve) {
       //get student information
       database.firebase_data.collection("students").doc(database.user)
-      .onSnapshot(function(user){ 
-        var userData = user.data()
-        var result = {
-          name: userData.name,
-          faculty: userData.faculty,
-          dept: userData.dept,
-          course: userData.course,
-          modules: userData.modules_taken,
-          sap_by_sem: userData.sap_by_sem,
-          overall_cap: userData.overall_cap
-        }
-        resolve(result)
-      })
+        .onSnapshot(function (user) {
+          var userData = user.data()
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sap_by_sem,
+            overall_cap: userData.overall_cap
+          }
+          resolve(result)
+        })
     })
     return promise
   },
@@ -231,14 +231,14 @@ var database = {
   //=====================================//
   //----------- getModules---------------//
   //=====================================//
-  async getModules(module){
+  async getModules(module) {
     var promise = new Promise(resolve => {
       database.firebase_data.collection("modules")
-      .doc(module)
-      .get()
-      .then(doc => {
-        resolve(doc.data())
-      })
+        .doc(module)
+        .get()
+        .then(doc => {
+          resolve(doc.data())
+        })
     })
     return promise
   },
@@ -246,20 +246,43 @@ var database = {
   //=====================================//
   //----------- ifAddedModule------------//
   //=====================================//
-  async ifAddedModule(module,user){
-    var promise = new Promise(resolve =>{
+  async ifAddedModule(module, user) {
+    var promise = new Promise(resolve => {
       database.firebase_data.collection("module_grades")
-      .where("studentID", "==", user)
-      .where("module", "==", module)
-      .get().then(snapshot =>{
-        snapshot.forEach(doc =>{
-          if (doc){
-            resolve(doc.data())
+        .where("studentID", "==", user)
+        .where("module", "==", module)
+        .get().then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              resolve(doc.data())
+            })
           } else {
             resolve(null)
           }
         })
-      })
+    })
+    return promise
+
+  },
+
+  //=====================================//
+  //----------- ifAddedReview------------//
+  //=====================================//
+
+  async ifAddedReview(module, user) {
+    var promise = new Promise(resolve => {
+      database.firebase_data.collection("reviews")
+        .where("userid", "==", user)
+        .where("module_code", "==", module)
+        .get().then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              resolve(doc.data())
+            })
+          } else {
+            resolve(null)
+          }
+        })
     })
     return promise
 
@@ -272,15 +295,15 @@ var database = {
   //=====================================//
   // in progress
   //setModuleResults(moduleCode, su, grade, sem, year, teacher) {
-    //set into module_grades
-    //update student overall cap
-    //update semester cap
-    //update student attributes
-    // set module attribute
+  //set into module_grades
+  //update student overall cap
+  //update semester cap
+  //update student attributes
+  // set module attribute
 
-    // 
+  // 
   //}
-    // database.firebase_data.collection("module_grades").where("studentID","==",database.user)
+  // database.firebase_data.collection("module_grades").where("studentID","==",database.user)
   // .get().then(function(snapshot){
   //   var grades = []
   //   snapshot.forEach(function(module_grade_){
@@ -289,29 +312,29 @@ var database = {
   //   result.modules = grades
   //   resolve(result)
   // })
-//   calculateGrade(grade){
-//     if (grade == "A+" || grade == "A"){
-//         return 5
-//     } else if (grade == "A-"){
-//         return 4.5
-//     } else if (grade == "B+"){
-//         return 4
-//     } else if (grade == "B"){
-//         return 3.5
-//     } else if (grade == "B-"){
-//         return 3
-//     } else if (grade == "C+"){
-//         return 2.5
-//     } else if (grade == "C"){
-//         return 2
-//     } else if (grade == "D+"){
-//         return 1.5
-//     } else if (grade == "D"){
-//         return 1
-//     } else if (grade == "F"){
-//         return 0
-//     }
-// },
+  //   calculateGrade(grade){
+  //     if (grade == "A+" || grade == "A"){
+  //         return 5
+  //     } else if (grade == "A-"){
+  //         return 4.5
+  //     } else if (grade == "B+"){
+  //         return 4
+  //     } else if (grade == "B"){
+  //         return 3.5
+  //     } else if (grade == "B-"){
+  //         return 3
+  //     } else if (grade == "C+"){
+  //         return 2.5
+  //     } else if (grade == "C"){
+  //         return 2
+  //     } else if (grade == "D+"){
+  //         return 1.5
+  //     } else if (grade == "D"){
+  //         return 1
+  //     } else if (grade == "F"){
+  //         return 0
+  //     }
+  // },
 
 }
 
@@ -372,7 +395,7 @@ export default database;
   //   //returning promise object
   //   return promise
   // },
-  
+
   //=====================================//
   //----------- getAllModules------------//
   //=====================================//
