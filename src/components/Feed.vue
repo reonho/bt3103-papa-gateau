@@ -32,9 +32,11 @@
                          
                            <div class="grid-container">
                              <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
-                              <b-button variant="outline-info" >
-                                <h1>{{mod}}</h1>
-                              </b-button>
+                               <router-link class="nav-link" to= "/ModuleList" >
+                                  <b-button variant="outline-info" >
+                                    <h1>{{mod}}</h1>
+                                  </b-button>
+                              </router-link>
                             </div>
                             </div>
                        
@@ -90,6 +92,7 @@ import VueApexCharts from 'vue-apexcharts'
               categories: [ "MA1101R","EC1301","GER1000","BT1101","IS1103","ST2334", "MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030",]
             }
           },
+          
           
           
         }
