@@ -216,19 +216,19 @@ export default {
   methods: {
     review() {
       //prevents user from submitting multiple reviews
-      // database.getUser().then(user => {
-      //   database
-      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
-      //     .then(mod => {
-      //       if (mod === null) {
-      //         this.$router.push({
-      //           name: "ReviewForm",
-      //           params: { mod: this.Modules[0].info.moduleCode }
-      //         });
-      //       } else {
-      //         this.showDialog = true
-      //       }
-      //     });
+      database.getUser().then(user => {
+        database
+          .ifAddedModule(this.Modules[0].info.moduleCode, user)
+          .then(mod => {
+            if (mod === null) {
+              this.$router.push({
+                name: "ReviewForm",
+                params: { mod: this.Modules[0].info.moduleCode }
+              });
+            } else {
+              this.showDialog = true
+            }
+          });
       this.$router.push({
         name: "ReviewForm",
         params: { mod: this.Modules[0].info.moduleCode }
