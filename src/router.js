@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LandPage from './Pages/LandPage.vue'
-import LandPage2 from './Pages/LandPage2.vue'
 import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
@@ -35,15 +34,6 @@ let router = new Router({
       path: '/',
       name: 'LandPage',
       component: LandPage,
-      props: true,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: '/L2',
-      name: 'LandPage2',
-      component: LandPage2,
       props: true,
       meta: {
         requiresAuth: false

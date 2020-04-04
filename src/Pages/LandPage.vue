@@ -1,6 +1,6 @@
 <template>
   <div class="landPage">
-    <NavBar class="fixed-top" @scroll="scrolltoView" />
+    <NavBar class="fixed-top"/>
     <div class="container-fluid" style="width:90%">
       <md-card class="header-card" md-with-hover>
         <div class="md-layout md-gutter md-alignment-center-right">
@@ -28,9 +28,9 @@
                 <p class="sub-content-title">Course Programme</p>
                 <p class="sub-content-text">{{User.course}}</p>
                 <p class="sub-content-title">Current Semester</p>
-                <p class="sub-content-text">Year 1 Semester 2</p>
-                <p class="sub-content-title">CAP</p>
-                <p class="sub-content-text">4.5</p>
+                <p class="sub-content-text">{{sem}}</p>
+                <p class="sub-content-title">Overall Cap</p>
+                <p class="sub-content-text">{{User.overall_cap}}</p>
               </div>
             </div>
           </td>
@@ -39,7 +39,7 @@
             <div>
               <div class="sub-header-title">STRENGTHS</div>
               <div class="sub-header-content">
-                <RadarChart :my_attr="userattrbutes" :fac_attr="facultyAttributes"></RadarChart>
+                <RadarChart  v-if="facultyAttributes" :my_attr="User.attributes" :fac_attr="facultyAttributes"></RadarChart>
               </div>
             </div>
           </td>
@@ -51,7 +51,7 @@
         <tr>
           <td style="width: 35%;padding:0;">
             <div>
-              <div class="sub-header-title">GRADES</div>
+              <div class="sub-header-title">GRADES</div>            
 
               <div class="sub-header-content" style="padding-top:2vw;">
                 <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="padding:2%" />
@@ -75,7 +75,7 @@
       </table>
       <br />
       <br />
-      <Feed :modules="dummymodules" :course="User.course" :sem="sem"></Feed>
+      <Feed :modules="modules" :course="User.course" :sem="sem"></Feed>
     </div>
     <div style="height:200px"></div>
   </div>
@@ -109,120 +109,50 @@ export default {
     ReviewSection
     // // Ratings
   },
-  methods: {
-    //use this method to find data of a specific module
-    findModule(mod, database) {
-      var data = database.Modules;
-      for (var i = 0; i < data.length; ++i) {
-        if (data[i].Name == mod) {
-          return data[i];
-        }
-      }
-    },
-    get_currentsem(obj_array) {
-      var keys = [
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight"
-      ];
-      var sem_no = 1;
-      for (let i = 0; i < 8; i++) {
-        var key = keys[i];
-        //console.log(obj_array[0][key])
-        var value = obj_array[i][key];
-        if (!value) {
-          sem_no = i + 1;
-          break;
-        }
-      }
-      var year = Math.ceil(sem_no / 2);
-      var sem = sem_no % 2;
-      this.sem = "Year " + year.toString() + " Semester " + sem.toString();
+    methods: {
+        //use this method to find data of a specific module
+        findModule(mod,database){
+            var data = database.Modules
+            for (var i = 0; i < data.length; ++i){
+                if (data[i].Name == mod) {
+                    return data[i]
+                }
+            }
+        },
+        get_currentsem(obj_array){
 
+            var sem_no = 1
+            for(let i=0; i < 8; i++){
+                //console.log(obj_array[0][key])
+                var value = obj_array[i]
+                if (Object.entries(value).length === 0){
+                    sem_no = i
+                    break
+                }
+            }
+            var year = Math.floor(sem_no/2)+1
+            var sem = sem_no%2+1
+            this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
+        },
 
-    },  
-    data: function(){ 
-        return {
-            // assign data into Data attribute
-            Data: this.findModule("CS2030",DataObject),
-            User: {},
-            reviewData:[],
-            sem: null,
-            cohortTopMods: null,
-            dummymodules:["MA1521","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334","BT2101","CS1010S","IS2101","BT2102","BT3103","BT3102", "CS2030", "MA1101R", "EC1301","GER1000","BT1101","IS1103","ST2334"],
-            facultyAttributes: [],
+        get_modules(modules){
+            var mods = []
+            for(let i =0; i < modules.length; i++){
+                mods.push(modules[i]["module"])
+            }
+            this.modules = mods
+        },
 
-        };
-    },
-    readUser() {
-      // this is a function for testing the queries only. for reference
-      database.getStudentInfo().then(e => {
-        this.User = e;
-        console.log(e);
-        this.get_currentsem(e.sap_by_sem);
-      });
-      // database.getStudentInfo().then(function(e){
-      //     this.User = e
-      //     console.log(e)
-      // })
-    }
-  },
+    }, 
   data: function() {
     return {
       // assign data into Data attribute
       Data: this.findModule("CS2030", DataObject),
       User: {},
       reviewData: [],
-      userattrbutes: [
-        { attribute: "BT", score: 4 },
-        { attribute: "CS", score: 4 },
-        { attribute: "MA", score: 4 },
-        { attribute: "IS", score: 4.5 },
-        { attribute: "EC", score: 4.3 }
-      ],
-      facultyAttributes: [
-        { attribute: "BT", score: 3.5 },
-        { attribute: "CS", score: 3.7 },
-        { attribute: "MA", score: 3.6 },
-        { attribute: "IS", score: 4.2 },
-        { attribute: "EC", score: 4.3 }
-      ],
-
+      facultyAttributes: null,
+      modules: [],
       sem: null,
-      dummymodules: [
-        "MA1521",
-        "BT2101",
-        "CS1010S",
-        "IS2101",
-        "BT2102",
-        "BT3103",
-        "BT3102",
-        "CS2030",
-        "MA1101R",
-        "EC1301",
-        "GER1000",
-        "BT1101",
-        "IS1103",
-        "ST2334",
-        "BT2101",
-        "CS1010S",
-        "IS2101",
-        "BT2102",
-        "BT3103",
-        "BT3102",
-        "CS2030",
-        "MA1101R",
-        "EC1301",
-        "GER1000",
-        "BT1101",
-        "IS1103",
-        "ST2334"
-      ]
     };
   },
     created(){
@@ -254,7 +184,7 @@ export default {
             dept: userData.dept,
             course: userData.course,
             modules: userData.modules_taken,
-            sap_by_sem: userData.sap_by_sem,
+            sap_by_sem: userData.sam_by_sem,
             overall_cap: userData.overall_cap,
             batch: userData.batch, // for querying cohort top modules
             modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
@@ -270,10 +200,13 @@ export default {
 
             // query database for course attributes
             database.getFacultyAttributes(result.faculty).then(attributes =>{
-                self.facultyAttributes = attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+              console.log(attributes.attributes)
+              self.facultyAttributes = attributes.attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
             })      
 
             self.get_currentsem(self.User.sap_by_sem)
+            self.get_modules(self.User.modules_taken)
+            
         })
        
         

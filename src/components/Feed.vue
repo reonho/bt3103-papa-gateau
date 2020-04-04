@@ -5,7 +5,6 @@
         <td style="width: 60%;padding:0;">
           <div>
             <div class="sub-header-title">TOP COHORT</div>
-
             <div class="sub-header-content" style="padding-top:1vw;">
               <div id="chart">
                 <apexchart type="bar" :options="chartOptions" :series="series" style></apexchart>
@@ -20,9 +19,11 @@
             <div class="sub-header-content" style="padding:0;;">
               <div class="grid-container">
                 <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
+                 <router-link class="nav-link" to = "/:mod" >
                   <b-button class="mod-btn" variant="outline-info">
                     <h1 style="font-size:2.5vh">{{mod}}</h1>
                   </b-button>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -62,6 +63,7 @@ export default {
             horizontal: true
           }
         },
+
         fill: {
           colors: ["#17a2b8"]
         },
@@ -85,6 +87,7 @@ export default {
             "BT3102",
             "CS2030"
           ]
+
         }
       }
     };
