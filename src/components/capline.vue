@@ -1,7 +1,5 @@
 <template>
 <div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
@@ -21,8 +19,7 @@
 
         data: function(){ 
             return {
-                series1: [{ name: 'Semester Grade', data: [0,0],},
-                 { name: 'Cumulative Grade', data: [0,0],}],
+                series1: [{ name: 'My Average',data: [4.9, 4.5, 4, 4.2, 4.1, 4.3],}, { name: 'NUS Average',data: [4, 3.9, 3.71, 3.70, 3.69, 3.67],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',

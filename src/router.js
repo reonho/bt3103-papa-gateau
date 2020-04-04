@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LandPage from './Pages/LandPage.vue'
+import LandPage2 from './Pages/LandPage2.vue'
 import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+import Registration from './Pages/Registration'
 // import EditForm from './components/EditForm'
 import database from './firebase.js'
 
@@ -22,6 +24,14 @@ let router = new Router({
       }
     },
     {
+      path: '/Registration',
+      name: 'Registration',
+      component: Registration,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
       path: '/',
       name: 'LandPage',
       component: LandPage,
@@ -30,20 +40,27 @@ let router = new Router({
         requiresAuth: true
       }
     },
-    // comment this block to test components
-   
+    {
+      path: '/L2',
+      name: 'LandPage2',
+      component: LandPage2,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
     {
       path: '/loginPage',
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
       path: '/:code',
-      name: 'modulePage',
       props: true,
+      name: 'modulePage',
       component: modulePage,
       meta: {
         requiresAuth: true

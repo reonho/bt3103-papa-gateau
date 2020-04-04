@@ -2,9 +2,9 @@
   <div>
     
       <apexchart
-        style="background-color:white;width:350px;padding:10px"
+        style="background-color:white;width:100%;margin-top:-2%"
         type="bar"
-        height="150"
+        height="170"
         :options="chartOptions"
         :series="seriesStats"
       ></apexchart>
@@ -35,7 +35,7 @@ export default {
           }
         },
         fill: {
-            colors: ['#1ABC9C']
+            colors: ['#B82D17']
         },
         plotOptions: {
           bar: {
@@ -45,7 +45,7 @@ export default {
         dataLabels: {
           enabled: false
         },
-        colors: ['#1ABC9C'],
+        colors: ['#B82D17'],
         xaxis: {
           categories: [
             "Lectures",
