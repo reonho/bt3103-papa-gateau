@@ -22,6 +22,14 @@ let router = new Router({
       }
     },
     {
+      path: '/Registration',
+      name: 'Registration',
+      component: Registration,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
       path: '/',
       name: 'LandPage',
       component: LandPage,
@@ -30,20 +38,18 @@ let router = new Router({
         requiresAuth: true
       }
     },
-    // comment this block to test components
-   
     {
       path: '/loginPage',
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
       path: '/:code',
-      name: 'modulePage',
       props: true,
+      name: 'modulePage',
       component: modulePage,
       meta: {
         requiresAuth: true
