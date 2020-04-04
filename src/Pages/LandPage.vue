@@ -6,7 +6,6 @@
             <div class="md-layout md-gutter md-alignment-center-right">
 
             <div class = "md-layout-item" > <h1 style="color:#FFFFFF; font-size:250%">Hello {{User.User}}! Welcome to your dashboard.
-            <button v-on:click="readDatabase">Greet</button>
             </h1></div>
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>

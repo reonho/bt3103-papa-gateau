@@ -49,7 +49,9 @@
       </div>
       <hr />
       <div id="statistics">
-        <span style="color:#0B5345; margin-top:20px; font-size: 25px">Statistics</span>
+        <div class="row">
+          <div class="col" style="color:#0B5345; margin-top:20px; font-size: 25px">Statistics</div>
+        </div>
         <br />
         <br />
         <b-tabs
@@ -75,16 +77,9 @@
                     <div class="col-5">
                       <h3 style="padding-top: 10px;color:#0B5345">Student reviews</h3>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star">
-                          <span>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                          </span>
+                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
                         </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star">
-                          <i class="fa fa-star"></i>
+                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
                         </span>
                         <span style="padding:10px;font-size: 15px">
                           <span id="avg"></span> out of 5
@@ -103,14 +98,9 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: gold;" class="star" id = "easy_gold_stars">
                             </span>
-                            <span style="color: lightgrey;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
                             </span>
                             <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
@@ -118,25 +108,41 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: gold;" class="star" id = "man_gold_stars">
                             </span>
-                            <span style="color: lightgrey;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
                             </span>
                             <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
+                        </div>
+                        <div class="col-6" style="float:right">
+                          <p>
+                            <span style="color: gold;" class="star" id = "exam_gold_stars">
+                            </span>
+                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
+                            </span>
+                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                          </p>
+                        </div>
+                      </div>
                       <br />
-                      <intakechart :seriesStats="seriesStats"></intakechart>
+                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
+                      <md-field style="width: 20vw">
+                      <label for="years">All Years Selected</label>
+                      <md-select multiple name="years" id="years">
+                        <md-option value="AY 1819">AY 1819</md-option>
+                        <md-option value="AY 1920">AY 1920</md-option>
+                      </md-select>
+                    </md-field>
                     </div>
                   </div>
                   <br />
@@ -189,7 +195,6 @@
 import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
-import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
@@ -200,7 +205,6 @@ export default {
   components: {
     PieChart,
     BarChart,
-    intakechart: StudentIntakeChart,
     workloadchart: WorkloadChartForMod,
     // reviewcard: ReviewCardForMod,
     NavBar,
@@ -210,13 +214,12 @@ export default {
     numWholeStars(ele) {
       var num = 0;
       if (ele == "easy") {
-        num = Number(document.getElementById("easy").innerHTML);
+        num = this.easy;
       } else if (ele == "manag") {
-        num = Number(document.getElementById("manageable").innerHTML);
+        num = this.manageable;
       } else {
-        num = Number(document.getElementById("ratings").innerHTML);
+        num = this.avg;
       }
-      console.log(num);
       return Math.floor(num / 1);
     },
 
@@ -266,6 +269,9 @@ export default {
     });
   },
   data: () => ({
+    avg: 0,
+    manageable: 0,
+    easy: 0,
     reviewData: [],
     chosenSem: 0,
     seriesStats: [
