@@ -32,7 +32,7 @@
                          
                            <div class="grid-container">
                              <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
-                               <router-link class="nav-link" to = "/MA1101R" >
+                               <router-link class="nav-link" to = "/:mod" >
                                   <b-button variant="outline-info" >
                                     <h1>{{mod}}</h1>
                                   </b-button>
