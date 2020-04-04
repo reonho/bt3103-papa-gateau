@@ -14,10 +14,10 @@ export default {
               "rgb(255, 99, 132)",
               "rgb(54, 162, 235)",
               "rgb(255, 205, 86)",
-              "rgb(200, 125, 73)",
-              "rgb(180, 110, 100)",
-              "rgb(30, 78, 190)",
-              "rgb(50, 100, 78)"
+              "rgb(185,168,242)",
+              "rgb(42,179,189)",
+              "rgb(41,227,199)",
+              "rgb(213,240,111)"
             ]
           }
         ]
@@ -34,16 +34,16 @@ export default {
       }
     }
   },
-  props: ['semester'],
+  props: ['semester', 'code'],
   methods: {
     fetchItems: function () {
       database.firebase_data.collection('reviews').get().then(querySnapShot => {
         var faculties = new Object()
         var display = false
         querySnapShot.forEach(doc => {
-          console.log(doc.data())
           var sem = doc.data().detailsForm.selectedSemester
-          if (sem.includes("Semester " + (this.semester + 1))) {
+          var modCode = doc.data().module_code
+          if (sem.includes("Semester " + (this.semester + 1)) && modCode == this.code) {
             display = true
             var fac = doc.data().detailsForm.selectedFaculty
             if (!Object.prototype.hasOwnProperty.call(faculties, fac)) {
@@ -57,6 +57,7 @@ export default {
           this.datacollection.labels.push(key)
           this.datacollection.datasets[0].data.push(value)
         })
+
         document.getElementById("ratings").innerHTML = this.datacollection.datasets[0].data.reduce((a, b) => a + b, 0)
         if (display) this.renderChart(this.datacollection, this.options)
         else {

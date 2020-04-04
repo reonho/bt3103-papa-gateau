@@ -1,4 +1,3 @@
-
 <template>
   <div class="landPage">
     <NavBar class="fixed-top"/>
@@ -57,7 +56,6 @@
               <div class="sub-header-content" style="padding-top:2vw;">
                 <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="padding:2%" />
               </div>
-
             </div>
           </td>
           <td style="width: 5%"></td>

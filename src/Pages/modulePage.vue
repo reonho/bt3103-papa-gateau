@@ -69,23 +69,16 @@
             <div id="container">
               <div class="row">
                 <div class="col-4">
-                  <pie-chart :semester="chosenSem"></pie-chart>
+                  <pie-chart :semester="chosenSem" :code="code"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
                       <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star">
-                          <span>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                          </span>
+                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
                         </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star">
-                          <i class="fa fa-star"></i>
+                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
                         </span>
                         <span style="padding:10px;font-size: 15px">
                           <span id="avg"></span> out of 5
@@ -94,7 +87,7 @@
                       <h5 style="font-weight:400">
                         <span id="ratings"></span> student ratings
                       </h5>
-                      <bar-chart :semester="chosenSem"></bar-chart>
+                      <bar-chart :semester="chosenSem" :code="code"></bar-chart>
                     </div>
                     <div class="col-7">
                       <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
@@ -104,14 +97,9 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: gold;" class="star" id = "easy_gold_stars">
                             </span>
-                            <span style="color: lightgrey;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
                             </span>
                             <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
@@ -119,25 +107,41 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: gold;" class="star" id = "man_gold_stars">
                             </span>
-                            <span style="color: lightgrey;" class="star">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
+                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
                             </span>
                             <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
+                        </div>
+                        <div class="col-6" style="float:right">
+                          <p>
+                            <span style="color: gold;" class="star" id = "exam_gold_stars">
+                            </span>
+                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
+                            </span>
+                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                          </p>
+                        </div>
+                      </div>
                       <br />
-                      <intakechart :seriesStats="seriesStats"></intakechart>
+                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
+                      <md-field style="width: 20vw">
+                      <label for="years">All Years Selected</label>
+                      <md-select multiple name="years" id="years">
+                        <md-option value="AY 1819">AY 1819</md-option>
+                        <md-option value="AY 1920">AY 1920</md-option>
+                      </md-select>
+                    </md-field>
                     </div>
                   </div>
                   <br />
@@ -194,7 +198,6 @@
 <script>
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
-import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
@@ -207,7 +210,6 @@ export default {
   components: {
     PieChart,
     BarChart,
-    intakechart: StudentIntakeChart,
     workloadchart: WorkloadChartForMod,
     // reviewcard: ReviewCardForMod,
     NavBar,
@@ -233,18 +235,6 @@ export default {
         name: "ReviewForm",
         params: { mod: this.Modules[0].info.moduleCode }
       });
-    },
-    numWholeStars(ele) {
-      var num = 0;
-      if (ele == "easy") {
-        num = Number(document.getElementById("easy").innerHTML);
-      } else if (ele == "manag") {
-        num = Number(document.getElementById("manageable").innerHTML);
-      } else {
-        num = Number(document.getElementById("ratings").innerHTML);
-      }
-      console.log(num);
-      return Math.floor(num / 1);
     },
 
     formatwork(workload) {
@@ -423,7 +413,6 @@ export default {
   created() {
     //replace this with a query by module code
     console.log("created");
-    console.log(this.code);
     database.firebase_data
       .collection("reviews")
       .where("module_code", "==", this.code)
@@ -448,7 +437,7 @@ export default {
     totalsems: "",
     reviewData: [],
     infodes: null,
-    module_code: "", //testing purposes, replace with passed module code
+    module_code: "",
     chosenSem: 0,
     seriesStats: [
       {
@@ -456,102 +445,9 @@ export default {
         data: [150, 210, 186, 195]
       }
     ],
-    Modules: [],
-    chartOptions: {
-      title: {
-        display: true,
-        text: "Faculties",
-        padding: 5
-      },
-      legend: {
-        position: "bottom",
-        fullWidth: true
-      }
-    },
-    datacollection: {
-      labels: ["Computing", "Science", "Arts and Social Sciences"],
-      datasets: [
-        {
-          backgroundColor: [
-            "rgb(255, 99, 132)",
-            "rgb(54, 162, 235)",
-            "rgb(255, 205, 86)"
-          ],
-          data: [10, 5, 3]
-        }
-      ]
-    },
-    chartOptions1: {
-      scales: {
-        yAxes: [
-          {
-            gridLines: {
-              display: false
-            }
-          }
-        ],
-        xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              display: true
-            },
-            gridLines: {
-              display: true
-            }
-          }
-        ]
-      },
-      legend: {
-        display: false
-      }
-    },
-    datacollection1: {
-      labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
-      datasets: [
-        {
-          label: "Number of votes",
-          backgroundColor: "rgba(255,99,132, 0.5)",
-          data: [3, 5, 1, 2, 2]
-        }
-      ]
-    }
+    Modules: []
   })
-};
-
-// archive
-// <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
-//         Reviews
-//         <a
-//           class="btn btn-primary btn-lg mr-4"
-//           style="color: white; font-size: 15px; float:right"
-//           href="/#/review"
-//           id="addReview"
-//         >New Review</a>
-//         <b-dropdown
-//           size="lg"
-//           variant="link"
-//           toggle-class="text-decoration-none"
-//           style="float:right"
-//           no-caret
-//         >
-//           <template v-slot:button-content>Sort by Newest &#9662;</template>
-//           <b-dropdown-item href="#">
-//             <h5>Best</h5>
-//           </b-dropdown-item>
-//           <b-dropdown-item href="#">
-//             <h5>Newest</h5>
-//           </b-dropdown-item>
-//           <b-dropdown-item href="#">
-//             <h5>Oldest</h5>
-//           </b-dropdown-item>
-//         </b-dropdown>
-//       </div>
-//       <br />
-//       <div>
-//         <reviewcard :review="reviewData" />
-//       </div>
-//       <hr />
+}
 </script>
 
 
@@ -608,24 +504,14 @@ export default {
   cursor: not-allowed;
   opacity: 0.5;
 }
-.md-theme-default .dropdown-item {
-    color: #EC7663 !important;
-  font-weight:bold
-}
-
-</style>
-
-<style>
 .btn-link {
   color: #EC7663;
   font-weight:bold
 }
-
 .btn-link:hover {
   color: #EC7663;
   font-weight:bold
 }
-
 .btn-link:focus {
   color: #EC7663;
   font-weight:bold
