@@ -3,12 +3,12 @@
     <NavBar />
     <div id="modulePage" style="margin-left:15vw;margin-right:15vw;margin-top:5vh">
       <title id="details">{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
-      <div style="color:#0B5345; margin-left: 20px; margin-top:20px" class="header">
+      <div style="color:#EC7663; margin-left: 20px; margin-top:20px" class="header">
         <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
       <button
         class="button"
-        style="float: right; margin-right: 20px;background-color:#0B5345"
+        style="float: right; margin-right: 20px;background-color:#17a2b8"
         onclick="window.location.href = '/#/ModuleList';"
       >
         <span>Back To All Modules</span>
@@ -49,21 +49,22 @@
       </div>
       <hr />
       <div id="statistics">
-        <span style="color:#0B5345; margin-top:20px; font-size: 25px">Statistics</span>
+        <span style="color:#EC7663; margin-top:20px; font-size: 25px">Statistics</span>
         <br />
         <br />
         <b-tabs
           active-nav-item-class="activetab"
           class="semtabs"
+          v-model="chosenSem"
           content-class="mt-3"
-          no-fade="false"
           lazy
         >
           <b-tab
-            v-for="sem in checkSemester(this.Modules[0].info.semesterData)"
+            v-for="sem in checksemester(this.Modules[0])"
             v-bind:key="sem.index"
             :title="sem.semester"
             :title-link-class="sem.disabled"
+            :active="sem.active"
           >
             <div id="container">
               <div class="row">
@@ -73,13 +74,17 @@
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
-                      <h3 style="padding-top: 10px;color:#0B5345">Student reviews</h3>
+                      <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
+                        <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
+                        <span
+                          style="color: lightgrey;font-size:16px;"
+                          class="star"
+                          id="avg_grey_stars"
+                        ></span>
+                        <span style="padding:10px;font-size: 15px">
+                          <span id="avg"></span> out of 5
                         </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
-                        </span>
-                        <span style="padding:10px;font-size: 15px">4.4 out of 5</span>
                       </p>
                       <h5 style="font-weight:400">
                         <span id="ratings"></span> student ratings
@@ -87,18 +92,16 @@
                       <bar-chart :semester="chosenSem" :code="code"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#0B5345">Features</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
                       <div class="row">
                         <div class="col-6">
                           <p style="font-weight:400; font-size:12px">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "easy_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px">4.0</span>
+                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
                       </div>
@@ -108,11 +111,9 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "man_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px">2.9</span>
+                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
@@ -122,27 +123,24 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "exam_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="exam"></span>
                           </p>
                         </div>
                       </div>
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
                       <md-field style="width: 20vw">
-                      <label for="years">All Years Selected</label>
-                      <md-select multiple name="years" id="years">
-                        <md-option value="AY 1819">AY 1819</md-option>
-                        <md-option value="AY 1920">AY 1920</md-option>
-                      </md-select>
-                    </md-field>
+                        <label for="years">All Years Selected</label>
+                        <md-select multiple name="years" id="years">
+                          <md-option value="AY 1819">AY 1819</md-option>
+                          <md-option value="AY 1920">AY 1920</md-option>
+                        </md-select>
+                      </md-field>
                     </div>
                   </div>
                   <br />
-                  <intakechart :seriesStats="seriesStats"></intakechart>
                 </div>
               </div>
             </div>
@@ -151,13 +149,13 @@
       </div>
       <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
-      <div id="reviews" style="color:#0B5345; margin-left: 20px; margin-top:20px; font-size: 25px">
+      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 25px">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right"
+          style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
           id="addReview"
-          v-on:click="review"
+          @click="review"
         >New Review</a>
         <b-dropdown
           size="lg"
@@ -189,9 +187,9 @@
         />
         <md-dialog-alert
           :md-active.sync="showAddDialog"
-          md-content="Please add the module before writing a review."
+          md-content="Please add the module first before writing a review."
           md-confirm-text="Okay"
-          md-title="Module not yet added"
+          md-title="Module not added"
         />
       </div>
     </div>
@@ -199,7 +197,6 @@
 </template>
 
 <script>
-//import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
@@ -207,9 +204,7 @@ import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
-  name: "ModulePage",
   props: {
     code: String
   },
@@ -237,7 +232,8 @@ export default {
                   name: "ReviewForm",
                   params: { mod: this.Modules[0].info.moduleCode }
                 });
-              } else { //user has already written a review, prompt them
+              } else {
+                //user has already written a review, prompt them
                 this.showDialog = true;
               }
             });
@@ -245,12 +241,6 @@ export default {
         });
       });
     },
-
-      // this.$router.push({
-      //   name: "ReviewForm",
-      //   params: { mod: this.Modules[0].info.moduleCode }
-      // });
-    
     formatwork(workload) {
       var series = [];
       series.push({
@@ -259,27 +249,84 @@ export default {
       });
       return series;
     },
-    checkSemester(arr) {
+    checksemester(arr) {
+      arr = arr.info.semesterData;
       var semesters = [
-        { semester: "Semester 1", disabled: "disabledTab" },
-        { semester: "Semester 2", disabled: "disabledTab" },
-        { semester: "Special Term I", disabled: "disabledTab" },
-        { semester: "Special Term II", disabled: "disabledTab" }
+        {
+          semester: "Semester 1",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Semester 2",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term I",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term II",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        }
       ];
       var num = arr.length;
-
+      var flag = false;
       for (var i = 0; i < num; i++) {
         if (arr[i].semester == 3) {
           semesters[2].disabled = "";
+          if (flag === false) {
+            semesters[2].active = true;
+          }
+          flag = true;
+          console.log();
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[2].examDate = arr[i].examDate;
+            semesters[2].examDuration = arr[i].examDuration / 60;
+          }
         } else if (arr[i].semester == 4) {
           semesters[3].disabled = "";
+          if (flag === false) {
+            semesters[3].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[3].examDate = arr[i].examDate;
+            semesters[3].examDuration = arr[i].examDuration / 60;
+          }
         } else if (arr[i].semester == 2) {
           semesters[1].disabled = "";
+          if (flag === false) {
+            semesters[1].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[1].examDate = arr[i].examDate;
+            semesters[1].examDuration = arr[i].examDuration / 60;
+          }
         } else {
           semesters[0].disabled = "";
+          if (flag === false) {
+            semesters[0].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[0].examDate = arr[i].examDate;
+            semesters[0].examDuration = arr[i].examDuration / 60;
+          }
         }
       }
-
       return semesters;
     },
     showsem(sem) {
@@ -331,7 +378,6 @@ export default {
           time[1],
           time[2]
         );
-
         var hours = finishDate.getHours();
         var minutes = finishDate.getMinutes();
         var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
@@ -367,7 +413,6 @@ export default {
       return num;
     }
   },
-
   created() {
     //replace this with a query by module code
     console.log("created");
@@ -385,7 +430,6 @@ export default {
         });
         console.log(this.reviewData);
       });
-
     //get module details
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
@@ -407,7 +451,7 @@ export default {
     ],
     Modules: []
   })
-}
+};
 </script>
 
 
@@ -433,14 +477,12 @@ export default {
   cursor: pointer;
   margin: 10px;
 }
-
 .button span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-
 .button span:after {
   content: "\00bb";
   position: absolute;
@@ -449,11 +491,9 @@ export default {
   right: -20px;
   transition: 0.5s;
 }
-
 .button:hover span {
   padding-right: 25px;
 }
-
 .button:hover span:after {
   opacity: 1;
   right: 0;
@@ -463,22 +503,21 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
 .btn-link {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
 .btn-link:hover {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
 .btn-link:focus {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
-
+</style>

@@ -1,5 +1,5 @@
-import { HorizontalBar, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import { HorizontalBar } from 'vue-chartjs'
+import database from "./firebase.js"
 
 export default {
   extends: HorizontalBar,
@@ -207,6 +207,6 @@ export default {
   created() {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
-    this.renderChart(this.chartData, this.options)
+    this.fetchItems()
   }
 }

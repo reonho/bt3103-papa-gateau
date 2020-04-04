@@ -1,7 +1,7 @@
 <template>
   <div id="AddModuleModal">
-    <md-button class="md-primary md-raised" style="background-color:white;
-    color:#1ABC9C;" @click="showModal = true" >Add new module</md-button>
+    <md-button class="md-primary md-raised" style="background-color:white;font-weight:bold;width:10vw;font-size:1.5vh;
+    color:#17a2b8;" @click="showModal = true" >Add new module</md-button>
     <md-dialog :md-active.sync="showModal">
       <md-dialog-title>Add New Module</md-dialog-title>
       <ModuleForm/>
@@ -51,7 +51,6 @@ export default {
     this.showModal = false;
   }
   }
-
 };
 </script>
 
@@ -62,5 +61,4 @@ export default {
   display: block;
 }
 @import "./style.css";
-
 </style>

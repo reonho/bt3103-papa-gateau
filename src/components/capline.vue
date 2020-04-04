@@ -1,7 +1,7 @@
 <template>
 <div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
+    <!-- <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
+        <h1>My Grades</h1> </md-card> -->
     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
@@ -18,7 +18,6 @@
             msg: String,
             sap: Array
         },
-
         data: function(){ 
             return {
                 series1: [{ name: 'Semester Grade', data: [0,0],},
@@ -44,7 +43,6 @@
                                 }
                             }
                             }],
-
                     dataLabels: {
                         enabled: true,
                         "formatter": function (val) {
@@ -56,7 +54,6 @@
                         opacity: 0.5,
                         colors: []
                         }
-
                 },   
             }
         },

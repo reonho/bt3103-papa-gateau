@@ -1,8 +1,8 @@
 <template>
 <div class="NavBar" style="border:1px solid white;border-bottom-color:grey;">
-   <md-toolbar class="md-accent" style="background:#1ABC9C;" md-elevation="0">
+   <md-toolbar class="md-accent" style="background:#17a2b8;" md-elevation="0">
        <h3 class="md-title" style="flex: 2;  margin-left:4vh;color:white;font-weight:bold">
-        <router-link class="nav-link" to="/">
+        <router-link class="nav-link" to="/LandPage">
            <md-button style="font-size: 200%;color:white;font-weight:bold">Modeaux</md-button>
         </router-link>
         </h3>
@@ -16,13 +16,16 @@
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
         </router-link>
+
+        <router-link class="nav-link" to="/Registration">
+          <md-button style="color:white;font-weight:bold" class="md-primary">Registration</md-button>
+        </router-link>
         
     </md-toolbar>
     
     <!-- Navigation>
     <nav class="navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container-fluid">
-
         <a class="navbar-brand ml-1" href="#">
          
             <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>
@@ -73,7 +76,7 @@
                 var self = this
                 database.logout().then(function(e){
                     if(e){
-                        self.$router.push("/")
+                        self.$router.push("/loginPage")
                     }
                 })
             }
