@@ -123,7 +123,7 @@ var database = {
             mod_counted ++
           }
         }
-        if (!module_results.SU) {
+        if (module_results.SU == "No") {
           database.firebase_data.collection('students').doc(module_results.studentID)
           .update({
             overall_cap: ((cap*mod_counted) + database.convertCap(module_results.grade))/(mod_counted+1)
@@ -168,7 +168,7 @@ var database = {
         }
   
       } else{
-        if (!module_results.SU) {
+        if (module_results.SU == "No") {
           database.firebase_data.collection('students').doc(module_results.studentID)
           .update({
             overall_cap: database.convertCap(module_results.grade)
@@ -184,15 +184,21 @@ var database = {
         }
       }
       //addmodule into modules_taken
+      var temp = null;
+      if (module_results.SU == "No"){
+        temp = false
+      }else {
+        temp = true
+      }
       database.firebase_data.collection('students').doc(module_results.studentID)
       .update({
         modules_taken: firebase.firestore.FieldValue.arrayUnion({
-          SU: module_results.SU,
+          SU: temp,
           module: module_results.module
         })
       })
       //update sam_by_sem
-      if(!module_results.SU){
+      if(module_results.SU == "No"){
         var arr = user.data().sam_by_sem
         var z;
         var flag_ = 0;
@@ -223,8 +229,6 @@ var database = {
         var year = 0;
         var semester = 0;
         var total_sems = arr
-        console.log(total_sems)
-        console.log('yay')
         for (var sem in total_sems){
           if (total_sems[sem].year != null){
             if (total_sems[sem].year > year){
@@ -250,7 +254,7 @@ var database = {
         }
       }
       //update faculty attributes
-      if (!module_results.SU){
+      if (module_results.SU == "No"){
         database.firebase_data.collection('faculties')
         .where('name', '==', module_results.faculty)
         .get().then(snapshot =>{
@@ -346,21 +350,25 @@ var database = {
         snapshot.forEach(user =>{
           students.push(user.id)
         })
-        database.firebase_data.collection('module_grades')
-        .where('studentID', 'in', students)
-        .get().then(snapshot=>{
-          snapshot.forEach(result =>{
-            var result_ = result.data()
-            if (modules.includes(result_.module)){
-              var index = modules.indexOf(result_.module)
-              amt[index] += 1
-            } else {
-              modules.push(result_.module)
-              amt.push(1)
-            }
+        if(!students.empty){
+          database.firebase_data.collection('module_grades')
+          .where('studentID', 'in', students)
+          .get().then(snapshot=>{
+            snapshot.forEach(result =>{
+              var result_ = result.data()
+              if (modules.includes(result_.module)){
+                var index = modules.indexOf(result_.module)
+                amt[index] += 1
+              } else {
+                modules.push(result_.module)
+                amt.push(1)
+              }
+            })
+            resolve({module: modules, amount: amt})
           })
-          resolve({module: modules, amount: amt})
-        })
+        } else {
+          resolve(null)
+        }
       })
     })
     return promise
