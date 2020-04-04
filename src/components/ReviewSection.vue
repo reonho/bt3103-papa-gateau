@@ -10,20 +10,25 @@
 <script>
 // import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
-import database from '../firebase';
+import database from '../firebase.js';
 export default {
   name: "ReviewSection",
   props: {
-    msg: String,
-    // reviewData: Object //should be an array of reviews from the backend
-  },
+    userid: String,
+    mod: String,
+    reviewData: Array,
+  }, 
+  // {
+  //   reviewData: Array //should be an array of reviews from the backend
+  // },
   data: () => ({
     // reviewData: DataObject.reviewData
-    reviewData: []
+    // reviewData: [],
+    //userid: 'e0123451'
   }),
 
   components: {
-    ReviewCard
+    ReviewCard,
   },
 
   created() {
@@ -38,10 +43,11 @@ export default {
       })
       // console.log(this.reviewData)
       
-    })
+    
 
+  })
   }
-};
+}
 </script>
 
 

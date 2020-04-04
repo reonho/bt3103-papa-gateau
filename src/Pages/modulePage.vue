@@ -39,11 +39,10 @@
             <br />
             <br />
             <b style="color: #616a6b">Exam</b>
-            <br />4-Dec-2019 9:00 AM • 2 hours
+            <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
           <div class="col-7">
-            <b style="color: #616a6b">
-            Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
+            <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
             <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
           </div>
         </div>
@@ -61,7 +60,7 @@
           lazy
         >
           <b-tab
-            v-for="sem in checkSemester(this.Modules[0])"
+            v-for="sem in checksemester(this.Modules[0])"
             v-bind:key="sem.index"
             :title="sem.semester"
             :title-link-class="sem.disabled"
@@ -153,14 +152,15 @@
         </b-tabs>
       </div>
       <hr />
-      <div id="reviews" style="color:#0B5345; margin-top:20px; font-size: 25px">
+      <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
+      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 25px">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right"
-          href="/#/review"
-          onclick="window.scrollTo(0, 0)"
+          style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
+          href="#"
           id="addReview"
+          @click="review"
         >New Review</a>
         <b-dropdown
           size="lg"
@@ -183,16 +183,19 @@
       </div>
       <br />
       <div>
-        <ReviewSection :review="reviewData" />
+        <ReviewSection :reviewData="reviewData" />
+        <md-dialog-alert
+          :md-active.sync="showDialog"
+          md-content="You have already submitted a review for this module."
+          md-confirm-text="Okay"
+          md-title="Review already exists"
+        />
       </div>
-      <hr />
-      <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
     </div>
   </div>
 </template>
 
 <script>
-// import DataObject from "../Database.js";
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
@@ -200,8 +203,10 @@ import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
+  props: {
+    code: String
+  },
   components: {
     PieChart,
     BarChart,
@@ -211,7 +216,7 @@ export default {
     ReviewSection
   },
   methods: {
-       review() {
+    review() {
       //prevents user from submitting multiple reviews
       // database.getUser().then(user => {
       //   database
@@ -241,7 +246,7 @@ export default {
       return series;
     },
 
-checksemester(arr) {
+    checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
         {
@@ -321,7 +326,6 @@ checksemester(arr) {
       }
       return semesters;
     },
-
     showsem(sem) {
       var totalsems = "";
       var num = sem.length;
@@ -406,7 +410,6 @@ checksemester(arr) {
       return num;
     }
   },
-
   created() {
     //replace this with a query by module code
     console.log("created");
@@ -470,14 +473,12 @@ checksemester(arr) {
   cursor: pointer;
   margin: 10px;
 }
-
 .button span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-
 .button span:after {
   content: "\00bb";
   position: absolute;
@@ -486,11 +487,9 @@ checksemester(arr) {
   right: -20px;
   transition: 0.5s;
 }
-
 .button:hover span {
   padding-right: 25px;
 }
-
 .button:hover span:after {
   opacity: 1;
   right: 0;
@@ -500,13 +499,11 @@ checksemester(arr) {
   border-width: 0;
   border-left-width: 0.1px;
 }
-
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
-
 .btn-link {
   color: #EC7663;
   font-weight:bold

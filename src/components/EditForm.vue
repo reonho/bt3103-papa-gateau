@@ -4,11 +4,10 @@
     <NavBar />
     <md-dialog-confirm
       :md-active.sync="exitDialog"
-      md-title="Exit review page?"
-      md-content="Your review will not be saved."
+      md-title="Stop editing review?"
+      md-content="Your changes will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
-      @md-confirm="goback"
     />
     <div class="page">
       <div class="pageHeader">
@@ -18,7 +17,7 @@
       </div>
       <div class="pageContent">
         <form @submit.prevent="submitForm">
-          <md-steppers md-linear md-alternative :md-active-step.sync:="active">
+          <md-steppers md-alternative :md-active-step.sync:="active">
             <md-step
               id="first"
               md-label="Basic Details"
@@ -29,8 +28,7 @@
               <md-card-content>
                 <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
                   <label>Your faculty</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedFaculty" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedFaculty">
+                  <md-select v-model="detailsForm.selectedFaculty">
                     <md-option
                       v-for="fac in faculties"
                       v-bind:key="fac.id"
@@ -45,8 +43,7 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
                   <label>Academic year</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedYear" :disabled="this.added" />
-                  <md-select v-if='added===false' v-model="detailsForm.selectedYear">
+                  <md-select v-model="detailsForm.selectedYear">
                     <md-option
                       v-for="yr in years"
                       v-bind:key="yr.id"
@@ -61,8 +58,7 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedSemester" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedSemester">
+                  <md-select v-model="detailsForm.selectedSemester">
                     <md-option
                       v-for="sem in semesters"
                       v-bind:key="sem.id"
@@ -77,7 +73,6 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedStaff')">
                   <label>Taught by</label>
-                  <!-- <md-input v-model = 'detailsForm.selectedStaff' :disabled = 'this.added'/> -->
                   <md-input v-model="detailsForm.selectedStaff"></md-input>
                   <span class="md-helper-text">Please enter the full name of the module lecturer</span>
                   <span
@@ -88,8 +83,7 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
                   <label>Grade obtained</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedGrade" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedGrade">
+                  <md-select v-model="detailsForm.selectedGrade">
                     <md-option
                       v-for="g in grades"
                       v-bind:key="g.id"
@@ -180,9 +174,7 @@
                 <br />
 
                 <md-field :class="getValidationClass('lectureForm', 'comments')">
-                  <label
-                    class
-                  >Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
+                  <label>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
                   <md-textarea v-model="lectureForm.comments"></md-textarea>
                   <span
                     class="md-error"
@@ -196,6 +188,7 @@
                   v-on:click.prevent="goNext('lectureForm','second','third')"
                 >Next</md-button>
               </md-card-actions>
+              <!-- </md-card> -->
             </md-step>
 
             <md-step
@@ -317,7 +310,6 @@
               v-on:click.prevent="active = 'fourth'"
               :md-error="commentForm.error"
             >
-              <!-- <md-card> -->
               <md-card-header
                 class="md-title"
               >For the questions below, rate your overall experience for the module.</md-card-header>
@@ -378,20 +370,16 @@
               <md-card-actions class="md-layout md-alignment-center-center">
                 <md-button class="md-raised okaybtn" type="submit">Submit</md-button>
               </md-card-actions>
-              <!-- <md-snackbar md-active = true md-position='center'></md-snackbar> -->
-              <!-- </md-card> -->
             </md-step>
           </md-steppers>
           <md-dialog-confirm
-            :md-click-outside-to-close="false"
             :md-active.sync="showSubmitMessage"
-            md-title="Review Submitted!"
-            md-content="Thanks for submitting a review!"
+            md-title="Review Edited!"
+            md-content="Your changes have been recorded."
             @md-confirm="goback"
             md-cancel-text
             md-confirm-text="Okay"
           />
-
         </form>
       </div>
     </div>
@@ -404,11 +392,14 @@ import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
-import database from "../firebase.js";
-import DataObject from '../Database.js'
+import database from "../firebase";
 export default {
-  name: "ReviewForm",
-  props: ["mod"],
+  name: "EditForm",
+  props: {
+    msg: String,
+    value: Number
+    // review: Object //pass in review object from the previous page, to fill the existing data
+  },
   components: {
     Ratings,
     NavBar
@@ -440,7 +431,7 @@ export default {
         required
       },
       comments: {
-        // required
+        required
       }
     },
     tutorialForm: {
@@ -448,16 +439,16 @@ export default {
         required
       },
       comments: {
-        // required
+        required
       },
       tutor: {
         required
       },
       apcomments: {
-        // required
+        required
       },
       examcomments: {
-        // required
+        required
       }
     },
     commentForm: {
@@ -475,29 +466,21 @@ export default {
   },
   methods: {
     submitForm() {
-      let db = database.firebase_data;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
-        // this.goback()
-        database.getUser().then(user => {
-          db.collection("reviews").add({
-            userid: user, //change this to the user id
-            module_code: this.mod, //change this to the passed props from moduleinfo page
-            likes: 0,
-            users_liked: [],
-            dislikes: 0,
-            users_disliked: [],
+        // this.setDone("first", "second");
+        database.firebase_data
+          .collection("reviews")
+          .doc("zmFd0jkjydpVp2Tn3Tzx")
+          .update({
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
             tutorialForm: this.tutorialForm,
             commentForm: this.commentForm
           });
-
-          // this.setDone("first", "second");
-        });
-        console.log("form submitted!");
+        console.log("form updated!");
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true;
@@ -530,7 +513,6 @@ export default {
       } else {
         this[formName].error = "Error!";
       }
-      window.scrollTo(0, 0)
     },
     getValidationClass(formName, fieldName) {
       const field = this.$v[formName][fieldName];
@@ -548,62 +530,40 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      this.$router.push({name: 'modulePage', params: {code:this.mod}})
-      // window.location.href = "/#/module";
+      window.location.href = "/#/module";
     }
   },
-
   created() {
-    // var self = this
-    let self = this;
-    database.getUser().then(user => {
-      database.ifAddedModule(this.mod, user).then(mod => {
-        console.log(mod);
-        self.added = true;
-        // this.added = true
-        // this.faculties = [{id: 1, title: mod.faculty}]
-        // this.grades = [{id: 1, title: mod.grade}]
-        // this.years = [{id: 1, title: mod.year}]
-        // this.semesters = [{id: 1, title: mod.sem}]
-        // this.added = true
-        var df = self.detailsForm;
-        df.selectedFaculty = mod.faculty;
-        df.selectedGrade = mod.grade;
-        df.selectedYear = mod.year;
-        df.selectedSemester = mod.sem;
-      });
-      if (this.added === false) {
-        this.faculties = DataObject.faculties
-        this.grades = DataObject.grades
-        this.years = DataObject.years
-        this.semesters = DataObject.semesters
-      }
+    database.getFaculties().then(r => {
+      this.faculties = r;
     });
-    // database.collection('faculties').get().then((querySnapShot) => {
-    //   let item = {}
-    //   querySnapShot.forEach(doc => {
-    //     item = doc.data()
-    //     this.faculties.push(item)
-    //   })
-    // })
-    // database.getFaculties().then(r => {
-    //   this.faculties = r;
-    // });
 
-    // database.getGrades().then(g => {
-    //   this.grades = g;
-    // });
+    database.getGrades().then(g => {
+      this.grades = g;
+    });
 
-    // database.getYears().then(y => {
-    //   this.years = y
-    // })
+    database.getYears().then(y => {
+      this.years = y;
+    });
 
-    // database.getSemesters().then(s => {
-    //   this.semesters = s
-    // })
+    database.getSemesters().then(s => {
+      this.semesters = s;
+    });
+    //for testing purposes, replace with the reviewid passed/review object pass from the ReviewCard
+    database.firebase_data
+      .collection("reviews")
+      .doc("zmFd0jkjydpVp2Tn3Tzx")
+      .get()
+      .then(doc => {
+        this.passedReview = doc.data();
+        this.detailsForm = this.passedReview.detailsForm;
+        this.lectureForm = this.passedReview.lectureForm;
+        this.tutorialForm = this.passedReview.tutorialForm;
+        this.commentForm = this.passedReview.commentForm;
+      });
   },
-
   data: () => ({
+    // passedReview: null,
     detailsForm: {
       selectedYear: null,
       selectedSemester: null,
@@ -614,6 +574,7 @@ export default {
     lectureForm: {
       lectureMaterial: "3",
       clarity: "3",
+      lectureComments: null,
       error: null
     },
     tutorialForm: {
@@ -646,22 +607,10 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    added: false,
     grades: [],
-    years: [],
     semesters: [],
-    faculties: [],
-
-    staff: [
-      {
-        id: 1,
-        name: "Leong Wai Kay"
-      },
-      {
-        id: 2,
-        name: "Ben Leong"
-      }
-    ]
+    years: [],
+    faculties: []
   })
 };
 </script>
@@ -688,7 +637,7 @@ export default {
 }
 
 .md-button.okaybtn {
-  background-color: #17a2b8 !important;
+  background-color: #007bff !important;
   font-weight: bold;
   color: white !important;
 }
@@ -698,42 +647,24 @@ export default {
   color: white !important;
 }
 
-
-/* .html .body {
-  height:100vh !important;
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
-  padding:0px;
-  margin:0px;
-
-
-} */
-
-/*
-Tentative fix to css background
-*/
+.html .body {
+  height: 100vh !important;
+  background-image: linear-gradient(
+    to top,
+    #cfd9df 0%,
+    #e2ebf0 100%
+  ) !important;
+  padding: 0px;
+  margin: 0px;
+}
 .pageBody {
   background-image: linear-gradient(
     to top,
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 100vmax;
+  min-height: 100vh;
+  max-height: 100vh;
   padding: 0px;
-}
-</style>
-<style>
-.md-steppers.md-theme-default .md-stepper-header.md-active .md-stepper-number  {
-  background-color: #17a2b8 !important;
-}
-.md-steppers.md-theme-default .md-stepper-header.md-done .md-stepper-number  {
-  background-color: #17a2b8 !important;
-}
-
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container {
-  border-color: #EC7663 !important;
-}
-
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container:after {
-    background-color: #EC7663 !important;
 }
 </style>

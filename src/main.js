@@ -11,6 +11,8 @@ import { MdButton, MdContent, MdToolbar, MdTabs} from 'vue-material/dist/compone
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
+
+
 Vue.use(VueMaterial);
 Vue.use(MdButton)
 Vue.use(MdContent)
