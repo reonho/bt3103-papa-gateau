@@ -27,7 +27,7 @@ let router = new Router({
       component: LandPage,
       props: true,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     // comment this block to test components
@@ -46,7 +46,7 @@ let router = new Router({
       props: true,
       component: modulePage,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -55,7 +55,7 @@ let router = new Router({
       component: ReviewForm,
       props: true,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
