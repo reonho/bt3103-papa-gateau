@@ -30,7 +30,7 @@
                 <p class="sub-content-text">{{User.course}}</p>
                 <p class="sub-content-title">Current Semester</p>
                 <p class="sub-content-text">Year 1 Semester 2</p>
-                <p class="sub-content-title">CAP</p>
+                <p class="sub-content-title">{{User.overall_cap}}</p>
                 <p class="sub-content-text">4.5</p>
               </div>
             </div>
@@ -40,7 +40,7 @@
             <div>
               <div class="sub-header-title">STRENGTHS</div>
               <div class="sub-header-content">
-                <RadarChart :my_attr="userattrbutes" :fac_attr="facultyAttributes"></RadarChart>
+                <RadarChart :my_attr="User.attrbutes" :fac_attr="facultyAttributes"></RadarChart>
               </div>
             </div>
           </td>
@@ -52,17 +52,7 @@
         <tr>
           <td style="width: 35%;padding:0;">
             <div>
-              <div class="sub-header-title">GRADES</div>
-
-        
-            <div id = "DegreeProgressCard"  >
-
-               <br>
-                
-                    <Feed v-if='User.modules_taken' :modules='modules' :course="User.course" :sem="sem"></Feed>
-            </div>
-             
-                
+              <div class="sub-header-title">GRADES</div>            
 
               <div class="sub-header-content" style="padding-top:2vw;">
                 <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="padding:2%" />
@@ -175,13 +165,7 @@ export default {
             //     console.log(e)
             // })
         }
-      }
-      var year = Math.ceil(sem_no / 2);
-      var sem = sem_no % 2;
-      this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-
-
-    },  
+    }, 
     data: function(){ 
         return {
             // assign data into Data attribute
@@ -214,18 +198,10 @@ export default {
       User: {},
       reviewData: [],
       userattrbutes: [
-        { attribute: "BT", score: 4 },
-        { attribute: "CS", score: 4 },
-        { attribute: "MA", score: 4 },
-        { attribute: "IS", score: 4.5 },
-        { attribute: "EC", score: 4.3 }
+      
       ],
       facultyAttributes: [
-        { attribute: "BT", score: 3.5 },
-        { attribute: "CS", score: 3.7 },
-        { attribute: "MA", score: 3.6 },
-        { attribute: "IS", score: 4.2 },
-        { attribute: "EC", score: 4.3 }
+       
       ],
 
       sem: null,
