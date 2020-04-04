@@ -229,9 +229,7 @@ export default {
               this.showDialog = true
             }
           });
-      this.$router.push({
-        name: "ReviewForm",
-        params: { mod: this.Modules[0].info.moduleCode }
+
       });
     },
     numWholeStars(ele) {
