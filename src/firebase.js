@@ -162,54 +162,70 @@ var database = {
     return promise
   },
 
-  // async getGrades() {
-  //   var promise = new Promise(resolve => {
-  //     let list = []
-  //     database.firebase_data.collection('grades').orderBy('id').onSnapshot(snapshot => {
-  //       let item = {}
-  //       snapshot.forEach(doc => {
-  //         item = doc.data()
-  //         item.id = doc.id
-  //         list.push(item)
-  //       })
-  //     })
-  //     resolve(list)
+  async getGrades() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('grades').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
 
-  //   })
-  //   return promise
-  // },
-  // async getYears() {
-  //   var promise = new Promise(resolve => {
-  //     let list = []
-  //     database.firebase_data.collection('years').orderBy('id').onSnapshot(snapshot => {
-  //       let item = {}
-  //       snapshot.forEach(doc => {
-  //         item = doc.data()
-  //         item.id = doc.id
-  //         list.push(item)
-  //       })
-  //     })
-  //     resolve(list)
+    })
+    return promise
+  },
+  async getFaculties() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('faculties').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
 
-  //   })
-  //   return promise
-  // },
-  // async getSemesters() {
-  //   var promise = new Promise(resolve => {
-  //     let list = []
-  //     database.firebase_data.collection('semesters').orderBy('id').onSnapshot(snapshot => {
-  //       let item = {}
-  //       snapshot.forEach(doc => {
-  //         item = doc.data()
-  //         item.id = doc.id
-  //         list.push(item)
-  //       })
-  //     })
-  //     resolve(list)
+    })
+    return promise
+  },
+  async getYears() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('years').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
 
-  //   })
-  //   return promise
-  // },
+    })
+    return promise
+  },
+  async getSemesters() {
+    var promise = new Promise(resolve => {
+      let list = []
+      database.firebase_data.collection('semesters').orderBy('id').onSnapshot(snapshot => {
+        let item = {}
+        snapshot.forEach(doc => {
+          item = doc.data()
+          item.id = doc.id
+          list.push(item)
+        })
+      })
+      resolve(list)
+
+    })
+    return promise
+  },
 
 
   //=====================================//

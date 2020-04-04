@@ -397,8 +397,8 @@ export default {
   name: "EditForm",
   props: {
     msg: String,
-    value: Number
-    // review: Object //pass in review object from the previous page, to fill the existing data
+    value: Number,
+    review: Object //pass in review object from the previous page, to fill the existing data
   },
   components: {
     Ratings,
@@ -431,7 +431,7 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       }
     },
     tutorialForm: {
@@ -439,16 +439,16 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       },
       tutor: {
         required
       },
       apcomments: {
-        required
+        // required
       },
       examcomments: {
-        required
+        // required
       }
     },
     commentForm: {
@@ -536,6 +536,7 @@ export default {
   created() {
     database.getFaculties().then(r => {
       this.faculties = r;
+      console.log(this.faculties)
     });
 
     database.getGrades().then(g => {
@@ -548,22 +549,14 @@ export default {
 
     database.getSemesters().then(s => {
       this.semesters = s;
+      this.detailsForm = this.review.detailsForm;
+      this.lectureForm = this.review.lectureForm;
+      this.tutorialForm = this.review.tutorialForm;
+      this.commentForm = this.review.commentForm;
     });
-    //for testing purposes, replace with the reviewid passed/review object pass from the ReviewCard
-    database.firebase_data
-      .collection("reviews")
-      .doc("zmFd0jkjydpVp2Tn3Tzx")
-      .get()
-      .then(doc => {
-        this.passedReview = doc.data();
-        this.detailsForm = this.passedReview.detailsForm;
-        this.lectureForm = this.passedReview.lectureForm;
-        this.tutorialForm = this.passedReview.tutorialForm;
-        this.commentForm = this.passedReview.commentForm;
-      });
+    // console.log(this.review);
   },
   data: () => ({
-    // passedReview: null,
     detailsForm: {
       selectedYear: null,
       selectedSemester: null,

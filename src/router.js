@@ -5,7 +5,7 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
-// import EditForm from './components/EditForm'
+import EditForm from './components/EditForm'
 import database from './firebase.js'
 
 
@@ -53,6 +53,15 @@ let router = new Router({
       path:'/review',
       name: 'ReviewForm',
       component: ReviewForm,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path:'/edit/:review.id',
+      name: 'EditForm',
+      component: EditForm,
       props: true,
       meta: {
         requiresAuth: true

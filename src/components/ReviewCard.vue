@@ -59,7 +59,7 @@
       <div class="footer">
         <!-- To add a v-if for footerLeft to check if the review was written by user -->
         <span class="footerLeft">
-          <md-button class="md-icon-button">
+          <md-button class="md-icon-button" v-on:click='edit'>
             <md-icon>edit</md-icon>
           </md-button>
           <md-button class="md-icon-button" v-on:click="showDialog = true">
@@ -268,6 +268,7 @@ export default {
       //find review id in collection
       //navigate to review form, while passing the fields from the review
       //allow to edit from the review form
+      this.$router.push({name:"EditForm", params: {review: this.review}})
     },
 
     deleteReview() {
