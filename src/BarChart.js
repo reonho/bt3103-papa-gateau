@@ -1,9 +1,11 @@
-import { HorizontalBar } from 'vue-chartjs'
+import { HorizontalBar} from 'vue-chartjs'
 import database from "./firebase.js"
+//const { reactiveProp } = mixins
 
 export default {
   extends: HorizontalBar,
-  props: ['semester', 'code'],
+  //mixins: [reactiveProp],
+  props: ['semester', 'code', 'years'],
   data: function () {
     return {
       datacollection: {
@@ -62,7 +64,8 @@ export default {
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
           var modCode = doc.data().module_code
-          if (sem.includes("Semester " + (this.semester + 1)) && modCode == this.code) {
+          var yr = doc.data().detailsForm.selectedYear
+          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
             display = true
             var rating = doc.data().commentForm.rating
             numbers[rating - 1] += 1
@@ -194,13 +197,13 @@ export default {
 
         this.avgRating = avg
         if (display) this.renderChart(this.datacollection, this.options)
-        else {
-          /*this.options.title.display = true
+        /*else {
+          this.options.title.display = true
           this.options.title.text = "No Data"
           this.options.responsive = true
-          this.renderChart(this.datacollection, this.options)*/
+          this.renderChart(this.datacollection, this.options)
           // does not display anything unless title is set to not display up there
-        }
+        }*/
       })
     }
   },
@@ -208,5 +211,25 @@ export default {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.fetchItems()
+  },
+  watch: {
+    years: function () {
+      this._data._chart.destroy()
+      var arr = []
+      arr.push(document.getElementById("avg_gold_stars"))
+      arr.push(document.getElementById("avg_grey_stars"))
+      arr.push(document.getElementById("easy_gold_stars"))
+      arr.push(document.getElementById("easy_grey_stars"))
+      arr.push(document.getElementById("man_gold_stars"))
+      arr.push(document.getElementById("man_grey_stars"))
+      arr.push(document.getElementById("exam_gold_stars"))
+      arr.push(document.getElementById("exam_grey_stars"))
+      for (let i = 0; i < arr.length; i++) {
+        while (arr[i].firstChild) {
+          arr[i].removeChild(arr[i].lastChild)
+        }
+      }
+      this.fetchItems()
+    }
   }
 }
