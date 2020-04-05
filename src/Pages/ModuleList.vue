@@ -108,9 +108,9 @@
                 <router-link
                   class="module-name"
                   :to="'/'+post.info.moduleCode"
-                  style="color:#0B5345;"
+                  style="color:#EC7663;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
-                <br/>
+                <br />
                 <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
                 <p
                   class="module-type"
@@ -154,6 +154,7 @@
                           v-bind:key="sem.index"
                           :title="sem.semester"
                           :title-link-class="sem.disabled"
+                          :active="sem.active"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -170,14 +171,11 @@
                               <br />
                               <span class="examhead">
                                 Workload - {{calcwork(post) + " hours"}}
-                                <md-tooltip class="mod-tooltip" md-direction="bottom">
-                                  <workloadchart :seriesStats="formatwork(post)"></workloadchart>
-                                </md-tooltip>
                                 <br />
                               </span>
                             </div>
                             <div style="width:27vw;background-color:white">
-                              <intakechart :seriesStats="seriesStats"></intakechart>
+                              <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
                         </b-tab>
@@ -198,7 +196,7 @@
 <script>
 import database from "../firebase.js";
 import NavBar from "../components/NavBar";
-import StudentIntakeChart from "../components/StudentIntakeChart";
+//import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
 import VueApexCharts from "vue-apexcharts";
 export default {
@@ -206,7 +204,7 @@ export default {
     NavBar,
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
-    intakechart: StudentIntakeChart,
+    //intakechart: StudentIntakeChart,
     workloadchart: WorkloadChart
   },
   props: {
@@ -377,62 +375,87 @@ export default {
       this.chosenlevel = [];
       this.chosenmc = [];
     },
-    checkexam(semester) {
-      if (semester.length === 1) {
-        return "No Exam";
-      }
-      return semester.examDate + " | " + semester.examDuration / 60 + " Hrs";
-    },
     checksemester(arr) {
-      var semesters = [];
       arr = arr.info.semesterData;
-      var num = arr.length;
-      for (var i = 1; i <= 4; i++) {
-        var semname;
-        var examDate;
-        var examDuration;
-        var disabled = "";
-        if (i === 3) {
-          semname = "Special Term 1";
-        } else if (i === 4) {
-          semname = "Special Term 2";
-        } else {
-          semname = "Sem " + i;
+      var semesters = [
+        {
+          semester: "Semester 1",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Semester 2",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term I",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Special Term II",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
         }
-        if (i > num) {
-          //leftover
-          examDate = null;
-          examDuration = 0;
-          disabled = "disabledTab"
+      ];
+      var num = arr.length;
+      var flag = false;
+      for (var i = 0; i < num; i++) {
+        if (arr[i].semester == 3) {
+          semesters[2].disabled = "";
+          if (flag === false) {
+            semesters[2].active = true;
+          }
+          flag = true;
+          console.log();
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[2].examDate = arr[i].examDate;
+            semesters[2].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 4) {
+          semesters[3].disabled = "";
+          if (flag === false) {
+            semesters[3].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[3].examDate = arr[i].examDate;
+            semesters[3].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 2) {
+          semesters[1].disabled = "";
+          if (flag === false) {
+            semesters[1].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[1].examDate = arr[i].examDate;
+            semesters[1].examDuration = arr[i].examDuration / 60;
+          }
         } else {
-          if (Object.keys(arr[i - 1]).length > 1) {
-            examDate = arr[i - 1].examDate;
-            examDuration = arr[i - 1].examDuration / 60;
-          } else {
-            examDate = null;
-            examDuration = 0;
+          semesters[0].disabled = "";
+          if (flag === false) {
+            semesters[0].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[0].examDate = arr[i].examDate;
+            semesters[0].examDuration = arr[i].examDuration / 60;
           }
         }
-        semesters.push({
-          semester: semname,
-          examDate: examDate,
-          examDuration: examDuration,
-          disabled: disabled
-        });
       }
       return semesters;
     },
-    // formatprereq: function(arr) {
-    //   var str = "";
-    //   for (var i = 0; i < arr.length; i++) {
-    //     if (i === arr.length - 1) {
-    //       str = str + arr[i];
-    //     } else {
-    //       str = str + arr[i] + ", ";
-    //     }
-    //   }
-    //   return str;
-    // },
+    
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -481,7 +504,7 @@ export default {
     },
     formatDur: function(duration) {
       if (duration !== 0) {
-        return " | " + duration + " hours";
+        return " • " + duration + " hours";
       } else {
         return "";
       }
@@ -511,12 +534,13 @@ export default {
       }
     },
     passmod: function(code) {
-      this.$router.push({ name: "modulePage", params: {code: code}})
+      this.$router.push({ name: "modulePage", params: { code: code } });
     }
   },
   mounted() {
     //this.writeDatabase();
     this.readDatabase();
+    //console.log(this.modulesData);
   }
 };
 </script>
@@ -560,7 +584,7 @@ label {
 .filter-header {
   margin-bottom: 20px;
   margin-top: 20px;
-  width: 50%;
+  width: 100%;
 }
 .filter-head {
   font-size: 130%;
@@ -569,16 +593,17 @@ label {
   margin-right: 80px;
 }
 .minihead {
-  color: #0b5345;
+  color: #616a6b;
   font-size: 80%;
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
 }
 .md-button.clear-filter {
-  background-color: #17a589 !important;
+  background-color: #17a2b8 !important;
   font-weight: bold;
-  margin-left: 30%;
+  float: right;
+  margin-right: 0;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -588,11 +613,11 @@ label {
 }
 .modnum {
   margin-right: 30px;
-  color: #0b5345;
+  color: #EC7663;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #0b5345 !important;
+  background-color: #EC7663 !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -619,13 +644,13 @@ label {
   background-color: white !important;
 }
 .mod-chips .md-chip.md-theme-default {
-  background-color: #0b5345 !important;
+  background-color: #EC7663 !important;
   color: white !important;
   font-weight: bold !important;
 }
 /* Module Card css */
 #ModuleItem {
-  margin-top: 20%;
+  margin-top: 18%;
 }
 .modulecard {
   margin: 30px;
@@ -633,7 +658,7 @@ label {
 }
 .module-name {
   font-size: 150%;
-  color: #1abc9c;
+  color: #17a2b8;
   font-weight: bold;
 }
 .module-preclusionhead {
@@ -654,18 +679,18 @@ label {
 .module-header {
   position: fixed;
   background-color: white;
-  left: 27%;
+  margin-right: 2%;
   top: 0;
   right: 0;
   z-index: 5;
-  width: 71%;
+  width: 71.5%;
 }
 .activetab {
-  background-color: #1abc9c !important;
+  background-color: #17a2b8 !important;
   font-weight: bold !important;
 }
 .md-theme-default .nav-link:not(.md-button) {
-  color: #17a589 !important;
+  color: #17a2b8 !important;
   font-weight: bold !important;
 }
 .md-theme-default .nav-link.active:not(.md-button) {

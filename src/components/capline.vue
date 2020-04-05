@@ -1,7 +1,5 @@
 <template>
 <div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
@@ -21,8 +19,7 @@
 
         data: function(){ 
             return {
-                series1: [{ name: 'Semester Grade', data: [0,0],},
-                 { name: 'Cumulative Grade', data: [0,0],}],
+                series1: [{ name: 'Semester AP',data: [],}, { name: 'Cumulative CAP',data: [],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
@@ -51,7 +48,7 @@
                                 return val.toFixed(2)
                             }
                     },
-                    colors:['#00aaff', '#ff9900', '#2cab93', "#9500ff", '#E91E63', '#FF9800',],
+                    colors:['#00aaff',  '#2cab93', '#ff9900',"#9500ff", '#E91E63', '#FF9800',],
                     fill: {
                         opacity: 0.5,
                         colors: []
@@ -62,14 +59,20 @@
         },
         methods:{
             parse_sap: function(obj_array){
-                console.log(obj_array[0].one)
+                obj_array = obj_array.sort(function(a,b){
+                    if(a.year == b.year){
+                        return a.sem - b.sem
+                    }
+                    return a.year - b.year
+                })
+                
+                console.log(obj_array)
                 var sap_series = []
                 var cum_series = []
-                var keys = ["one","two","three","four","five", "six", "seven", "eight"]
                 for(let i=0; i < 8; i++){
-                    var key = keys[i]
+                    
                     //console.log(obj_array[0][key])
-                    var value = obj_array[i][key]
+                    var value = obj_array[i]["cap"]
                     
                     if (!value){
                         break
