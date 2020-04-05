@@ -28,7 +28,12 @@
               <md-card-content>
                 <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
                   <label>Your faculty</label>
-                  <md-select v-model="detailsForm.selectedFaculty">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedFaculty"
+                    :disabled="this.added"
+                  />
+                  <md-select v-if="added===false" v-model="detailsForm.selectedFaculty">
                     <md-option
                       v-for="fac in faculties"
                       v-bind:key="fac.id"
@@ -43,7 +48,12 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
                   <label>Academic year</label>
-                  <md-select v-model="detailsForm.selectedYear">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedYear"
+                    :disabled="this.added"
+                  />
+                  <md-select v-if="added===false" v-model="detailsForm.selectedYear">
                     <md-option
                       v-for="yr in years"
                       v-bind:key="yr.id"
@@ -58,7 +68,12 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
-                  <md-select v-model="detailsForm.selectedSemester">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedSemester"
+                    :disabled="this.added"
+                  />
+                  <md-select v-if="added===false" v-model="detailsForm.selectedSemester">
                     <md-option
                       v-for="sem in semesters"
                       v-bind:key="sem.id"
@@ -73,6 +88,7 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedStaff')">
                   <label>Taught by</label>
+                  <!-- <md-input v-model = 'detailsForm.selectedStaff' :disabled = 'this.added'/> -->
                   <md-input v-model="detailsForm.selectedStaff"></md-input>
                   <span class="md-helper-text">Please enter the full name of the module lecturer</span>
                   <span
@@ -83,7 +99,12 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
                   <label>Grade obtained</label>
-                  <md-select v-model="detailsForm.selectedGrade">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedGrade"
+                    :disabled="this.added"
+                  />
+                  <md-select v-if="added===false" v-model="detailsForm.selectedGrade">
                     <md-option
                       v-for="g in grades"
                       v-bind:key="g.id"
@@ -393,6 +414,7 @@ import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase";
+// import DataObject from '../Database'
 export default {
   name: "EditForm",
   props: {
@@ -473,7 +495,7 @@ export default {
         // this.setDone("first", "second");
         database.firebase_data
           .collection("reviews")
-          .doc("zmFd0jkjydpVp2Tn3Tzx")
+          .doc(this.review.id)
           .update({
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
@@ -530,12 +552,26 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      this.$router.push({path:'/'})
+      this.$router.push({ path: "/" });
       // window.location.href = "/#/module";
-    
     }
   },
   created() {
+    //replace this with firebase calls please
+    let self = this;
+    database.getUser().then(user => {
+      database.ifAddedModule(this.review.module_code, user).then(mod => {
+        console.log(mod);
+        if (mod !== null) {
+          self.added = true;
+          var df = self.detailsForm;
+          df.selectedFaculty = mod.faculty;
+          df.selectedGrade = mod.grade;
+          df.selectedYear = mod.year;
+          df.selectedSemester = mod.sem;
+        }
+      });
+    });
     // database.getFaculties().then(r => {
     //   this.faculties = r;
     //   console.log(this.faculties)
@@ -609,7 +645,8 @@ export default {
     grades: [],
     semesters: [],
     years: [],
-    faculties: []
+    faculties: [],
+    added: false
   })
 };
 </script>
@@ -646,24 +683,25 @@ export default {
   color: white !important;
 }
 
-.html .body {
-  height: 100vh !important;
-  background-image: linear-gradient(
-    to top,
-    #cfd9df 0%,
-    #e2ebf0 100%
-  ) !important;
-  padding: 0px;
-  margin: 0px;
-}
+/* .html .body {
+  height:100vh !important;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
+  padding:0px;
+  margin:0px;
+
+
+} */
+
+/*
+Tentative fix to css background
+*/
 .pageBody {
   background-image: linear-gradient(
     to top,
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  min-height: 100vh;
-  max-height: 100vh;
+  height: 100vmax;
   padding: 0px;
 }
 </style>
