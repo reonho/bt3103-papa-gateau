@@ -530,30 +530,36 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      window.location.href = "/#/module";
+      this.$router.push({path:'/'})
+      // window.location.href = "/#/module";
+    
     }
   },
   created() {
-    database.getFaculties().then(r => {
-      this.faculties = r;
-      console.log(this.faculties)
-    });
+    // database.getFaculties().then(r => {
+    //   this.faculties = r;
+    //   console.log(this.faculties)
+    // });
 
-    database.getGrades().then(g => {
-      this.grades = g;
-    });
+    // database.getGrades().then(g => {
+    //   this.grades = g;
+    // });
 
-    database.getYears().then(y => {
-      this.years = y;
-    });
+    // database.getYears().then(y => {
+    //   this.years = y;
+    // });
 
-    database.getSemesters().then(s => {
-      this.semesters = s;
-      this.detailsForm = this.review.detailsForm;
-      this.lectureForm = this.review.lectureForm;
-      this.tutorialForm = this.review.tutorialForm;
-      this.commentForm = this.review.commentForm;
-    });
+    // database.getSemesters().then(s => {
+    //   this.semesters = s;
+    //   this.detailsForm = this.review.detailsForm;
+    //   this.lectureForm = this.review.lectureForm;
+    //   this.tutorialForm = this.review.tutorialForm;
+    //   this.commentForm = this.review.commentForm;
+    // });
+    this.detailsForm = this.review.detailsForm;
+    this.lectureForm = this.review.lectureForm;
+    this.tutorialForm = this.review.tutorialForm;
+    this.commentForm = this.review.commentForm;
     // console.log(this.review);
   },
   data: () => ({
