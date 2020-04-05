@@ -42,8 +42,9 @@ export default {
         var display = false
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
+          console.log(sem)
           var modCode = doc.data().module_code
-          if (sem.includes("Semester " + (this.semester + 1)) && modCode == this.code) {
+          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) : sem == this.semester) && modCode == this.code) {
             display = true
             var fac = doc.data().detailsForm.selectedFaculty
             if (!Object.prototype.hasOwnProperty.call(faculties, fac)) {
