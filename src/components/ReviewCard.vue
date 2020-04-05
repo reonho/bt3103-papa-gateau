@@ -1,12 +1,9 @@
 <template>
   <div id="ReviewCard">
-    <md-card v-if="anyComments ===true">
+    <!-- <md-card v-if="anyComments ===true"> -->
+    <md-card>
       <md-card-header class="md-gutter">
-        <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
-        <!-- <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedSemester}})</b> -->
         <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedYear}} {{review.detailsForm.selectedSemester}})</b>
-        <!-- <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon> -->
-        <!-- </md-button> -->
       </md-card-header>
 
       <md-card-content>
@@ -59,10 +56,10 @@
       <div class="footer">
         <!-- To add a v-if for footerLeft to check if the review was written by user -->
         <span class="footerLeft">
-          <md-button class="md-icon-button" v-on:click='edit'>
+          <md-button class="md-icon-button" v-on:click="edit" v-if="byUser === true">
             <md-icon>edit</md-icon>
           </md-button>
-          <md-button class="md-icon-button" v-on:click="showDialog = true">
+          <md-button class="md-icon-button" v-on:click="showDialog = true" v-if="byUser === true">
             <md-icon>delete</md-icon>
           </md-button>
         </span>
@@ -113,7 +110,8 @@ export default {
     showDialog: false,
     showDetail: false, //toggle visibility of hidden content,
     userid: null,
-    anyComments: true
+    anyComments: true,
+    byUser: false
   }),
 
   created() {
@@ -126,11 +124,16 @@ export default {
     ) {
       this.anyComments = false;
     }
+
     database.getUser().then(user => {
       this.userid = user;
+      if (this.userid === this.review.userid) {
+        //boolean to indicate if review was written by user, used to render edit/delete buttons
+        this.byUser = true;
+      }
+
       var ul = Object.values(this.review.users_liked);
       var ud = Object.values(this.review.users_disliked);
-      console.log(this.userid);
       //if user has liked the review
       if (ul.indexOf(this.userid) != -1) {
         this.liked = true;
@@ -156,7 +159,7 @@ export default {
     },
 
     hasComment(field) {
-      return field !== null && field !== undefined
+      return field !== null && field !== undefined;
     },
 
     like() {
@@ -268,7 +271,7 @@ export default {
       //find review id in collection
       //navigate to review form, while passing the fields from the review
       //allow to edit from the review form
-      this.$router.push({name:"EditForm", params: {review: this.review}})
+      this.$router.push({ name: "EditForm", params: { review: this.review } });
     },
 
     deleteReview() {
