@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <table style="width:100%">
@@ -7,7 +8,7 @@
             <div class="sub-header-title">TOP COHORT</div>
             <div class="sub-header-content" style="padding-top:1vw;">
               <div id="chart">
-                <apexchart type="bar" :options="chartOptions" :series="series" style></apexchart>
+                <apexchart type="bar" :options="chartOptionsYear" :series="series" style></apexchart>
               </div>
             </div>
           </div>
@@ -41,7 +42,7 @@ export default {
   name: "Feed",
   props: {
     modules: Array,
-    course: String,
+    course: Object,
     sem: String
   },
   components: {
@@ -51,7 +52,7 @@ export default {
     return {
       series: [
         {
-          data: [100, 80, 80, 75, 75, 60, 55, 50, 50, 40, 40, 30, 15]
+          data: []
         }
       ],
       chartOptions: {
@@ -67,31 +68,85 @@ export default {
           colors: ["#17a2b8"]
         },
         dataLabels: {
-          enabled: true
+          enabled: false
         },
         xaxis: {
           categories: [
-            "MA1101R",
-            "EC1301",
-            "GER1000",
-            "BT1101",
-            "IS1103",
-            "ST2334",
-            "MA1521",
-            "BT2101",
-            "CS1010S",
-            "IS2101",
-            "BT2102",
-            "BT3103",
-            "BT3102",
-            "CS2030"
+           
           ]
         }
       }
     };
+  },
+  created(){
+    var modlst = []
+    
+    for(let  i = 0; i < this.course.module.length; i++){
+      var mod = {}
+      mod["amt"] = this.course.amount[i]
+      mod["mod"] = this.course.module[i]
+      modlst.push(mod)
+    }
+    modlst = modlst.sort((a,b) => a.amt - b.amt)
+
+    for(let  i = 0; i < this.course.module.length; i++){
+      this.series[0].data.push(modlst[i].amt)
+      this.chartOptionsYear.xaxis.categories.push(modlst[i].mod)
+    }
+    
+
+
+    console.log(this.series[0].data)
+  },
+
+  methods:{
+    redirect : function(mod){
+      this.$router.push("/" + mod)
+    }
+
+  },
+  computed:{
+      chartOptionsYear: function() {
+      return {
+        chart: {
+          type: "bar",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              // you can call Vue methods now as "this" will point to the Vue instance when you use ES6 arrow function
+              //console.log(e)
+              var mod = this.chartOptionsYear.xaxis.categories[opts.dataPointIndex]
+              console.log('#/' + mod)
+              this.redirect(mod)
+              
+              
+            }
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true
+          }
+        },
+
+        fill: {
+          colors: ["#17a2b8"]
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: [
+           
+          ]
+
+        },
+      }
+    }
+
   }
 };
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
