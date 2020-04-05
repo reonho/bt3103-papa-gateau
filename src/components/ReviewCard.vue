@@ -71,7 +71,7 @@
             <md-icon>thumb_up</md-icon>
           </md-button>
           <md-button v-if="this.liked===true" class="md-icon-button md-primary" v-on:click="like">
-            <md-icon>thumb_up</md-icon>
+            <md-icon style="color: #27AE60">thumb_up</md-icon>
           </md-button>
           {{review.likes}}
           <md-button v-if="this.disliked===false" class="md-icon-button" v-on:click="dislike">
@@ -82,7 +82,7 @@
             class="md-icon-button md-primary"
             v-on:click="dislike"
           >
-            <md-icon>thumb_down</md-icon>
+            <md-icon style="color: #B82D17">thumb_down</md-icon>
           </md-button>
           {{review.dislikes}}
         </span>
