@@ -1,8 +1,10 @@
 import database from "./firebase.js"
 import { Doughnut } from 'vue-chartjs'
+//const { reactiveProp } = mixins
 
 export default {
   extends: Doughnut,
+  //mixins: [reactiveProp],
   data: function () {
     return {
       datacollection: {
@@ -34,7 +36,7 @@ export default {
       }
     }
   },
-  props: ['semester', 'code'],
+  props: ['semester', 'code', 'years'],
   methods: {
     fetchItems: function () {
       database.firebase_data.collection('reviews').get().then(querySnapShot => {
@@ -44,7 +46,8 @@ export default {
           var sem = doc.data().detailsForm.selectedSemester
           console.log(sem)
           var modCode = doc.data().module_code
-          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) : sem == this.semester) && modCode == this.code) {
+          var yr = doc.data().detailsForm.selectedYear
+          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
             display = true
             var fac = doc.data().detailsForm.selectedFaculty
             if (!Object.prototype.hasOwnProperty.call(faculties, fac)) {
@@ -73,5 +76,13 @@ export default {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.fetchItems()
+  },
+  watch: {
+    years: function () {
+      this._data._chart.destroy()
+      this.datacollection.datasets[0].data = []
+      this.options.title.text = "Faculties"
+      this.fetchItems()
+    }
   }
 }
