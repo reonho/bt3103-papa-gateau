@@ -1,6 +1,6 @@
 <template>
   <div class="landPage">
-    <NavBar class="fixed-top"/>
+    <NavBar class="fixed-top" />
     <div class="container-fluid" style="width:90%">
       <md-card class="header-card" md-with-hover>
         <div class="md-layout md-gutter md-alignment-center-right">
@@ -39,7 +39,11 @@
             <div>
               <div class="sub-header-title">STRENGTHS</div>
               <div class="sub-header-content">
-                <RadarChart  v-if="facultyAttributes" :my_attr="User.attributes" :fac_attr="facultyAttributes"></RadarChart>
+                <RadarChart
+                  v-if="facultyAttributes"
+                  :my_attr="User.attributes"
+                  :fac_attr="facultyAttributes"
+                ></RadarChart>
               </div>
             </div>
           </td>
@@ -51,7 +55,7 @@
         <tr>
           <td style="width: 35%;padding:0;">
             <div>
-              <div class="sub-header-title">GRADES</div>            
+              <div class="sub-header-title">GRADES</div>
 
               <div class="sub-header-content" style="padding-top:2vw;">
                 <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="padding:2%" />
@@ -109,38 +113,38 @@ export default {
     ReviewSection
     // // Ratings
   },
-    methods: {
-        //use this method to find data of a specific module
-        findModule(mod,database){
-            var data = database.Modules
-            for (var i = 0; i < data.length; ++i){
-                if (data[i].Name == mod) {
-                    return data[i]
-                }
-            }
-        },
-        get_currentsem(obj_array){
-            var sem_no = 1
-            for(let i=0; i < 8; i++){
-                //console.log(obj_array[0][key])
-                var value = obj_array[i]
-                if (Object.entries(value).length === 0){
-                    sem_no = i
-                    break
-                }
-            }
-            var year = Math.floor(sem_no/2)+1
-            var sem = sem_no%2+1
-            this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
-        },
-        get_modules(modules){
-            var mods = []
-            for(let i =0; i < modules.length; i++){
-                mods.push(modules[i]["module"])
-            }
-            this.modules = mods
-        },
-    }, 
+  methods: {
+    //use this method to find data of a specific module
+    findModule(mod, database) {
+      var data = database.Modules;
+      for (var i = 0; i < data.length; ++i) {
+        if (data[i].Name == mod) {
+          return data[i];
+        }
+      }
+    },
+    get_currentsem(obj_array) {
+      var sem_no = 1;
+      for (let i = 0; i < 8; i++) {
+        //console.log(obj_array[0][key])
+        var value = obj_array[i];
+        if (Object.entries(value).length === 0) {
+          sem_no = i;
+          break;
+        }
+      }
+      var year = Math.floor(sem_no / 2) + 1;
+      var sem = (sem_no % 2) + 1;
+      this.sem = "Year " + year.toString() + " Semester " + sem.toString();
+    },
+    get_modules(modules) {
+      var mods = [];
+      for (let i = 0; i < modules.length; i++) {
+        mods.push(modules[i]["module"]);
+      }
+      this.modules = mods;
+    }
+  },
   data: function() {
     return {
       // assign data into Data attribute
@@ -149,73 +153,73 @@ export default {
       reviewData: [],
       facultyAttributes: null,
       modules: [],
-      sem: null,
+      sem: null
     };
   },
-    created(){
-        const self = this
-        // query database for review data
-        database.getUser().then(user => {
-          console.log(user);
-          database.firebase_data
-            .collection("reviews")
-            .where("userid", "==", user)
-            .onSnapshot(querySnapShot => {
-              this.reviewData = [];
-              querySnapShot.forEach(doc => {
-                let item = {};
-                item = doc.data();
-                item.id = doc.id;
-                this.reviewData.push(item);
-              });
-            });
+  created() {
+    const self = this;
+    // query database for review data
+    database.getUser().then(user => {
+      console.log(user);
+      database.firebase_data
+        .collection("reviews")
+        .where("userid", "==", user)
+        .onSnapshot(querySnapShot => {
+          this.reviewData = [];
+          querySnapShot.forEach(doc => {
+            let item = {};
+            item = doc.data();
+            item.id = doc.id;
+            this.reviewData.push(item);
+          });
         });
-        // query database for user info
-        database.firebase_data.collection("students").doc(database.user)
-        .onSnapshot(function(user){ 
-            var userData = user.data()
-            var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sam_by_sem,
-            overall_cap: userData.overall_cap,
-            batch: userData.batch, // for querying cohort top modules
-            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-            attributes: userData.attributes //individual attributes can be found in self.User.attributes
-            }
-            
-            self.User = result
-            //query database for cohort top modules
-            database.getCohortTopModules(result.batch).then(doc =>{
-                self.cohortTopMods = doc
-            })
-            // query database for course attributes
-            database.getFacultyAttributes(result.faculty).then(attributes =>{
-              console.log(attributes.attributes)
-              self.facultyAttributes = attributes.attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
-            })      
-            self.get_currentsem(self.User.sap_by_sem)
-            self.get_modules(self.User.modules_taken)
-            
-        })
-       
-        
-        
-    },
-    mounted() {
-        
-        if (this.userPassed) {
-            //this.User = this.userPassed  
-        }
-        else{
-            this.User = {User:"there"}
-        }
+    });
+    // query database for user info
+    database.firebase_data
+      .collection("students")
+      .doc(database.user)
+      .onSnapshot(function(user) {
+        var userData = user.data();
+        var result = {
+          name: userData.name,
+          faculty: userData.faculty,
+          dept: userData.dept,
+          course: userData.course,
+          modules: userData.modules_taken,
+          sap_by_sem: userData.sam_by_sem,
+          overall_cap: userData.overall_cap,
+          batch: userData.batch, // for querying cohort top modules
+          modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+          attributes: userData.attributes //individual attributes can be found in self.User.attributes
+        };
+
+        self.User = result;
+        //query database for cohort top modules
+        database.getCohortTopModules(result.batch).then(doc => {
+          self.cohortTopMods = doc;
+        });
+        // query database for course attributes
+        database.getFacultyAttributes(result.faculty).then(attributes => {
+          console.log(attributes.attributes);
+          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+        });
+        self.get_currentsem(self.User.sap_by_sem);
+        self.get_modules(self.User.modules_taken);
+      });
+
+      database.getFaculties().then(f =>{
+        console.log(f)
+      })
+
+  },
+  mounted() {
+    if (this.userPassed) {
+      //this.User = this.userPassed
+    } else {
+      this.User = { User: "there" };
     }
-}
-    
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -225,12 +229,12 @@ export default {
   padding: 2%;
 }
 .landPage {
-  background: #EAECEE;
-   font-family: 'Helvetica', sans-serif;
+  background: #eaecee;
+  font-family: "Helvetica", sans-serif;
 }
 /* Header card css */
 .header-card {
-  margin-top:13vh;
+  margin-top: 13vh;
   margin-bottom: 3vh !important;
   padding: 4vh;
   margin-bottom: 1vh;
@@ -238,7 +242,6 @@ export default {
   border: 1px solid #17a2b8;
   border-radius: 25px;
   background-color: #17a2b8 !important;
-  
 }
 .header {
   color: #ffffff;
@@ -251,7 +254,7 @@ export default {
   text-align: left;
   padding: 25px;
   background-color: #17a2b8;
-  color:white;
+  color: white;
 }
 .sub-header-content {
   background: white;
@@ -265,7 +268,7 @@ export default {
   font-size: 2.1vh;
   font-weight: bold;
   text-align: left;
-  color: #EC7663;
+  color: #ec7663;
 }
 .sub-content-text {
   font-size: 2vh;
