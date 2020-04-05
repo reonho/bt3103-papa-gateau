@@ -470,6 +470,24 @@ var database = {
   },
 
   //=====================================//
+  //----------- getFaculties-------------//
+  //=====================================//
+  async getFaculties(){
+    var promise = new Promise(resolve => {
+      var faculties = [];
+      database.firebase_data.collection("faculties")
+      .get().then(snapshot => {
+        snapshot.forEach(doc =>{
+          faculties.push(doc.data().name)
+        })
+        faculties.sort()
+        resolve(faculties)
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
   //----------- getAllModuleCodes--------//
   //=====================================//
   async getAllModuleCodes(){
@@ -495,13 +513,13 @@ var database = {
       .where("studentID", "==", user)
       .where("module", "==", module)
       .get().then(snapshot =>{
-        snapshot.forEach(doc =>{
-          if (doc){
+        if (!snapshot.empty){
+          snapshot.forEach(doc =>{
             resolve(doc.data())
-          } else {
-            resolve(null)
-          }
-        })
+          })
+        } else{
+          resolve(null)
+        }
       })
     })
     return promise

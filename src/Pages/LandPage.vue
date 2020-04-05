@@ -11,6 +11,9 @@
             <div class = "md-layout-item" style="text-align:right">
                 <AddModulesModal/>
             </div>
+            <div>
+                <button v-on:click="test">Add 1</button>
+            </div>
             </div>
         </md-card>
 
@@ -161,6 +164,12 @@
                     return data[i]
                 }
             }
+        },
+        test(){
+            database.getFaculties().then(e =>{
+                console.log(e)
+            })
+
         },
         get_currentsem(obj_array){
             var keys = ["one","two","three","four","five", "six", "seven", "eight"]
