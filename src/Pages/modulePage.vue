@@ -133,6 +133,20 @@
                           </p>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                        </div>
+                        <div class="col-6" style="float:right">
+                          <p>
+                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
+                            </span>
+                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
+                            </span>
+                            <span style="padding:10px;font-size: 12px" id="workload"></span>
+                          </p>
+                        </div>
+                      </div>
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
                       <md-field style="width: 20vw">
