@@ -19,7 +19,7 @@
             <div class="sub-header-content" style="padding:0;;">
               <div class="grid-container">
                 <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
-                 <router-link class="nav-link" to = "/:mod" >
+                 <router-link class="nav-link" :to = " '/' + mod" >
                   <b-button class="mod-btn" variant="outline-info">
                     <h1 style="font-size:2.5vh">{{mod}}</h1>
                   </b-button>
