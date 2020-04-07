@@ -69,7 +69,7 @@
             <div id="container">
               <div class="row">
                 <div class="col-4">
-                  <pie-chart :semester="chosenSem" :code="code"></pie-chart>
+                  <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
@@ -87,7 +87,7 @@
                       <h5 style="font-weight:400">
                         <span id="ratings"></span> student ratings
                       </h5>
-                      <bar-chart :semester="chosenSem" :code="code"></bar-chart>
+                      <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
                     </div>
                     <div class="col-7">
                       <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
@@ -133,13 +133,29 @@
                           </p>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                        </div>
+                        <div class="col-6" style="float:right">
+                          <p>
+                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
+                            </span>
+                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
+                            </span>
+                            <span style="padding:10px;font-size: 12px" id="workload"></span>
+                          </p>
+                        </div>
+                      </div>
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
                       <md-field style="width: 20vw">
-                      <label for="years">All Years Selected</label>
-                      <md-select multiple name="years" id="years">
-                        <md-option value="AY 1819">AY 1819</md-option>
-                        <md-option value="AY 1920">AY 1920</md-option>
+                      <label for="years">Years Selected</label>
+                      <md-select v-model="yrs" multiple name="years" id="years">
+                        <md-option value="AY1920">AY 1920</md-option>
+                        <md-option value="AY1819">AY 1819</md-option>
+                        <md-option value="AY1718">AY 1718</md-option>
+                        <md-option value="AY1617">AY 1617</md-option>
                       </md-select>
                     </md-field>
                     </div>
@@ -434,6 +450,7 @@ export default {
   },
   data: () => ({
     showDialog: false,
+    yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
     totalsems: "",
     reviewData: [],
     infodes: null,
@@ -446,7 +463,12 @@ export default {
       }
     ],
     Modules: []
-  })
+  }),
+  watch: {
+    yrs: function(val) {
+      console.log(val)
+    }
+  }
 }
 </script>
 
