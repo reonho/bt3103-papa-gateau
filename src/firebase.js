@@ -105,6 +105,7 @@ var database = {
   },
 
   //==================Use methods from here onwards==========================//
+  
 
   //=====================================//
   //----------- updateStudentInfo--------//
@@ -249,7 +250,7 @@ var database = {
           }
           database.firebase_data.collection('students').doc(module_results.studentID)
           .update({
-            batch: current_sem
+            current_sem: current_sem
           })
         }
       }
@@ -524,7 +525,34 @@ var database = {
     })
     return promise
 
-  }
+  },
+
+  //=====================================//
+  //----------- getCourses---------------//
+  //=====================================//
+  async getCourses(){
+    var promise = new Promise(resolve=>{
+      var courses = []
+      database.firebase_data.collection('courses')
+      .get().then(snapshot =>{
+        snapshot.forEach(doc =>{
+          courses.push(doc.data().name)
+        })
+        resolve(courses)
+      })
+    })
+    return promise
+  },
+
+
+  //=====================================//
+  //----------- register-----------------//
+  //=====================================//
+  // async register(email, password, name, course, currentBatch){
+  //   var promise = new Promise((resolve, reject) =>{
+
+  //   } )
+  // }
 
 }
 

@@ -12,6 +12,9 @@
           </div>
           <div class="md-layout-item md-size-20" style="text-align:right">
             <AddModulesModal />
+            <div>
+                <button v-on:click="test">Add 1</button>
+            </div>
           </div>
         </div>
       </md-card>
@@ -110,6 +113,11 @@ export default {
     // // Ratings
   },
     methods: {
+        test(){
+            database.getCourses().then(e =>{
+                console.log(e)
+            })
+        },
         //use this method to find data of a specific module
         findModule(mod,database){
             var data = database.Modules
@@ -118,12 +126,6 @@ export default {
                     return data[i]
                 }
             }
-        },
-        test(){
-            database.getFaculties().then(e =>{
-                console.log(e)
-            })
-
         },
         get_currentsem(obj_array){
 
@@ -207,7 +209,6 @@ export default {
 
             // query database for course attributes
             database.getFacultyAttributes(result.faculty).then(attributes =>{
-              console.log(attributes.attributes)
               self.facultyAttributes = attributes.attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
             })      
 
