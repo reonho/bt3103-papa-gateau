@@ -3,53 +3,96 @@
     <!-- <md-card v-if="anyComments ===true"> -->
     <md-card>
       <md-card-header class="md-gutter">
-        <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedYear}} {{review.detailsForm.selectedSemester}})</b>
+        <p class="md-subheading">
+          <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedYear}} {{review.detailsForm.selectedSemester}})</b>
+        </p>
       </md-card-header>
 
       <md-card-content>
-        <div>
-          <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
-        </div>
+        <div class="grade"></div>
         <!-- <br/> -->
-        <div v-if="hasComment(review.lectureForm.comments)" class="para">
-          <!-- <div class = 'md-subheading'>Lectures</div> -->
-          <b>Lectures</b>
+        <!-- <div v-if="hasComment(review.lectureForm.comments)" class="para"> -->
+        <div class="para">
+          <p class="md-subheading">
+            <b>Lectures</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Lecturer</md-tooltip>
+              <md-icon class = 'chip-icon'>person</md-icon>
+              {{review.detailsForm.selectedStaff}}
+            </md-chip>
+
+            <md-chip class="info-chip">
+              <md-tooltip>Lecturer Clarity</md-tooltip>
+              <md-icon class = 'chip-icon'>school</md-icon>
+              {{review.lectureForm.clarity}}/5
+            </md-chip>
+            <md-chip class="info-chip">
+              <md-tooltip>Lecture Material</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.lectureForm.lectureMaterial}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.lectureForm.comments}}</p>
         </div>
 
-        <div v-if="hasComment(review.tutorialForm.comments)" class="para">
+        <!-- <div v-if="hasComment(review.tutorialForm.comments)" class="para"> -->
+        <div class="para" v-if = 'hasComment(review.tutorialForm.tutorialMaterial)'>
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Tutorials</b>
+          <p class="md-subheading">
+            <b>Tutorials</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Tutorial Material</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.tutorialForm.tutorialMaterial}}/5
+            </md-chip>
+          </p>
+
           <p class="comments">{{review.tutorialForm.comments}}</p>
         </div>
-
-        <div v-if="hasComment(review.tutorialForm.apcomments)" class="para">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.ap)'>
+          <!-- <div v-if="hasComment(review.tutorialForm.apcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Assignments & Projects</b>
+          <p class="md-subheading" >
+            <b>Assignments & Projects</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Assignment Manageability</md-tooltip>
+              <md-icon class = 'chip-icon'>assignment</md-icon>
+              {{review.tutorialForm.ap}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.tutorialForm.apcomments}}</p>
         </div>
 
-        <div v-if="hasComment(review.tutorialForm.examcomments)" class="para">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.exam)'>
+          <!-- <div v-if="hasComment(review.tutorialForm.examcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Examinations</b>
+          <p class="md-subheading" >
+            <b>Examinations</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Exam Manageability</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.tutorialForm.exam}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.tutorialForm.examcomments}}</p>
         </div>
 
         <div v-if="hasComment(review.commentForm.comments)" class="para">
-          <!-- <div class = 'md-subheading'>Comments</div> -->
-          <b>Comments</b>
+          <div class = 'md-subheading'><b>Comments</b></div>
           <p class="comments">{{review.commentForm.comments}}</p>
         </div>
-
-        <div class="grade">
-          <b>Grade obtained: {{review.detailsForm.selectedGrade}}</b>
-        </div>
-
-        <!-- <div class="date">Written on: {{review.date}}</div> -->
-
-        <div v-show="showDetail">
-          <p>Additional Details to be rendered</p>
-        </div>
+        <p>
+          <b>Grade obtained:</b>
+          {{review.detailsForm.selectedGrade}}
+        </p>
       </md-card-content>
       <hr />
       <!-- <md-divider/> -->
@@ -347,6 +390,14 @@ export default {
 
 .footerLeft {
   float: left;
+}
+
+.md-chip.md-theme-default {
+  /* background-color: #17a2b8; */
+  /* color: white; */
+}
+.chip-icon {
+  /* color: black !important; */
 }
 </style>
 
