@@ -29,14 +29,18 @@
               <md-card-content>
                 <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
                   <label>Your faculty</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedFaculty" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedFaculty">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedFaculty"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedFaculty">
                     <md-option
                       v-for="fac in faculties"
                       v-bind:key="fac.id"
                       v-bind:value="fac.title"
                     >{{fac.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedFaculty.required"
@@ -45,14 +49,18 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
                   <label>Academic year</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedYear" :disabled="this.added" />
-                  <md-select v-if='added===false' v-model="detailsForm.selectedYear">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedYear"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedYear">
                     <md-option
                       v-for="yr in years"
                       v-bind:key="yr.id"
                       v-bind:value="yr.title"
                     >{{yr.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedYear.required"
@@ -61,17 +69,40 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedSemester" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedSemester">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedSemester"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedSemester">
                     <md-option
                       v-for="sem in semesters"
                       v-bind:key="sem.id"
                       v-bind:value="sem.title"
                     >{{sem.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedSemester.required"
+                  >This field is required</span>
+                </md-field>
+                <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
+                  <label>Grade obtained</label>
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedGrade"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedGrade">
+                    <md-option
+                      v-for="g in grades"
+                      v-bind:key="g.id"
+                      v-bind:value="g.title"
+                    >{{g.title}}</md-option>
+                  </md-select> -->
+                  <span
+                    class="md-error"
+                    v-if="!$v.detailsForm.selectedGrade.required"
                   >This field is required</span>
                 </md-field>
 
@@ -84,22 +115,9 @@
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
-                </md-field>
-
-                <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
-                  <label>Grade obtained</label>
-                  <md-input v-if='added===true' v-model="detailsForm.selectedGrade" :disabled="this.added" />
-                  <md-select v-if='added===false'  v-model="detailsForm.selectedGrade">
-                    <md-option
-                      v-for="g in grades"
-                      v-bind:key="g.id"
-                      v-bind:value="g.title"
-                    >{{g.title}}</md-option>
-                  </md-select>
                   <span
-                    class="md-error"
-                    v-if="!$v.detailsForm.selectedGrade.required"
-                  >This field is required</span>
+                  class='md-error'
+                  v-if='!$v.detailsForm.selectedStaff.alpha'>This field can only contain alphabets</span>
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
@@ -154,6 +172,11 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="lectureForm.lectureMaterial"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <hr />
                 <br />
@@ -175,10 +198,14 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="lectureForm.clarity"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <hr />
                 <br />
-
                 <md-field :class="getValidationClass('lectureForm', 'comments')">
                   <label
                     class
@@ -206,7 +233,7 @@
             >
               <md-card-header
                 class="md-title"
-              >For the questions below, rate your experience with tutorials, assignments and examinations for the module.</md-card-header>
+              >For the questions below, rate your experience with tutorials, assignments and examinations for the module. Select 'Not Applicable' if they do not questions are not applicable for the module.</md-card-header>
               <md-card-content>
                 <label class="md-subheading">
                   <b>The tutorial material was well-organised and useful for understanding the module content.</b>
@@ -238,6 +265,11 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.tutorialMaterial"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'comments')">
                   <label
@@ -255,11 +287,24 @@
                   <b>As a whole, the assignments and projects were manageable.</b>
                 </label>
                 <div>
-                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="1">Strongly Disagree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    value="1"
+                  >Strongly Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="5">Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    value="5"
+                  >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'apcomments')">
                   <label
@@ -286,7 +331,16 @@
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio v-model="tutorialForm.exam" class="md-primary" value="5">Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.exam"
+                    class="md-primary"
+                    value="5"
+                  >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.exam"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'examcomments')">
                   <label
@@ -391,7 +445,6 @@
             md-cancel-text
             md-confirm-text="Okay"
           />
-
         </form>
       </div>
     </div>
@@ -401,11 +454,11 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import { required} from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
-import DataObject from '../Database.js'
+import DataObject from "../Database.js";
 export default {
   name: "ReviewForm",
   props: ["mod"],
@@ -423,7 +476,7 @@ export default {
         required
       },
       selectedStaff: {
-        required
+        required,
       },
       selectedGrade: {
         required
@@ -547,7 +600,7 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      this.$router.push({name: 'modulePage', params: {code:this.mod}})
+      this.$router.push({ name: "modulePage", params: { code: this.mod } });
       // window.location.href = "/#/module";
     }
   },
@@ -572,10 +625,10 @@ export default {
         df.selectedSemester = mod.sem;
       });
       if (this.added === false) {
-        this.faculties = DataObject.faculties
-        this.grades = DataObject.grades
-        this.years = DataObject.years
-        this.semesters = DataObject.semesters
+        this.faculties = DataObject.faculties;
+        this.grades = DataObject.grades;
+        this.years = DataObject.years;
+        this.semesters = DataObject.semesters;
       }
     });
     // database.collection('faculties').get().then((querySnapShot) => {
