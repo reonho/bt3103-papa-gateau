@@ -76,7 +76,7 @@
 
       <br />
       <br />
-      <table style="width:100%; margin-top:10vh;">
+      <table>
         <tr>
           <td style="padding:0">
             <div>
@@ -127,38 +127,52 @@ export default {
     ReviewSection
     // // Ratings
   },
-  methods: {
-    //use this method to find data of a specific module
-    findModule(mod, database) {
-      var data = database.Modules;
-      for (var i = 0; i < data.length; ++i) {
-        if (data[i].Name == mod) {
-          return data[i];
-        }
-      }
-    },
-    get_currentsem(obj_array) {
-      var sem_no = 1;
-      for (let i = 0; i < 8; i++) {
-        //console.log(obj_array[0][key])
-        var value = obj_array[i];
-        if (Object.entries(value).length === 0) {
-          sem_no = i;
-          break;
-        }
-      }
-      var year = Math.floor(sem_no / 2) + 1;
-      var sem = (sem_no % 2) + 1;
-      this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-    },
+    methods: {
+        test(){
+            var batch = {
+                year: 2018,
+                sem: 1
+            }
+            database.register('test@gmail.com', '123456', 'testname', 'Business Analytics', batch).then(doc =>{
+                console.log(doc)
+            }).catch(err =>{
+                console.log(err)
+            })
+        },
+        //use this method to find data of a specific module
+        findModule(mod,database){
+            var data = database.Modules
+            for (var i = 0; i < data.length; ++i){
+                if (data[i].Name == mod) {
+                    return data[i]
+                }
+            }
+        },
+        get_currentsem(obj_array){
 
-    get_modules(modules) {
-      var mods = [];
-      for (let i = 0; i < modules.length; i++) {
-        mods.push(modules[i]["module"]);
-      }
-      this.modules = mods;
-    },
+            var sem_no = 1
+            for(let i=0; i < 8; i++){
+                //console.log(obj_array[0][key])
+                var value = obj_array[i]
+                if (Object.entries(value).length === 0){
+                    sem_no = i
+                    break
+                }
+            }
+            var year = Math.floor(sem_no/2)+1
+            var sem = sem_no%2+1
+            this.sem = "Year " + year.toString() + " Semester " +  sem.toString()
+        },
+
+        get_modules(modules){
+            var mods = []
+            for(let i =0; i < modules.length; i++){
+                mods.push(modules[i]["module"])
+            }
+            this.modules = mods
+        },
+
+    
     formatcap(cap) {
       return cap.toFixed(2);
     }
@@ -219,6 +233,10 @@ export default {
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
         });
+            // query database for course attributes
+            database.getFacultyAttributes(result.faculty).then(attributes =>{
+              self.facultyAttributes = attributes.attributes //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+            })      
 
         // query database for course attributes
         database.getFacultyAttributes(result.faculty).then(attributes => {
@@ -281,6 +299,7 @@ export default {
   font-weight: bold;
   text-align: left;
   padding: 3vh;
+  padding-bottom: 4vh;
   color: #566573;
 }
 .sub-header-content {

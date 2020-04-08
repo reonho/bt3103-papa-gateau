@@ -105,6 +105,7 @@ var database = {
   },
 
   //==================Use methods from here onwards==========================//
+  
 
   //=====================================//
   //----------- updateStudentInfo--------//
@@ -194,7 +195,9 @@ var database = {
       .update({
         modules_taken: firebase.firestore.FieldValue.arrayUnion({
           SU: temp,
-          module: module_results.module
+          module: module_results.module,
+          sem: module_results.sem,
+          year: module_results.year
         })
       })
       //update sam_by_sem
@@ -249,7 +252,7 @@ var database = {
           }
           database.firebase_data.collection('students').doc(module_results.studentID)
           .update({
-            batch: current_sem
+            current_sem: current_sem
           })
         }
       }
@@ -470,6 +473,24 @@ var database = {
   },
 
   //=====================================//
+  //----------- getFaculties-------------//
+  //=====================================//
+  async getFaculties(){
+    var promise = new Promise(resolve => {
+      var faculties = [];
+      database.firebase_data.collection("faculties")
+      .get().then(snapshot => {
+        snapshot.forEach(doc =>{
+          faculties.push(doc.data().name)
+        })
+        faculties.sort()
+        resolve(faculties)
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
   //----------- getAllModuleCodes--------//
   //=====================================//
   async getAllModuleCodes(){
@@ -495,17 +516,78 @@ var database = {
       .where("studentID", "==", user)
       .where("module", "==", module)
       .get().then(snapshot =>{
-        snapshot.forEach(doc =>{
-          if (doc){
+        if (!snapshot.empty){
+          snapshot.forEach(doc =>{
             resolve(doc.data())
-          } else {
-            resolve(null)
-          }
-        })
+          })
+        } else{
+          resolve(null)
+        }
       })
     })
     return promise
 
+  },
+
+  //=====================================//
+  //----------- getCourses---------------//
+  //=====================================//
+  async getCourses(){
+    var promise = new Promise(resolve=>{
+      var courses = []
+      database.firebase_data.collection('courses')
+      .get().then(snapshot =>{
+        snapshot.forEach(doc =>{
+          courses.push(doc.data().name)
+        })
+        resolve(courses)
+      })
+    })
+    return promise
+  },
+
+
+  //=====================================//
+  //----------- register-----------------//
+  //=====================================//
+  async register(email, password, name_, course_, enrolmentBatch){
+    var promise = new Promise((resolve, reject) =>{
+      firebase.auth().
+      createUserWithEmailAndPassword(email, password).catch(function(error) {
+        var errorMessage = error.message;
+        reject(errorMessage)
+      });
+      database.firebase_data.collection('departments')
+      .where('courses', 'array-contains', course_).get()
+      .then(snapshot =>{
+        snapshot.forEach(doc_ =>{
+          var department = doc_.data().name
+          database.firebase_data.collection('faculties')
+          .where('departments', 'array-contains', department).get()
+          .then(snapshot =>{
+            snapshot.forEach(_doc_ =>{
+              var faculty_ = _doc_.data().name
+              database.getUser().then(doc =>{
+                database.firebase_data.collection('students').doc(doc).set({
+                    attributes: [],
+                    batch: enrolmentBatch,
+                    course: course_,
+                    name: name_,
+                    current_sem: {},
+                    dept: department,
+                    faculty: faculty_,
+                    modules_taken: [],
+                    overall_cap: 0,
+                    sam_by_sem: [{},{},{},{},{},{},{},{}]
+                })
+                resolve("account created!")
+              })
+            })
+          })
+        })
+      })
+    })
+    return promise
   }
 
 }
