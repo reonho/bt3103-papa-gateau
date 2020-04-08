@@ -1,37 +1,40 @@
 
 <template>
   <div>
-    <table style="width:100%">
-      <tr>
-        <td style="width: 60%;padding:0;">
-          <div>
-            <div class="sub-header-title">TOP COHORT</div>
-            <div class="sub-header-content" style="padding-top:1vw;">
-              <div id="chart">
-                <apexchart type="bar" :options="chartOptionsYear" :series="series" style></apexchart>
-              </div>
+    <div class="contain-div">
+      <div class="sub-contain-div1">
+        <div class="sub-header-content">
+          <div class="sub-header-title">TOP COHORT</div>
+          <div class="sub-header-content" style="padding-top:1vw;">
+            <div id="chart">
+              <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
             </div>
           </div>
-        </td>
-        <td style="width: 5%"></td>
-        <td style="width: 435%;padding:0">
-          <div>
-            <div class="sub-header-title">COMPLETED MODULES</div>
-            <div class="sub-header-content" style="padding:0;;">
-              <div class="grid-container">
-                <div v-for="mod in modules" :key="mod" style="margin:5%" class="grid-item">
-                 <router-link class="nav-link" to = "/:mod" >
+        </div>
+      </div>
+
+      <div class="sub-contain-div2">
+        <div class="sub-header-content">
+          <div class="sub-header-title">COMPLETED MODULES</div>
+          <div class="sub-header-content" style="padding:0;;">
+            <div class="grid-container">
+              <div
+                v-for="mod in modules"
+                :key="mod"
+                style="margin-top:1vh; margin-bottom:1vh"
+                class="grid-item"
+              >
+                <router-link class="nav-link" to="/:mod">
                   <b-button class="mod-btn" variant="outline-info">
                     <h1 style="font-size:2.5vh">{{mod}}</h1>
                   </b-button>
-                  </router-link>
-                </div>
+                </router-link>
               </div>
             </div>
           </div>
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -66,49 +69,43 @@ export default {
         },
 
         fill: {
-          colors: ["#17a2b8"]
+          colors: ["#008080"]
         },
         dataLabels: {
           enabled: false
         },
         xaxis: {
-          categories: [
-           
-          ]
-
+          categories: []
         }
       }
     };
   },
-  created(){
-    var modlst = []
-    
-    for(let  i = 0; i < this.course.module.length; i++){
-      var mod = {}
-      mod["amt"] = this.course.amount[i]
-      mod["mod"] = this.course.module[i]
-      modlst.push(mod)
+  created() {
+    var modlst = [];
+
+    for (let i = 0; i < this.course.module.length; i++) {
+      var mod = {};
+      mod["amt"] = this.course.amount[i];
+      mod["mod"] = this.course.module[i];
+      modlst.push(mod);
     }
-    modlst = modlst.sort((a,b) => a.amt - b.amt)
+    modlst = modlst.sort((a, b) => a.amt - b.amt);
 
-    for(let  i = 0; i < this.course.module.length; i++){
-      this.series[0].data.push(modlst[i].amt)
-      this.chartOptionsYear.xaxis.categories.push(modlst[i].mod)
+    for (let i = 0; i < this.course.module.length; i++) {
+      this.series[0].data.push(modlst[i].amt);
+      this.chartOptionsYear.xaxis.categories.push(modlst[i].mod);
     }
-    
 
-
-    console.log(this.series[0].data)
+    console.log(this.series[0].data);
   },
 
-  methods:{
-    redirect : function(mod){
-      this.$router.push("/" + mod)
+  methods: {
+    redirect: function(mod) {
+      this.$router.push("/" + mod);
     }
-
   },
-  computed:{
-      chartOptionsYear: function() {
+  computed: {
+    chartOptionsYear: function() {
       return {
         chart: {
           type: "bar",
@@ -116,11 +113,11 @@ export default {
             dataPointSelection: (e, chart, opts) => {
               // you can call Vue methods now as "this" will point to the Vue instance when you use ES6 arrow function
               //console.log(e)
-              var mod = this.chartOptionsYear.xaxis.categories[opts.dataPointIndex]
-              console.log('#/' + mod)
-              this.redirect(mod)
-              
-              
+              var mod = this.chartOptionsYear.xaxis.categories[
+                opts.dataPointIndex
+              ];
+              console.log("#/" + mod);
+              this.redirect(mod);
             }
           }
         },
@@ -131,20 +128,17 @@ export default {
         },
 
         fill: {
-          colors: ["#17a2b8"]
+          colors: ["#008080"]
         },
         dataLabels: {
-          enabled: false
+          enabled: false,
+          
         },
         xaxis: {
-          categories: [
-           
-          ]
-
-        },
-      }
+          categories: []
+        }
+      };
     }
-
   }
 };
 </script>
@@ -155,28 +149,25 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto;
-  padding: 2%;
-  grid-column-gap: 2%;
+  grid-column-gap: 0;
   grid-auto-rows: auto;
-  overflow: scroll;
+  overflow-y: auto;
 }
 .grid-item {
   text-align: center;
   padding: 2%;
 }
 .chart {
-  overflow: scroll;
+  overflow-y: scroll;
   max-height: 100vh;
 }
 
 .sub-header-title {
-  font-family: "Open Sans", sans-serif;
-  font-size: 150%;
+  font-size: 2.3vh;
   font-weight: bold;
   text-align: left;
-  padding: 25px;
-  background-color: #17a2b8;
-  color: white;
+  padding: 3vh;
+  color: #566573;
 }
 .sub-header-content {
   font-family: "Open Sans", sans-serif;
@@ -184,15 +175,13 @@ export default {
   font-weight: bold;
   text-align: left;
   padding: 0;
-  padding-left: 25px;
-  min-height:67vh;
-
+  min-height: 67vh;
 }
 .sub-content-title {
   font-size: 2.5vh;
   font-weight: bold;
   text-align: left;
-  color: #17a2b8;
+
 }
 .sub-content-text {
   font-size: 3vh;
@@ -203,5 +192,33 @@ export default {
 
 .mod-btn {
   width: 15vh;
+  padding:0.5vh;
+}
+
+.contain-div {
+  display: flex;
+  background-color:white;
+}
+.sub-contain-div1 {
+border-right: 2vw solid #eaecee;
+  width: 58vw;
+  background-color: white;
+  float: left;
+}
+.sub-contain-div2 {
+
+  width: 32vw;
+  background-color: white;
+  float: right;
+}
+.btn-outline-info {
+  color: #ec7663;
+  border-color: #ec7663;
+  border: 2px solid;
+}
+
+.btn-outline-info:hover{
+  background-color: #ec7663;
+  border-color: #ec7663;
 }
 </style>

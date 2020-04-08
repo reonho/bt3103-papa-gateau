@@ -1,12 +1,12 @@
 <template>
 <body class="container-fluid">
-  <div class="Registration">
+  <div class="loginPage">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
           <div class="cardbox card-signin my-5">
             <div style="padding:5%;  border-radius: 1rem 1rem 0 0;">
-              <h1 class="text-center" style="color:white; font-weight:600;font-size:6vh;">MODEAUX</h1>
+              <h1 class="text-center" style="color:white; font-weight:600;font-size:5.5vh;">MODEAUX</h1>
             </div>
             <div class="card-body">
               <!---form>
@@ -22,7 +22,7 @@
                       <span> {{this.error}}</span>
               </form-->
               <div style="text-align:center">
-                <h1 style="color:DARKCYAN; font-size:3vh;">REGISTRATION</h1>
+                <h1 style="color:DARKCYAN; font-size:3vh;">USER LOGIN</h1>
               </div>
               <br />
               <p class="reg-header">User Info</p>
@@ -63,26 +63,44 @@
                   <md-field>
                     <label>Year of Enrollment</label>
                     <md-select v-model="year" name="year" id="year" md-dense>
-                      <md-option
-                        v-for="year in accumulateYear()"
-                        v-bind:key="year"
-                        :id="year"
-                      >{{ year }}</md-option>
+                      <md-option v-for="year in accumulateYear()" v-bind:key="year" :id="year">{{ year }}</md-option>
                     </md-select>
                   </md-field>
+  
                 </div>
               </div>
               <br />
+
+              <md-list v-for="post in updatesem" v-bind:key="post.index">
+                <p class="sem-header">Year {{post.year}} {{post.semester}}</p>
+                <md-empty-state v-show="showmod(post.mods)">
+                  <p class="empty">No Modules to Show</p>
+                  <p>Start adding modules by clicking the button below</p>
+                  <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
+                </md-empty-state>
+                <AddModulesModal />
+                <md-list v-for="mod in post.mods" v-bind:key="mod.index">{{mod.code}} {{mod.grade}}</md-list>
+                <p>Total CAP : 4.00</p>
+              </md-list>
+
+              <md-button
+                class="addsem"
+                :md-ripple="false"
+                v-on:click="addsem"
+                v-show="showbutton"
+              >Add Semester</md-button>
+
               <button
                 class="button btn btn-block text-uppercase"
                 type="submit"
                 v-on:click="login"
-                style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1vh;"
+                style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1.5vh;font-size:1.5vh"
               >
-                <span style="font-size:1.6vh">Register</span>
+                <span>Sign In</span>
               </button>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -104,7 +122,7 @@ export default {
       course: "",
       year: 0,
       semnum: 0,
-      semlist: []
+      semlist: [],
     };
   },
   computed: {
@@ -214,11 +232,10 @@ h1 {
 }
 body {
   background: url("../assets/background.png") no-repeat;
-
+  overflow: hidden;
   background-size: cover;
   width: 100%;
-  min-height: 100vh;
-  height: 125vh;
+  min-height: 500vh;
 }
 .button {
   font-family: Gill Sans;
@@ -239,8 +256,8 @@ body {
   content: "\00bb";
   position: absolute;
   opacity: 0;
-  top: -1vh !important;
-  font-size: 2.5vh;
+  top: -0.6vh !important;
+  font-size: 2vh;
   transition: 0.5s;
 }
 .button:hover span {
@@ -279,7 +296,7 @@ body {
   color: #ec7663 !important;
   font-weight: bold;
   text-decoration: underline;
-  margin-left: 1vh;
+  margin-left:1vh;
 }
 .regbox {
   text-align: center;
@@ -362,9 +379,8 @@ body {
 }
 .reg-header {
   font-weight: 600;
-  font-size: 2vh;
+  font-size: 130%;
   color: #ec7663;
-  
 }
 .sem-header {
   font-weight: 600;
