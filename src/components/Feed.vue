@@ -24,7 +24,7 @@
                 style="margin-top:1vh; margin-bottom:1vh"
                 class="grid-item"
               >
-                <router-link class="nav-link" to="/:mod">
+               <router-link class="nav-link" :to = " '/' + mod" >
                   <b-button class="mod-btn" variant="outline-info">
                     <h1 style="font-size:2.5vh">{{mod}}</h1>
                   </b-button>
