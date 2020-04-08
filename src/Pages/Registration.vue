@@ -29,7 +29,7 @@
 
               <md-field>
                 <label>Email</label>
-                <md-input type="username" id="username" v-model="user"></md-input>
+                <md-input type="username" id="username" v-model="username"></md-input>
                 <span class="md-suffix">@u.nus.edu</span>
               </md-field>
               <md-field>
@@ -51,7 +51,14 @@
                 <div class="md-layout-item md-size-55">
                   <md-field>
                     <label>Course</label>
-                    <md-select id="course" v-model="course"></md-select>
+                    <md-select v-model="coursechosen" name="coursechosen" id="coursechosen">
+                      <md-option
+                        v-for="course in courselist"
+                        :key="course.index"
+                        :id="course.value"
+                        v-model="course.value"
+                      >{{ course.value }}</md-option>
+                    </md-select>
                   </md-field>
                 </div>
                 <div class="md-layout-item md-size-5"></div>
@@ -62,12 +69,13 @@
                   </md-field>-->
                   <md-field>
                     <label>Year of Enrollment</label>
-                    <md-select v-model="year" name="year" id="year" md-dense>
+                    <md-select v-model="yearchosen" name="yearchosen" id="yearchosen">
                       <md-option
-                        v-for="year in accumulateYear()"
-                        v-bind:key="year"
-                        :id="year"
-                      >{{ year }}</md-option>
+                        v-for="year in accumulateYear"
+                        :key="year.index"
+                        :id="year.value"
+                        v-model="year.value"
+                      >{{ year.value }}</md-option>
                     </md-select>
                   </md-field>
                 </div>
@@ -76,11 +84,20 @@
               <button
                 class="button btn btn-block text-uppercase"
                 type="submit"
-                v-on:click="login"
+                v-on:click="addUser"
                 style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1vh;"
               >
                 <span style="font-size:1.6vh">Register</span>
               </button>
+              <md-dialog-confirm
+                :md-click-outside-to-close="false"
+                :md-active.sync="showSubmitMessage"
+                md-title="Success!"
+                md-content="Thank you for registering with MODEAUX! You can procced to login."
+                @md-confirm="goLogin"
+                md-cancel-text
+                md-confirm-text="Nice"
+              />
             </div>
           </div>
         </div>
@@ -92,19 +109,20 @@
 
 <script>
 // import DataObject from "../Database.js"
-//import database from "../firebase.js"
+import database from "../firebase.js";
 export default {
   name: "Registration",
   components: {},
   data: function() {
     return {
       username: "",
+      name: "",
       password: "",
       cfmpassword: "",
-      course: "",
-      year: 0,
-      semnum: 0,
-      semlist: []
+      coursechosen: null,
+      yearchosen: null,
+      courselist: [],
+      showSubmitMessage: false
     };
   },
   computed: {
@@ -121,6 +139,17 @@ export default {
         return false;
       }
       return true;
+    },
+    accumulateYear() {
+      var yearlist = [];
+      var latest = parseInt(new Date().getFullYear());
+      for (var i = 2000; i <= latest; i++) {
+        yearlist.push({
+          value: i
+        });
+      }
+
+      return yearlist;
     }
   },
   methods: {
@@ -161,15 +190,7 @@ export default {
 
       this.semlist = semesters;
     },
-    accumulateYear() {
-      var yearlist = [];
-      var latest = parseInt(new Date().getFullYear());
-      for (var i = 2000; i <= latest; i++) {
-        yearlist.push(i);
-      }
-      console.log(yearlist);
-      return yearlist;
-    },
+
     addsem() {
       this.semnum++;
     },
@@ -195,10 +216,50 @@ export default {
         }
       }
       this.semlist = currentsems;
+    },
+    addUser() {
+      var batch = {
+        year: this.yearchosen,
+        sem: 1
+      };
+      database
+        .register(
+          this.username+"@u.nus.edu",
+          this.password,
+          this.name,
+          this.coursechosen,
+          batch
+        )
+        .then(doc => {
+          console.log(doc);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+        this.showSubmitMessage = true;
+    },
+    goLogin() {
+      this.$router.push({ path: "/loginPage" });
+
     }
   },
   created() {
     this.filtersem();
+    //const self = this;
+    //  database.getCourses().then(item => {
+    //   this.courselist = item;
+    //   console.log(this.courselist);
+    // });
+    database.firebase_data
+      .collection("courses")
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          this.courselist.push({
+            value: doc.data().name
+          });
+        });
+      });
   }
 };
 </script>
@@ -364,7 +425,6 @@ body {
   font-weight: 600;
   font-size: 2vh;
   color: #ec7663;
-  
 }
 .sem-header {
   font-weight: 600;

@@ -47,6 +47,7 @@ var database = {
       .then(
         user => {
           database.user = user.uid
+          
           resolve(true)
         },
         err => {

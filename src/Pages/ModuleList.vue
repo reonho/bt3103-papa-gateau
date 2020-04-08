@@ -417,7 +417,6 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
