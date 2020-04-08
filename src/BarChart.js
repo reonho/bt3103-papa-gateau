@@ -1,9 +1,11 @@
-import { HorizontalBar } from 'vue-chartjs'
+import { HorizontalBar} from 'vue-chartjs'
 import database from "./firebase.js"
+//const { reactiveProp } = mixins
 
 export default {
   extends: HorizontalBar,
-  props: ['semester', 'code'],
+  //mixins: [reactiveProp],
+  props: ['semester', 'code', 'years'],
   data: function () {
     return {
       datacollection: {
@@ -58,11 +60,13 @@ export default {
         var easy = [0,0,0,0,0]
         var manag = [0,0,0,0,0]
         var eman = [0,0,0,0,0]
+        var work = [0,0,0,0,0]
         var display = false
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
           var modCode = doc.data().module_code
-          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) : sem == this.semester) && modCode == this.code) {
+          var yr = doc.data().detailsForm.selectedYear
+          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
             display = true
             var rating = doc.data().commentForm.rating
             numbers[rating - 1] += 1
@@ -70,11 +74,14 @@ export default {
             var easiness = doc.data().commentForm.difficulty
             easy[easiness - 1] += 1
 
-            var wkload = doc.data().commentForm.workload
-            manag[wkload - 1] += 1
+            var asgnmt = doc.data().tutorialForm.ap
+            manag[asgnmt - 1] += 1
 
             var exam = doc.data().tutorialForm.exam
             eman[exam - 1] += 1
+
+            var wkload = doc.data().commentForm.workload
+            work[wkload - 1] += 1
           }
         })
         
@@ -192,15 +199,43 @@ export default {
           ele7.appendChild(gstar)
         }
 
+        var wsum = 0
+        for (s = 0; s < 5; s++) {
+          wsum += (work[s] * (s + 1))
+        }
+        var wavg = Math.round((wsum / numPpl + Number.EPSILON) * 100) / 100
+        document.getElementById("workload").innerHTML = wavg
+      
+        var ele8 = document.getElementById("wkload_gold_stars")
+        var ele9 = document.getElementById("wkload_grey_stars")
+
+        for (x = 0; x < this.numWholeStars(wavg); x++) {
+          let star = document.createElement("i")
+          star.className = "fa fa-star"
+          ele8.appendChild(star)
+        }
+
+        for (z = 0; z < this.numHalfStars(wavg); z++) {
+          let hstar = document.createElement("i")
+          hstar.className = "fas fa-star-half-alt"
+          ele8.appendChild(hstar)
+        }
+
+        for (y = 0; y < (5 - this.numWholeStars(wavg) - this.numHalfStars(wavg)); y++) {
+          let gstar = document.createElement("i")
+          gstar.className = "fa fa-star"
+          ele9.appendChild(gstar)
+        }
+
         this.avgRating = avg
         if (display) this.renderChart(this.datacollection, this.options)
-        else {
-          /*this.options.title.display = true
+        /*else {
+          this.options.title.display = true
           this.options.title.text = "No Data"
           this.options.responsive = true
-          this.renderChart(this.datacollection, this.options)*/
+          this.renderChart(this.datacollection, this.options)
           // does not display anything unless title is set to not display up there
-        }
+        }*/
       })
     }
   },
@@ -208,5 +243,27 @@ export default {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.fetchItems()
+  },
+  watch: {
+    years: function () {
+      this._data._chart.destroy()
+      var arr = []
+      arr.push(document.getElementById("avg_gold_stars"))
+      arr.push(document.getElementById("avg_grey_stars"))
+      arr.push(document.getElementById("easy_gold_stars"))
+      arr.push(document.getElementById("easy_grey_stars"))
+      arr.push(document.getElementById("man_gold_stars"))
+      arr.push(document.getElementById("man_grey_stars"))
+      arr.push(document.getElementById("exam_gold_stars"))
+      arr.push(document.getElementById("exam_grey_stars"))
+      arr.push(document.getElementById("wkload_gold_stars"))
+      arr.push(document.getElementById("wkload_grey_stars"))
+      for (let i = 0; i < arr.length; i++) {
+        while (arr[i].firstChild) {
+          arr[i].removeChild(arr[i].lastChild)
+        }
+      }
+      this.fetchItems()
+    }
   }
 }
