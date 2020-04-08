@@ -428,7 +428,6 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
-        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {

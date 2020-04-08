@@ -182,6 +182,7 @@ export default {
             item.id = doc.id;
             this.reviewData.push(item);
           });
+          console.log(this.reviewData)
         });
     });
     // query database for user info
@@ -217,9 +218,6 @@ export default {
         self.get_modules(self.User.modules_taken);
       });
 
-      database.getFaculties().then(f =>{
-        console.log(f)
-      })
 
   },
   mounted() {
