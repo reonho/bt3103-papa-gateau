@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div id="ReviewSection" v-if='hasReviews===true'>
-      <div v-for="r in reviewData" v-bind:key="'review'+r.id" >
+    <div id="ReviewSection" v-if="hasReviews===true">
+      <div v-for="r in reviewData" v-bind:key="'review'+r.id">
         <ReviewCard :review="r"></ReviewCard>
       </div>
     </div>
-    <div class = 'empty-state' id = 'EmptyState' v-if='hasReviews===false'>
+    <div class="empty-state" id="EmptyState" v-if="hasReviews===false">
       <md-empty-state
-        class ='md-accent'
-        md-icon='post_add'
+        class="md-accent"
+        md-icon="post_add"
         md-label="No Reviews"
         md-description="There are no reviews yet. Write a review now!"
       />
@@ -41,8 +41,17 @@ export default {
   components: {
     ReviewCard
   },
+  // created() {
+  //   console.log("ReviewSection " + this.reviewData)
+  //   if (this.reviewData.length > 0) {
+  //     this.hasReviews = true;
+  //   } else {
+  //     this.hasReviews = false;
+  //   }
+   
+  // },
 
-  updated() {
+  beforeUpdated() {
     console.log("ReviewSection " + this.reviewData)
     if (this.reviewData.length > 0) {
       this.hasReviews = true;
