@@ -114,15 +114,18 @@ export default {
   },
     methods: {
         test(){
-            var batch = {
-                year: 2018,
-                sem: 1
-            }
-            database.register('test@gmail.com', '123456', 'testname', 'Business Analytics', batch).then(doc =>{
-                console.log(doc)
-            }).catch(err =>{
-                console.log(err)
+            database.getCourses().then(e =>{
+                console.log(e)
             })
+            // var batch = {
+            //     year: 2018,
+            //     sem: 1
+            // }
+            // database.register('test@gmail.com', '123456', 'testname', 'Business Analytics', batch).then(doc =>{
+            //     console.log(doc)
+            // }).catch(err =>{
+            //     console.log(err)
+            // })
         },
         //use this method to find data of a specific module
         findModule(mod,database){
