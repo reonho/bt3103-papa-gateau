@@ -300,7 +300,7 @@ var database = {
   //=====================================//
   async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
     var result = module_result
-    var promise = new Promise(resolve =>{
+    var promise = new Promise((resolve,reject) =>{
       database.getUser().then(user =>{
         database.firebase_data.collection('students').doc(user)
         .get().then(userData =>{
@@ -327,9 +327,9 @@ var database = {
               //update student overall cap, modules taken, attributes, cap per semester
               database.updateStudentInfo(results)
               //update faculty attributes and number of students taken
-              resolve(snapshot.empty)
+              resolve("success")
             } else {
-              resolve(snapshot.empty)
+              reject("module already taken!")
             }
           })   
         })

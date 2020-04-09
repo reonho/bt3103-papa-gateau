@@ -114,8 +114,16 @@ export default {
   },
     methods: {
         test(){
-            database.getCourses().then(e =>{
-                console.log(e)
+            database.addModuleResults({
+                selectedGrade: "A",
+                selectedModule: "BT2101",
+                selectedSemester: "Semester 1",
+                selectedYear: "AY1819",
+                selectedSU: "No"
+            }).then(e =>{
+                console.log(e) //do something if successful add module results
+            }).catch(e =>{
+                console.log(e) //do something if unsuccessfule e.g. print(e)
             })
             // var batch = {
             //     year: 2018,
