@@ -143,9 +143,13 @@ export default {
     accumulateYear() {
       var yearlist = [];
       var latest = parseInt(new Date().getFullYear());
-      for (var i = 2000; i <= latest; i++) {
+     
+      for (var i = 2018; i < latest; i++) {
+        var start = i.toString().substring(2,4)
+        var end = (parseInt(start) + 1).toString();
+        var value = "AY" + start + end
         yearlist.push({
-          value: i
+          value: value
         });
       }
 

@@ -1,6 +1,6 @@
 <template>
   <div id="ViewSemesterSection">
-    <AddModuleModal />
+    {{this.getModuleDetails("BT2101")}}
     <div>
       <div class="md-layout">
         <div class="md-layout-item md-size-30">
@@ -47,19 +47,34 @@
           <md-button class="addsem" :md-ripple="false" v-on:click="addsem">Add Semester</md-button>
         </md-empty-state>
         <md-list v-for="post in updatesem" v-bind:key="post.index">
-          <p class="sem-header">
-            Year {{post.year}} {{post.semester}}
-            <md-button class="md-icon-button expand-btn" v-on:click="hideContent(post)" v-show="!post.collapse">
-              <md-icon style="font-size:1.5vw !important">expand_less</md-icon>
+          <div>
+            <md-button
+              class="md-icon-button"
+              style="margin-top: -0.6vw"
+              v-on:click="hideContent(post)"
+              v-show="!post.collapse"
+            >
+              <md-icon
+                style="font-size:1.5vw !important"
+                v-on:click="hideContent(post)"
+                v-show="!post.collapse"
+              >expand_less</md-icon>
             </md-button>
-            <md-button class="md-icon-button expand-btn" style="width:1.5vw" v-on:click="showContent(post)" v-show="post.collapse">
-              <md-icon style="font-size:1.5vw !important;">expand_more</md-icon>
+            <md-button
+              class="md-icon-button"
+              style="margin-top: -0.6vw;margin-left:0.3vw;"
+              v-on:click="showContent(post)"
+              v-show="post.collapse"
+            >
+              <md-icon style="font-size:1.5vw !important">expand_more</md-icon>
             </md-button>
-          </p>
+            <span class="sem-header">Year {{post.year}} Semester {{post.semester}}</span>
+          </div>
+
           <div class="sem-box" v-show="!post.collapse">
             <div class="md-layout sem-content">
               <div class="md-layout-item">
-                <p>Total CAP : 4.00</p>
+                <p>Total CAP : {{post.cap}}</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
               <div class="md-layout-item">
@@ -119,29 +134,58 @@
 </template>
 
 <script>
-import AddModuleModal from "./AddModuleModal.vue";
+//import AddModuleModal from "./AddModuleModal.vue";
+import database from "../firebase.js";
 export default {
   name: "ViewSemesterSection",
   props: {
-    //user: String
+    User: Object
   },
   data: () => ({
     showModal: false,
     yearlist: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }],
     semlist: [{ value: 1 }, { value: 2 }],
     semnum: 0,
-    semesters: []
+    semesters: [],
+    usergrades: []
   }),
   components: {
-    AddModuleModal
+    //AddModuleModal
   },
   computed: {
     updatesem() {
       let allsems = this.semesters;
+      let usersems = this.User.sap_by_sem;
+      let usermods = this.usergrades;
       var semesters = [];
       for (var k = 0; k < this.semnum; k++) {
+        let sem = allsems[k];
+        sem.cap = usersems[k].cap;
+        //read in the mods
+        for (var i = 0; i < Object.keys(usermods).length; i++) {
+          let mod = usermods[i];
+          console.log(sem);
+          if (
+            (mod.sem == sem.semester) &
+            (this.User.batch.year - mod.year + 1 == sem.year)
+          ) {
+            
+            sem.mods.push([
+              {
+                code: mod.module,
+                grade: mod.grade,
+                SU: mod.SU,
+                faculty: mod.faculty,
+                MC: 0,
+                department: null,
+                name: null
+              }
+            ]);
+          }
+        }
         semesters.push(allsems[k]);
       }
+
       return semesters;
     },
     showbutton() {
@@ -153,15 +197,17 @@ export default {
   },
   methods: {
     filtersem() {
-      var sem = ["Semester 2", "Semester 1"];
+      var sem = [2, 1];
       var semesters = [];
       for (var k = 1; k <= 8; k++) {
         if (k <= 2) {
           //Year 1
+
           semesters.push({
             year: 1,
             semester: sem[k % 2],
             mods: [],
+            cap: 0.0,
             collapse: false
           });
         } else if (k > 2 && k <= 4) {
@@ -170,6 +216,7 @@ export default {
             year: 2,
             semester: sem[k % 2],
             mods: [],
+            cap: 0.0,
             collapse: false
           });
         } else if (k > 4 && k <= 6) {
@@ -178,6 +225,7 @@ export default {
             year: 3,
             semester: sem[k % 2],
             mods: [],
+            cap: 0.0,
             collapse: false
           });
         } else if (k > 6 && k <= 8) {
@@ -186,6 +234,7 @@ export default {
             year: 4,
             semester: sem[k % 2],
             mods: [],
+            cap: 0.0,
             collapse: false
           });
         }
@@ -223,7 +272,7 @@ export default {
       this.semesters = currentsems;
     },
     hideContent(sem) {
-       let currentsems = this.semesters;
+      let currentsems = this.semesters;
       for (var i = 0; i < currentsems.length; i++) {
         if (
           currentsems[i].year == sem.year &&
@@ -235,7 +284,7 @@ export default {
       this.semesters = currentsems;
     },
     showContent(sem) {
-       let currentsems = this.semesters;
+      let currentsems = this.semesters;
       for (var i = 0; i < currentsems.length; i++) {
         if (
           currentsems[i].year == sem.year &&
@@ -245,10 +294,24 @@ export default {
         }
       }
       this.semesters = currentsems;
-    }
+    },
+    accumulatesems() {
+      let sems = this.User.sap_by_sem;
+      for (var i = 0; i < sems.length; i++) {
+        if (Object.keys(sems[i]).length > 0) {
+          this.semnum++;
+        }
+      }
+    },
+   
   },
+
   created() {
     this.filtersem();
+    this.accumulatesems();
+    database.getModuleResults().then(item => {
+      this.usergrades = item;
+    });
   }
 };
 </script>
@@ -291,8 +354,8 @@ export default {
   font-weight: bold;
 }
 .sem-box {
-  background-color:#ebecf0;
-  margin-bottom: 1vw
+  background-color: #ebecf0;
+  margin-bottom: 1vw;
 }
 .sem-content {
   margin: 1.5vw 0vw 0vw 2.5vw;
@@ -336,13 +399,10 @@ export default {
   height: 1.5vw;
 }
 
-.expand-btn {
-  min-width: 1vw !important;
-  width: 1vw;
-  height: 1vw;
-}
-
 .md-icon {
   font-size: 1vw !important;
+}
+.md-empty-state {
+  padding-top: 1.5vw;
 }
 </style>

@@ -68,7 +68,7 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" v-if="cohortTopMods"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User = "User" v-if="cohortTopMods"></Feed>
 
       <br />
       <br />
@@ -188,6 +188,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
+    
         var result = {
           name: userData.name,
           faculty: userData.faculty,

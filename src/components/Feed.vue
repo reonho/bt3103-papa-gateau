@@ -23,7 +23,7 @@
           </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
-            <ViewSemesterSection />
+            <ViewSemesterSection :User = "User" />
           </div>
         </div>
       </div>
@@ -51,7 +51,8 @@ export default {
   props: {
     modules: Array,
     course: Object,
-    sem: String
+    sem: String,
+    User: Object
   },
   components: {
     ViewSemesterSection,
