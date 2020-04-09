@@ -56,6 +56,7 @@
           active-nav-item-class="activetab"
           class="semtabs"
           v-model="chosenSem"
+          id="moduletabs"
           content-class="mt-3"
           lazy
         >
@@ -537,6 +538,17 @@ export default {
 .btn-link:focus {
   color: #EC7663;
   font-weight:bold
+}
+#moduletabs .nav-item .nav-link.activetab {
+  background-color: #17a2b8 !important;
+  font-weight: bold !important;
+}
+.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
+ color: white !important;
+}
+.md-theme-default #moduletabs .nav-link:not(.md-button) {
+  color: #17a2b8 !important;
+  font-weight: bold !important;
 }
 
 </style>

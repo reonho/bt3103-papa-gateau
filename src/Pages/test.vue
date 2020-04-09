@@ -1,12 +1,12 @@
 <template>
 <body class="container-fluid">
-  <div class="Registration">
+  <div class="loginPage">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
           <div class="cardbox card-signin my-5">
             <div style="padding:5%;  border-radius: 1rem 1rem 0 0;">
-              <h1 class="text-center" style="color:white; font-weight:600;font-size:6vh;">MODEAUX</h1>
+              <h1 class="text-center" style="color:white; font-weight:600;font-size:5.5vh;">MODEAUX</h1>
             </div>
             <div class="card-body">
               <!---form>
@@ -22,14 +22,14 @@
                       <span> {{this.error}}</span>
               </form-->
               <div style="text-align:center">
-                <h1 style="color:DARKCYAN; font-size:3vh;">REGISTRATION</h1>
+                <h1 style="color:DARKCYAN; font-size:3vh;">USER LOGIN</h1>
               </div>
               <br />
               <p class="reg-header">User Info</p>
 
               <md-field>
                 <label>Email</label>
-                <md-input type="username" id="username" v-model="username"></md-input>
+                <md-input type="username" id="username" v-model="user"></md-input>
                 <span class="md-suffix">@u.nus.edu</span>
               </md-field>
               <md-field>
@@ -51,14 +51,7 @@
                 <div class="md-layout-item md-size-55">
                   <md-field>
                     <label>Course</label>
-                    <md-select v-model="coursechosen" name="coursechosen" id="coursechosen">
-                      <md-option
-                        v-for="course in courselist"
-                        :key="course.index"
-                        :id="course.value"
-                        v-model="course.value"
-                      >{{ course.value }}</md-option>
-                    </md-select>
+                    <md-select id="course" v-model="course"></md-select>
                   </md-field>
                 </div>
                 <div class="md-layout-item md-size-5"></div>
@@ -69,37 +62,45 @@
                   </md-field>-->
                   <md-field>
                     <label>Year of Enrollment</label>
-                    <md-select v-model="yearchosen" name="yearchosen" id="yearchosen">
-                      <md-option
-                        v-for="year in accumulateYear"
-                        :key="year.index"
-                        :id="year.value"
-                        v-model="year.value"
-                      >{{ year.value }}</md-option>
+                    <md-select v-model="year" name="year" id="year" md-dense>
+                      <md-option v-for="year in accumulateYear()" v-bind:key="year" :id="year">{{ year }}</md-option>
                     </md-select>
                   </md-field>
+  
                 </div>
               </div>
               <br />
+
+              <md-list v-for="post in updatesem" v-bind:key="post.index">
+                <p class="sem-header">Year {{post.year}} {{post.semester}}</p>
+                <md-empty-state v-show="showmod(post.mods)">
+                  <p class="empty">No Modules to Show</p>
+                  <p>Start adding modules by clicking the button below</p>
+                  <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
+                </md-empty-state>
+                <AddModulesModal />
+                <md-list v-for="mod in post.mods" v-bind:key="mod.index">{{mod.code}} {{mod.grade}}</md-list>
+                <p>Total CAP : 4.00</p>
+              </md-list>
+
+              <md-button
+                class="addsem"
+                :md-ripple="false"
+                v-on:click="addsem"
+                v-show="showbutton"
+              >Add Semester</md-button>
+
               <button
                 class="button btn btn-block text-uppercase"
                 type="submit"
-                v-on:click="addUser"
-                style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1vh;"
+                v-on:click="login"
+                style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1.5vh;font-size:1.5vh"
               >
-                <span style="font-size:1.6vh">Register</span>
+                <span>Sign In</span>
               </button>
-              <md-dialog-confirm
-                :md-click-outside-to-close="false"
-                :md-active.sync="showSubmitMessage"
-                md-title="Success!"
-                md-content="Thank you for registering with MODEAUX! You can procced to login."
-                @md-confirm="goLogin"
-                md-cancel-text
-                md-confirm-text="Nice"
-              />
             </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -109,20 +110,19 @@
 
 <script>
 // import DataObject from "../Database.js"
-import database from "../firebase.js";
+//import database from "../firebase.js"
 export default {
   name: "Registration",
   components: {},
   data: function() {
     return {
       username: "",
-      name: "",
       password: "",
       cfmpassword: "",
-      coursechosen: null,
-      yearchosen: null,
-      courselist: [],
-      showSubmitMessage: false
+      course: "",
+      year: 0,
+      semnum: 0,
+      semlist: [],
     };
   },
   computed: {
@@ -139,21 +139,6 @@ export default {
         return false;
       }
       return true;
-    },
-    accumulateYear() {
-      var yearlist = [];
-      var latest = parseInt(new Date().getFullYear());
-     
-      for (var i = 2018; i < latest; i++) {
-        var start = i.toString().substring(2,4)
-        var end = (parseInt(start) + 1).toString();
-        var value = "AY" + start + end
-        yearlist.push({
-          value: value
-        });
-      }
-
-      return yearlist;
     }
   },
   methods: {
@@ -194,7 +179,15 @@ export default {
 
       this.semlist = semesters;
     },
-
+    accumulateYear() {
+      var yearlist = [];
+      var latest = parseInt(new Date().getFullYear());
+      for (var i = 2000; i <= latest; i++) {
+        yearlist.push(i);
+      }
+      console.log(yearlist);
+      return yearlist;
+    },
     addsem() {
       this.semnum++;
     },
@@ -220,50 +213,10 @@ export default {
         }
       }
       this.semlist = currentsems;
-    },
-    addUser() {
-      var batch = {
-        year: this.yearchosen,
-        sem: 1
-      };
-      database
-        .register(
-          this.username+"@u.nus.edu",
-          this.password,
-          this.name,
-          this.coursechosen,
-          batch
-        )
-        .then(doc => {
-          console.log(doc);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-        this.showSubmitMessage = true;
-    },
-    goLogin() {
-      this.$router.push({ path: "/loginPage" });
-
     }
   },
   created() {
     this.filtersem();
-    //const self = this;
-    //  database.getCourses().then(item => {
-    //   this.courselist = item;
-    //   console.log(this.courselist);
-    // });
-    database.firebase_data
-      .collection("courses")
-      .get()
-      .then(snapshot => {
-        snapshot.forEach(doc => {
-          this.courselist.push({
-            value: doc.data().name
-          });
-        });
-      });
   }
 };
 </script>
@@ -279,11 +232,10 @@ h1 {
 }
 body {
   background: url("../assets/background.png") no-repeat;
-
+  overflow: hidden;
   background-size: cover;
   width: 100%;
-  min-height: 100vh;
-  height: 125vh;
+  min-height: 500vh;
 }
 .button {
   font-family: Gill Sans;
@@ -304,8 +256,8 @@ body {
   content: "\00bb";
   position: absolute;
   opacity: 0;
-  top: -1vh !important;
-  font-size: 2.5vh;
+  top: -0.6vh !important;
+  font-size: 2vh;
   transition: 0.5s;
 }
 .button:hover span {
@@ -344,7 +296,7 @@ body {
   color: #ec7663 !important;
   font-weight: bold;
   text-decoration: underline;
-  margin-left: 1vh;
+  margin-left:1vh;
 }
 .regbox {
   text-align: center;
@@ -427,7 +379,7 @@ body {
 }
 .reg-header {
   font-weight: 600;
-  font-size: 2vh;
+  font-size: 130%;
   color: #ec7663;
 }
 .sem-header {

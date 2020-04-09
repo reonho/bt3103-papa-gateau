@@ -111,7 +111,7 @@
                   style="color:#EC7663;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
                 <br />
-                <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
+
                 <p
                   class="module-type"
                 >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
@@ -143,6 +143,7 @@
                       <br />
                       <b-tabs
                         style="width:45vw;"
+                        id="moduletabs"
                         active-nav-item-class="activetab"
                         class="semtabs"
                         content-class="mt-3"
@@ -416,7 +417,6 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -455,7 +455,7 @@ export default {
       }
       return semesters;
     },
-    
+
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -561,6 +561,7 @@ hr {
   margin-top: 10px !important;
 }
 </style>
+
 <style>
 label {
   font-weight: 100 !important;
@@ -613,11 +614,11 @@ label {
 }
 .modnum {
   margin-right: 30px;
-  color: #EC7663;
+  color: #ec7663;
   font-weight: bold;
 }
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #EC7663 !important;
+  background-color: #ec7663 !important;
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid rgba(0, 0, 0, 0.54) !important;
@@ -644,7 +645,7 @@ label {
   background-color: white !important;
 }
 .mod-chips .md-chip.md-theme-default {
-  background-color: #EC7663 !important;
+  background-color: #ec7663 !important;
   color: white !important;
   font-weight: bold !important;
 }
@@ -685,17 +686,18 @@ label {
   z-index: 5;
   width: 71.5%;
 }
-.activetab {
+#moduletabs .nav-item .nav-link.activetab {
   background-color: #17a2b8 !important;
   font-weight: bold !important;
 }
-.md-theme-default .nav-link:not(.md-button) {
+.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
+ color: white !important;
+}
+.md-theme-default #moduletabs .nav-link:not(.md-button) {
   color: #17a2b8 !important;
   font-weight: bold !important;
 }
-.md-theme-default .nav-link.active:not(.md-button) {
-  color: white !important;
-}
+
 .md-tabs.test .md-tabs-content {
   height: 190px !important;
   max-width: 100% !important;
@@ -714,4 +716,5 @@ label {
 .md-tooltip.mod-tooltip.md-theme-default {
   background-color: transparent !important;
 }
+
 </style>
