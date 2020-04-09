@@ -4,18 +4,7 @@
     <div class="contain-div">
       <div class="sub-contain-div1">
         <div class="sub-header-content">
-          <div class="sub-header-title">TOP COHORT</div>
-          <div class="sub-header-content" style="padding-top:1vw;">
-            <div id="chart">
-              <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sub-contain-div2">
-        <div class="sub-header-content">
-          <div class="sub-header-title">COMPLETED MODULES</div>
+          <!-- <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:0;;">
             <div class="grid-container">
               <div
@@ -31,6 +20,21 @@
                 </router-link>
               </div>
             </div>
+          </div>-->
+          <div class="sub-header-title">COMPLETED MODULES</div>
+          <div class="sub-header-content" style="padding:3vh;">
+            <ViewSemesterSection />
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-contain-div2">
+        <div class="sub-header-content">
+          <div class="sub-header-title">TOP COHORT</div>
+          <div class="sub-header-content" style="padding-top:1vw;">
+            <div id="chart">
+              <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
+            </div>
           </div>
         </div>
       </div>
@@ -41,6 +45,7 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
+import ViewSemesterSection from "../components/ViewSemesterSection";
 export default {
   name: "Feed",
   props: {
@@ -49,6 +54,7 @@ export default {
     sem: String
   },
   components: {
+    ViewSemesterSection,
     apexchart: VueApexCharts
   },
   data: function() {
@@ -131,8 +137,7 @@ export default {
           colors: ["#008080"]
         },
         dataLabels: {
-          enabled: false,
-          
+          enabled: false
         },
         xaxis: {
           categories: []
@@ -146,6 +151,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+div {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+}
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -172,7 +181,6 @@ export default {
 .sub-header-content {
   font-family: "Open Sans", sans-serif;
   background: white;
-  font-weight: bold;
   text-align: left;
   padding: 0;
   min-height: 67vh;
@@ -181,7 +189,6 @@ export default {
   font-size: 2.5vh;
   font-weight: bold;
   text-align: left;
-
 }
 .sub-content-text {
   font-size: 3vh;
@@ -192,22 +199,25 @@ export default {
 
 .mod-btn {
   width: 15vh;
-  padding:0.5vh;
+  padding: 0.5vh;
 }
 
 .contain-div {
   display: flex;
-  background-color:white;
+  background-color: white;
+  max-height: 75vh;
 }
 .sub-contain-div1 {
-border-right: 2vw solid #eaecee;
-  width: 58vw;
+  border-right: 2vw solid #ebecf0;
+  width: 43vw;
+
   background-color: white;
   float: left;
+  overflow-y: scroll;
 }
 .sub-contain-div2 {
+  width: 47vw;
 
-  width: 32vw;
   background-color: white;
   float: right;
 }
@@ -217,7 +227,7 @@ border-right: 2vw solid #eaecee;
   border: 2px solid;
 }
 
-.btn-outline-info:hover{
+.btn-outline-info:hover {
   background-color: #ec7663;
   border-color: #ec7663;
 }

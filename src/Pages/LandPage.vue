@@ -12,12 +12,10 @@
           </div>
           <div class="md-layout-item md-size-35">
             <div class="md-layout md-gutter">
-              <div class="md-layout-item md-size-40">
-                <EditUserDetailsButton style="margin-left: 4vh;" />
+              <div class="md-layout-item md-size-50">
+                <EditUserDetailsButton style="margin-left: 10vh;" />
               </div>
-              <div class="md-layout-item md-size-60">
-                <AddModulesModal style="margin-left: 4vh;" />
-              </div>
+              <div class="md-layout-item md-size-50"></div>
             </div>
           </div>
         </div>
@@ -75,18 +73,12 @@
       <br />
       <br />
       <div>
-        
-            <div>
-              <div class="sub-header-content" style="padding:0;">
-                <div class="sub-header-title">MY REVIEWS</div>
-                <ReviewSection
-                  style="min-height:52vh"
-                  :reviewData="reviewData"
-                  class="ReviewSection"
-                />
-              </div>
-            </div>
-          
+        <div>
+          <div class="sub-header-content" style="padding:0;">
+            <div class="sub-header-title">MY REVIEWS</div>
+            <ReviewSection style="min-height:52vh" :reviewData="reviewData" class="ReviewSection" />
+          </div>
+        </div>
       </div>
     </div>
     <div style="height:200px"></div>
@@ -94,7 +86,7 @@
 </template>
 <script>
 import DataObject from "../Database.js";
-import AddModulesModal from "../components/AddModuleModal";
+
 import EditUserDetailsButton from "../components/EditUserDetailsButton";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
@@ -111,7 +103,6 @@ export default {
   name: "LandPage",
   props: ["userPassed"],
   components: {
-    AddModulesModal,
     RadarChart,
     // //coursetree,
     // //TreeChart,
@@ -124,7 +115,6 @@ export default {
     // // Ratings
   },
   methods: {
-
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
@@ -220,8 +210,7 @@ export default {
         // query database for course attributes
         database.getFacultyAttributes(result.faculty).then(attributes => {
           self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
-
-       });
+        });
 
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
@@ -244,7 +233,7 @@ export default {
   padding: 2%;
 }
 .landPage {
-  background: #eaecee;
+  background: #ebecf0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
     Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -311,7 +300,7 @@ export default {
   background-color: white;
 }
 .sub-contain-div1 {
-  border-right: 2vw solid #eaecee;
+  border-right: 2vw solid #ebecf0;
   width: 47vw;
   background-color: white;
   float: left;
