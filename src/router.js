@@ -27,7 +27,7 @@ let router = new Router({
       name: 'Registration',
       component: Registration,
       meta: {
-        requiresAuth: false
+        requiresGuest: true
       }
     },
     {
@@ -36,7 +36,7 @@ let router = new Router({
       component: LandPage,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -44,7 +44,7 @@ let router = new Router({
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
@@ -53,7 +53,7 @@ let router = new Router({
       name: 'modulePage',
       component: modulePage,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -62,7 +62,7 @@ let router = new Router({
       component: ReviewForm,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     }
   ]
