@@ -224,7 +224,7 @@ export default {
     addUser() {
       var batch = {
         year: this.yearchosen,
-        sem: 1
+        sem: "Semester 1"
       };
       database
         .register(

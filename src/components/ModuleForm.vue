@@ -89,7 +89,7 @@ export default {
     return {
       showModal: false,
       searchlist: [],
-      Years: [{id:1, title: 2017}, {id:1, title: 2018}, {id:1, title: 2019}, {id:1, title: 2020}],
+      Years: [{id:1, title: "AY1819"}, {id:1, title: "AY1920"}],
       modules: [
     {
      id: 1,
@@ -175,21 +175,16 @@ export default {
       semesters: [
         {
           id: 1,
-          title: 1,
+          title: "Semester 1",
           examDuration: 120
         },
         {
           id: 2,
-          title:2,
+          title:"Semester 2",
           examDate: "2020-05-05T09:00:00.000Z",
           examDuration: 120
         },
-        {
-          id: 3,
-          title: "Special Term",
-          examDate: "2020-06-19T06:30:00.000Z",
-          examDuration: 120
-        }
+       
       ],
       submitStatus: null,
       detailsForm: {
@@ -238,6 +233,7 @@ export default {
           console.log(e)
           // create an alert saying you have already added this module
           this.$root.$emit('closeModal');
+          
         })
         
 

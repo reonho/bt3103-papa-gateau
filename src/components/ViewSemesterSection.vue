@@ -1,6 +1,6 @@
 <template>
   <div id="ViewSemesterSection">
-    {{this.getModuleDetails("BT2101")}}
+   <AddModuleModal/>
     <div>
       <div class="md-layout">
         <div class="md-layout-item md-size-30">
@@ -68,7 +68,7 @@
             >
               <md-icon style="font-size:1.5vw !important">expand_more</md-icon>
             </md-button>
-            <span class="sem-header">Year {{post.year}} Semester {{post.semester}}</span>
+            <span class="sem-header">Year {{post.year}} {{post.semester}}</span>
           </div>
 
           <div class="sem-box" v-show="!post.collapse">
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-//import AddModuleModal from "./AddModuleModal.vue";
+import AddModuleModal from "./AddModuleModal.vue";
 import database from "../firebase.js";
 export default {
   name: "ViewSemesterSection",
@@ -150,13 +150,14 @@ export default {
     usergrades: []
   }),
   components: {
-    //AddModuleModal
+    AddModuleModal
   },
   computed: {
     updatesem() {
       let allsems = this.semesters;
       let usersems = this.User.sap_by_sem;
       let usermods = this.usergrades;
+      console.log(usermods);
       var semesters = [];
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
@@ -167,7 +168,7 @@ export default {
           console.log(sem);
           if (
             (mod.sem == sem.semester) &
-            (this.User.batch.year - mod.year + 1 == sem.year)
+            (this.User.batch.year == "AY1819")
           ) {
             
             sem.mods.push([
@@ -183,6 +184,7 @@ export default {
             ]);
           }
         }
+        console.log(semesters);
         semesters.push(allsems[k]);
       }
 
@@ -197,7 +199,7 @@ export default {
   },
   methods: {
     filtersem() {
-      var sem = [2, 1];
+      var sem = ["Semester 2", "Semester 1"];
       var semesters = [];
       for (var k = 1; k <= 8; k++) {
         if (k <= 2) {
