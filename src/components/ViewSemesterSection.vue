@@ -91,7 +91,7 @@
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
                 <p class="mod-name">{{mod.code}} {{mod.name}}</p>
-                <p>{{mod.faculty}} • Arts and Social Science • 4 MCs</p>
+                <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
                     <p>
@@ -165,12 +165,11 @@ export default {
   computed: {
     updatesem() {
       let allsems = this.semesters;
-      let usersems = this.User.sap_by_sem;
       let usermods = this.usergrades;
       var semesters = [];
+
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
-        sem.cap = usersems[k].cap;
         //read in the mods
         for (var i = 0; i < Object.keys(usermods).length; i++) {
           let mod = usermods[i];
@@ -206,7 +205,7 @@ export default {
         }
         semesters.push(sem);
       }
-      console.log(semesters);
+
       return semesters;
     },
     showbutton() {
@@ -217,52 +216,6 @@ export default {
     }
   },
   methods: {
-    filtersem() {
-      var sem = ["Semester 2", "Semester 1"];
-      var semesters = [];
-      for (var k = 1; k <= 8; k++) {
-        if (k <= 2) {
-          //Year 1
-
-          semesters.push({
-            year: 1,
-            semester: sem[k % 2],
-            mods: [],
-            cap: 0.0,
-            collapse: false
-          });
-        } else if (k > 2 && k <= 4) {
-          //Year 2
-          semesters.push({
-            year: 2,
-            semester: sem[k % 2],
-            mods: [],
-            cap: 0.0,
-            collapse: false
-          });
-        } else if (k > 4 && k <= 6) {
-          //Year 3
-          semesters.push({
-            year: 3,
-            semester: sem[k % 2],
-            mods: [],
-            cap: 0.0,
-            collapse: false
-          });
-        } else if (k > 6 && k <= 8) {
-          //Year 4
-          semesters.push({
-            year: 4,
-            semester: sem[k % 2],
-            mods: [],
-            cap: 0.0,
-            collapse: false
-          });
-        }
-      }
-
-      this.semesters = semesters;
-    },
     addsem() {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
@@ -285,9 +238,10 @@ export default {
         year: latest,
         semester: latestsem,
         mods: [],
-        cap: 0.0,
+        cap: 0.00,
         collapse: false
       });
+
       this.semnum++;
     },
     showmod: function(mods) {
@@ -352,7 +306,6 @@ export default {
           var modules = semesterlist[i].mods;
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
-              console.log(item);
               modules[k].faculty = list.info.faculty;
               modules[k].MC = list.info.moduleCredit;
               modules[k].name = list.info.title;
@@ -364,12 +317,13 @@ export default {
     },
 
     formatcap(cap) {
+  
       return cap.toFixed(2);
     },
     formatMC(sem) {
       var total = 0;
       for (var i = 0; i < sem.mods.length; i++) {
-          total += parseInt(sem.mods[i].MC);
+        total += parseInt(sem.mods[i].MC);
       }
       return total;
     },
@@ -379,7 +333,6 @@ export default {
   },
 
   created() {
-    //this.filtersem();
     this.accumulatesems();
     database.getModuleResults().then(item => {
       this.usergrades = item;

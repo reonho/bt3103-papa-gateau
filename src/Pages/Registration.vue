@@ -243,7 +243,7 @@ export default {
         this.showSubmitMessage = true;
     },
     goLogin() {
-      this.$router.push({ path: "/loginPage" });
+      this.$router.push({ path: "/" });
 
     }
   },
