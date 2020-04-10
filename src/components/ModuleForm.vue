@@ -1,7 +1,7 @@
 <template>
-  <md-card>
+  <div>
     <form>
-    <md-card-content>
+    
       <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
         <label>Your Module</label>
         <md-input v-model="detailsForm.selectedModule">
@@ -10,36 +10,6 @@
         <span
           class="md-error"
           v-if="!$v.detailsForm.selectedModule.required"
-        >This field is required</span>
-      </md-field>
- 
-      <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
-        <label>Semester taken</label>
-        <md-select v-model="detailsForm.selectedSemester">
-          <md-option
-            v-for="sem in semesters"
-            v-bind:key="sem.id"
-            v-bind:value="sem.title"
-          >{{sem.title}}</md-option>
-        </md-select>
-        <span
-          class="md-error"
-          v-if="!$v.detailsForm.selectedSemester.required"
-        >This field is required</span>
-      </md-field>
-
-      <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
-        <label>Year taken</label>
-        <md-select v-model="detailsForm.selectedYear">
-          <md-option
-            v-for="year in Years"
-            v-bind:key="year.id"
-            v-bind:value="year.title"
-          >{{year.title}}</md-option>
-        </md-select>
-        <span
-          class="md-error"
-          v-if="!$v.detailsForm.selectedYear.required"
         >This field is required</span>
       </md-field>
 
@@ -67,9 +37,9 @@
           >Submit</md-button>
         
       </md-card-actions>
-    </md-card-content>
+    
     </form>
-  </md-card>
+  </div>
 </template>
 
 <script>
@@ -80,7 +50,9 @@ import database from "../firebase.js"
 export default {
   name: "ModuleForm",
   props: {
-    msg: String
+    //msg: String
+    sem: String,
+    year: String
   },
   components: {
     // FollowUpModal
@@ -189,10 +161,10 @@ export default {
       submitStatus: null,
       detailsForm: {
         selectedModule: null,
-        selectedSemester: null,
+        selectedSemester: this.sem,
         selectedGrade: null,
         selectedSU: null,
-        selectedYear: null,
+        selectedYear:  this.year,
       }
     };
   },
@@ -202,18 +174,14 @@ export default {
       selectedModule: {
         required
       },
-      selectedSemester: {
-        required
-      },
+    
       selectedGrade: {
         required
       },
       selectedSU:{
         required
       },
-      selectedYear:{
-        required
-      }
+      
     }
   },
   methods: {
@@ -226,6 +194,7 @@ export default {
       }
     },
     submitForm() {
+      
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("ok");
@@ -233,8 +202,9 @@ export default {
           console.log(e)
           // create an alert saying you have already added this module
           this.$root.$emit('closeModal');
-          
+
         })
+       
         
 
       }

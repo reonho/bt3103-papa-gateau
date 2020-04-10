@@ -448,6 +448,7 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
+
   },
   data: () => ({
     showDialog: false,
