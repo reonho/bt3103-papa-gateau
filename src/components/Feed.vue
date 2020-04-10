@@ -74,7 +74,6 @@ export default {
             horizontal: true
           }
         },
-
         fill: {
           colors: ["#008080"]
         },
@@ -171,7 +170,6 @@ div {
   overflow-y: scroll;
   max-height: 100vh;
 }
-
 .sub-header-title {
   font-size: 2.3vh;
   font-weight: bold;
@@ -197,7 +195,6 @@ div {
   padding-bottom: 4vh;
   color: #2e4053;
 }
-
 .mod-btn {
   width: 15vh;
   padding: 0.5vh;

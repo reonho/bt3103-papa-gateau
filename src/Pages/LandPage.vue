@@ -303,7 +303,6 @@ export default {
   padding-bottom: 4vh;
   color: #2e4053;
 }
-
 .ReviewSection {
   max-height: 50vh;
   overflow: auto;

@@ -635,6 +635,29 @@ var database = {
   },
 
   //=====================================//
+  //----------- ifAddedReview------------//
+  //=====================================//
+
+  async ifAddedReview(module, user) {
+    var promise = new Promise(resolve => {
+      database.firebase_data.collection("reviews")
+        .where("userid", "==", user)
+        .where("module_code", "==", module)
+        .get().then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              resolve(doc.data())
+            })
+          } else {
+            resolve(null)
+          }
+        })
+    })
+    return promise
+
+  },
+
+  //=====================================//
   //----------- register-----------------//
   //=====================================//
   async register(email, password, name_, course_, enrolmentBatch) {
@@ -686,6 +709,7 @@ var database = {
     return promise;
   },
 };
+
 
 export default database;
 

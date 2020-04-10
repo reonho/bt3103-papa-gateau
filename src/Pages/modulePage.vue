@@ -77,10 +77,12 @@
                     <div class="col-5">
                       <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
-                        </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
-                        </span>
+                        <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
+                        <span
+                          style="color: lightgrey;font-size:16px;"
+                          class="star"
+                          id="avg_grey_stars"
+                        ></span>
                         <span style="padding:10px;font-size: 15px">
                           <span id="avg"></span> out of 5
                         </span>
@@ -98,10 +100,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "easy_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
@@ -112,10 +112,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "man_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
@@ -126,11 +124,9 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "exam_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="exam"></span>
                           </p>
                         </div>
                       </div>
@@ -175,7 +171,6 @@
         <a
           class="btn btn-primary btn-lg mr-4"
           style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
-          href="#"
           id="addReview"
           @click="review"
         >New Review</a>
@@ -207,6 +202,12 @@
           md-confirm-text="Okay"
           md-title="Review already exists"
         />
+        <md-dialog-alert
+          :md-active.sync="showAddDialog"
+          md-content="Please add the module first before writing a review."
+          md-confirm-text="Okay"
+          md-title="Module not added"
+        />
       </div>
     </div>
   </div>
@@ -234,26 +235,29 @@ export default {
   },
   methods: {
     review() {
-      //prevents user from submitting multiple reviews
-      // database.getUser().then(user => {
-      //   database
-      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
-      //     .then(mod => {
-      //       if (mod === null) {
-      //         this.$router.push({
-      //           name: "ReviewForm",
-      //           params: { mod: this.Modules[0].info.moduleCode }
-      //         });
-      //       } else {
-      //         this.showDialog = true
-      //       }
-      //     });
-      this.$router.push({
-        name: "ReviewForm",
-        params: { mod: this.Modules[0].info.moduleCode }
+      database.getUser().then(user => {
+        //check if user has added module
+        database.ifAddedModule(this.code, user).then(mod => {
+          console.log(mod);
+          if (mod === null) {
+            this.showAddDialog = true;
+          } else {
+            database.ifAddedReview(this.code, user).then(rev => {
+              //if user has not written review yet
+              if (rev === null) {
+                this.$router.push({
+                  name: "ReviewForm",
+                  params: { mod: this.Modules[0].info.moduleCode }
+                });
+              } else {
+                //user has already written a review, prompt them
+                this.showDialog = true;
+              }
+            });
+          }
+        });
       });
     },
-
     formatwork(workload) {
       var series = [];
       series.push({
@@ -262,7 +266,6 @@ export default {
       });
       return series;
     },
-
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -442,7 +445,6 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
-        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {
@@ -451,6 +453,7 @@ export default {
 
   },
   data: () => ({
+    showAddDialog: false,
     showDialog: false,
     yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
     totalsems: "",
@@ -529,16 +532,16 @@ export default {
   opacity: 0.5;
 }
 .btn-link {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
 .btn-link:hover {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
 .btn-link:focus {
-  color: #EC7663;
-  font-weight:bold
+  color: #ec7663;
+  font-weight: bold;
 }
 #moduletabs .nav-item .nav-link.activetab {
   background-color: #17a2b8 !important;
