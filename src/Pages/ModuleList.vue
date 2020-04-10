@@ -80,7 +80,7 @@
       </div>
       <div class="md-layout-item">
         <!-- Modules -->
-        <div class="module-div">
+        <div>
           <div class="module-header">
             <div class="search-wrapper">
               <md-autocomplete v-model="searchbar" :md-options="searchlist">
@@ -102,7 +102,7 @@
               <hr />
             </div>
           </div>
-          <div id="ModuleItem">
+          <div class="module-div" id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
                 <router-link
@@ -548,24 +548,23 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
+p, span {
+  font-size:1.7vh;
+  line-height: 1.5;
+}
 .md-content {
-  max-width: 400px;
-  max-height: 700px;
+  max-width: 22vw;
+  max-height: 100vh;
   overflow: auto;
-  padding: 20px;
-  padding-left: 30px;
+  padding: 1vw;
+  padding-left: 1.5vw;
 }
 hr {
   height: 0px !important;
   margin: 0 !important;
   margin-top: 10px !important;
 }
-</style>
 
-<style>
-label {
-  font-weight: 100 !important;
-}
 .sticky-header {
   position: fixed;
   left: 0;
@@ -573,37 +572,37 @@ label {
   top: 0;
   z-index: 10;
 }
-.module-div {
-  position: relative;
-}
+
 /* Filter section css */
 .md-content.md-scrollbar {
   position: fixed;
-  margin-top: 70px;
-  width: 25%;
+  margin-top: 3.5vw;
+  width: 22vw;
 }
 .filter-header {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  width: 100%;
+  margin-bottom: 1vw;
+  margin-top: 2.7vw;
+  width: 19vw;
 }
 .filter-head {
-  font-size: 130%;
+  font-size: 1vw;
   color: #616a6b;
   font-weight: bold;
-  margin-right: 80px;
+  margin-right: 3vw;
 }
 .minihead {
   color: #616a6b;
-  font-size: 80%;
+  font-size: 1.4vh;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.5vw;
   display: block;
 }
 .md-button.clear-filter {
-  background-color: #17a2b8 !important;
+  background-color: teal !important;
   font-weight: bold;
   float: right;
+  font-size: 1.4vh;
+  padding: 1vh;
   margin-right: 0;
 }
 .md-button.clear-filter.md-theme-default {
@@ -613,100 +612,63 @@ label {
   text-align: right;
 }
 .modnum {
-  margin-right: 30px;
+  margin-right: 2vw;
   color: #ec7663;
   font-weight: bold;
 }
-.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #ec7663 !important;
-}
-.md-checkbox .md-checkbox-container {
-  border: 1px solid rgba(0, 0, 0, 0.54) !important;
-  border-radius: 3px !important;
-}
-.md-checkbox.md-checked .md-checkbox-container:after {
-  border-color: white !important;
-  top: 1px;
-  left: 6px;
-}
+
 .md-checkbox {
   display: flex !important;
-  margin: 5px 5px 5px 0px !important;
+  margin: 0.3vw 0.3vw 0.3vw 0 !important;
 }
-.levelcheck {
-  padding: 11px;
-  padding-top: 0px;
-}
+
 .mod-dropdown.md-field {
-  margin: 4px 0px 10px !important;
+  margin: 0.3vw 0 0.5vw !important;
 }
-/* Chips css */
-.md-chips.md-field.mod-chips.md-theme-default:after {
-  background-color: white !important;
-}
-.mod-chips .md-chip.md-theme-default {
-  background-color: #ec7663 !important;
-  color: white !important;
-  font-weight: bold !important;
-}
+
 /* Module Card css */
 #ModuleItem {
-  margin-top: 18%;
+  margin-top:25vh;
 }
 .modulecard {
-  margin: 30px;
-  margin-bottom: 0px !important;
+  margin: 2vw;
+  margin-bottom: 0 !important;
 }
 .module-name {
-  font-size: 150%;
-  color: #17a2b8;
+  font-size: 1.2vw;
   font-weight: bold;
 }
+.module-type {
+  padding-top: 1vh
+}
 .module-preclusionhead {
-  font-size: 120%;
+  font-size: 1.7vh;
   color: #616a6b;
   font-weight: bold;
 }
 .module-prerequisitehead {
-  font-size: 120%;
+  font-size: 1.7vh;
   color: #616a6b;
   font-weight: bold;
 }
 .search-wrapper {
   margin: 0 auto;
-  margin-bottom: 20px;
-  margin-top: 100px;
+  margin-bottom: 1vw;
+  margin-top: 5.5vw;
 }
 .module-header {
   position: fixed;
   background-color: white;
-  margin-right: 2%;
+  margin-top:1vw;
+  margin-right: 2vw;
   top: 0;
   right: 0;
-  z-index: 5;
-  width: 71.5%;
-}
-#moduletabs .nav-item .nav-link.activetab {
-  background-color: #17a2b8 !important;
-  font-weight: bold !important;
-}
-.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
- color: white !important;
-}
-.md-theme-default #moduletabs .nav-link:not(.md-button) {
-  color: #17a2b8 !important;
-  font-weight: bold !important;
+  width: 71vw;
+  z-index: 1;
 }
 
-.md-tabs.test .md-tabs-content {
-  height: 190px !important;
-  max-width: 100% !important;
-  padding-left: 0px !important;
-  padding-right: 10px !important;
-  padding-top: 5px !important;
-}
 .examhead {
-  font-size: 110%;
+  font-size: 1.7vh;
   color: #616a6b;
   font-weight: bold;
 }
@@ -716,5 +678,60 @@ label {
 .md-tooltip.mod-tooltip.md-theme-default {
   background-color: transparent !important;
 }
+</style>
 
+<style>
+.md-field label {
+  font-size: 1.7vh !important;
+}
+label {
+  font-weight: 200 !important;
+  font-size: 1.7vh;
+}
+
+/* Module Sem Tab CSS */
+#moduletabs .nav-item .nav-link.activetab {
+  background-color: teal !important;
+  font-weight: bold !important;
+  font-size: 1.5vh
+}
+.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
+  color: white !important;
+  font-size: 1.5vh
+}
+.md-theme-default #moduletabs .nav-link:not(.md-button) {
+  color: teal !important;
+  font-weight: bold !important;
+  font-size: 1.5vh
+}
+
+/* checkbox css */
+
+.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
+  background-color: #ec7663 !important;
+
+}
+.md-checkbox .md-checkbox-container {
+  border: 1px solid #616a6b !important;
+  border-radius: 3px !important;
+}
+.md-checkbox.md-checked .md-checkbox-container:after {
+  border-color: white !important;
+  top: 1px;
+  left: 6px;
+}
+
+/* Chips css */
+.md-chips.md-field.mod-chips.md-theme-default:after {
+  background-color: white !important;
+}
+.mod-chips .md-chip.md-theme-default {
+  background-color: #ec7663 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.md-list.md-theme-default .md-selected .md-list-item-content, .md-list.md-theme-default .router-link-active .md-list-item-content {
+  color: #B82D17 !important;
+}
 </style>

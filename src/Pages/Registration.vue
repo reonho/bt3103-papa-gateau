@@ -419,12 +419,7 @@ body {
   color: white;
   background-color: #3b5998;
 }
-.md-button.addsem {
-  background-color: #17a2b8 !important;
-  font-weight: bold;
-  color: white;
-  margin: 0;
-}
+
 .reg-header {
   font-weight: 600;
   font-size: 2vh;
