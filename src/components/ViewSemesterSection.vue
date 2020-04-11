@@ -108,12 +108,18 @@
                   </div>
                 </div>
                 <span class="footerright">
-                  <md-button class="md-icon-button mod-icon">
+                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(post)">
                     <md-icon>edit</md-icon>
                   </md-button>
+                  <md-dialog :md-active.sync="showModal">
+                    <md-dialog-content>
+                      <ModuleForm :grade="modalgrade" :SU="modalSU" />
+                    </md-dialog-content>
+                  </md-dialog>
                   <md-button class="md-icon-button mod-icon">
                     <md-icon>delete</md-icon>
                   </md-button>
+                  
                 </span>
               </div>
             </md-list>
@@ -256,6 +262,11 @@ export default {
     addmod(sem) {
       this.modalsem = sem.semester;
       this.modalyear = sem.year;
+      this.showModal = true;
+    },
+    editmod(mod) {
+      this.modalgrade = mod.grade;
+      this.modalSU = mod.SU;
       this.showModal = true;
     },
     hideContent(sem) {
