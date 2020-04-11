@@ -5,10 +5,9 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
-import Registration from './Pages/Registration'
-// import EditForm from './components/EditForm'
+import EditForm from './components/EditForm'
 import database from './firebase.js'
-
+import Registration from './Pages/Registration'
 
 Vue.use(Router)
 
@@ -27,7 +26,7 @@ let router = new Router({
       name: 'Registration',
       component: Registration,
       meta: {
-        requiresAuth: false
+        requiresGuest: true
       }
     },
     {
@@ -36,33 +35,44 @@ let router = new Router({
       component: LandPage,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
+    // comment this block to test components
+   
     {
       path: '/loginPage',
       name: 'loginPage',
       component: loginPage,
       meta: {
-        requiresGuest: false
+        requiresGuest: true
       }
     },
     {
       path: '/:code',
-      props: true,
       name: 'modulePage',
+      props: true,
       component: modulePage,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
-      path:'/review',
+      path:'/review/:mod',
       name: 'ReviewForm',
       component: ReviewForm,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
+      }
+    },
+    {
+      path:'/edit/:review.id',
+      name: 'EditForm',
+      component: EditForm,
+      props: true,
+      meta: {
+        requiresAuth: true
       }
     }
   ]

@@ -25,7 +25,6 @@ export default {
       chartOptions2: {
         chart: {
           id: "strengths",
-
           type: "radar",
           dropShadow: {
             enabled: false,
@@ -153,5 +152,4 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "./style.css";
-
 </style>

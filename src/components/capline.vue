@@ -16,7 +16,6 @@
             msg: String,
             sap: Array
         },
-
         data: function(){ 
             return {
                 series1: [{ name: 'Semester AP',data: [],}, { name: 'Cumulative CAP',data: [],}],
@@ -41,7 +40,6 @@
                                 }
                             }
                             }],
-
                     dataLabels: {
                         enabled: true,
                         "formatter": function (val) {
@@ -53,7 +51,6 @@
                         opacity: 0.5,
                         colors: []
                         }
-
                 },   
             }
         },
