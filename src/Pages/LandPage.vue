@@ -17,6 +17,7 @@
     width:20vh;font-size: 1.6vh; margin:0"
               @click="showModal = true"
             >EDIT DETAILS</md-button>
+            <button v-on:click="test">Greet</button>
             <md-dialog :md-active.sync="showModal">
               <md-dialog-title>Edit Your Personal Details</md-dialog-title>
 
@@ -136,6 +137,12 @@ export default {
     };
   },
   methods: {
+    // tester method
+    test(){
+      database.getStudentAttributes().then(e =>{
+        console.log(e)
+      })
+    },
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
@@ -196,7 +203,6 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-
         var result = {
           name: userData.name,
           faculty: userData.faculty,
