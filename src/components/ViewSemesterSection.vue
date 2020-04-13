@@ -113,7 +113,7 @@
                   </md-button>
                   <md-dialog :md-active.sync="showModal">
                     <md-dialog-content>
-                      <ModuleForm :grade="modalgrade" :SU="modalSU" />
+                      <ModuleForm :grade="mod.grade" :SU="mod.SU" />
                     </md-dialog-content>
                   </md-dialog>
                   <md-button class="md-icon-button mod-icon">
@@ -264,9 +264,7 @@ export default {
       this.modalyear = sem.year;
       this.showModal = true;
     },
-    editmod(mod) {
-      this.modalgrade = mod.grade;
-      this.modalSU = mod.SU;
+    editmod() {
       this.showModal = true;
     },
     hideContent(sem) {
