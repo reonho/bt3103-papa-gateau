@@ -207,7 +207,22 @@ export default {
        
         
       }
-    }
+    },
+    created() {
+    let self = this;
+    database.getUser().then(user => {
+      database.ifAddedModule(this.detailsForm.selectedModule, user).then(mod => {
+        console.log(mod);
+        if (mod !== null) {
+          self.added = true;
+          var df = self.mod;
+          df.selectedModule = mod.Name;
+          df.selectedGrade = mod.grade;
+          df.selectedSU = mod.SU;
+        }
+      });
+    });
+  },
   }
 };
 </script>
