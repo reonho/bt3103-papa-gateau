@@ -111,8 +111,267 @@ var database = {
   //==================Use methods from here onwards==========================//
 
   //=====================================//
+  //----------- addModuleResults---------//
+  //=====================================//
+  async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
+    var result = module_result
+    var promise = new Promise((resolve,reject) =>{
+      database.getUser().then(user =>{
+        database.firebase_data.collection('students').doc(user)
+        .get().then(userData =>{
+          var user_ = userData.data()
+          //check if module is added
+          database.firebase_data.collection('module_grades')
+          .where('module' ,"==",result.selectedModule)
+          .where('studentID', '==', user)
+          .get().then(snapshot =>{
+            if(snapshot.empty){
+              //add module_results
+              var results = {
+                SU: result.selectedSU,
+                attribute: result.selectedModule.slice(0,2),
+                course: user_.course,
+                faculty: user_.faculty,
+                grade: result.selectedGrade,
+                module: result.selectedModule,
+                sem: result.selectedSemester, 
+                studentID: user,
+                year: result.selectedYear 
+              }
+              database.firebase_data.collection('module_grades').add(results)
+              //update student overall cap, modules taken, attributes, cap per semester
+              database.updateStudentInfo(results)
+              //update faculty attributes and number of students taken
+              resolve("success")
+            } else {
+              reject("module already taken!")
+            }
+          })   
+        })
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
+  //-------- updateModuleResults---------//
+  //=====================================//
+  //newModuleGrades is an object with sem, year, grade attributes to be updated
+  async updateModuleResults(module, newModuleGrades){
+    var promise = new Promise((resolve,reject) =>{
+      database.getUser().then(user =>{
+        database.firebase_data.collection("module_grades")
+        .where("studentID", "==", user)
+        .where("module", "==", module)
+        .get().then(snapshot =>{
+          if (!snapshot.empty){
+            snapshot.forEach(doc =>{
+              database.firebase_data.collection("module_grades").doc(doc.id)
+              .update({
+                year: newModuleGrades.year,
+                sem: newModuleGrades.sem,
+                grade: newModuleGrades.grade
+              })
+              resolve("Module Grade Updated!")
+            })
+          } else {
+            reject("Module Grade not in database!")
+          }
+        })
+      })
+    })
+    return promise
+  },
+
+  //=====================================//
+  //----------- getModuleResults -----//
+  //=====================================//
+  async getModuleResults() {
+    //input must have grade, module, sem, year, SU
+    var promise = new Promise((resolve) => {
+      var modulelist = []
+      database.getUser().then((user) => {
+        //check if module is added
+        database.firebase_data
+          .collection("module_grades")
+          .where("studentID", "==", user)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              modulelist.push(doc.data());
+            });
+            resolve(modulelist);
+          });
+      });
+    });
+    return promise;
+  },
+
+  //=====================================//
+  //----------- getCohortTopModules------//
+  //=====================================//
+  async getCohortTopModules(batch) {
+    var promise = new Promise((resolve) => {
+      var modules = [];
+      var amt = [];
+      var students = [];
+      database.firebase_data
+        .collection("students")
+        .where("batch", "==", batch)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((user) => {
+            students.push(user.id);
+          });
+          if (!students.empty) {
+            database.firebase_data
+              .collection("module_grades")
+              .where("studentID", "in", students)
+              .get()
+              .then((snapshot) => {
+                snapshot.forEach((result) => {
+                  var result_ = result.data();
+                  if (modules.includes(result_.module)) {
+                    var index = modules.indexOf(result_.module);
+                    amt[index] += 1;
+                  } else {
+                    modules.push(result_.module);
+                    amt.push(1);
+                  }
+                });
+                resolve({ module: modules, amount: amt });
+              });
+          } else {
+            resolve(null);
+          }
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
+  //----------- getFacultyAttributes-----//
+  //=====================================//
+  async getFacultyAttributes(faculty) {
+    var promise = new Promise((resolve) => {
+      database.firebase_data
+        .collection("faculties")
+        .where("name", "==", faculty)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((faculty) => {
+            database.firebase_data
+              .collection("faculties")
+              .doc(faculty.id)
+              .get()
+              .then((doc) => {
+                resolve(doc.data());
+              });
+          });
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
+  //----------- getNUSAttributes-----//
+  //=====================================//
+  async getNUSAttributes() {
+    var promise = new Promise((resolve) => {
+      database.firebase_data
+        .collection("faculties")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((faculty) => {
+            database.firebase_data
+              .collection("faculties")
+              .doc(faculty.id)
+              .get()
+              .then((doc) => {
+                resolve(doc.data());
+              });
+          });
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
+  //----------- getModuleReview----------//
+  //=====================================//
+  async getModuleReviewID(module_) {
+    var promise = new Promise(function(resolve) {
+      var reviews = [];
+      database.firebase_data
+        .collection("reviews")
+        .where("module_code", "==", module_)
+        .get()
+        .then(function(snapshot) {
+          snapshot.forEach((doc) => {
+            reviews.push(doc.id);
+          });
+          resolve(reviews);
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
+  //----------- getUserReview----------//
+  //=====================================//
+  async getUserReviewID(user) {
+    var promise = new Promise(function(resolve) {
+      var reviews = [];
+      database.firebase_data
+        .collection("reviews")
+        .where("userid", "==", user)
+        .get()
+        .then(function(snapshot) {
+          snapshot.forEach((doc) => {
+            reviews.push(doc.id);
+          });
+          resolve(reviews);
+        });
+    });
+    return promise;
+  },
+
+
+  //===========================================Queries for student data==================================================
+
+  //=====================================//
+  //----------- getStudentInfo-----------//
+  //=====================================//
+  // For use in LandPage to update data in LandPage
+  getStudentInfo() {
+    var promise = new Promise(function(resolve) {
+      //get student information
+      database.firebase_data
+        .collection("students")
+        .doc(database.user)
+        .onSnapshot(function(user) {
+          var userData = user.data();
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sam_by_sem,
+            overall_cap: userData.overall_cap,
+            batch: userData.batch,
+            attributes: userData.attributes
+          };
+          resolve(result);
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
   //----------- updateStudentInfo--------//
   //=====================================//
+  //For use in addModuleModal to update the data in database
   async updateStudentInfo(module_results) {
     //update overall cap
     database.firebase_data
@@ -339,259 +598,6 @@ var database = {
         }
       });
   },
-
-  //=====================================//
-  //----------- addModuleResults---------//
-  //=====================================//
-  async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
-    var result = module_result
-    var promise = new Promise((resolve,reject) =>{
-      database.getUser().then(user =>{
-        database.firebase_data.collection('students').doc(user)
-        .get().then(userData =>{
-          var user_ = userData.data()
-          //check if module is added
-          database.firebase_data.collection('module_grades')
-          .where('module' ,"==",result.selectedModule)
-          .where('studentID', '==', user)
-          .get().then(snapshot =>{
-            if(snapshot.empty){
-              //add module_results
-              var results = {
-                SU: result.selectedSU,
-                attribute: result.selectedModule.slice(0,2),
-                course: user_.course,
-                faculty: user_.faculty,
-                grade: result.selectedGrade,
-                module: result.selectedModule,
-                sem: result.selectedSemester, 
-                studentID: user,
-                year: result.selectedYear 
-              }
-              database.firebase_data.collection('module_grades').add(results)
-              //update student overall cap, modules taken, attributes, cap per semester
-              database.updateStudentInfo(results)
-              //update faculty attributes and number of students taken
-              resolve("success")
-            } else {
-              reject("module already taken!")
-            }
-          })   
-        })
-      })
-    })
-    return promise
-  },
-
-  //=====================================//
-  //-------- updateModuleResults---------//
-  //=====================================//
-  //newModuleGrades is an object with sem, year, grade attributes to be updated
-  async updateModuleResults(module, newModuleGrades){
-    var promise = new Promise((resolve,reject) =>{
-      database.getUser().then(user =>{
-        database.firebase_data.collection("module_grades")
-        .where("studentID", "==", user)
-        .where("module", "==", module)
-        .get().then(snapshot =>{
-          if (!snapshot.empty){
-            snapshot.forEach(doc =>{
-              database.firebase_data.collection("module_grades").doc(doc.id)
-              .update({
-                year: newModuleGrades.year,
-                sem: newModuleGrades.sem,
-                grade: newModuleGrades.grade
-              })
-              resolve("Module Grade Updated!")
-            })
-          } else {
-            reject("Module Grade not in database!")
-          }
-        })
-      })
-    })
-    return promise
-  },
-
-  //=====================================//
-  //----------- getModuleResults -----//
-  //=====================================//
-  async getModuleResults() {
-    //input must have grade, module, sem, year, SU
-    var promise = new Promise((resolve) => {
-      var modulelist = []
-      database.getUser().then((user) => {
-        //check if module is added
-        database.firebase_data
-          .collection("module_grades")
-          .where("studentID", "==", user)
-          .get()
-          .then((snapshot) => {
-            snapshot.forEach((doc) => {
-              modulelist.push(doc.data());
-            });
-            resolve(modulelist);
-          });
-      });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getCohortTopModules------//
-  //=====================================//
-  async getCohortTopModules(batch) {
-    var promise = new Promise((resolve) => {
-      var modules = [];
-      var amt = [];
-      var students = [];
-      database.firebase_data
-        .collection("students")
-        .where("batch", "==", batch)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((user) => {
-            students.push(user.id);
-          });
-          if (!students.empty) {
-            database.firebase_data
-              .collection("module_grades")
-              .where("studentID", "in", students)
-              .get()
-              .then((snapshot) => {
-                snapshot.forEach((result) => {
-                  var result_ = result.data();
-                  if (modules.includes(result_.module)) {
-                    var index = modules.indexOf(result_.module);
-                    amt[index] += 1;
-                  } else {
-                    modules.push(result_.module);
-                    amt.push(1);
-                  }
-                });
-                resolve({ module: modules, amount: amt });
-              });
-          } else {
-            resolve(null);
-          }
-        });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getFacultyAttributes-----//
-  //=====================================//
-  async getFacultyAttributes(faculty) {
-    var promise = new Promise((resolve) => {
-      database.firebase_data
-        .collection("faculties")
-        .where("name", "==", faculty)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((faculty) => {
-            database.firebase_data
-              .collection("faculties")
-              .doc(faculty.id)
-              .get()
-              .then((doc) => {
-                resolve(doc.data());
-              });
-          });
-        });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getNUSAttributes-----//
-  //=====================================//
-  async getNUSAttributes() {
-    var promise = new Promise((resolve) => {
-      database.firebase_data
-        .collection("faculties")
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((faculty) => {
-            database.firebase_data
-              .collection("faculties")
-              .doc(faculty.id)
-              .get()
-              .then((doc) => {
-                resolve(doc.data());
-              });
-          });
-        });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getModuleReview----------//
-  //=====================================//
-  async getModuleReviewID(module_) {
-    var promise = new Promise(function(resolve) {
-      var reviews = [];
-      database.firebase_data
-        .collection("reviews")
-        .where("module_code", "==", module_)
-        .get()
-        .then(function(snapshot) {
-          snapshot.forEach((doc) => {
-            reviews.push(doc.id);
-          });
-          resolve(reviews);
-        });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getUserReview----------//
-  //=====================================//
-  async getUserReviewID(user) {
-    var promise = new Promise(function(resolve) {
-      var reviews = [];
-      database.firebase_data
-        .collection("reviews")
-        .where("userid", "==", user)
-        .get()
-        .then(function(snapshot) {
-          snapshot.forEach((doc) => {
-            reviews.push(doc.id);
-          });
-          resolve(reviews);
-        });
-    });
-    return promise;
-  },
-
-  //=====================================//
-  //----------- getStudentInfo-----------//
-  //=====================================//
-  getStudentInfo() {
-    var promise = new Promise(function(resolve) {
-      //get student information
-      database.firebase_data
-        .collection("students")
-        .doc(database.user)
-        .onSnapshot(function(user) {
-          var userData = user.data();
-          var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sam_by_sem,
-            overall_cap: userData.overall_cap,
-            batch: userData.batch
-          };
-          resolve(result);
-        });
-    });
-    return promise;
-  },
   //=====================================//
   //------- getStudentAttributes---------//
   //=====================================//
@@ -643,12 +649,106 @@ var database = {
   //=====================================//
   //----- getStudentModulesTaken---------//
   //=====================================//
+  async getStudentModulesTaken(){
+    var promise = new Promise(resolve =>{
+      database.getUser().then(user=>{
+        database.firebase_data.collection('module_grades')
+        .where('studentID','==',user)
+        .get().then(snapshot=>{
+          var completedMods = []
+          if (!snapshot.empty){
+            snapshot.forEach(grade=>{
+              var ModGrade = grade.data()
+              completedMods.push({
+                SU: ModGrade.SU,
+                module: ModGrade.module,
+                sem: ModGrade.sem,
+                year: ModGrade.year
+              })
+            })
+          }
+          resolve(completedMods)
+        })
+      })
+    })
+    return promise
+  },
   //=====================================//
   //-------- getStudentOverallCap--------//
   //=====================================//
+    async getStudentOverallCap(){
+    var promise = new Promise(resolve =>{
+      database.getUser().then(user=>{
+        database.firebase_data.collection('module_grades')
+        .where('studentID','==',user)
+        .get().then(snapshot=>{
+          var noOfModules = 0
+          var totalCap = 0
+          if (!snapshot.empty){
+            snapshot.forEach(grade=>{
+              var ModGrade = grade.data()
+              if (ModGrade.SU == "No"){
+                totalCap += database.convertCap(ModGrade.grade)
+                noOfModules ++
+              }
+            })
+          }
+          resolve(totalCap/noOfModules)
+        })
+      })
+    })
+    return promise
+  },
   //=====================================//
   //-------- getStudentSam_by_sem--------//
   //=====================================//
+  async getStudentSam_by_sem(){
+    var promise = new Promise(resolve =>{
+      database.getUser().then(user=>{
+        database.firebase_data.collection('module_grades')
+        .where('studentID','==',user)
+        .get().then(snapshot=>{
+          var sam_by_sem = []
+          if (!snapshot.empty){
+            snapshot.forEach(grade=>{
+              var ModGrade = grade.data()
+              if (ModGrade.SU == "No"){
+                if (sam_by_sem.empty){
+                  sam_by_sem.push({
+                    amt: 1,
+                    cap: database.convertCap(ModGrade.grade),
+                    sem: ModGrade.sem,
+                    year: ModGrade.year
+                  })
+                } else {
+                  var flag = false
+                  for (var sem in sam_by_sem){
+                    if (sam_by_sem[sem].year == ModGrade.year && sam_by_sem[sem].sem == ModGrade.sem){
+                      flag = true
+                      sam_by_sem[sem].cap = (sam_by_sem[sem].cap + database.convertCap(ModGrade.grade))/
+                        (sam_by_sem[sem].amt + 1);
+                      sam_by_sem[sem].amt ++
+                      break;
+                    }
+                  }
+                  if (!flag){
+                    sam_by_sem.push({
+                      amt: 1,
+                      cap: database.convertCap(ModGrade.grade),
+                      sem: ModGrade.sem,
+                      year: ModGrade.year
+                    })  
+                  }
+                }
+              }
+            })
+          }
+          resolve(sam_by_sem)
+        })
+      })
+    })
+    return promise
+  },
 
   //=====================================//
   //----------- getModules---------------//
