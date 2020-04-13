@@ -23,14 +23,14 @@
           </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
-            <ViewSemesterSection :User = "User" />
+            <ViewSemesterSection :User = "User"  v-if="User"/>
           </div>
         </div>
       </div>
 
       <div class="sub-contain-div2">
         <div class="sub-header-content">
-          <div class="sub-header-title">TOP COHORT</div>
+          <div class="sub-header-title">TOP MODULES TAKEN BY YOUR COHORT</div>
           <div class="sub-header-content" style="padding-top:1vw;">
             <div id="chart">
               <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
@@ -74,7 +74,6 @@ export default {
             horizontal: true
           }
         },
-
         fill: {
           colors: ["#008080"]
         },
@@ -96,7 +95,7 @@ export default {
       mod["mod"] = this.course.module[i];
       modlst.push(mod);
     }
-    modlst = modlst.sort((a, b) => a.amt - b.amt);
+    modlst = modlst.sort((a, b) => b.amt - a.amt);
 
     for (let i = 0; i < this.course.module.length; i++) {
       this.series[0].data.push(modlst[i].amt);
@@ -171,7 +170,6 @@ div {
   overflow-y: scroll;
   max-height: 100vh;
 }
-
 .sub-header-title {
   font-size: 2.3vh;
   font-weight: bold;
@@ -197,7 +195,6 @@ div {
   padding-bottom: 4vh;
   color: #2e4053;
 }
-
 .mod-btn {
   width: 15vh;
   padding: 0.5vh;

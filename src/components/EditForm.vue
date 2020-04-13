@@ -28,13 +28,18 @@
               <md-card-content>
                 <md-field :class="getValidationClass('detailsForm', 'selectedFaculty')">
                   <label>Your faculty</label>
-                  <md-select v-model="detailsForm.selectedFaculty">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedFaculty"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedFaculty">
                     <md-option
                       v-for="fac in faculties"
                       v-bind:key="fac.id"
                       v-bind:value="fac.title"
                     >{{fac.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedFaculty.required"
@@ -43,13 +48,18 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedYear')">
                   <label>Academic year</label>
-                  <md-select v-model="detailsForm.selectedYear">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedYear"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedYear">
                     <md-option
                       v-for="yr in years"
                       v-bind:key="yr.id"
                       v-bind:value="yr.title"
                     >{{yr.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedYear.required"
@@ -58,41 +68,51 @@
 
                 <md-field :class="getValidationClass('detailsForm', 'selectedSemester')">
                   <label>Semester taken</label>
-                  <md-select v-model="detailsForm.selectedSemester">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedSemester"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedSemester">
                     <md-option
                       v-for="sem in semesters"
                       v-bind:key="sem.id"
                       v-bind:value="sem.title"
                     >{{sem.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedSemester.required"
                   >This field is required</span>
                 </md-field>
-
-                <md-field :class="getValidationClass('detailsForm', 'selectedStaff')">
-                  <label>Taught by</label>
-                  <md-input v-model="detailsForm.selectedStaff"></md-input>
-                  <span class="md-helper-text">Please enter the full name of the module lecturer</span>
-                  <span
-                    class="md-error"
-                    v-if="!$v.detailsForm.selectedStaff.required"
-                  >This field is required</span>
-                </md-field>
-
                 <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
                   <label>Grade obtained</label>
-                  <md-select v-model="detailsForm.selectedGrade">
+                  <md-input
+                    v-if="added===true"
+                    v-model="detailsForm.selectedGrade"
+                    :disabled="this.added"
+                  />
+                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedGrade">
                     <md-option
                       v-for="g in grades"
                       v-bind:key="g.id"
                       v-bind:value="g.title"
                     >{{g.title}}</md-option>
-                  </md-select>
+                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedGrade.required"
+                  >This field is required</span>
+                </md-field>
+
+                <md-field :class="getValidationClass('detailsForm', 'selectedStaff')">
+                  <label>Taught by</label>
+                  <!-- <md-input v-model = 'detailsForm.selectedStaff' :disabled = 'this.added'/> -->
+                  <md-input v-model="detailsForm.selectedStaff"></md-input>
+                  <span class="md-helper-text">Please enter the full name of the module lecturer</span>
+                  <span
+                    class="md-error"
+                    v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
                 </md-field>
 
@@ -148,6 +168,11 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="lectureForm.lectureMaterial"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <hr />
                 <br />
@@ -169,12 +194,18 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="lectureForm.clarity"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <hr />
                 <br />
-
                 <md-field :class="getValidationClass('lectureForm', 'comments')">
-                  <label>Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
+                  <label
+                    class
+                  >Please write a few sentences to explain your choices for the above questions. You are encouraged to provide more details to support your claims.</label>
                   <md-textarea v-model="lectureForm.comments"></md-textarea>
                   <span
                     class="md-error"
@@ -188,7 +219,6 @@
                   v-on:click.prevent="goNext('lectureForm','second','third')"
                 >Next</md-button>
               </md-card-actions>
-              <!-- </md-card> -->
             </md-step>
 
             <md-step
@@ -199,7 +229,7 @@
             >
               <md-card-header
                 class="md-title"
-              >For the questions below, rate your experience with tutorials, assignments and examinations for the module.</md-card-header>
+              >For the questions below, rate your experience with tutorials, assignments and examinations for the module. Select 'Not Applicable' if they do not questions are not applicable for the module.</md-card-header>
               <md-card-content>
                 <label class="md-subheading">
                   <b>The tutorial material was well-organised and useful for understanding the module content.</b>
@@ -231,6 +261,11 @@
                     class="md-primary"
                     value="5"
                   >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.tutorialMaterial"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'comments')">
                   <label
@@ -248,11 +283,24 @@
                   <b>As a whole, the assignments and projects were manageable.</b>
                 </label>
                 <div>
-                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="1">Strongly Disagree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    value="1"
+                  >Strongly Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="5">Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    value="5"
+                  >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.ap"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'apcomments')">
                   <label
@@ -279,7 +327,16 @@
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio v-model="tutorialForm.exam" class="md-primary" value="5">Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.exam"
+                    class="md-primary"
+                    value="5"
+                  >Strongly Agree</md-radio>
+                  <md-radio
+                    v-model="tutorialForm.exam"
+                    class="md-primary"
+                    :value="null"
+                  >Not Applicable</md-radio>
                 </div>
                 <md-field :class="getValidationClass('tutorialForm', 'examcomments')">
                   <label
@@ -310,6 +367,7 @@
               v-on:click.prevent="active = 'fourth'"
               :md-error="commentForm.error"
             >
+              <!-- <md-card> -->
               <md-card-header
                 class="md-title"
               >For the questions below, rate your overall experience for the module.</md-card-header>
@@ -359,7 +417,7 @@
                 <label class="md-subheading">
                   <b>As a whole, how would you rate this module?</b>
                 </label>
-                <Ratings v-model="commentForm.rating" />
+                <Ratings v-model="commentForm.rating" :initialValue='commentForm.rating' />
                 <hr />
                 <br />
                 <md-field>
@@ -370,9 +428,12 @@
               <md-card-actions class="md-layout md-alignment-center-center">
                 <md-button class="md-raised okaybtn" type="submit">Submit</md-button>
               </md-card-actions>
+              <!-- <md-snackbar md-active = true md-position='center'></md-snackbar> -->
+              <!-- </md-card> -->
             </md-step>
           </md-steppers>
           <md-dialog-confirm
+            :md-click-outside-to-close="false"
             :md-active.sync="showSubmitMessage"
             md-title="Review Edited!"
             md-content="Your changes have been recorded."
@@ -393,12 +454,13 @@ import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase";
+// import DataObject from '../Database'
 export default {
   name: "EditForm",
   props: {
     msg: String,
-    value: Number
-    // review: Object //pass in review object from the previous page, to fill the existing data
+    value: Number,
+    review: Object //pass in review object from the previous page, to fill the existing data
   },
   components: {
     Ratings,
@@ -431,7 +493,7 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       }
     },
     tutorialForm: {
@@ -439,16 +501,16 @@ export default {
         required
       },
       comments: {
-        required
+        // required
       },
       tutor: {
         required
       },
       apcomments: {
-        required
+        // required
       },
       examcomments: {
-        required
+        // required
       }
     },
     commentForm: {
@@ -473,7 +535,7 @@ export default {
         // this.setDone("first", "second");
         database.firebase_data
           .collection("reviews")
-          .doc("zmFd0jkjydpVp2Tn3Tzx")
+          .doc(this.review.id)
           .update({
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
@@ -530,40 +592,53 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      window.location.href = "/#/module";
+      this.$router.push({ path: "/" });
+      // window.location.href = "/#/module";
     }
   },
   created() {
-    database.getFaculties().then(r => {
-      this.faculties = r;
-    });
-
-    database.getGrades().then(g => {
-      this.grades = g;
-    });
-
-    database.getYears().then(y => {
-      this.years = y;
-    });
-
-    database.getSemesters().then(s => {
-      this.semesters = s;
-    });
-    //for testing purposes, replace with the reviewid passed/review object pass from the ReviewCard
-    database.firebase_data
-      .collection("reviews")
-      .doc("zmFd0jkjydpVp2Tn3Tzx")
-      .get()
-      .then(doc => {
-        this.passedReview = doc.data();
-        this.detailsForm = this.passedReview.detailsForm;
-        this.lectureForm = this.passedReview.lectureForm;
-        this.tutorialForm = this.passedReview.tutorialForm;
-        this.commentForm = this.passedReview.commentForm;
+    //replace this with firebase calls please
+    let self = this;
+    database.getUser().then(user => {
+      database.ifAddedModule(this.review.module_code, user).then(mod => {
+        console.log(mod);
+        if (mod !== null) {
+          self.added = true;
+          var df = self.detailsForm;
+          df.selectedFaculty = mod.faculty;
+          df.selectedGrade = mod.grade;
+          df.selectedYear = mod.year;
+          df.selectedSemester = mod.sem;
+        }
       });
+    });
+    // database.getFaculties().then(r => {
+    //   this.faculties = r;
+    //   console.log(this.faculties)
+    // });
+
+    // database.getGrades().then(g => {
+    //   this.grades = g;
+    // });
+
+    // database.getYears().then(y => {
+    //   this.years = y;
+    // });
+
+    // database.getSemesters().then(s => {
+    //   this.semesters = s;
+    //   this.detailsForm = this.review.detailsForm;
+    //   this.lectureForm = this.review.lectureForm;
+    //   this.tutorialForm = this.review.tutorialForm;
+    //   this.commentForm = this.review.commentForm;
+    // });
+    this.detailsForm = this.review.detailsForm;
+    this.lectureForm = this.review.lectureForm;
+    this.tutorialForm = this.review.tutorialForm;
+    this.commentForm = this.review.commentForm;
+    // console.log(this.review);
   },
   data: () => ({
-    // passedReview: null,
     detailsForm: {
       selectedYear: null,
       selectedSemester: null,
@@ -610,7 +685,8 @@ export default {
     grades: [],
     semesters: [],
     years: [],
-    faculties: []
+    faculties: [],
+    added: false
   })
 };
 </script>
@@ -647,24 +723,25 @@ export default {
   color: white !important;
 }
 
-.html .body {
-  height: 100vh !important;
-  background-image: linear-gradient(
-    to top,
-    #cfd9df 0%,
-    #e2ebf0 100%
-  ) !important;
-  padding: 0px;
-  margin: 0px;
-}
+/* .html .body {
+  height:100vh !important;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
+  padding:0px;
+  margin:0px;
+
+
+} */
+
+/*
+Tentative fix to css background
+*/
 .pageBody {
   background-image: linear-gradient(
     to top,
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  min-height: 100vh;
-  max-height: 100vh;
+  height: 100vmax;
   padding: 0px;
 }
 </style>

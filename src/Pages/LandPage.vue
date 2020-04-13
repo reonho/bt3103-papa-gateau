@@ -4,19 +4,26 @@
     <div class="container-fluid" style="width: 90vw;">
       <div class="header-card">
         <div class="md-layout md-gutter md-alignment-center-right">
-          <div class="md-layout-item md-size-65">
+          <div class="md-layout-item md-size-85">
             <h1 class="header">
               Welcome to your dashboard, {{User.name}}
               <!--button v-on:click="readDatabase">Greet</button-->
             </h1>
           </div>
-          <div class="md-layout-item md-size-35">
-            <div class="md-layout md-gutter">
-              <div class="md-layout-item md-size-50">
-                <EditUserDetailsButton style="margin-left: 10vh;" />
-              </div>
-              <div class="md-layout-item md-size-50"></div>
-            </div>
+          <div class="md-layout-item md-size-15">
+            <md-button
+              class="md-primary md-raised"
+              style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
+    width:20vh;font-size: 1.6vh; margin:0"
+              @click="showModal = true"
+            >EDIT DETAILS</md-button>
+            <md-dialog :md-active.sync="showModal">
+              <md-dialog-title>Edit Your Personal Details</md-dialog-title>
+
+              <md-dialog-content>
+                <EditUserDetailsForm />
+              </md-dialog-content>
+            </md-dialog>
           </div>
         </div>
         <div>
@@ -45,6 +52,7 @@
                   <p
                     class="sub-content-text"
                     style="padding-bottom:0;"
+                    v-if="cohortTopMods"
                   >{{formatcap(User.overall_cap)}}</p>
                 </div>
               </div>
@@ -68,7 +76,7 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User = "User" v-if="cohortTopMods"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
 
       <br />
       <br />
@@ -87,7 +95,7 @@
 <script>
 import DataObject from "../Database.js";
 
-import EditUserDetailsButton from "../components/EditUserDetailsButton";
+import EditUserDetailsForm from "../components/EditUserDetailsForm";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
 // //import TreeChart from "../components/TreeCharts/TreeChart"
@@ -107,12 +115,25 @@ export default {
     // //coursetree,
     // //TreeChart,
     // //OverallProgress,
-    EditUserDetailsButton,
+    EditUserDetailsForm,
     capline,
     NavBar,
     Feed,
     ReviewSection
     // // Ratings
+  },
+    data: function() {
+    return {
+      // assign data into Data attribute
+      Data: this.findModule("CS2030", DataObject),
+      User: {},
+      reviewData: [],
+      facultyAttributes: null,
+      modules: [],
+      sem: null,
+      cohortTopMods: null,
+      showModal: false
+    };
   },
   methods: {
     //use this method to find data of a specific module
@@ -151,23 +172,10 @@ export default {
       return cap.toFixed(2);
     }
   },
-  data: function() {
-    return {
-      // assign data into Data attribute
-      Data: this.findModule("CS2030", DataObject),
-      User: {},
-      reviewData: [],
-      facultyAttributes: null,
-      modules: [],
-      sem: null,
-      cohortTopMods: null
-    };
-  },
   created() {
     const self = this;
     // query database for review data
     database.getUser().then(user => {
-      console.log(user);
       database.firebase_data
         .collection("reviews")
         .where("userid", "==", user)
@@ -188,7 +196,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-    
+
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -229,10 +237,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.md-dialog {
+  overflow: auto;
+  display: block;
+  width:40vw;
+}
 .dashboard {
   color: white;
   padding: 2%;
 }
+
 .landPage {
   background: #ebecf0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
@@ -290,7 +304,6 @@ export default {
   padding-bottom: 4vh;
   color: #2e4053;
 }
-
 .ReviewSection {
   max-height: 50vh;
   overflow: auto;

@@ -1,68 +1,108 @@
 <template>
   <div id="ReviewCard">
-    <md-card v-if="anyComments ===true">
+    <!-- <md-card v-if="anyComments ===true"> -->
+    <md-card>
       <md-card-header class="md-gutter">
-        <!-- <md-button class = 'headerButton' v-on:click='showDetail = !showDetail'> -->
-        <!-- <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedSemester}})</b> -->
-        <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedYear}} {{review.detailsForm.selectedSemester}})</b>
-        <!-- <md-icon class = 'dropdown'>{{swapIcon()}}</md-icon> -->
-        <!-- </md-button> -->
+        <p class="md-subheading">
+          <b>{{review.module_code}} {{review.module_name}} ({{review.detailsForm.selectedYear}} {{review.detailsForm.selectedSemester}})</b>
+        </p>
       </md-card-header>
 
       <md-card-content>
-        <div>
-          <!-- <b>Semester taken: {{review.sem_taken}}</b> -->
-        </div>
+        <div class="grade"></div>
         <!-- <br/> -->
-        <div v-if="hasComment(review.lectureForm.comments)" class="para">
-          <!-- <div class = 'md-subheading'>Lectures</div> -->
-          <b>Lectures</b>
+        <!-- <div v-if="hasComment(review.lectureForm.comments)" class="para"> -->
+        <div class="para">
+          <p class="md-subheading">
+            <b>Lectures</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Lecturer</md-tooltip>
+              <md-icon class = 'chip-icon'>person</md-icon>
+              {{review.detailsForm.selectedStaff}}
+            </md-chip>
+
+            <md-chip class="info-chip">
+              <md-tooltip>Lecturer Clarity</md-tooltip>
+              <md-icon class = 'chip-icon'>school</md-icon>
+              {{review.lectureForm.clarity}}/5
+            </md-chip>
+            <md-chip class="info-chip">
+              <md-tooltip>Lecture Material</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.lectureForm.lectureMaterial}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.lectureForm.comments}}</p>
         </div>
 
-        <div v-if="hasComment(review.tutorialForm.comments)" class="para">
+        <!-- <div v-if="hasComment(review.tutorialForm.comments)" class="para"> -->
+        <div class="para" v-if = 'hasComment(review.tutorialForm.tutorialMaterial)'>
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Tutorials</b>
+          <p class="md-subheading">
+            <b>Tutorials</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Tutorial Material</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.tutorialForm.tutorialMaterial}}/5
+            </md-chip>
+          </p>
+
           <p class="comments">{{review.tutorialForm.comments}}</p>
         </div>
-
-        <div v-if="hasComment(review.tutorialForm.apcomments)" class="para">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.ap)'>
+          <!-- <div v-if="hasComment(review.tutorialForm.apcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Assignments & Projects</b>
+          <p class="md-subheading" >
+            <b>Assignments & Projects</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Assignment Manageability</md-tooltip>
+              <md-icon class = 'chip-icon'>assignment</md-icon>
+              {{review.tutorialForm.ap}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.tutorialForm.apcomments}}</p>
         </div>
 
-        <div v-if="hasComment(review.tutorialForm.examcomments)" class="para">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.exam)'>
+          <!-- <div v-if="hasComment(review.tutorialForm.examcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <b>Examinations</b>
+          <p class="md-subheading" >
+            <b>Examinations</b>
+          </p>
+          <p>
+            <md-chip class="info-chip">
+              <md-tooltip>Exam Manageability</md-tooltip>
+              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              {{review.tutorialForm.exam}}/5
+            </md-chip>
+          </p>
           <p class="comments">{{review.tutorialForm.examcomments}}</p>
         </div>
 
         <div v-if="hasComment(review.commentForm.comments)" class="para">
-          <!-- <div class = 'md-subheading'>Comments</div> -->
-          <b>Comments</b>
+          <div class = 'md-subheading'><b>Comments</b></div>
           <p class="comments">{{review.commentForm.comments}}</p>
         </div>
-
-        <div class="grade">
-          <b>Grade obtained: {{review.detailsForm.selectedGrade}}</b>
-        </div>
-
-        <!-- <div class="date">Written on: {{review.date}}</div> -->
-
-        <div v-show="showDetail">
-          <p>Additional Details to be rendered</p>
-        </div>
+        <p>
+          <b>Grade obtained:</b>
+          {{review.detailsForm.selectedGrade}}
+        </p>
       </md-card-content>
       <hr />
       <!-- <md-divider/> -->
       <div class="footer">
         <!-- To add a v-if for footerLeft to check if the review was written by user -->
         <span class="footerLeft">
-          <md-button class="md-icon-button">
+          <md-button class="md-icon-button" v-on:click="edit" v-if="byUser === true">
             <md-icon>edit</md-icon>
           </md-button>
-          <md-button class="md-icon-button" v-on:click="showDialog = true">
+          <md-button class="md-icon-button" v-on:click="showDialog = true" v-if="byUser === true">
             <md-icon>delete</md-icon>
           </md-button>
         </span>
@@ -113,7 +153,8 @@ export default {
     showDialog: false,
     showDetail: false, //toggle visibility of hidden content,
     userid: null,
-    anyComments: true
+    anyComments: true,
+    byUser: false
   }),
 
   created() {
@@ -126,11 +167,16 @@ export default {
     ) {
       this.anyComments = false;
     }
+
     database.getUser().then(user => {
       this.userid = user;
+      if (this.userid === this.review.userid) {
+        //boolean to indicate if review was written by user, used to render edit/delete buttons
+        this.byUser = true;
+      }
+
       var ul = Object.values(this.review.users_liked);
       var ud = Object.values(this.review.users_disliked);
-      console.log(this.userid);
       //if user has liked the review
       if (ul.indexOf(this.userid) != -1) {
         this.liked = true;
@@ -156,7 +202,7 @@ export default {
     },
 
     hasComment(field) {
-      return field !== null && field !== undefined
+      return field !== null && field !== undefined;
     },
 
     like() {
@@ -177,8 +223,10 @@ export default {
       else if (this.liked === true) {
         //if post already liked, unlike it
         this.liked = false;
-        //update count in db
-        database.firebase_data.collection("reviews")
+
+        //remove user from users_liked
+        this.remove(this.review.users_liked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_liked: this.review.users_liked,
@@ -187,8 +235,9 @@ export default {
       } else {
         //else like the post
         this.liked = true;
-        // this.like_count += 1;
-        database.firebase_data.collection("reviews")
+        //add user to users_liked
+        this.review.users_liked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             likes: this.review.users_liked.length,
@@ -198,9 +247,10 @@ export default {
         if (this.disliked === true) {
           //if user previously disliked, remove the dislike
           this.disliked = false;
-          this.dislike_count = Math.max(this.dislike_count - 1, 0);
-          //decrement dislike count in db
-          database.firebase_data.collection("reviews")
+
+          //remove user from users_disliked
+          this.remove(this.review.users_disliked, this.userid);
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_disliked: this.review.users_disliked,
@@ -228,7 +278,8 @@ export default {
         //if post already disliked, clear it
         this.disliked = false;
         //update count in db
-        database.firebase_data.collection("reviews")
+        this.remove(this.review.users_disliked, this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
@@ -237,7 +288,8 @@ export default {
       } else {
         //else dislike the post
         this.disliked = true;
-        database.firebase_data.collection("reviews")
+        this.review.users_disliked.push(this.userid);
+        db.collection("reviews")
           .doc(this.review.id)
           .update({
             users_disliked: this.review.users_disliked,
@@ -248,7 +300,7 @@ export default {
           //if user previously liked the review, remove the like
           this.remove(this.review.users_liked, this.userid);
           this.liked = false;
-          database.firebase_data.collection("reviews")
+          db.collection("reviews")
             .doc(this.review.id)
             .update({
               users_liked: this.review.users_liked,
@@ -262,16 +314,18 @@ export default {
       //find review id in collection
       //navigate to review form, while passing the fields from the review
       //allow to edit from the review form
+      this.$router.push({ name: "EditForm", params: { review: this.review } });
     },
 
     deleteReview() {
       // let self = this
       // console.log(this.review.commentForm.comments)
-      database.firebase_data.collection("reviews")
+      database.firebase_data
+        .collection("reviews")
         .doc(this.review.id)
         .delete();
       //find review id in collection
-      // database.firebase_data.collection('reviews').doc(reviewid).delete();
+      // database.collection('reviews').doc(reviewid).delete();
       //delete
       // update list of reviews (to be done in reviewsection)
     }
@@ -338,5 +392,12 @@ export default {
   float: left;
 }
 
+.md-chip.md-theme-default {
+  /* background-color: #17a2b8; */
+  /* color: white; */
+}
+.chip-icon {
+  /* color: black !important; */
+}
 </style>
 

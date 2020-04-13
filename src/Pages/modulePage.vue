@@ -6,13 +6,13 @@
       <div style="color:#EC7663; margin-left: 20px; margin-top:20px" class="header">
         <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
-      <button
+      <!-- <button
         class="button"
         style="float: right; margin-right: 20px;background-color:#17a2b8"
         onclick="window.location.href = '/#/ModuleList';"
       >
         <span>Back To All Modules</span>
-      </button>
+      </button> -->
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
@@ -22,34 +22,34 @@
         class="depFac"
       >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
-      <div style="margin-left: 20px; margin-right:20px;font-size:15px">
-        {{this.Modules[0].info.description}}
+      <div style="margin-left: 20px; margin-right:20px">
+        <span>{{this.Modules[0].info.description}}</span>
         <br />
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
-            <b style="color: #616a6b">Preclusion(s)</b>
+            <b class="miniheader">Preclusion(s)</b>
             <br />
-            {{this.Modules[0].info.preclusion}}
-            <br />
-            <br />
-            <b style="color: #616a6b">Prerequisite(s)</b>
-            <br />
-            {{this.Modules[0].info.prerequisite}}
+             <span>{{this.Modules[0].info.preclusion}}</span>
             <br />
             <br />
-            <b style="color: #616a6b">Exam</b>
+            <b class="miniheader">Prerequisite(s)</b>
+            <br />
+             <span>{{this.Modules[0].info.prerequisite}}</span>
+            <br />
+            <br />
+            <b class="miniheader">Exam</b>
             <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
           <div class="col-7">
-            <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
+            <b class="miniheader">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
             <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
           </div>
         </div>
       </div>
       <hr />
       <div id="statistics">
-        <span style="color:#EC7663; margin-top:20px; font-size: 25px">Statistics</span>
+        <span class="section-header">Statistics</span>
         <br />
         <br />
         <b-tabs
@@ -75,12 +75,14 @@
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
-                      <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
+                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Student reviews</h4>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
-                        </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
-                        </span>
+                        <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
+                        <span
+                          style="color: lightgrey;font-size:16px;"
+                          class="star"
+                          id="avg_grey_stars"
+                        ></span>
                         <span style="padding:10px;font-size: 15px">
                           <span id="avg"></span> out of 5
                         </span>
@@ -91,52 +93,46 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Features</h4>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Easy to understand</p>
+                          <p style="font-weight:400; font-size:1.5vh">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "easy_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
+                          <p style="font-weight:400; font-size:1.5vh">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "man_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
+                          <p style="font-weight:400; font-size:1.5vh">Manageable exams</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "exam_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="exam"></span>
                           </p>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                          <p style="font-weight:400; font-size:1.5vh">Manageable workload</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -149,7 +145,7 @@
                         </div>
                       </div>
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
+                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2vh">Filter by Year</h4>
                       <md-field style="width: 20vw">
                       <label for="years">Years Selected</label>
                       <md-select v-model="yrs" multiple name="years" id="years">
@@ -170,12 +166,11 @@
       </div>
       <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
-      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 25px">
+      <div id="reviews" class="section-header">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
-          href="#"
+          style="color: white; font-size: 1vw; width:10vw;float:right; margin-right:0 !important;background-color:teal; border-color:teal;"
           id="addReview"
           @click="review"
         >New Review</a>
@@ -183,7 +178,7 @@
           size="lg"
           variant="link"
           toggle-class="text-decoration-none"
-          style="float:right"
+          style="float:right;"
           no-caret
         >
           <template v-slot:button-content>Sort by Newest &#9662;</template>
@@ -199,13 +194,19 @@
         </b-dropdown>
       </div>
       <br />
-      <div>
+      <div style="margin-top:1vh">
         <ReviewSection :reviewData="reviewData" />
         <md-dialog-alert
           :md-active.sync="showDialog"
           md-content="You have already submitted a review for this module."
           md-confirm-text="Okay"
           md-title="Review already exists"
+        />
+        <md-dialog-alert
+          :md-active.sync="showAddDialog"
+          md-content="Please add the module first before writing a review."
+          md-confirm-text="Okay"
+          md-title="Module not added"
         />
       </div>
     </div>
@@ -234,26 +235,29 @@ export default {
   },
   methods: {
     review() {
-      //prevents user from submitting multiple reviews
-      // database.getUser().then(user => {
-      //   database
-      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
-      //     .then(mod => {
-      //       if (mod === null) {
-      //         this.$router.push({
-      //           name: "ReviewForm",
-      //           params: { mod: this.Modules[0].info.moduleCode }
-      //         });
-      //       } else {
-      //         this.showDialog = true
-      //       }
-      //     });
-      this.$router.push({
-        name: "ReviewForm",
-        params: { mod: this.Modules[0].info.moduleCode }
+      database.getUser().then(user => {
+        //check if user has added module
+        database.ifAddedModule(this.code, user).then(mod => {
+          console.log(mod);
+          if (mod === null) {
+            this.showAddDialog = true;
+          } else {
+            database.ifAddedReview(this.code, user).then(rev => {
+              //if user has not written review yet
+              if (rev === null) {
+                this.$router.push({
+                  name: "ReviewForm",
+                  params: { mod: this.Modules[0].info.moduleCode }
+                });
+              } else {
+                //user has already written a review, prompt them
+                this.showDialog = true;
+              }
+            });
+          }
+        });
       });
     },
-
     formatwork(workload) {
       var series = [];
       series.push({
@@ -262,7 +266,6 @@ export default {
       });
       return series;
     },
-
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -442,14 +445,15 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
-        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
+
   },
   data: () => ({
+    showAddDialog: false,
     showDialog: false,
     yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
     totalsems: "",
@@ -474,13 +478,30 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 .header {
-  font-size: 30px;
+  padding: 1vh;
+  padding-left: 0;
+  font-size: 1.7vw;
+}
+.miniheader {
+  font-size: 1.7vh;
+  color: #616a6b;
+  font-weight: bold;
 }
 .depFac {
-  font-size: 15px;
+  font-size: 1.7vh;
+}
+span {
+   font-size: 1.7vh;
+   line-height: 1.5;
+}
+.section-header {
+  color:#EC7663; 
+  margin-top:20px; 
+  font-size: 25px;
+  font-size: 1.5vw;
 }
 .button {
   display: block;
@@ -527,28 +548,26 @@ export default {
   cursor: not-allowed;
   opacity: 0.5;
 }
-.btn-link {
-  color: #EC7663;
-  font-weight:bold
-}
-.btn-link:hover {
-  color: #EC7663;
-  font-weight:bold
-}
-.btn-link:focus {
-  color: #EC7663;
-  font-weight:bold
-}
-#moduletabs .nav-item .nav-link.activetab {
-  background-color: #17a2b8 !important;
-  font-weight: bold !important;
-}
-.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
- color: white !important;
-}
-.md-theme-default #moduletabs .nav-link:not(.md-button) {
-  color: #17a2b8 !important;
-  font-weight: bold !important;
-}
+
+
 
 </style>
+<style>
+.btn-link {
+  color: #ec7663;
+  font-weight: bold;
+  font-size: 1vw !important
+}
+.btn-link:hover {
+  color: #ec7663;
+  font-weight: bold;
+}
+.btn-link:focus {
+  color: #ec7663;
+  font-weight: bold;
+}
+.dropdown-item h5 {
+  color: #ec7663;
+}
+</style>
+

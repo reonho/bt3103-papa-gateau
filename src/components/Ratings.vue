@@ -22,11 +22,10 @@
 <script>
 export default {
   name: "Ratings",
-  props: ['value'],
-  // props: {
-  //   msg: String,
-  //   eventName: String
-  // },
+  // props: ['value'],
+  props: {
+    initialValue: Number
+  },
   data: () => ({
     one: false,
     two: false,
@@ -37,6 +36,30 @@ export default {
     starColor: '#FFDF00'
     
   }),
+
+  created() {
+    //autofill the rating component
+    switch (this.initialValue) {
+      case 1:
+        this.clickRating('one')
+        break
+      case 2:
+        this.clickRating('two')
+        break
+      case 3:
+        this.clickRating('three')
+        break
+      case 4:
+        this.clickRating('four')
+        break
+      case 5:
+        this.clickRating('five')
+    }
+    // if (this.initialValue !== undefined) {
+    //   this.rating = this.initialValue
+    //   this.value = this.initialValue
+    // }
+  },
 
   components: {},
   methods: {

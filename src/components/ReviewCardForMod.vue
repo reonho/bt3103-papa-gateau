@@ -127,7 +127,8 @@ export default {
         //if post already liked, unlike it
         this.liked = false;
         //update count in db
-        database.firebase_data.collection("reviews")
+        database
+          .collection("reviews")
           .doc(this.review.id)
           .update({
             likes: Math.max(this.review.likes - 1, 0)
@@ -136,7 +137,8 @@ export default {
         //else like the post
         this.liked = true;
         // this.like_count += 1;
-        database.firebase_data.collection("reviews")
+        database
+          .collection("reviews")
           .doc(this.review.id)
           .update({
             likes: this.review.likes + 1
@@ -146,7 +148,8 @@ export default {
           this.disliked = false;
           this.dislike_count = Math.max(this.dislike_count - 1, 0);
           //decrement dislike count in db
-          database.firebase_data.collection("reviews")
+          database
+            .collection("reviews")
             .doc(this.review.id)
             .update({
               dislikes: Math.max(this.review.dislikes - 1, 0)
@@ -162,7 +165,8 @@ export default {
         this.disliked = false;
         // this.dislike_count = Math.max(this.dislike_count - 1, 0);
         //update count in db
-        database.firebase_data.collection("reviews")
+        database
+          .collection("reviews")
           .doc(this.review.id)
           .update({
             dislikes: Math.max(this.review.dislikes - 1, 0)
@@ -170,7 +174,8 @@ export default {
       } else {
         //else dislike the post
         this.disliked = true;
-        database.firebase_data.collection("reviews")
+        database
+          .collection("reviews")
           .doc(this.review.id)
           .update({
             dislikes: this.review.dislikes + 1
@@ -181,7 +186,8 @@ export default {
         if (this.liked === true) {
           //if user previously disliked, remove the like
           this.liked = false;
-          database.firebase_data.collection("reviews")
+          database
+            .collection("reviews")
             .doc(this.review.id)
             .update({
               likes: Math.max(this.review.likes - 1, 0)

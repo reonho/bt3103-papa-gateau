@@ -5,10 +5,9 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
-import Registration from './Pages/Registration'
-// import EditForm from './components/EditForm'
+import EditForm from './components/EditForm'
 import database from './firebase.js'
-
+import Registration from './Pages/Registration'
 
 Vue.use(Router)
 
@@ -39,6 +38,8 @@ let router = new Router({
         requiresAuth: true
       }
     },
+    // comment this block to test components
+   
     {
       path: '/loginPage',
       name: 'loginPage',
@@ -49,17 +50,26 @@ let router = new Router({
     },
     {
       path: '/:code',
-      props: true,
       name: 'modulePage',
+      props: true,
       component: modulePage,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path:'/review',
+      path:'/review/:mod',
       name: 'ReviewForm',
       component: ReviewForm,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path:'/edit/:review.id',
+      name: 'EditForm',
+      component: EditForm,
       props: true,
       meta: {
         requiresAuth: true

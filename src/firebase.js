@@ -2,7 +2,7 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
+  apiKey: process.env.VUE_APP_APIKEY,
   authDomain: "papa-gateau.firebaseapp.com",
   databaseURL: "https://papa-gateau.firebaseio.com",
   projectId: "papa-gateau",
@@ -11,6 +11,8 @@ const firebaseConfig = {
   appId: "1:945138208035:web:146ed078c96f9f09b81096",
   measurementId: "G-B09D9JVQ0B",
 };
+
+console.log(process.env.VUE_APP_APIKEY )
 
 firebase.initializeApp(firebaseConfig);
 
@@ -472,6 +474,29 @@ var database = {
   },
 
   //=====================================//
+  //----------- getNUSAttributes-----//
+  //=====================================//
+  async getNUSAttributes() {
+    var promise = new Promise((resolve) => {
+      database.firebase_data
+        .collection("faculties")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((faculty) => {
+            database.firebase_data
+              .collection("faculties")
+              .doc(faculty.id)
+              .get()
+              .then((doc) => {
+                resolve(doc.data());
+              });
+          });
+        });
+    });
+    return promise;
+  },
+
+  //=====================================//
   //----------- getModuleReview----------//
   //=====================================//
   async getModuleReviewID(module_) {
@@ -635,6 +660,29 @@ var database = {
   },
 
   //=====================================//
+  //----------- ifAddedReview------------//
+  //=====================================//
+
+  async ifAddedReview(module, user) {
+    var promise = new Promise(resolve => {
+      database.firebase_data.collection("reviews")
+        .where("userid", "==", user)
+        .where("module_code", "==", module)
+        .get().then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              resolve(doc.data())
+            })
+          } else {
+            resolve(null)
+          }
+        })
+    })
+    return promise
+
+  },
+
+  //=====================================//
   //----------- register-----------------//
   //=====================================//
   async register(email, password, name_, course_, enrolmentBatch) {
@@ -686,6 +734,7 @@ var database = {
     return promise;
   },
 };
+
 
 export default database;
 
