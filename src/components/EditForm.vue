@@ -8,6 +8,7 @@
       md-content="Your changes will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
+      @md-confirm='goback'
     />
     <div class="page">
       <div class="pageHeader">
