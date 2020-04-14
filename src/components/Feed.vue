@@ -23,7 +23,7 @@
           </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
-            <ViewSemesterSection :User = "User" />
+            <ViewSemesterSection :User="User" />
           </div>
         </div>
       </div>
@@ -33,7 +33,16 @@
           <div class="sub-header-title">TOP COHORT</div>
           <div class="sub-header-content" style="padding-top:1vw;">
             <div id="chart">
-              <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
+              <apexchart type="bar" :options="chartOptionsYear" v-show="!showEmpty" :series="series"></apexchart>
+              <div v-show="showEmpty">
+                <md-empty-state
+                  id="stateboxcor"
+                  style="max-width:0 !important;  color: #2e4053;"
+                  md-icon="bar_chart"
+                  md-label="No Batch Data to Display"
+                  md-description="There is no one in your batch who took the same modules. Start adding new modules in the Grades section!"
+                ></md-empty-state>
+              </div>
             </div>
           </div>
         </div>
@@ -143,6 +152,12 @@ export default {
           categories: []
         }
       };
+    },
+    showEmpty() {
+      if (this.series[0].data.length == 0) {
+        return true;
+      }
+      return false;
     }
   }
 };
@@ -228,5 +243,24 @@ div {
 .btn-outline-info:hover {
   background-color: #ec7663;
   border-color: #ec7663;
+}
+</style>
+<style>
+#stateboxcor .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal
+}
+
+#stateboxcor .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+
+#stateboxcor .md-empty-state-description {
+  font-size: 1vw !important;
+}
+
+#stateboxcor .md-empty-state-container {
+  padding-top: 10vh;
+  width: 28vw;
 }
 </style>

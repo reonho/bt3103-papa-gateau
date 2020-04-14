@@ -219,18 +219,19 @@ export default {
     addsem() {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-      if (this.semnum > 0) {
-        var latest1 =
-          parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
-        var latest2 =
-          parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
-        latest = "AY" + latest1 + latest2;
-        latestsem = this.semesters[this.semnum - 1].semester;
 
+      if (this.semnum > 0) {
+        latestsem = this.semesters[this.semnum - 1].semester;
         if (latestsem == "Semester 1") {
-          latestsem = "Semester 2";
+          latest = this.semesters[this.semnum - 1].year;
+          latestsem = "Semester 2"
         } else {
-          latestsem = "Semester 1";
+          var latest1 =
+            parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
+          var latest2 =
+            parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
+          latest = "AY" + latest1 + latest2;
+          latestsem = "Semester 1"
         }
       }
 
@@ -238,7 +239,7 @@ export default {
         year: latest,
         semester: latestsem,
         mods: [],
-        cap: 0.00,
+        cap: 0.0,
         collapse: false
       });
 
@@ -317,7 +318,6 @@ export default {
     },
 
     formatcap(cap) {
-  
       return cap.toFixed(2);
     },
     formatMC(sem) {

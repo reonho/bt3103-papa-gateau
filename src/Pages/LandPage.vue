@@ -64,12 +64,14 @@
         <div class="sub-contain-div2">
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
-            <RadarChart
-              v-if="facultyAttributes"
-              :my_attr="User.attributes"
-              :fac_attr="facultyAttributes"
-            ></RadarChart>
           </div>
+
+          <RadarChart
+            
+            v-if="facultyAttributes"
+            :my_attr="User.attributes"
+            :fac_attr="facultyAttributes"
+          ></RadarChart>
         </div>
       </div>
 
@@ -121,7 +123,7 @@ export default {
     ReviewSection
     // // Ratings
   },
-    data: function() {
+  data: function() {
     return {
       // assign data into Data attribute
       Data: this.findModule("CS2030", DataObject),
@@ -195,7 +197,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-
+        console.log(userData);
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -239,7 +241,7 @@ export default {
 .md-dialog {
   overflow: auto;
   display: block;
-  width:40vw;
+  width: 40vw;
 }
 .dashboard {
   color: white;
@@ -288,8 +290,6 @@ export default {
   background: white;
   text-align: left;
   padding: 0;
-  max-height: 100vh;
-  min-height: 52vh;
 }
 .sub-content-title {
   font-size: 1.9vh;
@@ -319,7 +319,7 @@ export default {
   float: left;
 }
 .sub-contain-div2 {
-  width: 40vw;
+  width: 42vw;
   background-color: white;
   float: right;
 }

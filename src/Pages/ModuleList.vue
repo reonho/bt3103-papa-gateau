@@ -14,11 +14,9 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                
-                  <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
-            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
-          </b-button>
-                  
+                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+                  <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+                </b-button>
               </td>
             </tr>
           </table>
@@ -177,7 +175,6 @@
                               <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
-                          
                         </b-tab>
                       </b-tabs>
                     </div>
@@ -185,7 +182,27 @@
                 </div>
               </div>
             </md-list>
-            <div style="height:200px"></div>
+
+            <div style="height:200px">
+              <div v-show="showEmpty">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important;  color: #2e4053;"
+                  md-icon="view_list"
+                  md-label="No Modules to Display"
+                ></md-empty-state>
+              </div>
+              <div v-show="loading">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading...."
+                >
+                <br/>
+                <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                </md-empty-state>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -195,6 +212,7 @@
 
 <script>
 import database from "../firebase.js";
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -205,7 +223,8 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
     //intakechart: StudentIntakeChart,
-    workloadchart: WorkloadChart
+    workloadchart: WorkloadChart,
+    pulseloader: PulseLoader
   },
   props: {
     test: {
@@ -215,6 +234,8 @@ export default {
   },
   data() {
     return {
+      color: "teal",
+      loading: true,
       searchbar: "",
       modulenum: 0,
       modulesData: [],
@@ -323,6 +344,12 @@ export default {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
+    },
+    showEmpty() {
+      if ((this.modulenum == 0) & (this.loading == false)) {
+        return true;
+      }
+      return false;
     }
   },
   methods: {
@@ -331,6 +358,7 @@ export default {
         .collection("modules")
         .get()
         .then(querySnapShot => {
+          this.loading = true;
           var flookup = {};
           var dlookup = {};
           var slookup = {};
@@ -363,6 +391,7 @@ export default {
               slookup[name] = 1;
               this.searchlist.push(name);
             }
+            this.loading = false;
           });
         });
     },
@@ -539,7 +568,9 @@ export default {
   },
   mounted() {
     //this.writeDatabase();
+
     this.readDatabase();
+
     //console.log(this.modulesData);
   }
 };
@@ -548,8 +579,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
-p, span {
-  font-size:2.1vh;
+p,
+span {
+  font-size: 2.1vh;
   line-height: 1.5;
 }
 .md-content {
@@ -583,7 +615,6 @@ hr {
   margin-bottom: 1vw;
   margin-top: 2.7vw;
   width: 19vw;
-  
 }
 .filter-head {
   font-size: 1.2vw;
@@ -600,7 +631,7 @@ hr {
 }
 .btn-outline-info {
   color: teal;
-  float:right;
+  float: right;
   border-color: teal;
   border: 2px solid;
 }
@@ -633,7 +664,7 @@ hr {
 
 /* Module Card css */
 #ModuleItem {
-  margin-top:25vh;
+  margin-top: 25vh;
 }
 .modulecard {
   margin: 2vw;
@@ -644,7 +675,7 @@ hr {
   font-weight: bold;
 }
 .module-type {
-  padding-top: 1vh
+  padding-top: 1vh;
 }
 .module-preclusionhead {
   font-size: 2.3vh;
@@ -664,7 +695,7 @@ hr {
 .module-header {
   position: fixed;
   background-color: white;
-  margin-top:1vw;
+  margin-top: 1vw;
   margin-right: 2vw;
   top: 0;
   right: 0;
@@ -701,12 +732,12 @@ label {
 }
 .md-theme-default #moduletabs .nav-link.active:not(.md-button) {
   color: white !important;
-  font-size: 1.8vh
+  font-size: 1.8vh;
 }
 .md-theme-default #moduletabs .nav-link:not(.md-button) {
   color: teal !important;
   font-weight: bold !important;
-  font-size: 1.8vh
+  font-size: 1.8vh;
 }
 #moduletabs .disabledTab {
   pointer-events: none;
@@ -718,7 +749,6 @@ label {
 
 .md-checkbox.md-theme-default.md-checked .md-checkbox-container {
   background-color: #ec7663 !important;
-
 }
 .md-checkbox .md-checkbox-container {
   border: 1px solid #616a6b !important;
@@ -730,7 +760,6 @@ label {
   left: 6px;
 }
 
-
 /* Chips css */
 .md-chips.md-field.mod-chips.md-theme-default:after {
   background-color: white !important;
@@ -741,7 +770,27 @@ label {
   font-weight: bold !important;
 }
 
-.md-list.md-theme-default .md-selected .md-list-item-content, .md-list.md-theme-default .router-link-active .md-list-item-content {
-  color: #B82D17 !important;
+.md-list.md-theme-default .md-selected .md-list-item-content,
+.md-list.md-theme-default .router-link-active .md-list-item-content {
+  color: #b82d17 !important;
+}
+
+/* Empty State */
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal
+}
+
+#statebox .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+
+#statebox .md-empty-state-description {
+  font-size: 1vw !important;
+}
+
+#statebox .md-empty-state-container {
+  padding-top: 5vh;
+  width: 42vw;
 }
 </style>
