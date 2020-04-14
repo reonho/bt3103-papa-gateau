@@ -154,7 +154,7 @@
                           v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
                           :title="sem.semester"
-                          :title-link-class="sem.disabled"
+                          :title-item-class="sem.disabled"
                           :active="sem.active"
                         >
                           <div class="md-layout">
@@ -453,6 +453,7 @@ export default {
           }
         }
       }
+      console.log(semesters);
       return semesters;
     },
 
@@ -704,6 +705,11 @@ label {
   font-weight: bold !important;
   font-size: 1.5vh
 }
+#moduletabs .disabledTab {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 /* checkbox css */
 
@@ -720,6 +726,7 @@ label {
   top: 1px;
   left: 6px;
 }
+
 
 /* Chips css */
 .md-chips.md-field.mod-chips.md-theme-default:after {

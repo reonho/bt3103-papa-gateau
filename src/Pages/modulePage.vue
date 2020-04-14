@@ -557,29 +557,15 @@ span {
   border-width: 0;
   border-left-width: 0.1px;
 }
-.disabledTab {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-
 
 </style>
 <style>
 .btn-link {
-  color: #ec7663;
-  font-weight: bold;
+  color: #ec7663 !important;
+  font-weight: bold !important;
   font-size: 1vw !important
 }
-.btn-link:hover {
-  color: #ec7663;
-  font-weight: bold;
-}
-.btn-link:focus {
-  color: #ec7663;
-  font-weight: bold;
-}
+
 .dropdown-item h5 {
   color: #ec7663;
 }
