@@ -196,7 +196,7 @@
                 <md-empty-state
                   id="statebox"
                   style="max-width:0 !important; color: #2e4053;"
-                  md-label="Loading...."
+                  md-label="Loading Modules..."
                 >
                 <br/>
                 <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>

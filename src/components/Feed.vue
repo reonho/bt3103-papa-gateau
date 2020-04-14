@@ -105,7 +105,7 @@ export default {
       modlst.push(mod);
     }
     modlst = modlst.sort((a, b) => a.amt - b.amt);
-
+  console.log(modlst)
     for (let i = 0; i < this.course.module.length; i++) {
       this.series[0].data.push(modlst[i].amt);
       this.chartOptionsYear.xaxis.categories.push(modlst[i].mod);

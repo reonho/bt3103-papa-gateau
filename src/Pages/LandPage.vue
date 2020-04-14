@@ -67,7 +67,6 @@
           </div>
 
           <RadarChart
-            
             v-if="facultyAttributes"
             :my_attr="User.attributes"
             :fac_attr="facultyAttributes"
@@ -78,7 +77,7 @@
       <br />
       <br />
       <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
-
+      
       <br />
       <br />
       <div>
@@ -97,6 +96,7 @@
 import DataObject from "../Database.js";
 
 import EditUserDetailsForm from "../components/EditUserDetailsForm";
+//import ViewSemesterSection from "../components/ViewSemesterSection";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
 // //import TreeChart from "../components/TreeCharts/TreeChart"
@@ -120,7 +120,8 @@ export default {
     capline,
     NavBar,
     Feed,
-    ReviewSection
+    ReviewSection,
+   // ViewSemesterSection
     // // Ratings
   },
   data: function() {
