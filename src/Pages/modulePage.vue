@@ -39,7 +39,8 @@
             <br />
             <br />
             <b class="miniheader">Exam</b>
-            <br />28-Nov-2019 5:00 PM • 2 hours
+            <br />
+            <span>28-Nov-2019 5:00 PM • 2 hours</span>
           </div>
           <div class="col-7">
             <b class="miniheader">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
@@ -75,7 +76,7 @@
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
-                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Student reviews</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
                         <span
@@ -93,10 +94,10 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Features</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh">Features</h4>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Easy to understand</p>
+                          <p style="font-weight:400; font-size:2vh">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -108,7 +109,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable assignments</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -120,7 +121,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable exams</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable exams</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -132,7 +133,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable workload</p>
+                          <p style="font-weight:400; font-size:2  vh">Manageable workload</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -144,22 +145,9 @@
                           </p>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px" id="workload"></span>
-                          </p>
-                        </div>
-                      </div>
+                      
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2vh">Filter by Year</h4>
+                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
                       <md-field style="width: 20vw">
                       <label for="years">Years Selected</label>
                       <md-select v-model="yrs" multiple name="years" id="years">
@@ -497,25 +485,25 @@ export default {
 .header {
   padding: 1vh;
   padding-left: 0;
-  font-size: 1.7vw;
+  font-size: 1.8vw;
 }
 .miniheader {
-  font-size: 1.7vh;
+  font-size: 1.2vw;
   color: #616a6b;
   font-weight: bold;
 }
 .depFac {
-  font-size: 1.7vh;
+  font-size: 2vh;
 }
 span {
-   font-size: 1.7vh;
+   font-size: 2.1vh;
    line-height: 1.5;
 }
 .section-header {
   color:#EC7663; 
   margin-top:20px; 
   font-size: 25px;
-  font-size: 1.5vw;
+  font-size: 1.9vw;
 }
 .button {
   display: block;

@@ -14,13 +14,11 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                <span>
-                  <md-button
-                    class="clear-filter"
-                    :md-ripple="false"
-                    v-on:click="clearfilter"
-                  >Clear Filters</md-button>
-                </span>
+                
+                  <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+          </b-button>
+                  
               </td>
             </tr>
           </table>
@@ -137,12 +135,12 @@
                     <span class="module-prerequisite">{{post.info.prerequisite}}</span>
                     <br />
                   </div>
-                  <div class="md-layout-item-30" style="padding-left:25px">
+                  <div class="md-layout-item-30" style="padding-left:3vw">
                     <div>
                       <br />
                       <br />
                       <b-tabs
-                        style="width:45vw;"
+                        style="width:46vw;"
                         id="moduletabs"
                         active-nav-item-class="activetab"
                         class="semtabs"
@@ -175,10 +173,11 @@
                                 <br />
                               </span>
                             </div>
-                            <div style="width:27vw;background-color:white">
+                            <div style="width:29vw;background-color:white">
                               <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
+                          
                         </b-tab>
                       </b-tabs>
                     </div>
@@ -550,7 +549,7 @@ export default {
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 p, span {
-  font-size:1.7vh;
+  font-size:2.1vh;
   line-height: 1.5;
 }
 .md-content {
@@ -584,27 +583,32 @@ hr {
   margin-bottom: 1vw;
   margin-top: 2.7vw;
   width: 19vw;
+  
 }
 .filter-head {
-  font-size: 1vw;
+  font-size: 1.2vw;
   color: #616a6b;
   font-weight: bold;
   margin-right: 3vw;
 }
 .minihead {
   color: #616a6b;
-  font-size: 1.4vh;
+  font-size: 1.5vh;
   font-weight: bold;
   margin-bottom: 0.5vw;
   display: block;
 }
-.md-button.clear-filter {
-  background-color: teal !important;
-  font-weight: bold;
-  float: right;
-  font-size: 1.4vh;
-  padding: 1vh;
-  margin-right: 0;
+.btn-outline-info {
+  color: teal;
+  float:right;
+  border-color: teal;
+  border: 2px solid;
+}
+
+.btn-outline-info:hover {
+  color: white;
+  background-color: teal;
+  border-color: teal;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -636,19 +640,19 @@ hr {
   margin-bottom: 0 !important;
 }
 .module-name {
-  font-size: 1.2vw;
+  font-size: 1.4vw;
   font-weight: bold;
 }
 .module-type {
   padding-top: 1vh
 }
 .module-preclusionhead {
-  font-size: 1.7vh;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
 .module-prerequisitehead {
-  font-size: 1.7vh;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
@@ -669,7 +673,7 @@ hr {
 }
 
 .examhead {
-  font-size: 1.7vh;
+  font-size: 2vh;
   color: #616a6b;
   font-weight: bold;
 }
@@ -694,16 +698,15 @@ label {
 #moduletabs .nav-item .nav-link.activetab {
   background-color: teal !important;
   font-weight: bold !important;
-  font-size: 1.5vh
 }
 .md-theme-default #moduletabs .nav-link.active:not(.md-button) {
   color: white !important;
-  font-size: 1.5vh
+  font-size: 1.8vh
 }
 .md-theme-default #moduletabs .nav-link:not(.md-button) {
   color: teal !important;
   font-weight: bold !important;
-  font-size: 1.5vh
+  font-size: 1.8vh
 }
 #moduletabs .disabledTab {
   pointer-events: none;
