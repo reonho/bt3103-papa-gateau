@@ -144,6 +144,20 @@
                           </p>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                        </div>
+                        <div class="col-6" style="float:right">
+                          <p>
+                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
+                            </span>
+                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
+                            </span>
+                            <span style="padding:10px;font-size: 12px" id="workload"></span>
+                          </p>
+                        </div>
+                      </div>
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345; font-size:2vh">Filter by Year</h4>
                       <md-field style="width: 20vw">
@@ -455,7 +469,7 @@ export default {
   data: () => ({
     showAddDialog: false,
     showDialog: false,
-    yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
+    yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
     totalsems: "",
     reviewData: [],
     infodes: null,
