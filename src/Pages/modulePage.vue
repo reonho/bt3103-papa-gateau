@@ -240,7 +240,7 @@ export default {
       database.getUser().then(user => {
         //check if user has added module
         database.ifAddedModule(this.code, user).then(mod => {
-          console.log(mod);
+          
           if (mod === null) {
             this.showAddDialog = true;
           } else {
@@ -309,7 +309,7 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
+
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
