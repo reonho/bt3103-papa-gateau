@@ -76,10 +76,12 @@
                     <div class="col-5">
                       <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
                       <p>
-                        <span style="color: gold;font-size:16px;" class="star" id = "avg_gold_stars">
-                        </span>
-                        <span style="color: lightgrey;font-size:16px;" class="star" id = "avg_grey_stars">
-                        </span>
+                        <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
+                        <span
+                          style="color: lightgrey;font-size:16px;"
+                          class="star"
+                          id="avg_grey_stars"
+                        ></span>
                         <span style="padding:10px;font-size: 15px">
                           <span id="avg"></span> out of 5
                         </span>
@@ -97,10 +99,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "easy_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "easy_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="easy"></span>
                           </p>
                         </div>
@@ -111,10 +111,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "man_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "man_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="manageable"></span>
                           </p>
                         </div>
@@ -125,11 +123,9 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "exam_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "exam_grey_stars">
-                            </span>
-                            <span style="padding:10px;font-size: 12px" id = "exam"></span>
+                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
+                            <span style="padding:10px;font-size: 12px" id="exam"></span>
                           </p>
                         </div>
                       </div>
@@ -139,10 +135,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="workload"></span>
                           </p>
                         </div>
@@ -150,14 +144,14 @@
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
                       <md-field style="width: 20vw">
-                      <label for="years">Years Selected</label>
-                      <md-select v-model="yrs" multiple name="years" id="years">
-                        <md-option value="AY1920">AY 1920</md-option>
-                        <md-option value="AY1819">AY 1819</md-option>
-                        <md-option value="AY1718">AY 1718</md-option>
-                        <md-option value="AY1617">AY 1617</md-option>
-                      </md-select>
-                    </md-field>
+                        <label for="years">Years Selected</label>
+                        <md-select v-model="yrs" multiple name="years" id="years">
+                          <md-option value="AY1920" id="thekey">AY 1920</md-option>
+                          <md-option value="AY1819">AY 1819</md-option>
+                          <md-option value="AY1718">AY 1718</md-option>
+                          <md-option value="AY1617">AY 1617</md-option>
+                        </md-select>
+                      </md-field>
                     </div>
                   </div>
                   <br />
@@ -206,6 +200,12 @@
           md-confirm-text="Okay"
           md-title="Review already exists"
         />
+        <md-dialog-alert
+          :md-active.sync="showAddDialog"
+          md-content="Please add the module first before writing a review."
+          md-confirm-text="Okay"
+          md-title="Module not added"
+        />
       </div>
     </div>
   </div>
@@ -233,23 +233,27 @@ export default {
   },
   methods: {
     review() {
-      //prevents user from submitting multiple reviews
-      // database.getUser().then(user => {
-      //   database
-      //     .ifAddedModule(this.Modules[0].info.moduleCode, user)
-      //     .then(mod => {
-      //       if (mod === null) {
-      //         this.$router.push({
-      //           name: "ReviewForm",
-      //           params: { mod: this.Modules[0].info.moduleCode }
-      //         });
-      //       } else {
-      //         this.showDialog = true
-      //       }
-      //     });
-      this.$router.push({
-        name: "ReviewForm",
-        params: { mod: this.Modules[0].info.moduleCode }
+      database.getUser().then(user => {
+        //check if user has added module
+        database.ifAddedModule(this.code, user).then(mod => {
+          console.log(mod);
+          if (mod === null) {
+            this.showAddDialog = true;
+          } else {
+            database.ifAddedReview(this.code, user).then(rev => {
+              //if user has not written review yet
+              if (rev === null) {
+                this.$router.push({
+                  name: "ReviewForm",
+                  params: { mod: this.Modules[0].info.moduleCode }
+                });
+              } else {
+                //user has already written a review, prompt them
+                this.showDialog = true;
+              }
+            });
+          }
+        });
       });
     },
 
@@ -340,6 +344,7 @@ export default {
           }
         }
       }
+      console.log(semesters)
       return semesters;
     },
     showsem(sem) {
@@ -449,6 +454,7 @@ export default {
     });
   },
   data: () => ({
+    showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
     totalsems: "",
@@ -466,10 +472,10 @@ export default {
   }),
   watch: {
     yrs: function(val) {
-      console.log(val)
+      console.log(val);
     }
   }
-}
+};
 </script>
 
 
@@ -528,15 +534,14 @@ export default {
 }
 .btn-link {
   color: #EC7663;
-  font-weight:bold
+  font-weight: bold;
 }
 .btn-link:hover {
   color: #EC7663;
-  font-weight:bold
+  font-weight: bold;
 }
 .btn-link:focus {
   color: #EC7663;
-  font-weight:bold
+  font-weight: bold;
 }
-
 </style>
