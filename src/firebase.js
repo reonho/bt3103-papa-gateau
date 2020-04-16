@@ -221,15 +221,14 @@ var database = {
         .get()
         .then((snapshot) => {
           snapshot.forEach((user) => {
+            console.log(user.id)
             students.push(user.id);
-          });
-          if (!students.empty) {
             database.firebase_data
               .collection("module_grades")
-              .where("studentID", "in", students)
+              .where("studentID", "==", user.id)
               .get()
-              .then((snapshot) => {
-                snapshot.forEach((result) => {
+              .then(snapshot=>{
+                snapshot.forEach(result=>{
                   var result_ = result.data();
                   if (modules.includes(result_.module)) {
                     var index = modules.indexOf(result_.module);
@@ -238,12 +237,10 @@ var database = {
                     modules.push(result_.module);
                     amt.push(1);
                   }
-                });
-                resolve({ module: modules, amount: amt });
-              });
-          } else {
-            resolve(null);
-          }
+                })
+                resolve({module: modules, amount: amt})
+              })
+          });
         });
     });
     return promise;
