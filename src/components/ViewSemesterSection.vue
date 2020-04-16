@@ -5,7 +5,7 @@
         <div class="md-layout-item md-size-30">
           <md-field style="margin:0;padding:0;min-height:4.5vh">
             <label style="top:1.3vh;font-size:1vw">Year</label>
-            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
+            <md-select  v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
               <md-option
                 v-for="year in yearlist"
                 :key="year.index"
@@ -156,7 +156,9 @@ export default {
     usergrades: [],
     modalyear: null,
     modalsem: null,
-    currentdetails: []
+    currentdetails: [],
+    yearchosen: null,
+    semchosen: null
   }),
   components: {
     //AddModuleModal

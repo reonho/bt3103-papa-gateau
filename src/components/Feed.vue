@@ -23,14 +23,14 @@
           </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
-            <ViewSemesterSection :User = "User" />
+            <ViewSemesterSection :User = "User"  v-if="User"/>
           </div>
         </div>
       </div>
 
       <div class="sub-contain-div2">
         <div class="sub-header-content">
-          <div class="sub-header-title">TOP COHORT</div>
+          <div class="sub-header-title">TOP MODULES TAKEN BY YOUR COHORT</div>
           <div class="sub-header-content" style="padding-top:1vw;">
             <div id="chart">
               <apexchart type="bar" :options="chartOptionsYear" :series="series"></apexchart>
@@ -95,7 +95,7 @@ export default {
       mod["mod"] = this.course.module[i];
       modlst.push(mod);
     }
-    modlst = modlst.sort((a, b) => a.amt - b.amt);
+    modlst = modlst.sort((a, b) => b.amt - a.amt);
 
     for (let i = 0; i < this.course.module.length; i++) {
       this.series[0].data.push(modlst[i].amt);

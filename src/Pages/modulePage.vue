@@ -6,13 +6,13 @@
       <div style="color:#EC7663; margin-left: 20px; margin-top:20px" class="header">
         <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
-      <!-- <button
+      <button
         class="button"
         style="float: right; margin-right: 20px;background-color:#17a2b8"
         onclick="window.location.href = '/#/ModuleList';"
       >
         <span>Back To All Modules</span>
-      </button> -->
+      </button>
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
@@ -22,41 +22,40 @@
         class="depFac"
       >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
-      <div style="margin-left: 20px; margin-right:20px">
-        <span>{{this.Modules[0].info.description}}</span>
+      <div style="margin-left: 20px; margin-right:20px;font-size:15px">
+        {{this.Modules[0].info.description}}
         <br />
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
-            <b class="miniheader">Preclusion(s)</b>
+            <b style="color: #616a6b">Preclusion(s)</b>
             <br />
-             <span>{{this.Modules[0].info.preclusion}}</span>
-            <br />
-            <br />
-            <b class="miniheader">Prerequisite(s)</b>
-            <br />
-             <span>{{this.Modules[0].info.prerequisite}}</span>
+            {{this.Modules[0].info.preclusion}}
             <br />
             <br />
-            <b class="miniheader">Exam</b>
+            <b style="color: #616a6b">Prerequisite(s)</b>
+            <br />
+            {{this.Modules[0].info.prerequisite}}
+            <br />
+            <br />
+            <b style="color: #616a6b">Exam</b>
             <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
           <div class="col-7">
-            <b class="miniheader">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
+            <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
             <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
           </div>
         </div>
       </div>
       <hr />
       <div id="statistics">
-        <span class="section-header">Statistics</span>
+        <span style="color:#EC7663; margin-top:20px; font-size: 25px">Statistics</span>
         <br />
         <br />
         <b-tabs
           active-nav-item-class="activetab"
           class="semtabs"
           v-model="chosenSem"
-          id="moduletabs"
           content-class="mt-3"
           lazy
         >
@@ -75,7 +74,7 @@
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
-                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Student reviews</h4>
+                      <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
                         <span
@@ -93,10 +92,10 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2vh">Features</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Easy to understand</p>
+                          <p style="font-weight:400; font-size:12px">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -108,7 +107,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable assignments</p>
+                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -120,7 +119,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable exams</p>
+                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -132,29 +131,27 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:1.5vh">Manageable workload</p>
+                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="workload"></span>
                           </p>
                         </div>
                       </div>
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2vh">Filter by Year</h4>
+                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
                       <md-field style="width: 20vw">
-                      <label for="years">Years Selected</label>
-                      <md-select v-model="yrs" multiple name="years" id="years">
-                        <md-option value="AY1920">AY 1920</md-option>
-                        <md-option value="AY1819">AY 1819</md-option>
-                        <md-option value="AY1718">AY 1718</md-option>
-                        <md-option value="AY1617">AY 1617</md-option>
-                      </md-select>
-                    </md-field>
+                        <label for="years">Years Selected</label>
+                        <md-select v-model="yrs" multiple name="years" id="years">
+                          <md-option value="AY1920" id="thekey">AY 1920</md-option>
+                          <md-option value="AY1819">AY 1819</md-option>
+                          <md-option value="AY1718">AY 1718</md-option>
+                          <md-option value="AY1617">AY 1617</md-option>
+                        </md-select>
+                      </md-field>
                     </div>
                   </div>
                   <br />
@@ -166,11 +163,12 @@
       </div>
       <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
-      <div id="reviews" class="section-header">
+      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 25px">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 1vw; width:10vw;float:right; margin-right:0 !important;background-color:teal; border-color:teal;"
+          style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
+          href="#"
           id="addReview"
           @click="review"
         >New Review</a>
@@ -178,7 +176,7 @@
           size="lg"
           variant="link"
           toggle-class="text-decoration-none"
-          style="float:right;"
+          style="float:right"
           no-caret
         >
           <template v-slot:button-content>Sort by Newest &#9662;</template>
@@ -194,7 +192,7 @@
         </b-dropdown>
       </div>
       <br />
-      <div style="margin-top:1vh">
+      <div>
         <ReviewSection :reviewData="reviewData" />
         <md-dialog-alert
           :md-active.sync="showDialog"
@@ -258,6 +256,7 @@ export default {
         });
       });
     },
+
     formatwork(workload) {
       var series = [];
       series.push({
@@ -266,6 +265,7 @@ export default {
       });
       return series;
     },
+
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -445,6 +445,7 @@ export default {
           this.reviewData.push(item);
           // console.log(doc.id)
         });
+        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {
@@ -471,7 +472,7 @@ export default {
     my_attr: [],
     showAddDialog: false,
     showDialog: false,
-    yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
+    yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
     totalsems: "",
     reviewData: [],
     infodes: null,
@@ -487,37 +488,20 @@ export default {
   }),
   watch: {
     yrs: function(val) {
-      console.log(val)
+      console.log(val);
     }
   }
-}
+};
 </script>
 
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 .header {
-  padding: 1vh;
-  padding-left: 0;
-  font-size: 1.7vw;
-}
-.miniheader {
-  font-size: 1.7vh;
-  color: #616a6b;
-  font-weight: bold;
+  font-size: 30px;
 }
 .depFac {
-  font-size: 1.7vh;
-}
-span {
-   font-size: 1.7vh;
-   line-height: 1.5;
-}
-.section-header {
-  color:#EC7663; 
-  margin-top:20px; 
-  font-size: 25px;
-  font-size: 1.5vw;
+  font-size: 15px;
 }
 .button {
   display: block;
@@ -564,15 +548,9 @@ span {
   cursor: not-allowed;
   opacity: 0.5;
 }
-
-
-
-</style>
-<style>
 .btn-link {
   color: #ec7663;
   font-weight: bold;
-  font-size: 1vw !important
 }
 .btn-link:hover {
   color: #ec7663;
@@ -582,8 +560,4 @@ span {
   color: #ec7663;
   font-weight: bold;
 }
-.dropdown-item h5 {
-  color: #ec7663;
-}
 </style>
-

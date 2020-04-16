@@ -52,6 +52,7 @@
                   <p
                     class="sub-content-text"
                     style="padding-bottom:0;"
+                    v-if="cohortTopMods"
                   >{{formatcap(User.overall_cap)}}</p>
                 </div>
               </div>
