@@ -344,6 +344,7 @@ export default {
           }
         }
       }
+      console.log(semesters)
       return semesters;
     },
     showsem(sem) {
@@ -478,7 +479,7 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~vue-material/src/theme/engine";
 .header {
   font-size: 30px;
@@ -532,15 +533,15 @@ export default {
   opacity: 0.5;
 }
 .btn-link {
-  color: #ec7663;
+  color: #EC7663;
   font-weight: bold;
 }
 .btn-link:hover {
-  color: #ec7663;
+  color: #EC7663;
   font-weight: bold;
 }
 .btn-link:focus {
-  color: #ec7663;
+  color: #EC7663;
   font-weight: bold;
 }
 </style>
