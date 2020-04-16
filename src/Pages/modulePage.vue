@@ -451,8 +451,24 @@ export default {
       this.Modules.push(item);
     });
 
+
+    //variables for ModuleRadarChart
+    //Query user's attributes
+    database.firebase_data
+      .collection('students')
+      .doc(database.user)
+      .get()
+      .then(user => {
+        var userData = user.data()
+        this.my_attr = userData.attributes
+        console.log(this.my_attr)
+      })
+      //Query attributes of top scorers
+
+
   },
   data: () => ({
+    my_attr: [],
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1819", "AY1920", "AY1617", "AY1718"],
