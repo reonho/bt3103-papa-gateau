@@ -2,7 +2,8 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_APIKEY,
+  //apiKey: process.env.VUE_APP_APIKEY,
+  apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
   authDomain: "papa-gateau.firebaseapp.com",
   databaseURL: "https://papa-gateau.firebaseio.com",
   projectId: "papa-gateau",
