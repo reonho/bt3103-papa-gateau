@@ -138,7 +138,7 @@ export default {
   methods: {
     // tester method
     test(){
-      database.getCohortTopModules({sem:"Semester 1", year: "AY1819"}).then(e =>{
+      database.getFacultyAttributes("Business").then(e =>{
         console.log(e)
       })
 
