@@ -1,12 +1,12 @@
-import { HorizontalBar} from 'vue-chartjs'
-import database from "./firebase.js"
+import { HorizontalBar } from "vue-chartjs";
+import database from "./firebase.js";
 //const { reactiveProp } = mixins
 
 export default {
   extends: HorizontalBar,
   //mixins: [reactiveProp],
-  props: ['semester', 'code', 'years'],
-  data: function () {
+  props: ["semester", "code", "years", "loading"],
+  data: function() {
     return {
       datacollection: {
         labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
@@ -14,36 +14,36 @@ export default {
           {
             data: [],
             label: "Number of votes",
-            backgroundColor: "rgba(255,99,132,0.5)"
-          }
-        ]
+            backgroundColor: "rgba(255,99,132,0.5)",
+          },
+        ],
       },
       options: {
         scales: {
           yAxes: [
             {
               gridLines: {
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           ],
           xAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                display: true
+                display: true,
               },
               gridLines: {
-                display: true
-              }
-            }
-          ]
+                display: true,
+              },
+            },
+          ],
         },
         legend: {
-          display: false
-        }
-      }
-    }
+          display: false,
+        },
+      },
+    };
   },
   methods: {
     numWholeStars(n) {
@@ -52,218 +52,261 @@ export default {
     numHalfStars(n) {
       if (n % 1 >= 0.5) {
         return 1;
-      } else return 0
+      } else return 0;
     },
-    fetchItems: function () {
-      database.firebase_data.collection('reviews').get().then(querySnapShot => {
-        var numbers = [0,0,0,0,0]
-        var easy = [0,0,0,0,0]
-        var manag = [0,0,0,0,0]
-        var eman = [0,0,0,0,0]
-        var work = [0,0,0,0,0]
-        var display = false
-        querySnapShot.forEach(doc => {
-          var sem = doc.data().detailsForm.selectedSemester
-          var modCode = doc.data().module_code
-          var yr = doc.data().detailsForm.selectedYear
-          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
-            display = true
-            var rating = doc.data().commentForm.rating
-            numbers[rating - 1] += 1
+    fetchItems: function() {
+     
+      
+      database.firebase_data
+        .collection("reviews")
+        .get()
+        .then((querySnapShot) => {
+          var numbers = [0, 0, 0, 0, 0];
+          var easy = [0, 0, 0, 0, 0];
+          var manag = [0, 0, 0, 0, 0];
+          var eman = [0, 0, 0, 0, 0];
+          var work = [0, 0, 0, 0, 0];
+          var display = false;
+          querySnapShot.forEach((doc) => {
+            
+            var sem = doc.data().detailsForm.selectedSemester;
+            var modCode = doc.data().module_code;
+            var yr = doc.data().detailsForm.selectedYear;
+            if (
+              (isNaN(sem)
+                ? sem.includes("Semester " + (this.semester + 1)) ||
+                  sem.includes("Special Term " + (this.semester - 1))
+                : sem == this.semester) &&
+              modCode == this.code &&
+              this.years.includes(yr)
+            ) {
+              display = true;
+              var rating = doc.data().commentForm.rating;
+              numbers[rating - 1] += 1;
 
-            var easiness = doc.data().commentForm.difficulty
-            easy[easiness - 1] += 1
+              var easiness = doc.data().commentForm.difficulty;
+              easy[easiness - 1] += 1;
 
-            var asgnmt = doc.data().tutorialForm.ap
-            manag[asgnmt - 1] += 1
+              var asgnmt = doc.data().tutorialForm.ap;
+              manag[asgnmt - 1] += 1;
 
-            var exam = doc.data().tutorialForm.exam
-            eman[exam - 1] += 1
+              var exam = doc.data().tutorialForm.exam;
+              eman[exam - 1] += 1;
 
-            var wkload = doc.data().commentForm.workload
-            work[wkload - 1] += 1
+              var wkload = doc.data().commentForm.workload;
+              work[wkload - 1] += 1;
+            }
+          });
+
+          this.datacollection.datasets[0].data = numbers.reverse();
+          var sum = 0;
+          var numPpl = numbers.reduce((a, b) => a + b, 0);
+          for (var i = 0; i < 5; i++) {
+            sum += numbers[i] * (5 - i);
           }
-        })
-        
-        this.datacollection.datasets[0].data = numbers.reverse()
-        var sum = 0
-        var numPpl = numbers.reduce((a, b) => a + b, 0)
-        for (var i = 0; i < 5; i++) {
-          sum += (numbers[i] * (5 - i))
-        }
-        var avg = Math.round((sum / numPpl + Number.EPSILON) * 100) / 100
-        document.getElementById("avg").innerHTML = avg
-      
-        var ele = document.getElementById("avg_gold_stars")
-        var ele1 = document.getElementById("avg_grey_stars")
+          var avg = Math.round((sum / numPpl + Number.EPSILON) * 100) / 100;
+          document.getElementById("avg").innerHTML = avg;
+         
 
-        for (var x = 0; x < this.numWholeStars(avg); x++) {
-          let star = document.createElement("i")
-          star.className = "fa fa-star"
-          ele.appendChild(star)
-        }
+          var ele = document.getElementById("avg_gold_stars");
+          var ele1 = document.getElementById("avg_grey_stars");
 
-        for (var z = 0; z < this.numHalfStars(avg); z++) {
-          let hstar = document.createElement("i")
-          hstar.className = "fas fa-star-half-alt"
-          ele.appendChild(hstar)
-        }
+          for (var x = 0; x < this.numWholeStars(avg); x++) {
+            let star = document.createElement("i");
+            star.className = "fa fa-star";
+            ele.appendChild(star);
+          }
 
-        for (var y = 0; y < (5 - this.numWholeStars(avg) - this.numHalfStars(avg)); y++) {
-          let gstar = document.createElement("i")
-          gstar.className = "fa fa-star"
-          ele1.appendChild(gstar)
-        }
+          for (var z = 0; z < this.numHalfStars(avg); z++) {
+            let hstar = document.createElement("i");
+            hstar.className = "fas fa-star-half-alt";
+            ele.appendChild(hstar);
+          }
 
-        var esum = 0
-        for (var s = 0; s < 5; s++) {
-          esum += (easy[s] * (s + 1))
-        }
-        var eavg = Math.round((esum / numPpl + Number.EPSILON) * 100) / 100
-        document.getElementById("easy").innerHTML = eavg
+          for (
+            var y = 0;
+            y < 5 - this.numWholeStars(avg) - this.numHalfStars(avg);
+            y++
+          ) {
+            let gstar = document.createElement("i");
+            gstar.className = "fa fa-star";
+            ele1.appendChild(gstar);
+          }
 
-        var ele2 = document.getElementById("easy_gold_stars")
-        var ele3 = document.getElementById("easy_grey_stars")
+          var esum = 0;
+          for (var s = 0; s < 5; s++) {
+            esum += easy[s] * (s + 1);
+          }
+          var eavg = Math.round((esum / numPpl + Number.EPSILON) * 100) / 100;
+          document.getElementById("easy").innerHTML = eavg;
 
-        for (x = 0; x < this.numWholeStars(eavg); x++) {
-          let star = document.createElement("i")
-          star.className = "fa fa-star"
-          ele2.appendChild(star)
-        }
+          var ele2 = document.getElementById("easy_gold_stars");
+          var ele3 = document.getElementById("easy_grey_stars");
 
-        for (z = 0; z < this.numHalfStars(eavg); z++) {
-          let hstar = document.createElement("i")
-          hstar.className = "fas fa-star-half-alt"
-          ele2.appendChild(hstar)
-        }
+          for (x = 0; x < this.numWholeStars(eavg); x++) {
+            let star = document.createElement("i");
+            star.className = "fa fa-star";
+            ele2.appendChild(star);
+          }
 
-        for (y = 0; y < (5 - this.numWholeStars(eavg) - this.numHalfStars(eavg)); y++) {
-          let gstar = document.createElement("i")
-          gstar.className = "fa fa-star"
-          ele3.appendChild(gstar)
-        }
+          for (z = 0; z < this.numHalfStars(eavg); z++) {
+            let hstar = document.createElement("i");
+            hstar.className = "fas fa-star-half-alt";
+            ele2.appendChild(hstar);
+          }
 
-        var msum = 0
-        for (var t = 0; t < 5; t++) {
-          msum += (manag[t] * (t + 1))
-        }
-        var mavg = Math.round((msum / numPpl + Number.EPSILON) * 100) / 100
-        document.getElementById("manageable").innerHTML = mavg
+          for (
+            y = 0;
+            y < 5 - this.numWholeStars(eavg) - this.numHalfStars(eavg);
+            y++
+          ) {
+            let gstar = document.createElement("i");
+            gstar.className = "fa fa-star";
+            ele3.appendChild(gstar);
+          }
 
-        var ele4 = document.getElementById("man_gold_stars")
-        var ele5 = document.getElementById("man_grey_stars")
+          var msum = 0;
+          for (var t = 0; t < 5; t++) {
+            msum += manag[t] * (t + 1);
+          }
+          var mavg = Math.round((msum / numPpl + Number.EPSILON) * 100) / 100;
+          document.getElementById("manageable").innerHTML = mavg;
 
-        for (x = 0; x < this.numWholeStars(mavg); x++) {
-          let star = document.createElement("i")
-          star.className = "fa fa-star"
-          ele4.appendChild(star)
-        }
+          var ele4 = document.getElementById("man_gold_stars");
+          var ele5 = document.getElementById("man_grey_stars");
 
-        for (z = 0; z < this.numHalfStars(mavg); z++) {
-          let hstar = document.createElement("i")
-          hstar.className = "fas fa-star-half-alt"
-          ele4.appendChild(hstar)
-        }
+          for (x = 0; x < this.numWholeStars(mavg); x++) {
+            let star = document.createElement("i");
+            star.className = "fa fa-star";
+            ele4.appendChild(star);
+          }
 
-        for (y = 0; y < (5 - this.numWholeStars(mavg) - this.numHalfStars(mavg)); y++) {
-          let gstar = document.createElement("i")
-          gstar.className = "fa fa-star"
-          ele5.appendChild(gstar)
-        }
+          for (z = 0; z < this.numHalfStars(mavg); z++) {
+            let hstar = document.createElement("i");
+            hstar.className = "fas fa-star-half-alt";
+            ele4.appendChild(hstar);
+          }
 
-        var exsum = 0
-        for (t = 0; t < 5; t++) {
-          exsum += (eman[t] * (t + 1))
-        }
-        var exavg = Math.round((exsum / numPpl + Number.EPSILON) * 100) / 100
-        document.getElementById("exam").innerHTML = exavg
+          for (
+            y = 0;
+            y < 5 - this.numWholeStars(mavg) - this.numHalfStars(mavg);
+            y++
+          ) {
+            let gstar = document.createElement("i");
+            gstar.className = "fa fa-star";
+            ele5.appendChild(gstar);
+          }
 
-        var ele6 = document.getElementById("exam_gold_stars")
-        var ele7 = document.getElementById("exam_grey_stars")
+          var exsum = 0;
+          for (t = 0; t < 5; t++) {
+            exsum += eman[t] * (t + 1);
+          }
+          var exavg = Math.round((exsum / numPpl + Number.EPSILON) * 100) / 100;
+          document.getElementById("exam").innerHTML = exavg;
 
-        for (x = 0; x < this.numWholeStars(exavg); x++) {
-          let star = document.createElement("i")
-          star.className = "fa fa-star"
-          ele6.appendChild(star)
-        }
+          var ele6 = document.getElementById("exam_gold_stars");
+          var ele7 = document.getElementById("exam_grey_stars");
 
-        for (z = 0; z < this.numHalfStars(exavg); z++) {
-          let hstar = document.createElement("i")
-          hstar.className = "fas fa-star-half-alt"
-          ele6.appendChild(hstar)
-        }
+          for (x = 0; x < this.numWholeStars(exavg); x++) {
+            let star = document.createElement("i");
+            star.className = "fa fa-star";
+            ele6.appendChild(star);
+          }
 
-        for (y = 0; y < (5 - this.numWholeStars(exavg) - this.numHalfStars(exavg)); y++) {
-          let gstar = document.createElement("i")
-          gstar.className = "fa fa-star"
-          ele7.appendChild(gstar)
-        }
+          for (z = 0; z < this.numHalfStars(exavg); z++) {
+            let hstar = document.createElement("i");
+            hstar.className = "fas fa-star-half-alt";
+            ele6.appendChild(hstar);
+          }
 
-        var wsum = 0
-        for (s = 0; s < 5; s++) {
-          wsum += (work[s] * (s + 1))
-        }
-        var wavg = Math.round((wsum / numPpl + Number.EPSILON) * 100) / 100
-        document.getElementById("workload").innerHTML = wavg
-      
-        var ele8 = document.getElementById("wkload_gold_stars")
-        var ele9 = document.getElementById("wkload_grey_stars")
+          for (
+            y = 0;
+            y < 5 - this.numWholeStars(exavg) - this.numHalfStars(exavg);
+            y++
+          ) {
+            let gstar = document.createElement("i");
+            gstar.className = "fa fa-star";
+            ele7.appendChild(gstar);
+          }
 
-        for (x = 0; x < this.numWholeStars(wavg); x++) {
-          let star = document.createElement("i")
-          star.className = "fa fa-star"
-          ele8.appendChild(star)
-        }
+          var wsum = 0;
+          for (s = 0; s < 5; s++) {
+            wsum += work[s] * (s + 1);
+          }
+          var wavg = Math.round((wsum / numPpl + Number.EPSILON) * 100) / 100;
+          document.getElementById("workload").innerHTML = wavg;
 
-        for (z = 0; z < this.numHalfStars(wavg); z++) {
-          let hstar = document.createElement("i")
-          hstar.className = "fas fa-star-half-alt"
-          ele8.appendChild(hstar)
-        }
+          var ele8 = document.getElementById("wkload_gold_stars");
+          var ele9 = document.getElementById("wkload_grey_stars");
 
-        for (y = 0; y < (5 - this.numWholeStars(wavg) - this.numHalfStars(wavg)); y++) {
-          let gstar = document.createElement("i")
-          gstar.className = "fa fa-star"
-          ele9.appendChild(gstar)
-        }
+          for (x = 0; x < this.numWholeStars(wavg); x++) {
+            let star = document.createElement("i");
+            star.className = "fa fa-star";
+            ele8.appendChild(star);
+          }
 
-        this.avgRating = avg
-        if (display) this.renderChart(this.datacollection, this.options)
-        /*else {
+          for (z = 0; z < this.numHalfStars(wavg); z++) {
+            let hstar = document.createElement("i");
+            hstar.className = "fas fa-star-half-alt";
+            ele8.appendChild(hstar);
+          }
+
+          for (
+            y = 0;
+            y < 5 - this.numWholeStars(wavg) - this.numHalfStars(wavg);
+            y++
+          ) {
+            let gstar = document.createElement("i");
+            gstar.className = "fa fa-star";
+            ele9.appendChild(gstar);
+          }
+
+          this.avgRating = avg;
+          if (display) this.renderChart(this.datacollection, this.options);
+          
+          /*else {
           this.options.title.display = true
           this.options.title.text = "No Data"
           this.options.responsive = true
           this.renderChart(this.datacollection, this.options)
           // does not display anything unless title is set to not display up there
         }*/
-      })
-    }
+        });
+       
+
+        
+    },
   },
   created() {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
-    this.fetchItems()
+    
+    this.fetchItems();
+    
   },
   watch: {
-    years: function () {
-      this._data._chart.destroy()
-      var arr = []
-      arr.push(document.getElementById("avg_gold_stars"))
-      arr.push(document.getElementById("avg_grey_stars"))
-      arr.push(document.getElementById("easy_gold_stars"))
-      arr.push(document.getElementById("easy_grey_stars"))
-      arr.push(document.getElementById("man_gold_stars"))
-      arr.push(document.getElementById("man_grey_stars"))
-      arr.push(document.getElementById("exam_gold_stars"))
-      arr.push(document.getElementById("exam_grey_stars"))
-      arr.push(document.getElementById("wkload_gold_stars"))
-      arr.push(document.getElementById("wkload_grey_stars"))
+    years: function() {
+     
+      this._data._chart.destroy();
+      var arr = [];
+      arr.push(document.getElementById("avg_gold_stars"));
+      arr.push(document.getElementById("avg_grey_stars"));
+      arr.push(document.getElementById("easy_gold_stars"));
+      arr.push(document.getElementById("easy_grey_stars"));
+      arr.push(document.getElementById("man_gold_stars"));
+      arr.push(document.getElementById("man_grey_stars"));
+      arr.push(document.getElementById("exam_gold_stars"));
+      arr.push(document.getElementById("exam_grey_stars"));
+      arr.push(document.getElementById("wkload_gold_stars"));
+      arr.push(document.getElementById("wkload_grey_stars"));
       for (let i = 0; i < arr.length; i++) {
         while (arr[i].firstChild) {
-          arr[i].removeChild(arr[i].lastChild)
+          arr[i].removeChild(arr[i].lastChild);
         }
       }
-      this.fetchItems()
-    }
-  }
-}
+      this.fetchItems();
+
+     
+    },
+  },
+};

@@ -14,13 +14,9 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                <span>
-                  <md-button
-                    class="clear-filter"
-                    :md-ripple="false"
-                    v-on:click="clearfilter"
-                  >Clear Filters</md-button>
-                </span>
+                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+                  <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+                </b-button>
               </td>
             </tr>
           </table>
@@ -80,7 +76,7 @@
       </div>
       <div class="md-layout-item">
         <!-- Modules -->
-        <div class="module-div">
+        <div>
           <div class="module-header">
             <div class="search-wrapper">
               <md-autocomplete v-model="searchbar" :md-options="searchlist">
@@ -102,7 +98,7 @@
               <hr />
             </div>
           </div>
-          <div id="ModuleItem">
+          <div class="module-div" id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
                 <router-link
@@ -111,7 +107,7 @@
                   style="color:#EC7663;"
                 >{{post.info.moduleCode}} {{post.info.title}}</router-link>
                 <br />
-                <router-link :to="{path:'/:moduleCode', query: {code: post.info.moduleCode}}"></router-link>
+
                 <p
                   class="module-type"
                 >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
@@ -137,12 +133,13 @@
                     <span class="module-prerequisite">{{post.info.prerequisite}}</span>
                     <br />
                   </div>
-                  <div class="md-layout-item-30" style="padding-left:25px">
+                  <div class="md-layout-item-30" style="padding-left:3vw">
                     <div>
                       <br />
                       <br />
                       <b-tabs
-                        style="width:45vw;"
+                        style="width:46vw;"
+                        id="moduletabs"
                         active-nav-item-class="activetab"
                         class="semtabs"
                         content-class="mt-3"
@@ -153,7 +150,7 @@
                           v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
                           :title="sem.semester"
-                          :title-link-class="sem.disabled"
+                          :title-item-class="sem.disabled"
                           :active="sem.active"
                         >
                           <div class="md-layout">
@@ -174,7 +171,7 @@
                                 <br />
                               </span>
                             </div>
-                            <div style="width:27vw;background-color:white">
+                            <div style="width:29vw;background-color:white">
                               <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
@@ -185,7 +182,27 @@
                 </div>
               </div>
             </md-list>
-            <div style="height:200px"></div>
+
+            <div style="height:200px">
+              <div v-show="showEmpty">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important;  color: #2e4053;"
+                  md-icon="view_list"
+                  md-label="No Modules to Display"
+                ></md-empty-state>
+              </div>
+              <div v-show="loading">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading Modules..."
+                >
+                <br/>
+                <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                </md-empty-state>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -195,6 +212,7 @@
 
 <script>
 import database from "../firebase.js";
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -205,7 +223,8 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
     //intakechart: StudentIntakeChart,
-    workloadchart: WorkloadChart
+    workloadchart: WorkloadChart,
+    pulseloader: PulseLoader
   },
   props: {
     test: {
@@ -215,6 +234,8 @@ export default {
   },
   data() {
     return {
+      color: "teal",
+      loading: true,
       searchbar: "",
       modulenum: 0,
       modulesData: [],
@@ -323,6 +344,12 @@ export default {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
+    },
+    showEmpty() {
+      if ((this.modulenum == 0) & (this.loading == false)) {
+        return true;
+      }
+      return false;
     }
   },
   methods: {
@@ -331,6 +358,7 @@ export default {
         .collection("modules")
         .get()
         .then(querySnapShot => {
+          this.loading = true;
           var flookup = {};
           var dlookup = {};
           var slookup = {};
@@ -363,6 +391,7 @@ export default {
               slookup[name] = 1;
               this.searchlist.push(name);
             }
+            this.loading = false;
           });
         });
     },
@@ -416,7 +445,6 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -453,9 +481,10 @@ export default {
           }
         }
       }
+      console.log(semesters);
       return semesters;
     },
-    
+
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -539,7 +568,9 @@ export default {
   },
   mounted() {
     //this.writeDatabase();
+
     this.readDatabase();
+
     //console.log(this.modulesData);
   }
 };
@@ -548,23 +579,25 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
+p,
+span {
+  font-size: 2.1vh;
+  line-height: 1.5;
+}
+
 .md-content {
-  max-width: 400px;
-  max-height: 700px;
+  max-width: 22vw;
+  max-height: 100vh;
   overflow: auto;
-  padding: 20px;
-  padding-left: 30px;
+  padding: 1vw;
+  padding-left: 1.5vw;
 }
 hr {
   height: 0px !important;
   margin: 0 !important;
   margin-top: 10px !important;
 }
-</style>
-<style>
-label {
-  font-weight: 100 !important;
-}
+
 .sticky-header {
   position: fixed;
   left: 0;
@@ -572,38 +605,42 @@ label {
   top: 0;
   z-index: 10;
 }
-.module-div {
-  position: relative;
-}
+
 /* Filter section css */
 .md-content.md-scrollbar {
   position: fixed;
-  margin-top: 70px;
-  width: 25%;
+  margin-top: 3.5vw;
+  width: 22vw;
 }
 .filter-header {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  width: 100%;
+  margin-bottom: 1vw;
+  margin-top: 2.7vw;
+  width: 19vw;
 }
 .filter-head {
-  font-size: 130%;
+  font-size: 1.2vw;
   color: #616a6b;
   font-weight: bold;
-  margin-right: 80px;
+  margin-right: 3vw;
 }
 .minihead {
   color: #616a6b;
-  font-size: 80%;
+  font-size: 1.9vh;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.5vw;
   display: block;
 }
-.md-button.clear-filter {
-  background-color: #17a2b8 !important;
-  font-weight: bold;
+.btn-outline-info {
+  color: teal;
   float: right;
-  margin-right: 0;
+  border-color: teal;
+  border: 2px solid;
+}
+
+.btn-outline-info:hover {
+  color: white;
+  background-color: teal;
+  border-color: teal;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -612,99 +649,63 @@ label {
   text-align: right;
 }
 .modnum {
-  margin-right: 30px;
-  color: #EC7663;
+  margin-right: 2vw;
+  color: #ec7663;
   font-weight: bold;
 }
-.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #EC7663 !important;
-}
-.md-checkbox .md-checkbox-container {
-  border: 1px solid rgba(0, 0, 0, 0.54) !important;
-  border-radius: 3px !important;
-}
-.md-checkbox.md-checked .md-checkbox-container:after {
-  border-color: white !important;
-  top: 1px;
-  left: 6px;
-}
+
 .md-checkbox {
   display: flex !important;
-  margin: 5px 5px 5px 0px !important;
+  margin: 0.3vw 0.3vw 0.3vw 0 !important;
 }
-.levelcheck {
-  padding: 11px;
-  padding-top: 0px;
-}
+
 .mod-dropdown.md-field {
-  margin: 4px 0px 10px !important;
+  margin: 0.3vw 0 0.5vw !important;
 }
-/* Chips css */
-.md-chips.md-field.mod-chips.md-theme-default:after {
-  background-color: white !important;
-}
-.mod-chips .md-chip.md-theme-default {
-  background-color: #EC7663 !important;
-  color: white !important;
-  font-weight: bold !important;
-}
+
 /* Module Card css */
 #ModuleItem {
-  margin-top: 18%;
+  margin-top: 25vh;
 }
 .modulecard {
-  margin: 30px;
-  margin-bottom: 0px !important;
+  margin: 2vw;
+  margin-bottom: 0 !important;
 }
 .module-name {
-  font-size: 150%;
-  color: #17a2b8;
+  font-size: 1.4vw;
   font-weight: bold;
 }
+.module-type {
+  padding-top: 1vh;
+}
 .module-preclusionhead {
-  font-size: 120%;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
 .module-prerequisitehead {
-  font-size: 120%;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
 .search-wrapper {
   margin: 0 auto;
-  margin-bottom: 20px;
-  margin-top: 100px;
+  margin-bottom: 1vw;
+  margin-top: 5.5vw;
 }
 .module-header {
   position: fixed;
   background-color: white;
-  margin-right: 2%;
+  margin-top: 1vw;
+  margin-right: 2vw;
   top: 0;
   right: 0;
-  z-index: 5;
-  width: 71.5%;
+  width: 71vw;
+  z-index: 1;
 }
-.activetab {
-  background-color: #17a2b8 !important;
-  font-weight: bold !important;
-}
-.md-theme-default .nav-link:not(.md-button) {
-  color: #17a2b8 !important;
-  font-weight: bold !important;
-}
-.md-theme-default .nav-link.active:not(.md-button) {
-  color: white !important;
-}
-.md-tabs.test .md-tabs-content {
-  height: 190px !important;
-  max-width: 100% !important;
-  padding-left: 0px !important;
-  padding-right: 10px !important;
-  padding-top: 5px !important;
-}
+
 .examhead {
-  font-size: 110%;
+  font-size: 2vh;
   color: #616a6b;
   font-weight: bold;
 }
@@ -713,5 +714,84 @@ label {
 }
 .md-tooltip.mod-tooltip.md-theme-default {
   background-color: transparent !important;
+}
+</style>
+
+<style>
+.md-field label {
+  font-size: 1.7vh !important;
+}
+label {
+  font-weight: 200 !important;
+  font-size: 1.7vh;
+}
+
+/* Module Sem Tab CSS */
+#moduletabs .nav-item .nav-link.activetab {
+  background-color: teal !important;
+  font-weight: bold !important;
+}
+.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
+  color: white !important;
+  font-size: 1.8vh;
+}
+.md-theme-default #moduletabs .nav-link:not(.md-button) {
+  color: teal !important;
+  font-weight: bold !important;
+  font-size: 1.8vh;
+}
+#moduletabs .disabledTab {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* checkbox css */
+
+.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
+  background-color: #ec7663 !important;
+}
+.md-checkbox .md-checkbox-container {
+  border: 1px solid #616a6b !important;
+  border-radius: 3px !important;
+}
+.md-checkbox.md-checked .md-checkbox-container:after {
+  border-color: white !important;
+  top: 1px;
+  left: 6px;
+}
+
+/* Chips css */
+.md-chips.md-field.mod-chips.md-theme-default:after {
+  background-color: white !important;
+}
+.mod-chips .md-chip.md-theme-default {
+  background-color: #ec7663 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.md-list.md-theme-default .md-selected .md-list-item-content,
+.md-list.md-theme-default .router-link-active .md-list-item-content {
+  color: #b82d17 !important;
+}
+
+/* Empty State */
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal
+}
+
+#statebox .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+
+#statebox .md-empty-state-description {
+  font-size: 1vw !important;
+}
+
+#statebox .md-empty-state-container {
+  padding-top: 5vh;
+  width: 42vw;
 }
 </style>

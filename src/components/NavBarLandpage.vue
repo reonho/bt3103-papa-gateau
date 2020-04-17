@@ -31,7 +31,6 @@
     <!-- Navigation>
     <nav class="navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container-fluid">
-
         <a class="navbar-brand ml-1" href="#">
          
             <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>

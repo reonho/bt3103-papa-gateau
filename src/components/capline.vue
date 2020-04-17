@@ -16,10 +16,9 @@
             msg: String,
             sap: Array
         },
-
         data: function(){ 
             return {
-                series1: [{ name: 'My Average',data: [4.9, 4.5, 4, 4.2, 4.1, 4.3],}, { name: 'NUS Average',data: [4, 3.9, 3.71, 3.70, 3.69, 3.67],}],
+                series1: [{ name: 'Semester AP',data: [],}, { name: 'Cumulative CAP',data: [],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
@@ -41,25 +40,30 @@
                                 }
                             }
                             }],
-
                     dataLabels: {
                         enabled: true,
                         "formatter": function (val) {
                                 return val.toFixed(2)
                             }
                     },
-                    colors:['#00aaff', '#ff9900', '#2cab93', "#9500ff", '#E91E63', '#FF9800',],
+                    colors:['#00aaff',  '#2cab93', '#ff9900',"#9500ff", '#E91E63', '#FF9800',],
                     fill: {
                         opacity: 0.5,
                         colors: []
                         }
-
                 },   
             }
         },
         methods:{
             parse_sap: function(obj_array){
+                obj_array = obj_array.sort(function(a,b){
+                    if(a.year == b.year){
+                        return a.sem - b.sem
+                    }
+                    return a.year - b.year
+                })
                 
+                console.log(obj_array)
                 var sap_series = []
                 var cum_series = []
                 for(let i=0; i < 8; i++){

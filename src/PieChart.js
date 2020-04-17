@@ -44,6 +44,7 @@ export default {
         var display = false
         querySnapShot.forEach(doc => {
           var sem = doc.data().detailsForm.selectedSemester
+          
           var modCode = doc.data().module_code
           var yr = doc.data().detailsForm.selectedYear
           if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
