@@ -584,6 +584,7 @@ span {
   font-size: 2.1vh;
   line-height: 1.5;
 }
+
 .md-content {
   max-width: 22vw;
   max-height: 100vh;
@@ -624,7 +625,7 @@ hr {
 }
 .minihead {
   color: #616a6b;
-  font-size: 1.5vh;
+  font-size: 1.9vh;
   font-weight: bold;
   margin-bottom: 0.5vw;
   display: block;

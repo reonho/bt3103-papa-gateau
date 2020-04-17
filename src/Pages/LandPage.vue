@@ -14,7 +14,7 @@
             <md-button
               class="md-primary md-raised"
               style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
-    width:20vh;font-size: 1.6vh; margin:0"
+    width:20vh;font-size: 1.8vh; margin:0"
               @click="showModal = true"
             >EDIT DETAILS</md-button>
             <md-dialog :md-active.sync="showModal">
@@ -276,7 +276,7 @@ export default {
 }
 .header {
   color: #566573;
-  font-size: 3vh;
+  font-size: 4vh;
   font-weight: 600;
 }
 .sub-header-title {
@@ -299,7 +299,7 @@ export default {
   color: #ec7663;
 }
 .sub-content-text {
-  font-size: 1.8vh;
+  font-size: 2.1vh;
   text-align: left;
   padding-bottom: 4vh;
   color: #2e4053;
