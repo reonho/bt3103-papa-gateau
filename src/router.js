@@ -19,7 +19,7 @@ let router = new Router({
       name: 'ModuleList',
       component: ModuleList,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
