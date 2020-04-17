@@ -137,10 +137,8 @@
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
-                            <span style="color: gold;" class="star" id = "wkload_gold_stars">
-                            </span>
-                            <span style="color: lightgrey;" class="star" id = "wkload_grey_stars">
-                            </span>
+                            <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
+                            <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
                             <span style="padding:10px;font-size: 12px" id="workload"></span>
                           </p>
                         </div>
@@ -149,14 +147,14 @@
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
                       <md-field style="width: 20vw">
-                      <label for="years">Years Selected</label>
-                      <md-select v-model="yrs" multiple name="years" id="years">
-                        <md-option value="AY1920">AY 1920</md-option>
-                        <md-option value="AY1819">AY 1819</md-option>
-                        <md-option value="AY1718">AY 1718</md-option>
-                        <md-option value="AY1617">AY 1617</md-option>
-                      </md-select>
-                    </md-field>
+                        <label for="years">Years Selected</label>
+                        <md-select v-model="yrs" multiple name="years" id="years">
+                          <md-option value="AY1920" id="thekey">AY 1920</md-option>
+                          <md-option value="AY1819">AY 1819</md-option>
+                          <md-option value="AY1718">AY 1718</md-option>
+                          <md-option value="AY1617">AY 1617</md-option>
+                        </md-select>
+                      </md-field>
                     </div>
                   </div>
                   <br />
@@ -346,6 +344,7 @@ export default {
           }
         }
       }
+      console.log(semesters)
       return semesters;
     },
     showsem(sem) {
@@ -473,10 +472,10 @@ export default {
   }),
   watch: {
     yrs: function(val) {
-      console.log(val)
+      console.log(val);
     }
   }
-}
+};
 </script>
 
 
