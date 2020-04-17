@@ -7,6 +7,7 @@ export default {
   //mixins: [reactiveProp],
   data: function () {
     return {
+      ratings: 0,
       datacollection: {
         labels: [],
         datasets: [
@@ -61,8 +62,9 @@ export default {
           this.datacollection.labels.push(key)
           this.datacollection.datasets[0].data.push(value)
         })
-
-        document.getElementById("ratings").innerHTML = this.datacollection.datasets[0].data.reduce((a, b) => a + b, 0)
+        var ratings = this.datacollection.datasets[0].data.reduce((a, b) => a + b, 0);
+        this.$root.$emit("showratings", ratings);
+        document.getElementById("ratings").innerHTML = ratings;
         if (display) this.renderChart(this.datacollection, this.options)
         else {
           this.options.title.text = "No Data"
@@ -70,6 +72,7 @@ export default {
           this.renderChart(this.datacollection, this.options)
         }
       })
+      
     }
   },
   created() {

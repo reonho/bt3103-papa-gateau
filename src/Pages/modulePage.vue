@@ -64,13 +64,15 @@
             <div id="container">
               <div class="row">
                 <div class="col-4" v-show="loading"></div>
-                <div class="col-4" v-show="!loading">
+                <div class="col-4" v-show="showEmpty"></div>
+                <div class="col-4" v-show="!loading&&!showEmpty">
                   <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                 </div>
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5" v-show="loading"></div>
-                    <div class="col-5" v-show="!loading">
+                    <div class="col-5" v-show="showEmpty"></div>
+                    <div class="col-5"  v-show="!loading&&!showEmpty">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
@@ -90,7 +92,8 @@
                     </div>
                     <div class="col-7">
                       <div v-show="loading"></div>
-                      <div v-show="!loading">
+                        <div v-show="showEmpty"></div>
+                      <div  v-show="!loading&&!showEmpty">
                         <h4
                           style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
                         >Features</h4>
@@ -157,10 +160,22 @@
                             id="years"
                             @md-selected="showloading"
                           >
-                            <md-option value="AY1920" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1920</md-option>
-                            <md-option value="AY1819" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1819</md-option>
-                            <md-option value="AY1718" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1718</md-option>
-                            <md-option value="AY1617" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1617</md-option>
+                            <md-option
+                              value="AY1920"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1920</md-option>
+                            <md-option
+                              value="AY1819"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1819</md-option>
+                            <md-option
+                              value="AY1718"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1718</md-option>
+                            <md-option
+                              value="AY1617"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1617</md-option>
                           </md-select>
                         </md-field>
                       </div>
@@ -177,6 +192,16 @@
                   >
                     <br />
                     <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                  </md-empty-state>
+                </div>
+                <div style="width: 100vw;" v-show="showEmpty&&!loading">
+                  <md-empty-state
+                    id="statebox"
+                    style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
+                    md-label="No Data"
+                    md-icon="bar_chart"
+                  >
+                    <br />
                   </md-empty-state>
                 </div>
               </div>
@@ -258,13 +283,24 @@ export default {
     NavBar,
     ReviewSection
   },
-
+  computed: {
+    showEmpty: function() {
+      var result = false;
+      if (this.ratings == 0) {
+        result = true;
+      }
+      return result;
+    },
+  },
   methods: {
     showloading: function() {
       this.loading = true;
+      this.$root.$on("showratings", this.showratings);
       setTimeout(() => {
         this.loading = false;
-      }, 700);
+      }, 1000);
+      
+      
     },
     review() {
       database.getUser().then(user => {
@@ -461,6 +497,10 @@ export default {
         num = num + arr[i];
       }
       return num;
+    },
+    showratings(value) {
+      this.ratings = value;
+      console.log(value);
     }
   },
   created() {
@@ -487,8 +527,10 @@ export default {
   },
   mounted() {
     this.loading = false;
+    this.$root.$on("showratings", this.showratings);
   },
   data: () => ({
+    ratings: 0,
     loading: true,
     showAddDialog: false,
     showDialog: false,
@@ -595,5 +637,23 @@ span {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
+}
+/* Empty State */
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal
+}
+
+#statebox .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+
+#statebox .md-empty-state-description {
+  font-size: 1vw !important;
+}
+
+#statebox .md-empty-state-container {
+  padding-top: 5vh;
+  width: 42vw;
 }
 </style>
