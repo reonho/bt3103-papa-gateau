@@ -27,31 +27,37 @@
               <br />
               <p class="reg-header">User Info</p>
 
-              <md-field>
+              <md-field :class="getValidationClass('regForm', 'username')">
                 <label>Email</label>
-                <md-input type="username" id="username" v-model="username"></md-input>
+                <md-input type="username" id="username" v-model="regForm.username"></md-input>
                 <span class="md-suffix">@u.nus.edu</span>
+                <span class="md-error" v-if="!$v.regForm.username.required">This field is required</span>
               </md-field>
-              <md-field>
+              <md-field :class="getValidationClass('regForm', 'name')"> 
                 <label>Name</label>
-                <md-input type="name" id="name" v-model="name"></md-input>
+                <md-input type="name" id="name" v-model="regForm.name"></md-input>
+                <span class="md-error" v-if="!$v.regForm.name.required">This field is required</span>
               </md-field>
-              <md-field>
+              <md-field :class="getValidationClass('regForm', 'password')">
                 <label>Password</label>
-                <md-input type="password" id="password" v-model="password"></md-input>
+                <md-input type="password" id="password" v-model="regForm.password"></md-input>
+                   <span class="md-error" v-if="!$v.regForm.password.required">This field is required</span>
+                   <span class="md-error" v-if="!$v.regForm.password.minLength">Password must be at least 6 characters</span>
               </md-field>
-              <md-field>
+              <md-field :class="getValidationClass('regForm', 'cfmpassword')">
                 <label>Confirm Password</label>
-                <md-input type="password" id="cfmpassword" v-model="cfmpassword"></md-input>
+                <md-input type="password" id="cfmpassword" v-model="regForm.cfmpassword"></md-input>
+                <span class="md-error" v-if="!$v.regForm.cfmpassword.required">This field is required</span>
+                    <span class="md-error" v-if="!$v.regForm.password.sameAsPassword & $v.regForm.cfmpassword.required">Password does not match</span>
               </md-field>
               <br />
               <p class="reg-header">Education Info</p>
 
               <div class="md-layout">
                 <div class="md-layout-item md-size-55">
-                  <md-field>
+                  <md-field :class="getValidationClass('regForm', 'coursechosen')">
                     <label>Course</label>
-                    <md-select v-model="coursechosen" name="coursechosen" id="coursechosen">
+                    <md-select v-model="regForm.coursechosen" name="coursechosen" id="coursechosen">
                       <md-option
                         v-for="course in courselist"
                         :key="course.index"
@@ -59,6 +65,7 @@
                         v-model="course.value"
                       >{{ course.value }}</md-option>
                     </md-select>
+                       <span class="md-error" v-if="!$v.regForm.coursechosen.required">This field is required</span>
                   </md-field>
                 </div>
                 <div class="md-layout-item md-size-5"></div>
@@ -67,9 +74,9 @@
                     <label>Number of semesters completed</label>
                     <md-input type="number" v-on:keyup="filtersem" id="currentsem" v-model="semnum"></md-input>
                   </md-field>-->
-                  <md-field>
+                  <md-field :class="getValidationClass('regForm', 'yearchosen')">
                     <label>Year of Enrollment</label>
-                    <md-select v-model="yearchosen" name="yearchosen" id="yearchosen">
+                    <md-select v-model="regForm.yearchosen" name="yearchosen" id="yearchosen">
                       <md-option
                         v-for="year in accumulateYear"
                         :key="year.index"
@@ -77,6 +84,7 @@
                         v-model="year.value"
                       >{{ year.value }}</md-option>
                     </md-select>
+                       <span class="md-error" v-if="!$v.regForm.yearchosen.required">This field is required</span>
                   </md-field>
                 </div>
               </div>
@@ -84,7 +92,7 @@
               <button
                 class="button btn btn-block text-uppercase"
                 type="submit"
-                v-on:click="addUser"
+                v-on:click.prevent="addUser"
                 style="background:linear-gradient(to right, teal,#17a2b8); font-weight:600;color:white;padding:1vh;"
               >
                 <span style="font-size:1.6vh">Register</span>
@@ -110,20 +118,51 @@
 <script>
 // import DataObject from "../Database.js"
 import database from "../firebase.js";
+import { validationMixin } from "vuelidate";
+import { required, sameAs, minLength} from "vuelidate/lib/validators";
 export default {
   name: "Registration",
   components: {},
   data: function() {
     return {
-      username: "",
-      name: "",
-      password: "",
-      cfmpassword: "",
-      coursechosen: null,
-      yearchosen: null,
+      regForm: {
+        username: null,
+        name: null,
+        password: null,
+        cfmpassword: null,
+        coursechosen: null,
+        yearchosen: null,
+        
+      },
       courselist: [],
-      showSubmitMessage: false
+        showSubmitMessage: false
     };
+  },
+  mixins: [validationMixin],
+  validations: {
+    regForm: {
+      username: {
+        required
+      },
+      name: {
+        required
+      },
+      password: {
+        required,
+        minLength: minLength(6)
+      },
+      cfmpassword: {
+        required,
+        sameAsPassword: sameAs('password')
+
+      },
+      coursechosen: {
+        required
+      },
+      yearchosen: {
+        required
+      }
+    }
   },
   computed: {
     updatesem() {
@@ -143,11 +182,11 @@ export default {
     accumulateYear() {
       var yearlist = [];
       var latest = parseInt(new Date().getFullYear());
-     
-      for (var i = 2018; i < latest; i++) {
-        var start = i.toString().substring(2,4)
+
+      for (var i = 2016; i < latest; i++) {
+        var start = i.toString().substring(2, 4);
         var end = (parseInt(start) + 1).toString();
-        var value = "AY" + start + end
+        var value = "AY" + start + end;
         yearlist.push({
           value: value
         });
@@ -157,6 +196,14 @@ export default {
     }
   },
   methods: {
+    getValidationClass(formName, fieldName) {
+      const field = this.$v[formName][fieldName];
+      if (field) {
+        return {
+          "md-invalid": field.$invalid && field.$dirty
+        };
+      }
+    },
     filtersem() {
       var sem = ["Semester 2", "Semester 1"];
       var semesters = [];
@@ -204,47 +251,38 @@ export default {
       }
       return true;
     },
-    addmod(sem) {
-      var code = "BT2101";
-      var grade = "A";
-      let currentsems = this.semlist;
-      for (var i = 0; i < currentsems.length; i++) {
-        if (
-          currentsems[i].year == sem.year &&
-          currentsems[i].semester == sem.semester
-        ) {
-          currentsems[i].mods.push({
-            code: code,
-            grade: grade
-          });
-        }
-      }
-      this.semlist = currentsems;
-    },
     addUser() {
       var batch = {
-        year: this.yearchosen,
+        year: this.regForm.yearchosen,
         sem: "Semester 1"
       };
-      database
-        .register(
-          this.username+"@u.nus.edu",
-          this.password,
-          this.name,
-          this.coursechosen,
-          batch
-        )
-        .then(doc => {
-          console.log(doc);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-        this.showSubmitMessage = true;
+
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        console.log(this.regForm);
+        console.log(batch);
+        database
+          .register(
+            this.regForm.username + "@u.nus.edu",
+            this.regForm.password,
+            this.regForm.name,
+            this.regForm.coursechosen,
+            batch
+          )
+          .then(doc => {
+            console.log(doc);
+             this.showSubmitMessage = true;
+             console.log(database.user);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+       
+        
+      }
     },
     goLogin() {
       this.$router.push({ path: "/" });
-
     }
   },
   created() {
@@ -264,6 +302,7 @@ export default {
           });
         });
       });
+      
   }
 };
 </script>

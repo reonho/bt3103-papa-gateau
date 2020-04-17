@@ -74,7 +74,7 @@
                 <div class="col-8 box">
                   <div class="row">
                     <div class="col-5">
-                      <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
+                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
                         <span
@@ -92,10 +92,10 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
+                      <h4 style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh">Features</h4>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Easy to understand</p>
+                          <p style="font-weight:400; font-size:2vh">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -107,7 +107,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -119,7 +119,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable exams</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -131,7 +131,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                          <p style="font-weight:400; font-size:2  vh">Manageable workload</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -141,8 +141,9 @@
                           </p>
                         </div>
                       </div>
+                      
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
+                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
                       <md-field style="width: 20vw">
                         <label for="years">Years Selected</label>
                         <md-select v-model="yrs" multiple name="years" id="years">
@@ -236,7 +237,7 @@ export default {
       database.getUser().then(user => {
         //check if user has added module
         database.ifAddedModule(this.code, user).then(mod => {
-          console.log(mod);
+          
           if (mod === null) {
             this.showAddDialog = true;
           } else {
@@ -307,7 +308,7 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
+
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -482,10 +483,27 @@ export default {
 <style lang="scss">
 @import "~vue-material/src/theme/engine";
 .header {
-  font-size: 30px;
+  padding: 1vh;
+  padding-left: 0;
+  font-size: 1.8vw;
+}
+.miniheader {
+  font-size: 1.2vw;
+  color: #616a6b;
+  font-weight: bold;
 }
 .depFac {
-  font-size: 15px;
+  font-size: 2vh;
+}
+span {
+   font-size: 2.1vh;
+   line-height: 1.5;
+}
+.section-header {
+  color:#EC7663; 
+  margin-top:20px; 
+  font-size: 25px;
+  font-size: 1.9vw;
 }
 .button {
   display: block;
@@ -527,21 +545,16 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-.disabledTab {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+
+</style>
+<style>
 .btn-link {
-  color: #EC7663;
-  font-weight: bold;
+  color: #ec7663 !important;
+  font-weight: bold !important;
+  font-size: 1vw !important
 }
-.btn-link:hover {
-  color: #EC7663;
-  font-weight: bold;
-}
-.btn-link:focus {
-  color: #EC7663;
-  font-weight: bold;
+
+.dropdown-item h5 {
+  color: #ec7663;
 }
 </style>
