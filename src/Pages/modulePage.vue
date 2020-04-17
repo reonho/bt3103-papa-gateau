@@ -69,8 +69,7 @@
                 </div>
                 <div class="col-8 box">
                   <div class="row">
-                    <div class="col-5" v-show="loading">
-                      </div>
+                    <div class="col-5" v-show="loading"></div>
                     <div class="col-5" v-show="!loading">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
@@ -80,7 +79,7 @@
                           class="star"
                           id="avg_grey_stars"
                         ></span>
-                        <span style="padding:10px;font-size: 15px">
+                        <span style="padding:10px;">
                           <span id="avg"></span> out of 5
                         </span>
                       </p>
@@ -90,77 +89,82 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <div v-show="loading">
-                           </div>
+                      <div v-show="loading"></div>
                       <div v-show="!loading">
-                         
-                      <h4
-                        style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
-                      >Features</h4>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                        <h4
+                          style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
+                        >Features</h4>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span style="color: gold;" class="star" id="easy_gold_stars"></span>
+                              <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
+                              <span style="padding:10px;font-size: 12px" id="easy"></span>
+                            </p>
+                          </div>
                         </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="easy"></span>
-                          </p>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span style="color: gold;" class="star" id="man_gold_stars"></span>
+                              <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
+                              <span style="padding:10px;font-size: 12px" id="manageable"></span>
+                            </p>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable exams</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span style="color: gold;" class="star" id="exam_gold_stars"></span>
+                              <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
+                              <span style="padding:10px;font-size: 12px" id="exam"></span>
+                            </p>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable workload</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
+                              <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
+                              <span style="padding:10px;font-size: 12px" id="workload"></span>
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="manageable"></span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Manageable exams</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="exam"></span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2  vh">Manageable workload</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="workload"></span>
-                          </p>
-                        </div>
-                      </div>
-                      </div>
-                     
 
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
+                      <div v-show="!loading">
+                        <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
 
-                      <md-field style="width: 20vw">
-                        <label for="years">Years Selected</label>
-                        <md-select v-model="yrs" multiple name="years" id="years">
-                          <md-option value="AY1920">AY 1920</md-option>
-                          <md-option value="AY1819">AY 1819</md-option>
-                          <md-option value="AY1718">AY 1718</md-option>
-                          <md-option value="AY1617">AY 1617</md-option>
-                        </md-select>
-                      </md-field>
-                   </div>
+                        <md-field style="width: 20vw">
+                          <label for="years">Years Selected</label>
+                          <md-select
+                            v-model="yrs"
+                            multiple
+                            name="years"
+                            id="years"
+                            @md-selected="showloading"
+                          >
+                            <md-option value="AY1920" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1920</md-option>
+                            <md-option value="AY1819" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1819</md-option>
+                            <md-option value="AY1718" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1718</md-option>
+                            <md-option value="AY1617" v-bind:class="{'disabledTab': loading,  '': !loading }">AY 1617</md-option>
+                          </md-select>
+                        </md-field>
+                      </div>
+                    </div>
                   </div>
                   <br />
                 </div>
@@ -254,13 +258,13 @@ export default {
     NavBar,
     ReviewSection
   },
-  
+
   methods: {
-    showloading:function() {
-       this.loading = true
-     setTimeout(() => {
-      this.loading = false
-    }, 1500)
+    showloading: function() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, 700);
     },
     review() {
       database.getUser().then(user => {
@@ -373,7 +377,6 @@ export default {
           }
         }
       }
-      console.log(semesters);
       return semesters;
     },
     showsem(sem) {
@@ -506,11 +509,11 @@ export default {
   watch: {
     yrs: function(val) {
       console.log(val);
-    },
-    
+    }
   }
 };
 </script>
+
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
