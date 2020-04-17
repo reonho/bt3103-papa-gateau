@@ -63,12 +63,15 @@
           >
             <div id="container">
               <div class="row">
+                <div class="col-4" v-show="loading"></div>
                 <div class="col-4" v-show="!loading">
                   <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                 </div>
-                <div class="col-8 box" v-show="!loading">
+                <div class="col-8 box">
                   <div class="row">
-                    <div class="col-5">
+                    <div class="col-5" v-show="loading">
+                      </div>
+                    <div class="col-5" v-show="!loading">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
@@ -87,6 +90,10 @@
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
+                      <div v-show="loading">
+                           </div>
+                      <div v-show="!loading">
+                         
                       <h4
                         style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
                       >Features</h4>
@@ -138,20 +145,22 @@
                           </p>
                         </div>
                       </div>
+                      </div>
+                     
 
                       <br />
                       <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
 
                       <md-field style="width: 20vw">
                         <label for="years">Years Selected</label>
-                        <md-select v-model="yrs" multiple name="years" id="years">
+                        <md-select v-model="yrs" multiple name="years" id="years" @md-selected="showloading">
                           <md-option value="AY1920" id="thekey">AY 1920</md-option>
                           <md-option value="AY1819">AY 1819</md-option>
                           <md-option value="AY1718">AY 1718</md-option>
                           <md-option value="AY1617">AY 1617</md-option>
                         </md-select>
                       </md-field>
-                    </div>
+                   </div>
                   </div>
                   <br />
                 </div>
@@ -160,7 +169,7 @@
                   <md-empty-state
                     id="statebox"
                     style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
-                    md-label="Loading Modules..."
+                    md-label="Loading Data..."
                   >
                     <br />
                     <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
@@ -245,18 +254,14 @@ export default {
     NavBar,
     ReviewSection
   },
-  computed: {
-    showloading() {
-      console.log(this.$refs);
-      // if (document.getElementById("load").innerHTML == "load") {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-      return false;
-    }
-  },
+  
   methods: {
+    showloading:function() {
+       this.loading = true
+     setTimeout(() => {
+      this.loading = false
+    }, 1500)
+    },
     review() {
       database.getUser().then(user => {
         //check if user has added module
@@ -476,11 +481,8 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
-
-  
   },
   mounted() {
-
     this.loading = false;
   },
   data: () => ({
@@ -504,7 +506,8 @@ export default {
   watch: {
     yrs: function(val) {
       console.log(val);
-    }
+    },
+    
   }
 };
 </script>
@@ -573,7 +576,7 @@ span {
 .box {
   border-style: solid;
   border-width: 0;
-  border-left-width: 0.1px;
+  border-left-width: 0px;
 }
 </style>
 <style>
