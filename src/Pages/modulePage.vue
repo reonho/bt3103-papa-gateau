@@ -72,7 +72,7 @@
                   <div class="row">
                     <div class="col-5" v-show="loading"></div>
                     <div class="col-5" v-show="showEmpty"></div>
-                    <div class="col-5"  v-show="!loading&&!showEmpty">
+                    <div class="col-5" v-show="!loading&&!showEmpty">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
@@ -92,8 +92,8 @@
                     </div>
                     <div class="col-7">
                       <div v-show="loading"></div>
-                        <div v-show="showEmpty"></div>
-                      <div  v-show="!loading&&!showEmpty">
+                      <div v-show="showEmpty"></div>
+                      <div v-show="!loading&&!showEmpty">
                         <h4
                           style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
                         >Features</h4>
@@ -290,7 +290,7 @@ export default {
         result = true;
       }
       return result;
-    },
+    }
   },
   methods: {
     showloading: function() {
@@ -299,8 +299,6 @@ export default {
       setTimeout(() => {
         this.loading = false;
       }, 1000);
-      
-      
     },
     review() {
       database.getUser().then(user => {
@@ -530,6 +528,7 @@ export default {
     this.$root.$on("showratings", this.showratings);
   },
   data: () => ({
+    color: "teal",
     ratings: 0,
     loading: true,
     showAddDialog: false,
@@ -638,22 +637,5 @@ span {
   cursor: not-allowed;
   opacity: 0.5;
 }
-/* Empty State */
-#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
-  font-size: 9vw !important;
-  color: teal
-}
-
-#statebox .md-empty-state-label {
-  font-size: 1.3vw !important;
-}
-
-#statebox .md-empty-state-description {
-  font-size: 1vw !important;
-}
-
-#statebox .md-empty-state-container {
-  padding-top: 5vh;
-  width: 42vw;
-}
 </style>
+
