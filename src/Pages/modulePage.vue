@@ -146,7 +146,7 @@
                       <md-field style="width: 20vw">
                         <label for="years">Years Selected</label>
                         <md-select v-model="yrs" multiple name="years" id="years">
-                          <md-option value="AY1920" id="thekey">AY 1920</md-option>
+                          <md-option value="AY1920">AY 1920</md-option>
                           <md-option value="AY1819">AY 1819</md-option>
                           <md-option value="AY1718">AY 1718</md-option>
                           <md-option value="AY1617">AY 1617</md-option>
@@ -478,8 +478,7 @@ export default {
 };
 </script>
 
-
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 .header {
   font-size: 30px;
@@ -527,11 +526,6 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-.disabledTab {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
 .btn-link {
   color: #EC7663;
   font-weight: bold;
@@ -543,5 +537,12 @@ export default {
 .btn-link:focus {
   color: #EC7663;
   font-weight: bold;
+}
+</style>
+<style lang="scss">
+.disabledTab {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>
