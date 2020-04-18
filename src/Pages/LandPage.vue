@@ -70,8 +70,8 @@
             <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
             <RadarChart
               v-if="facultyAttributes"
-              :my_attr="User.attributes"
-              :fac_attr="facultyAttributes"
+              v-bind:my_attr="User.attributes"
+              v-bind:fac_attr="facultyAttributes"
               type='Faculty'
               label_1='My Attributes'
               label_2='Faculty Average'

@@ -53,9 +53,9 @@
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
             <RadarChart
-              v-if="topAttributes !== null && myAttributes !== null"
-              :my_attr="myAttributes"
-              :fac_attr="topAttributes"
+              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
+              :my_attr="topAttributes"
+              :fac_attr="myAttributes"
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
@@ -445,7 +445,7 @@ export default {
         num = num + arr[i];
       }
       return num;
-    }
+    },
   },
   created() {
     //replace this with a query by module code
@@ -468,9 +468,6 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
-
-    //variables for ModuleRadarChart
-    //Query user's attributes
     database.firebase_data
       .collection("students")
       .doc(database.user)
@@ -478,17 +475,37 @@ export default {
       .then(user => {
         var userData = user.data();
         this.myAttributes = userData.attributes;
+        console.log(typeof this.myAttCheck)
+        this.myAttCheck = userData.attributes[0].att
+        console.log("Check myAtt")
       });
 
     database.getModuleAttributes(this.code).then(ma => {
       console.log(ma);
       this.topAttributes = ma;
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      var self = this
+      async function check(self){
+        console.log(typeof ma[0])
+        while(typeof ma[0] == "undefined"){
+          await(sleep(2000))
+          console.log(typeof ma[0])
+        }
+        self.topAttCheck = ma[0].att  
+      }
+      check(self)
+
     });
+
     //Query attributes of top scorers
   },
   data: () => ({
     topAttributes: null,
     myAttributes: null,
+    myAttCheck: false,
+    topAttCheck: false,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
