@@ -138,7 +138,7 @@ export default {
   methods: {
     // tester method
     test(){
-      database.getFacultyAttributes("Business").then(e =>{
+      database.getNUSAttributes().then(e =>{
         console.log(e)
       })
 

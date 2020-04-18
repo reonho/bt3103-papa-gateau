@@ -329,19 +329,41 @@ var database = {
   async getNUSAttributes() {
     var promise = new Promise((resolve) => {
       database.firebase_data
-        .collection("faculties")
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((faculty) => {
-            database.firebase_data
-              .collection("faculties")
-              .doc(faculty.id)
-              .get()
-              .then((doc) => {
-                resolve(doc.data());
-              });
-          });
-        });
+        .collection("module_grades")
+        .get().then(snapshot=>{
+          var attributes = []
+          snapshot.forEach(doc=>{
+            var grade_ = doc.data()
+              if (grade_.SU == "No"){
+                if (attributes.empty){
+                  attributes.push({
+                    amt: 1,
+                    att: grade_.attribute,
+                    grade : database.convertCap(grade_.grade)
+                  })
+                } else {
+                  var flag = false
+                  for (var att in attributes){
+                    if (attributes[att].att == grade_.attribute){
+                      flag = true
+                      attributes[att].grade = (attributes[att].grade*attributes[att].amt + database.convertCap(grade_.grade))/
+                        (attributes[att].amt + 1);
+                      attributes[att].amt += 1
+                      break;
+                    }
+                  }
+                  if (!flag){
+                    attributes.push({
+                      amt: 1,
+                      att: grade_.attribute,
+                      grade : database.convertCap(grade_.grade)
+                    })
+                  }
+                }
+              }            
+          })
+          resolve(attributes)
+        })
     });
     return promise;
   },
