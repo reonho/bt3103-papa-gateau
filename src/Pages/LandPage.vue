@@ -41,7 +41,7 @@
           <div class="sub-header-content">
             <div class="sub-header-title">GRADES</div>
 
-            <div class="grade-content">
+            <div class="grade-content" v-if="sem">
               <div class="md-layout md-gutter">
                 <div class="md-layout-item md-size-40">
                   <p class="sub-content-title">Current Semester</p>
@@ -77,7 +77,7 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohortTopMods"></Feed>
       
       <br />
       <br />
@@ -150,7 +150,7 @@ export default {
     },
     get_currentsem(obj_array) {
       var sem_no = 1;
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < obj_array.length; i++) {
         //console.log(obj_array[0][key])
         var value = obj_array[i];
         if (Object.entries(value).length === 0) {
@@ -161,6 +161,7 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
+      console.log(this.sem)
     },
 
     get_modules(modules) {
@@ -223,10 +224,11 @@ export default {
         database.getFacultyAttributes(result.faculty).then(attributes => {
           self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
         });
-
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
+
+      
   },
   mounted() {
     if (this.userPassed) {

@@ -129,7 +129,7 @@ export default {
       for (let i = 0; i < lenf; i++) {
         var f_code = fac_attr[i].att;
         if(fac_attrs[f_code] == undefined){
-          fac_attrs[f_code] = [fac_attr[i].grade]
+          fac_attrs[f_code] = [fac_attr[i].grade.toFixed(2)]
         }
       }
 
@@ -145,7 +145,7 @@ export default {
       }
       for (let i = 0; i < len; i++) {
         var m_code = my_attr[i].att;
-        m_list .push(my_attr[i].grade)
+        m_list .push(my_attr[i].grade.toFixed(2))
         attr_labels.push(m_code)
         f_list.push(fac_attrs[m_code])
       }
