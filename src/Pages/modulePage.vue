@@ -22,11 +22,14 @@
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
+            <div v-show="showPreclusions(this.Modules[0].info.preclusion)">
             <b style="color: #616a6b">Preclusion(s)</b>
             <br />
             <p>{{this.Modules[0].info.preclusion}}</p>
             <br />
             <br />
+            </div>
+            <div v-show="showPrereq(this.Modules[0].info.prerequisite)">
             <b style="color: #616a6b">Prerequisite(s)</b>
             <br />
             <p>{{this.Modules[0].info.prerequisite}}</p>
@@ -34,6 +37,7 @@
             <br />
             <b style="color: #616a6b">Exam</b>
             <br /><p>28-Nov-2019 5:00 PM • 2 hours</p>
+            </div>
           </div>
           <div class="col-7">
             <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
@@ -570,6 +574,19 @@ export default {
       } else if (str == "manag_wkld") {
         this.manag_wkld = value;
       }
+    },
+    showPreclusions(val) {
+      console.log(val)
+      if (val != null) {
+        return true;
+      }
+      return false;
+    },
+    showPrereq(val) {
+      if (val != null) {
+        return true;
+      }
+      return false;
     }
   },
   created() {

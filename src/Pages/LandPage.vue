@@ -57,8 +57,8 @@
                 </div>
               </div>
             </div>
-<div class="sub-header-content" style="padding:2vw;">
-            <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
+            <div class="sub-header-content" style="padding:2vw;">
+              <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
             </div>
           </div>
         </div>
@@ -67,11 +67,13 @@
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
           </div>
-
           <RadarChart
             v-if="facultyAttributes"
-            :my_attr="User.attributes"
-            :fac_attr="facultyAttributes"
+            v-bind:my_attr="User.attributes"
+            v-bind:fac_attr="facultyAttributes"
+            type="Faculty"
+            label_1="My Attributes"
+            label_2="Faculty Average"
           ></RadarChart>
         </div>
       </div>
