@@ -15,7 +15,6 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
-// import database from "../firebase";
 export default {
   name: "radar",
   components: {
@@ -23,16 +22,13 @@ export default {
   },
   props: {
     my_attr: Array,
-    fac_attr: Array,
-    type: String,
-    label_1: String,
-    label_2: String
+    fac_attr: Array
   },
   data: function() {
     return {
       series1: [
-        { name: this.label_1, data: [] },
-        { name: this.label_2, data: [] }
+        { name: "My Attributes", data: [5, 0] },
+        { name: "Faculty Average", data: [0, 5] }
       ],
       chartOptions2: {
         chart: {
@@ -51,7 +47,7 @@ export default {
         dataLabels: {
           enabled: true
         },
-
+       
         title: {
           text: ""
         },
@@ -116,6 +112,8 @@ export default {
         }
       }
 
+
+
       this.series1[0].data = my_attrs;
       this.series1[1].data = fac_attrs;
       this.chartOptions2.xaxis.categories = attr_labels;
@@ -124,50 +122,46 @@ export default {
     parse_attr2: function(my_attr, fac_attr) {
       var attr_labels = [];
       var fac_attrs = {};
-      var m_list = [];
-      var f_list = [];
+      var m_list = []
+      var f_list = []
       var lenf = fac_attr.length;
-      //for each item in fac_attr
+
       for (let i = 0; i < lenf; i++) {
-        var f_code = fac_attr[i].att; //get the attribute (e.g. 'BT')
-        if (fac_attrs[f_code] == undefined) {
-          //create an obj like so {'BT':4}
-          fac_attrs[f_code] = fac_attr[i].grade;
+        var f_code = fac_attr[i].att;
+        if(fac_attrs[f_code] == undefined){
+          fac_attrs[f_code] = [fac_attr[i].grade]
         }
       }
 
-      my_attr.sort(function(a, b) {
-        return b.grade - a.grade;
-      });
+      my_attr.sort(function(a,b){
+        return b.grade - a.grade
+      })
 
-      var len = my_attr.length;
-      console.log(my_attr.length)
-      if (len > 6) {
-        len = 6;
+      
+
+      var len = my_attr.length
+      if(len > 6){
+        len = 6
       }
       for (let i = 0; i < len; i++) {
         var m_code = my_attr[i].att;
-        m_list.push(my_attr[i].grade);
-        attr_labels.push(m_code);
-        if (fac_attrs[m_code] !== undefined) {
-          f_list.push(fac_attrs[m_code].toFixed(2));
-        } else {
-          f_list.push(0);
-        }
+        m_list .push(my_attr[i].grade)
+        attr_labels.push(m_code)
+        f_list.push(fac_attrs[m_code])
       }
-      console.log(m_list);
-      console.log(f_list);
+      
 
+        
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
     }
   },
   created() {
+   
+   //console.log(this.fac_attr);
     this.parse_attr2(this.my_attr, this.fac_attr);
-    // this.parse_attr2(this.fac_attr, this.my_attr);
   }
-
 };
 </script>
 

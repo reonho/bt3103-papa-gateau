@@ -13,7 +13,7 @@ const firebaseConfig = {
   measurementId: "G-B09D9JVQ0B",
 };
 
-console.log(process.env.VUE_APP_APIKEY)
+console.log(process.env.VUE_APP_APIKEY )
 
 firebase.initializeApp(firebaseConfig);
 
@@ -27,8 +27,8 @@ var database = {
   },
 
   getUser() {
-    var promise = new Promise(function (resolve) {
-      firebase.auth().onAuthStateChanged(function (user) {
+    var promise = new Promise(function(resolve) {
+      firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           database.user = user.uid;
           resolve(database.user);
@@ -42,7 +42,7 @@ var database = {
   },
 
   login(email, password) {
-    var promise = new Promise(function (resolve) {
+    var promise = new Promise(function(resolve) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -98,11 +98,11 @@ var database = {
   },
 
   logout() {
-    var promise = new Promise(function (resolve) {
+    var promise = new Promise(function(resolve) {
       firebase
         .auth()
         .signOut()
-        .then(function () {
+        .then(function() {
           resolve(true);
         });
     });
@@ -344,41 +344,41 @@ var database = {
   //=====================================//
   //----------- addModuleResults---------//
   //=====================================//
-  async addModuleResults(module_result) { //input must have grade, module, sem, year, SU
+  async addModuleResults(module_result){ //input must have grade, module, sem, year, SU
     var result = module_result
-    var promise = new Promise((resolve, reject) => {
-      database.getUser().then(user => {
+    var promise = new Promise((resolve,reject) =>{
+      database.getUser().then(user =>{
         database.firebase_data.collection('students').doc(user)
-          .get().then(userData => {
-            var user_ = userData.data()
-            //check if module is added
-            database.firebase_data.collection('module_grades')
-              .where('module', "==", result.selectedModule)
-              .where('studentID', '==', user)
-              .get().then(snapshot => {
-                if (snapshot.empty) {
-                  //add module_results
-                  var results = {
-                    SU: result.selectedSU,
-                    attribute: result.selectedModule.slice(0, 2),
-                    course: user_.course,
-                    faculty: user_.faculty,
-                    grade: result.selectedGrade,
-                    module: result.selectedModule,
-                    sem: result.selectedSemester,
-                    studentID: user,
-                    year: result.selectedYear
-                  }
-                  database.firebase_data.collection('module_grades').add(results)
-                  //update student overall cap, modules taken, attributes, cap per semester
-                  database.updateStudentInfo(results)
-                  //update faculty attributes and number of students taken
-                  resolve("success")
-                } else {
-                  reject("module already taken!")
-                }
-              })
-          })
+        .get().then(userData =>{
+          var user_ = userData.data()
+          //check if module is added
+          database.firebase_data.collection('module_grades')
+          .where('module' ,"==",result.selectedModule)
+          .where('studentID', '==', user)
+          .get().then(snapshot =>{
+            if(snapshot.empty){
+              //add module_results
+              var results = {
+                SU: result.selectedSU,
+                attribute: result.selectedModule.slice(0,2),
+                course: user_.course,
+                faculty: user_.faculty,
+                grade: result.selectedGrade,
+                module: result.selectedModule,
+                sem: result.selectedSemester, 
+                studentID: user,
+                year: result.selectedYear 
+              }
+              database.firebase_data.collection('module_grades').add(results)
+              //update student overall cap, modules taken, attributes, cap per semester
+              database.updateStudentInfo(results)
+              //update faculty attributes and number of students taken
+              resolve("success")
+            } else {
+              reject("module already taken!")
+            }
+          })   
+        })
       })
     })
     return promise
@@ -501,13 +501,13 @@ var database = {
   //----------- getModuleReview----------//
   //=====================================//
   async getModuleReviewID(module_) {
-    var promise = new Promise(function (resolve) {
+    var promise = new Promise(function(resolve) {
       var reviews = [];
       database.firebase_data
         .collection("reviews")
         .where("module_code", "==", module_)
         .get()
-        .then(function (snapshot) {
+        .then(function(snapshot) {
           snapshot.forEach((doc) => {
             reviews.push(doc.id);
           });
@@ -521,13 +521,13 @@ var database = {
   //----------- getUserReview----------//
   //=====================================//
   async getUserReviewID(user) {
-    var promise = new Promise(function (resolve) {
+    var promise = new Promise(function(resolve) {
       var reviews = [];
       database.firebase_data
         .collection("reviews")
         .where("userid", "==", user)
         .get()
-        .then(function (snapshot) {
+        .then(function(snapshot) {
           snapshot.forEach((doc) => {
             reviews.push(doc.id);
           });
@@ -541,12 +541,12 @@ var database = {
   //----------- getStudentInfo-----------//
   //=====================================//
   getStudentInfo() {
-    var promise = new Promise(function (resolve) {
+    var promise = new Promise(function(resolve) {
       //get student information
       database.firebase_data
         .collection("students")
         .doc(database.user)
-        .onSnapshot(function (user) {
+        .onSnapshot(function(user) {
           var userData = user.data();
           var result = {
             name: userData.name,
@@ -578,8 +578,7 @@ var database = {
     });
     return promise;
   },
-  
-  //==============================================ModulePage and Review Page functions=====================================
+
   //=====================================//
   //----------- getFaculties-------------//
   //=====================================//
@@ -685,62 +684,6 @@ var database = {
   },
 
   //=====================================//
-  //---------- getModuleAttributes-------//
-  //=====================================//
-  async getModuleAttributes(module_code) {
-    var top_attributes = [];
-    var top_students = [];
-    var attr_list = []
-    var promise = new Promise(function (resolve) {
-      database.firebase_data
-        .collection("module_grades")
-        .where("module", "==", module_code)
-        .where("grade", "in", ["A+", "A"])
-        .get()
-        .then(function (results) {
-          if (results.empty) {
-            resolve(null)
-          }
-          results.forEach(function (r) {
-            top_students.push({
-              studentID: r.data().studentID,
-              grade: r.data().grade
-            });
-          });
-          return top_students;
-        })
-        .then(function (ts) {
-          ts.forEach(function (s) {
-            database.firebase_data
-              .collection("students")
-              .doc(s.studentID)
-              .get()
-              .then(function (user) {
-                var attributes = user.data().attributes;
-                attributes.forEach(function (attribute) {
-                  var att = attribute.att.trim();
-                  var grade = attribute.grade;
-                  if (attr_list.includes(att)) {
-                    var idx = attr_list.indexOf(att)
-                    var old = top_attributes[idx]
-                    old['total'] = old['total'] + grade
-                    old['amt'] += 1
-                    old['grade'] = old['total'] / old['amt']
-                  } else {
-                    attr_list.push(att)
-                    top_attributes.push({ total: grade, amt: 1, att: att, grade: grade })
-                  }
-                });
-              });
-            resolve(top_attributes)
-          })
-        })
-    })
-    return promise
-  },
-
-
-  //=====================================//
   //----------- register-----------------//
   //=====================================//
   async register(email, password, name_, course_, enrolmentBatch) {
@@ -748,7 +691,7 @@ var database = {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .catch(function (error) {
+        .catch(function(error) {
           var errorMessage = error.message;
           reject(errorMessage);
         });

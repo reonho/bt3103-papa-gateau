@@ -31,7 +31,7 @@
       <div class="sub-contain-div2">
         <div class="sub-header-content">
           <div class="sub-header-title">TOP MODULES TAKEN BY YOUR COHORT</div>
-          <div class="sub-header-content" style="padding-top:1vw;">
+          <div class="sub-header-content" style="padding:2vw;">
             <div id="chart">
               <apexchart type="bar" :options="chartOptionsYear" v-show="!showEmpty" :series="series"></apexchart>
               <div v-show="showEmpty">
@@ -76,7 +76,8 @@ export default {
       ],
       chartOptions: {
         chart: {
-          type: "bar"
+          type: "bar",
+          padding: 1
         },
         plotOptions: {
           bar: {
@@ -184,6 +185,7 @@ div {
 .chart {
   overflow-y: scroll;
   max-height: 100vh;
+
 }
 .sub-header-title {
   font-size: 2.3vh;
