@@ -14,7 +14,7 @@
             <md-button
               class="md-primary md-raised"
               style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
-    width:10vw;height: 5vh;font-size: 1.8vh; margin:0"
+    width:20vh;font-size: 1.8vh; margin:0"
               @click="showModal = true"
             >EDIT DETAILS</md-button>
             <md-dialog :md-active.sync="showModal">
@@ -57,29 +57,47 @@
                 </div>
               </div>
             </div>
-<div class="sub-header-content" style="padding:2vw;">
+
             <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
-            </div>
           </div>
         </div>
 
         <div class="sub-contain-div2">
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
+            <!-- When using RadarChart to display My Attributes vs Faculty, set my_attr to be user attributes and fac_attr to be faculty -->
+            <!-- However, when using to display My Attributes vs Module Attributes, type as Faculty, set my_attr to be user attributes and fac_attr to be top student attributes.  -->
+            <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
+            <RadarChart
+              v-if="facultyAttributes"
+              v-bind:my_attr="User.attributes"
+              v-bind:fac_attr="facultyAttributes"
+              type='Faculty'
+              label_1='My Attributes'
+              label_2='Faculty Average'
+            ></RadarChart>
+            <!-- <RadarChart
+              v-if="facultyAttributes"
+              :my_attr="User.attributes"
+              :fac_attr="facultyAttributes"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart> -->
           </div>
 
-          <RadarChart
+          <!-- <RadarChart
             v-if="facultyAttributes"
             :my_attr="User.attributes"
             :fac_attr="facultyAttributes"
-          ></RadarChart>
+          ></RadarChart> -->
         </div>
       </div>
 
       <br />
       <br />
       <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
-
+      
       <br />
       <br />
       <div>
@@ -122,8 +140,8 @@ export default {
     capline,
     NavBar,
     Feed,
-    ReviewSection
-    // ViewSemesterSection
+    ReviewSection,
+   // ViewSemesterSection
     // // Ratings
   },
   data: function() {
@@ -221,9 +239,14 @@ export default {
           self.cohortTopMods = doc;
         });
         // query database for course attributes
+        // database.getModuleAttributes("BT2101").then(r => {
+        //   self.facultyAttributes = r;
+        // });
         database.getFacultyAttributes(result.faculty).then(attributes => {
-          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          self.facultyAttributes = attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          console.log(attributes)
         });
+      
 
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
@@ -253,6 +276,8 @@ export default {
 
 .landPage {
   background: #ebecf0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
 }
 /* Header card css */
 .header-card {
@@ -323,12 +348,5 @@ export default {
   width: 42vw;
   background-color: white;
   float: right;
-}
-</style>
-<style>
-/* apply to all */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
-    Ubuntu, Droid Sans, Helvetica Neue, sans-serif !important;
 }
 </style>

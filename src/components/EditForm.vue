@@ -8,6 +8,7 @@
       md-content="Your changes will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
+      @md-confirm='goback'
     />
     <div class="page">
       <div class="pageHeader">
@@ -741,7 +742,7 @@ Tentative fix to css background
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 100vh;
+  height: 100vmax;
   padding: 0px;
 }
 </style>

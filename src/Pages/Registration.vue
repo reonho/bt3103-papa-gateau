@@ -336,24 +336,20 @@ body {
 .button span {
   cursor: pointer;
   display: inline-block;
-  position: relative;
+
   transition: 0.5s;
 }
-
 .button span:after {
-  content: '\00bb';
+  content: "\00bb";
   position: absolute;
   opacity: 0;
-  font-size: 2vh;
-  top: -0.55vh;
-  right: -1vh;
+  top: -1vh !important;
+  font-size: 2.5vh;
   transition: 0.5s;
 }
-
 .button:hover span {
-  padding-right: 2.5vh;
+  padding-right: 25px;
 }
-
 .button:hover span:after {
   opacity: 1;
   right: 0;

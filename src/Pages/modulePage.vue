@@ -10,30 +10,30 @@
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
-      ><p>{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</p></div>
+      >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 5px"
         class="depFac"
       >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
       <div style="margin-left: 20px; margin-right:20px;font-size:2vh">
-        <p>{{this.Modules[0].info.description}}</p>
+        {{this.Modules[0].info.description}}
         <br />
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
             <b style="color: #616a6b">Preclusion(s)</b>
             <br />
-            <p>{{this.Modules[0].info.preclusion}}</p>
+            {{this.Modules[0].info.preclusion}}
             <br />
             <br />
             <b style="color: #616a6b">Prerequisite(s)</b>
             <br />
-            <p>{{this.Modules[0].info.prerequisite}}</p>
+            {{this.Modules[0].info.prerequisite}}
             <br />
             <br />
             <b style="color: #616a6b">Exam</b>
-            <br /><p>28-Nov-2019 5:00 PM • 2 hours</p>
+            <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
           <div class="col-7">
             <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
@@ -42,6 +42,21 @@
         </div>
       </div>
       <hr />
+      <div>
+        <div class="sub-contain-div2">
+          <div class="sub-header-content">
+            <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
+            <RadarChart
+              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
+              :my_attr="topAttributes"
+              :fac_attr="myAttributes"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart>
+          </div>
+        </div>
+      </div>
       <div id="statistics">
         <span style="color:#EC7663; margin-top:20px; font-size: 3vh">Statistics</span>
         <br />
@@ -114,7 +129,7 @@
                         >Features</h4>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:1.5vh">Easy to understand</p>
+                            <p style="font-weight:400; font-size:2vh">Easy to understand</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -133,7 +148,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:1.5vh">Manageable assignments</p>
+                            <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -152,7 +167,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:1.5vh">Manageable exams</p>
+                            <p style="font-weight:400; font-size:2vh">Manageable exams</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -171,7 +186,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:1.5vh">Manageable workload</p>
+                            <p style="font-weight:400; font-size:2vh">Manageable workload</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -253,7 +268,7 @@
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size:1.9vh; float:right; background-color:teal; border-color:teal"
+          style="color: white; font-size: 2vh; float:right; background-color:teal; border-color:teal"
           href="#"
           id="addReview"
           @click="review"
@@ -308,6 +323,7 @@ import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
+import RadarChart from "../components/RadarChart";
 export default {
   props: {
     code: String
@@ -317,6 +333,7 @@ export default {
     BarChart,
     workloadchart: WorkloadChartForMod,
     ScaleLoader,
+    RadarChart,
     // reviewcard: ReviewCardForMod,
     NavBar,
     ReviewSection
@@ -329,9 +346,8 @@ export default {
       var years = [];
       for (var docu in this.reviewData) {
         let sem = this.reviewData[docu].detailsForm.selectedSemester
-        console.log(sem)
-        if (!years.includes(this.reviewData[docu].detailsForm.selectedYear) && (sem == ("Semester " + (this.chosenSem + 1)) ||
-                  sem == ("Special Term " + (this.chosenSem - 1)))) {
+        if (!years.includes(this.reviewData[docu].detailsForm.selectedYear) && (sem.includes("Semester " + (this.chosenSem + 1)) ||
+                  sem.includes("Special Term " + (this.chosenSem - 1)))) {
           years.push(this.reviewData[docu].detailsForm.selectedYear)
         }
       }
@@ -592,6 +608,38 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
+    database.firebase_data
+      .collection("students")
+      .doc(database.user)
+      .get()
+      .then(user => {
+        var userData = user.data();
+        this.myAttributes = userData.attributes;
+        console.log(typeof this.myAttCheck)
+        this.myAttCheck = userData.attributes[0].att
+        console.log("Check myAtt")
+      });
+
+    database.getModuleAttributes(this.code).then(ma => {
+      console.log(ma);
+      this.topAttributes = ma;
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      var self = this
+      async function check(self){
+        console.log(typeof ma[0])
+        while(typeof ma[0] == "undefined"){
+          await(sleep(2000))
+          console.log(typeof ma[0])
+        }
+        self.topAttCheck = ma[0].att  
+      }
+      check(self)
+
+    });
+
+    //Query attributes of top scorers
   },
   mounted() {
     this.loading = false;
@@ -607,6 +655,10 @@ export default {
     manag_exam: 0,
     manag_wkld: 0,
     loading: true,
+    topAttributes: null,
+    myAttributes: null,
+    myAttCheck: false,
+    topAttCheck: false,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
@@ -637,14 +689,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
-p {
-   font-size: 1.8vh;
-  line-height: 1.5;
-}
 .header {
   padding: 1vh;
   padding-left: 0;
-  font-size: 3.5vh;
+  font-size: 1.8vw;
 }
 .miniheader {
   font-size: 1.2vw;

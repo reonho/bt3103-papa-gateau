@@ -118,14 +118,14 @@
                     <br />
                     <br />
                     <br />
-                    <span class="module-preclusionhead" v-show="showPreclusions(post.info.preclusion)">
+                    <span class="module-preclusionhead">
                       Preclusions
                       <br />
                     </span>
-                    <span class="module-preclusion" v-show="showPreclusions(post.info.preclusion)">{{post.info.preclusion}}</span>
-                    <br v-show="showPreclusions(post.info.preclusion)" />
-                    <br v-show="showPreclusions(post.info.preclusion)" />
-                    <span class="module-prerequisitehead" v-show="showPrereq(post.info.prerequisite)">
+                    <span class="module-preclusion">{{post.info.preclusion}}</span>
+                    <br />
+                    <br />
+                    <span class="module-prerequisitehead">
                       Prerequisites
                       <br />
                     </span>
@@ -350,8 +350,7 @@ export default {
         return true;
       }
       return false;
-    },
-    
+    }
   },
   methods: {
     readDatabase: function() {
@@ -566,19 +565,6 @@ export default {
     },
     passmod: function(code) {
       this.$router.push({ name: "modulePage", params: { code: code } });
-    },
-    showPreclusions(val) {
-      console.log(val)
-      if (val != null) {
-        return true;
-      }
-      return false;
-    },
-    showPrereq(val) {
-      if (val != null) {
-        return true;
-      }
-      return false;
     }
   },
   mounted() {
@@ -737,7 +723,7 @@ hr {
   font-size: 1.7vh !important;
 }
 label {
-  font-weight: 400 !important;
+  font-weight: 200 !important;
   font-size: 1.7vh;
 }
 
