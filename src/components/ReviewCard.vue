@@ -324,7 +324,7 @@ export default {
         .collection("reviews")
         .doc(this.review.id)
         .delete();
-        window.location.reload() // temporarily used to refresh the stats; shld try using emit
+        //window.location.reload() // temporarily used to refresh the stats; shld try using emit
       //find review id in collection
       // database.collection('reviews').doc(reviewid).delete();
       //delete
