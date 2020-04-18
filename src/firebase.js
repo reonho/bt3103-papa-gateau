@@ -723,57 +723,19 @@ var database = {
                     var old = top_attributes[idx]
                     old['total'] = old['total'] + grade
                     old['amt'] += 1
+                    old['grade'] = old['total'] / old['amt']
                   } else {
                     attr_list.push(att)
-                    top_attributes.push({ total: grade, amt: 1, att: att })
+                    top_attributes.push({ total: grade, amt: 1, att: att, grade: grade })
                   }
-                  // if (att in top_attributes) {
-                  //   // top_attributes[att]['total'] += grade;
-                  //   // top_attributes[att]['amt'] += 1;
-                  //   // top_attributes[att]['grade'] = top_attributes[att]['total'] / top_attributes[att]['amt']
-                  // } else {
-                  //   top_attributes[att] = { total: grade, amt: 1, grade: grade };
-                  // }
                 });
               });
-          });
-          resolve(top_attributes)
+            resolve(top_attributes)
+          })
         })
     })
     return promise
-
   },
-
-
-  // async getModuleTopStudents(module_code) {
-  //   var promise = new Promise(resolve => {
-  //     var top_students = []
-  //     database.firebase_data
-  //       .collection("module_grades")
-  //       .where("module", "==", module_code)
-  //       .where("grade", "in", ["A+", "A"])
-  //       .get()
-  //       .then(function (results) {
-  //         if (results.empty) {
-  //           resolve(null)
-  //         }
-  //         results.forEach(function (r) {
-  //           top_students.push({
-  //             studentID: r.data().studentID,
-  //             grade: r.data().grade
-  //           });
-  //         });
-  //         resolve(top_students);
-  //       })
-  //   })
-  // },
-
-  // async getModuleTopStudentsAttributes(module_code) {
-  //   var promise = new Promise(resolve => {
-  //     let ts = await database.getModuleTopStudents(module_code)
-  //   })
-  // }
-
 
   //=====================================//
   //----------- register-----------------//

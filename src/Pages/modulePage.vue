@@ -48,6 +48,21 @@
         </div>
       </div>
       <hr />
+      <div>
+        <div class="sub-contain-div2">
+          <div class="sub-header-content">
+            <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
+            <RadarChart
+              v-if="topAttributes !== null && myAttributes !== null"
+              :my_attr="myAttributes"
+              :fac_attr="topAttributes"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart>
+          </div>
+        </div>
+      </div>
       <div id="statistics">
         <span style="color:#EC7663; margin-top:20px; font-size: 25px">Statistics</span>
         <br />
@@ -219,6 +234,7 @@ import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
+import RadarChart from "../components/RadarChart";
 export default {
   props: {
     code: String
@@ -227,6 +243,7 @@ export default {
     PieChart,
     BarChart,
     workloadchart: WorkloadChartForMod,
+    RadarChart,
     // reviewcard: ReviewCardForMod,
     NavBar,
     ReviewSection
@@ -452,24 +469,26 @@ export default {
       this.Modules.push(item);
     });
 
-
     //variables for ModuleRadarChart
     //Query user's attributes
     database.firebase_data
-      .collection('students')
+      .collection("students")
       .doc(database.user)
       .get()
       .then(user => {
-        var userData = user.data()
-        this.my_attr = userData.attributes
-        console.log(this.my_attr)
-      })
-      //Query attributes of top scorers
+        var userData = user.data();
+        this.myAttributes = userData.attributes;
+      });
 
-
+    database.getModuleAttributes(this.code).then(ma => {
+      console.log(ma);
+      this.topAttributes = ma;
+    });
+    //Query attributes of top scorers
   },
   data: () => ({
-    my_attr: [],
+    topAttributes: null,
+    myAttributes: null,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],

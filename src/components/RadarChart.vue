@@ -7,7 +7,7 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
-import database from "../firebase";
+// import database from "../firebase";
 export default {
   name: "radar",
   components: {
@@ -15,13 +15,16 @@ export default {
   },
   props: {
     my_attr: Array,
-    fac_attr: Array
+    fac_attr: Array,
+    type: String,
+    label_1: String,
+    label_2: String
   },
   data: function() {
     return {
       series1: [
-        { name: "My Attributes", data: [5, 0] },
-        { name: "Faculty Average", data: [0, 5] }
+        { name: this.label_1, data: [5, 0] },
+        { name: this.label_2, data: [0, 5] }
       ],
       chartOptions2: {
         chart: {
@@ -78,6 +81,7 @@ export default {
     };
   },
   methods: {
+
     parse_attr: function(my_attr, fac_attr) {
       var my_attrs = [];
       var attr_labels = [];
@@ -110,7 +114,7 @@ export default {
       var lenf = fac_attr.length;
       for (let i = 0; i < lenf; i++) {
         var f_code = fac_attr[i].att;
-        if (fac_attrs[f_code] == undefined) {
+        if (fac_attrs[f_code] === undefined) {
           fac_attrs[f_code] = [fac_attr[i].grade.toFixed(2)];
         }
       }
@@ -125,9 +129,9 @@ export default {
       }
       for (let i = 0; i < len; i++) {
         var m_code = my_attr[i].att;
-        m_list.push(my_attr[i].grade);
-        attr_labels.push(m_code);
-        f_list.push(fac_attrs[m_code]);
+        m_list.push(my_attr[i].grade)
+        attr_labels.push(m_code)
+        f_list.push(fac_attrs[m_code])
       }
 
       this.series1[0].data = m_list;
@@ -136,16 +140,17 @@ export default {
     }
   },
   created() {
+    if (this.type === 'Faculty') {
+      this.parse_attr2(this.my_attr, this.fac_attr)
+    } else if (this.type === 'Module') {
+      this.parse_attr2(this.fac_attr, this.my_attr);
+    }
+    // var self = this;
+    // database.getModuleAttributes("BT2101").then(m => {
+    //   self.test = m;
+    // });
     //console.log(this.fac_attr);
-    this.parse_attr2(this.my_attr, this.fac_attr);
-
-    database.getModuleAttributes('BT2101').then(m => {
-      console.log(m)
-      console.log(m['0'])
-
-      
-    })
-
+    // this.parse_attr2(this.my_attr, this.fac_attr);
     
   }
 };
