@@ -141,7 +141,7 @@ export default {
 
     database.getModuleAttributes('BT2101').then(m => {
       console.log(m)
-      console.log(m[0])
+      console.log(m['0'])
 
       
     })

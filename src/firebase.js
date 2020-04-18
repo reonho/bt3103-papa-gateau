@@ -745,34 +745,34 @@ var database = {
   },
 
 
-  async getModuleTopStudents(module_code) {
-    var promise = new Promise(resolve => {
-      var top_students = []
-      database.firebase_data
-        .collection("module_grades")
-        .where("module", "==", module_code)
-        .where("grade", "in", ["A+", "A"])
-        .get()
-        .then(function (results) {
-          if (results.empty) {
-            resolve(null)
-          }
-          results.forEach(function (r) {
-            top_students.push({
-              studentID: r.data().studentID,
-              grade: r.data().grade
-            });
-          });
-          resolve(top_students);
-        })
-    })
-  },
+  // async getModuleTopStudents(module_code) {
+  //   var promise = new Promise(resolve => {
+  //     var top_students = []
+  //     database.firebase_data
+  //       .collection("module_grades")
+  //       .where("module", "==", module_code)
+  //       .where("grade", "in", ["A+", "A"])
+  //       .get()
+  //       .then(function (results) {
+  //         if (results.empty) {
+  //           resolve(null)
+  //         }
+  //         results.forEach(function (r) {
+  //           top_students.push({
+  //             studentID: r.data().studentID,
+  //             grade: r.data().grade
+  //           });
+  //         });
+  //         resolve(top_students);
+  //       })
+  //   })
+  // },
 
-  async getModuleTopStudentsAttributes(module_code) {
-    var promise = new Promise(resolve => {
-      let ts = await database.getModuleTopStudents(module_code)
-    })
-  }
+  // async getModuleTopStudentsAttributes(module_code) {
+  //   var promise = new Promise(resolve => {
+  //     let ts = await database.getModuleTopStudents(module_code)
+  //   })
+  // }
 
 
   //=====================================//
