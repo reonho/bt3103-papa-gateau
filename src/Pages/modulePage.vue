@@ -6,13 +6,7 @@
       <div style="color:#EC7663; margin-left: 20px; margin-top:20px" class="header">
         <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
       </div>
-      <button
-        class="button"
-        style="float: right; margin-right: 20px;background-color:#17a2b8"
-        onclick="window.location.href = '/#/ModuleList';"
-      >
-        <span>Back To All Modules</span>
-      </button>
+
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
@@ -22,7 +16,7 @@
         class="depFac"
       >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
-      <div style="margin-left: 20px; margin-right:20px;font-size:15px">
+      <div style="margin-left: 20px; margin-right:20px;font-size:2vh">
         {{this.Modules[0].info.description}}
         <br />
         <br />
@@ -49,12 +43,13 @@
       </div>
       <hr />
       <div id="statistics">
-        <span style="color:#EC7663; margin-top:20px; font-size: 25px">Statistics</span>
+        <span style="color:#EC7663; margin-top:20px; font-size: 3vh">Statistics</span>
         <br />
         <br />
         <b-tabs
           active-nav-item-class="activetab"
           class="semtabs"
+          id="moduletabs"
           v-model="chosenSem"
           content-class="mt-3"
           lazy
@@ -68,13 +63,13 @@
           >
             <div id="container">
               <div class="row">
-                <div class="col-4">
+                <div class="col-4" v-show="!loading">
                   <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                 </div>
-                <div class="col-8 box">
+                <div class="col-8 box" v-show="!loading">
                   <div class="row">
                     <div class="col-5">
-                      <h3 style="padding-top: 10px;color:#616a6b">Student reviews</h3>
+                      <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
                       <p>
                         <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
                         <span
@@ -89,13 +84,15 @@
                       <h5 style="font-weight:400">
                         <span id="ratings"></span> student ratings
                       </h5>
-                      <bar-chart :semester="chosenSem" :code="code" :years="yrs"></bar-chart>
+                      <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4 style="padding-top: 10px;color:#616a6b">Features</h4>
+                      <h4
+                        style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
+                      >Features</h4>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Easy to understand</p>
+                          <p style="font-weight:400; font-size:2vh">Easy to understand</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -107,7 +104,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable assignments</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -119,7 +116,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable exams</p>
+                          <p style="font-weight:400; font-size:2vh">Manageable exams</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -131,7 +128,7 @@
                       </div>
                       <div class="row">
                         <div class="col-6">
-                          <p style="font-weight:400; font-size:12px">Manageable workload</p>
+                          <p style="font-weight:400; font-size:2  vh">Manageable workload</p>
                         </div>
                         <div class="col-6" style="float:right">
                           <p>
@@ -141,8 +138,10 @@
                           </p>
                         </div>
                       </div>
+
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345">Filter by Year</h4>
+                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
+
                       <md-field style="width: 20vw">
                         <label for="years">Years Selected</label>
                         <md-select v-model="yrs" multiple name="years" id="years">
@@ -156,6 +155,17 @@
                   </div>
                   <br />
                 </div>
+
+                <div style="width: 100vw;" v-show="loading">
+                  <md-empty-state
+                    id="statebox"
+                    style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
+                    md-label="Loading Modules..."
+                  >
+                    <br />
+                    <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                  </md-empty-state>
+                </div>
               </div>
             </div>
           </b-tab>
@@ -163,11 +173,11 @@
       </div>
       <hr />
       <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
-      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 25px">
+      <div id="reviews" style="color:#EC7663; margin-left: 20px; margin-top:20px; font-size: 3vh">
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 15px; float:right; background-color:#17a2b8; border-color:#17a2b8"
+          style="color: white; font-size: 2vh; float:right; background-color:teal; border-color:teal"
           href="#"
           id="addReview"
           @click="review"
@@ -179,7 +189,9 @@
           style="float:right"
           no-caret
         >
-          <template v-slot:button-content>Sort by Newest &#9662;</template>
+          <template v-slot:button-content>
+            <h5>Sort by Newest &#9662;</h5>
+          </template>
           <b-dropdown-item href="#">
             <h5>Best</h5>
           </b-dropdown-item>
@@ -215,6 +227,7 @@
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
@@ -227,16 +240,27 @@ export default {
     PieChart,
     BarChart,
     workloadchart: WorkloadChartForMod,
+    pulseloader: PulseLoader,
     // reviewcard: ReviewCardForMod,
     NavBar,
     ReviewSection
+  },
+  computed: {
+    showloading() {
+      console.log(this.$refs);
+      // if (document.getElementById("load").innerHTML == "load") {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+      return false;
+    }
   },
   methods: {
     review() {
       database.getUser().then(user => {
         //check if user has added module
         database.ifAddedModule(this.code, user).then(mod => {
-          console.log(mod);
           if (mod === null) {
             this.showAddDialog = true;
           } else {
@@ -307,7 +331,7 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-          console.log();
+
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -344,7 +368,7 @@ export default {
           }
         }
       }
-      console.log(semesters)
+      console.log(semesters);
       return semesters;
     },
     showsem(sem) {
@@ -452,8 +476,15 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
+
+  
+  },
+  mounted() {
+
+    this.loading = false;
   },
   data: () => ({
+    loading: true,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
@@ -482,10 +513,27 @@ export default {
 <style lang="scss">
 @import "~vue-material/src/theme/engine";
 .header {
-  font-size: 30px;
+  padding: 1vh;
+  padding-left: 0;
+  font-size: 1.8vw;
+}
+.miniheader {
+  font-size: 1.2vw;
+  color: #616a6b;
+  font-weight: bold;
 }
 .depFac {
-  font-size: 15px;
+  font-size: 2vh;
+}
+span {
+  font-size: 2.1vh;
+  line-height: 1.5;
+}
+.section-header {
+  color: #ec7663;
+  margin-top: 20px;
+  font-size: 25px;
+  font-size: 1.9vw;
 }
 .button {
   display: block;
@@ -527,21 +575,15 @@ export default {
   border-width: 0;
   border-left-width: 0.1px;
 }
-.disabledTab {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+</style>
+<style>
 .btn-link {
-  color: #EC7663;
-  font-weight: bold;
+  color: #ec7663 !important;
+  font-weight: bold !important;
+  font-size: 1vw !important;
 }
-.btn-link:hover {
-  color: #EC7663;
-  font-weight: bold;
-}
-.btn-link:focus {
-  color: #EC7663;
-  font-weight: bold;
+
+.dropdown-item h5 {
+  color: #ec7663;
 }
 </style>
