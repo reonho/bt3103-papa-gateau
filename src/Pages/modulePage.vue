@@ -62,95 +62,171 @@
             :active="sem.active"
           >
             <div id="container">
+              <div v-show="showEmpty&&!loading">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053; padding:0"
+                  md-label="No Data"
+                  md-icon="cloud_circle"
+                >
+                </md-empty-state>
+              </div>
               <div class="row">
-                <div class="col-4" v-show="!loading">
+                <div class="col-4" v-show="loading"></div>
+                <div class="col-4" v-show="showEmpty"></div>
+                <div class="col-4" v-show="!loading&&!showEmpty">
                   <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                 </div>
-                <div class="col-8 box" v-show="!loading">
+                <div class="col-8 box">
                   <div class="row">
-                    <div class="col-5">
+                    <div class="col-5" v-show="loading"></div>
+                    <div class="col-5" v-show="showEmpty"></div>
+                    <div class="col-5" v-show="!loading&&!showEmpty">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
-                      <p>
-                        <span style="color: gold;font-size:16px;" class="star" id="avg_gold_stars"></span>
+                      <p v-if = "ratings != 0">
+                        <span v-for = "n in numWholeStars(overallRating)" :key = "n" style="color: gold;font-size:16px;" class="star" id="avg_gold_stars">
+                          <i class = "fa fa-star"></i>
+                        </span>
+                        <span v-for = "n in numHalfStars(overallRating)" :key = "n" style="color: gold;font-size:16px;" class="star" id="avg_gold_stars_half">
+                          <i class = "fas fa-star-half-alt"></i>
+                        </span>
                         <span
-                          style="color: lightgrey;font-size:16px;"
-                          class="star"
+                          v-for = "n in (5 - numWholeStars(overallRating) - numHalfStars(overallRating))" :key="n" style="color: lightgrey;font-size:16px;" class="star"
                           id="avg_grey_stars"
-                        ></span>
-                        <span style="padding:10px;font-size: 15px">
-                          <span id="avg"></span> out of 5
+                        >
+                        <i class = "fa fa-star"></i>
+                        </span>
+                        <span style="padding:8px;">
+                          {{ overallRating }} out of 5
                         </span>
                       </p>
                       <h5 style="font-weight:400">
-                        <span id="ratings"></span> student ratings
+                        {{ratings}} student ratings
                       </h5>
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
-                      <h4
-                        style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
-                      >Features</h4>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                      <div v-show="loading"></div>
+                      <div v-show="showEmpty"></div>
+                      <div v-show="!loading&&!showEmpty" v-if = "ratings != 0">
+                        <h4
+                          style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
+                        >Features</h4>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span v-for = "n in numWholeStars(easy)" :key = "n" style="color: gold;" class="star" id="easy_gold_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span v-for = "n in numHalfStars(easy)" :key = "n" style="color: gold;" class="star" id="easy_gold_stars_half">
+                                <i class = "fas fa-star-half-alt"></i>
+                              </span>
+                              <span v-for = "n in (5 - numWholeStars(easy) - numHalfStars(easy))" :key="n" style="color: lightgrey;" class="star" id="easy_grey_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span style="padding:10px;font-size: 12px" id="easy">{{ easy }}</span>
+                            </p>
+                          </div>
                         </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="easy_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="easy_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="easy"></span>
-                          </p>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span v-for = "n in numWholeStars(manag_asgn)" :key = "n" style="color: gold;" class="star" id="man_gold_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span v-for = "n in numHalfStars(manag_asgn)" :key = "n" style="color: gold;" class="star" id="man_gold_stars_half">
+                                <i class = "fas fa-star-half-alt"></i>
+                              </span>
+                              <span v-for = "n in (5 - numWholeStars(manag_asgn) - numHalfStars(manag_asgn))" :key="n" style="color: lightgrey;" class="star" id="man_grey_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span style="padding:10px;font-size: 12px" id="manageable">{{ manag_asgn }}</span>
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable exams</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span v-for = "n in numWholeStars(manag_exam)" :key = "n" style="color: gold;" class="star" id="exam_gold_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span v-for = "n in numHalfStars(manag_exam)" :key = "n" style="color: gold;" class="star" id="exam_gold_stars_half">
+                                <i class = "fas fa-star-half-alt"></i>
+                              </span>
+                              <span v-for = "n in (5 - numWholeStars(manag_exam) - numHalfStars(manag_exam))" :key="n" style="color: lightgrey;" class="star" id="exam_grey_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span style="padding:10px;font-size: 12px" id="exam">{{ manag_exam }}</span>
+                            </p>
+                          </div>
                         </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="man_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="man_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="manageable"></span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2vh">Manageable exams</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="exam_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="exam_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="exam"></span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <p style="font-weight:400; font-size:2  vh">Manageable workload</p>
-                        </div>
-                        <div class="col-6" style="float:right">
-                          <p>
-                            <span style="color: gold;" class="star" id="wkload_gold_stars"></span>
-                            <span style="color: lightgrey;" class="star" id="wkload_grey_stars"></span>
-                            <span style="padding:10px;font-size: 12px" id="workload"></span>
-                          </p>
+                        <div class="row">
+                          <div class="col-6">
+                            <p style="font-weight:400; font-size:2vh">Manageable workload</p>
+                          </div>
+                          <div class="col-6" style="float:right">
+                            <p>
+                              <span v-for = "n in numWholeStars(manag_wkld)" :key = "n" style="color: gold;" class="star" id="wkload_gold_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span v-for = "n in numHalfStars(manag_wkld)" :key = "n" style="color: gold;" class="star" id="wkload_gold_stars_half">
+                                <i class = "fas fa-star-half-alt"></i>
+                              </span>
+                              <span v-for = "n in (5 - numWholeStars(manag_wkld) - numHalfStars(manag_wkld))" :key="n" style="color: lightgrey;" class="star" id="wkload_grey_stars">
+                                <i class = "fa fa-star"></i>
+                              </span>
+                              <span style="padding:10px;font-size: 12px" id="workload">{{ manag_wkld }}</span>
+                            </p>
+                          </div>
                         </div>
                       </div>
 
                       <br />
-                      <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
 
-                      <md-field style="width: 20vw">
-                        <label for="years">Years Selected</label>
-                        <md-select v-model="yrs" multiple name="years" id="years">
-                          <md-option value="AY1920" id="thekey">AY 1920</md-option>
-                          <md-option value="AY1819">AY 1819</md-option>
-                          <md-option value="AY1718">AY 1718</md-option>
-                          <md-option value="AY1617">AY 1617</md-option>
-                        </md-select>
-                      </md-field>
+                      <div v-show="!loading && !(findYears.length == 0)">
+                        <h4 style="padding-top: 10px;color:#0B5345; font-size:2.5vh">Filter by Year</h4>
+
+                        <md-field style="width: 20vw">
+                          <label for="years">Years Selected</label>
+                          <md-select
+                            v-model="yrs"
+                            multiple
+                            name="years"
+                            id="years"
+                            @md-selected="showloading"
+                          >
+                            <md-option
+                              v-if = "findYears.includes('AY1920')"
+                              value="AY1920"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1920</md-option>
+                            <md-option
+                              v-if = "findYears.includes('AY1819')"
+                              value="AY1819"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1819</md-option>
+                            <md-option
+                              v-if = "findYears.includes('AY1718')"
+                              value="AY1718"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1718</md-option>
+                            <md-option
+                              v-if = "findYears.includes('AY1617')"
+                              value="AY1617"
+                              v-bind:class="{'disabledTab': loading,  '': !loading }"
+                            >AY 1617</md-option>
+                          </md-select>
+                        </md-field>
+                      </div>
                     </div>
                   </div>
                   <br />
@@ -160,10 +236,10 @@
                   <md-empty-state
                     id="statebox"
                     style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
-                    md-label="Loading Modules..."
+                    md-label="Loading..."
                   >
                     <br />
-                    <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                    <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
                   </md-empty-state>
                 </div>
               </div>
@@ -227,7 +303,7 @@
 import PieChart from "../PieChart.js";
 import BarChart from "../BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 // import ReviewCardForMod from "../components/ReviewCardForMod";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
@@ -240,23 +316,49 @@ export default {
     PieChart,
     BarChart,
     workloadchart: WorkloadChartForMod,
-    pulseloader: PulseLoader,
+    ScaleLoader,
     // reviewcard: ReviewCardForMod,
     NavBar,
     ReviewSection
   },
   computed: {
-    showloading() {
-      console.log(this.$refs);
-      // if (document.getElementById("load").innerHTML == "load") {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-      return false;
+    showEmpty: function() {
+      return this.ratings == 0;
+    },
+    findYears: function() {
+      var years = [];
+      for (var docu in this.reviewData) {
+        let sem = this.reviewData[docu].detailsForm.selectedSemester
+        if (!years.includes(this.reviewData[docu].detailsForm.selectedYear) && (sem.includes("Semester " + (this.chosenSem + 1)) ||
+                  sem.includes("Special Term " + (this.chosenSem - 1)))) {
+          years.push(this.reviewData[docu].detailsForm.selectedYear)
+        }
+      }
+      return years;
     }
   },
   methods: {
+    numWholeStars(n) {
+      return Math.floor(n);
+    },
+    numHalfStars(n) {
+      if (n % 1 >= 0.5) {
+        return 1;
+      } else return 0;
+    },
+    shortload: function(n) {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, n);
+    },
+    showloading: function() {
+      this.loading = true;
+      this.$root.$on("showValues", this.showValues);
+      setTimeout(() => {
+        this.loading = false;
+      }, 800);
+    },
     review() {
       database.getUser().then(user => {
         //check if user has added module
@@ -368,7 +470,6 @@ export default {
           }
         }
       }
-      console.log(semesters);
       return semesters;
     },
     showsem(sem) {
@@ -453,11 +554,25 @@ export default {
         num = num + arr[i];
       }
       return num;
+    },
+    showValues(value, str) {
+      if (str == "ratings") {
+        this.ratings = value;
+      } else if (str == "avg") {
+        this.overallRating = value;
+      } else if (str == "easy") {
+        this.easy = value;
+      } else if (str == "manag_asgn") {
+        this.manag_asgn = value;
+      } else if (str == "manag_exam") {
+        this.manag_exam = value;
+      } else if (str == "manag_wkld") {
+        this.manag_wkld = value;
+      }
     }
   },
   created() {
     //replace this with a query by module code
-    console.log("created");
     database.firebase_data
       .collection("reviews")
       .where("module_code", "==", this.code)
@@ -468,22 +583,28 @@ export default {
           item = doc.data();
           item.id = doc.id;
           this.reviewData.push(item);
+          console.log(this.reviewData)
           // console.log(doc.id)
         });
-        console.log(this.reviewData);
       });
     //get module details
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
-
-  
   },
   mounted() {
-
     this.loading = false;
+    this.shortload(2000);
+    this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
+    color: "#eda200",
+    ratings: 0,
+    overallRating: 0,
+    easy: 0,
+    manag_asgn: 0,
+    manag_exam: 0,
+    manag_wkld: 0,
     loading: true,
     showAddDialog: false,
     showDialog: false,
@@ -502,15 +623,18 @@ export default {
     Modules: []
   }),
   watch: {
-    yrs: function(val) {
-      console.log(val);
+    yrs: function() {
+      this.$root.$on("showValues", this.showValues);
+    },
+    chosenSem: function() {
+      this.shortload(900)
     }
   }
 };
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 .header {
   padding: 1vh;
@@ -573,10 +697,8 @@ span {
 .box {
   border-style: solid;
   border-width: 0;
-  border-left-width: 0.1px;
+  border-left-width: 0px;
 }
-</style>
-<style>
 .btn-link {
   color: #ec7663 !important;
   font-weight: bold !important;
@@ -587,3 +709,11 @@ span {
   color: #ec7663;
 }
 </style>
+<style lang="scss">
+.disabledTab {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+</style>
+
