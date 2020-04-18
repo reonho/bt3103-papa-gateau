@@ -150,10 +150,8 @@ export default {
   created() {
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
-  },
-  mounted() {
-    this.parse_attr2(this.my_attr, this.fac_attr)
   }
+
 };
 </script>
 
