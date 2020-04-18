@@ -38,13 +38,13 @@
             <md-radio
               v-model="detailsForm.selectedSU"
               class="md-primary"
-              style="padding-left:2vw"
+              style="padding-left:1vw"
               value="Yes"
             >SU</md-radio>
             <md-radio
               v-model="detailsForm.selectedSU"
               class="md-primary"
-              style="padding-left:2vw"
+              style="padding-left:1vw"
               value="No"
             >No SU</md-radio>
           </div>
@@ -231,6 +231,6 @@ export default {
 </style>
 <style lang="scss">
 .md-menu-content {
-  z-index: 11;
+  z-index: 11 !important;
 }
 </style>
