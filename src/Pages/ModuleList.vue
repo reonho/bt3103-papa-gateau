@@ -199,7 +199,7 @@
                   md-label="Loading Modules..."
                 >
                 <br/>
-                <pulseloader :loading="loading" :color="color" :size="size"></pulseloader>
+                <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
                 </md-empty-state>
               </div>
             </div>
@@ -212,7 +212,7 @@
 
 <script>
 import database from "../firebase.js";
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
 import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -224,7 +224,7 @@ export default {
     apexchart: VueApexCharts,
     //intakechart: StudentIntakeChart,
     workloadchart: WorkloadChart,
-    pulseloader: PulseLoader
+    ScaleLoader
   },
   props: {
     test: {
@@ -234,7 +234,7 @@ export default {
   },
   data() {
     return {
-      color: "teal",
+      color: "#eda200",
       loading: true,
       searchbar: "",
       modulenum: 0,
@@ -549,6 +549,7 @@ export default {
     formatwork(workload) {
       var series = [];
       series.push({
+        name: "Workload",
         data: workload
       });
       return series;
