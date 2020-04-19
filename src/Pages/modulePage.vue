@@ -22,18 +22,31 @@
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
-            <b style="color: #616a6b">Preclusion(s)</b>
+            <span v-if="this.Modules[0].info.preclusion">
+              <b style="color: #616a6b">Preclusion(s)</b>
+              <br />
+              <span>{{this.Modules[0].info.preclusion}}</span>
+              <br />
+              <br />
+            </span>
+            <span v-if="this.Modules[0].info.prerequisite">
+              <b style="color: #616a6b">Prerequisite(s)</b>
+              <br />
+              {{this.Modules[0].info.prerequisite}}
+              <br />
+              <br />
+            </span>
+            <p v-for="sem in checksemester(this.Modules[0])" v-bind:key="sem.index">
+              <span v-if="sem.disabled == ''">
+                <b style="color: #616a6b">
+                  {{ sem.semester }} Exam
+                  <br />
+                </b>
+                <span v-if="sem.examDate == null">No Exam</span>
+                <span v-else>{{ formatDate(sem.examDate) }} • {{ sem.examDuration }} hrs</span>
+              </span>
+            </p>
             <br />
-            {{this.Modules[0].info.preclusion}}
-            <br />
-            <br />
-            <b style="color: #616a6b">Prerequisite(s)</b>
-            <br />
-            {{this.Modules[0].info.prerequisite}}
-            <br />
-            <br />
-            <b style="color: #616a6b">Exam</b>
-            <br />28-Nov-2019 5:00 PM • 2 hours
           </div>
           <div class="col-7">
             <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
@@ -68,8 +81,7 @@
                   style="max-width:0 !important; color: #2e4053; padding:0"
                   md-label="No Data"
                   md-icon="cloud_circle"
-                >
-                </md-empty-state>
+                ></md-empty-state>
               </div>
               <div class="row">
                 <div class="col-4" v-show="loading"></div>
@@ -83,32 +95,43 @@
                     <div class="col-5" v-show="showEmpty"></div>
                     <div class="col-5" v-show="!loading&&!showEmpty">
                       <h4 style="padding-top: 10px;color:#616a6b; font-size:2.5vh">Student reviews</h4>
-                      <p v-if = "ratings != 0">
-                        <span v-for = "n in numWholeStars(overallRating)" :key = "n" style="color: gold;font-size:16px;" class="star" id="avg_gold_stars">
-                          <i class = "fa fa-star"></i>
-                        </span>
-                        <span v-for = "n in numHalfStars(overallRating)" :key = "n" style="color: gold;font-size:16px;" class="star" id="avg_gold_stars_half">
-                          <i class = "fas fa-star-half-alt"></i>
+                      <p v-if="ratings != 0">
+                        <span
+                          v-for="n in numWholeStars(overallRating)"
+                          :key="n"
+                          style="color: gold;font-size:16px;"
+                          class="star"
+                          id="avg_gold_stars"
+                        >
+                          <i class="fa fa-star"></i>
                         </span>
                         <span
-                          v-for = "n in (5 - numWholeStars(overallRating) - numHalfStars(overallRating))" :key="n" style="color: lightgrey;font-size:16px;" class="star"
+                          v-for="n in numHalfStars(overallRating)"
+                          :key="n"
+                          style="color: gold;font-size:16px;"
+                          class="star"
+                          id="avg_gold_stars_half"
+                        >
+                          <i class="fas fa-star-half-alt"></i>
+                        </span>
+                        <span
+                          v-for="n in (5 - numWholeStars(overallRating) - numHalfStars(overallRating))"
+                          :key="n"
+                          style="color: lightgrey;font-size:16px;"
+                          class="star"
                           id="avg_grey_stars"
                         >
-                        <i class = "fa fa-star"></i>
+                          <i class="fa fa-star"></i>
                         </span>
-                        <span style="padding:8px;">
-                          {{ overallRating }} out of 5
-                        </span>
+                        <span style="padding:8px;">{{ overallRating }} out of 5</span>
                       </p>
-                      <h5 style="font-weight:400">
-                        {{ratings}} student ratings
-                      </h5>
+                      <h5 style="font-weight:400">{{ratings}} <span v-if="ratings > 1">student ratings</span><span v-else>student rating</span></h5>
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
                       <div v-show="loading"></div>
                       <div v-show="showEmpty"></div>
-                      <div v-show="!loading&&!showEmpty" v-if = "ratings != 0">
+                      <div v-show="!loading&&!showEmpty" v-if="ratings != 0">
                         <h4
                           style="padding-top: 10px;color:#616a6b; padding-bottom:10px;font-size:2.5vh"
                         >Features</h4>
@@ -118,14 +141,32 @@
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
-                              <span v-for = "n in numWholeStars(easy)" :key = "n" style="color: gold;" class="star" id="easy_gold_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in numWholeStars(easy)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="easy_gold_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span v-for = "n in numHalfStars(easy)" :key = "n" style="color: gold;" class="star" id="easy_gold_stars_half">
-                                <i class = "fas fa-star-half-alt"></i>
+                              <span
+                                v-for="n in numHalfStars(easy)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="easy_gold_stars_half"
+                              >
+                                <i class="fas fa-star-half-alt"></i>
                               </span>
-                              <span v-for = "n in (5 - numWholeStars(easy) - numHalfStars(easy))" :key="n" style="color: lightgrey;" class="star" id="easy_grey_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in (5 - numWholeStars(easy) - numHalfStars(easy))"
+                                :key="n"
+                                style="color: lightgrey;"
+                                class="star"
+                                id="easy_grey_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
                               <span style="padding:10px;font-size: 12px" id="easy">{{ easy }}</span>
                             </p>
@@ -137,16 +178,37 @@
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
-                              <span v-for = "n in numWholeStars(manag_asgn)" :key = "n" style="color: gold;" class="star" id="man_gold_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in numWholeStars(manag_asgn)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="man_gold_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span v-for = "n in numHalfStars(manag_asgn)" :key = "n" style="color: gold;" class="star" id="man_gold_stars_half">
-                                <i class = "fas fa-star-half-alt"></i>
+                              <span
+                                v-for="n in numHalfStars(manag_asgn)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="man_gold_stars_half"
+                              >
+                                <i class="fas fa-star-half-alt"></i>
                               </span>
-                              <span v-for = "n in (5 - numWholeStars(manag_asgn) - numHalfStars(manag_asgn))" :key="n" style="color: lightgrey;" class="star" id="man_grey_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in (5 - numWholeStars(manag_asgn) - numHalfStars(manag_asgn))"
+                                :key="n"
+                                style="color: lightgrey;"
+                                class="star"
+                                id="man_grey_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span style="padding:10px;font-size: 12px" id="manageable">{{ manag_asgn }}</span>
+                              <span
+                                style="padding:10px;font-size: 12px"
+                                id="manageable"
+                              >{{ manag_asgn }}</span>
                             </p>
                           </div>
                         </div>
@@ -156,14 +218,32 @@
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
-                              <span v-for = "n in numWholeStars(manag_exam)" :key = "n" style="color: gold;" class="star" id="exam_gold_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in numWholeStars(manag_exam)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="exam_gold_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span v-for = "n in numHalfStars(manag_exam)" :key = "n" style="color: gold;" class="star" id="exam_gold_stars_half">
-                                <i class = "fas fa-star-half-alt"></i>
+                              <span
+                                v-for="n in numHalfStars(manag_exam)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="exam_gold_stars_half"
+                              >
+                                <i class="fas fa-star-half-alt"></i>
                               </span>
-                              <span v-for = "n in (5 - numWholeStars(manag_exam) - numHalfStars(manag_exam))" :key="n" style="color: lightgrey;" class="star" id="exam_grey_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in (5 - numWholeStars(manag_exam) - numHalfStars(manag_exam))"
+                                :key="n"
+                                style="color: lightgrey;"
+                                class="star"
+                                id="exam_grey_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
                               <span style="padding:10px;font-size: 12px" id="exam">{{ manag_exam }}</span>
                             </p>
@@ -175,16 +255,37 @@
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
-                              <span v-for = "n in numWholeStars(manag_wkld)" :key = "n" style="color: gold;" class="star" id="wkload_gold_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in numWholeStars(manag_wkld)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="wkload_gold_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span v-for = "n in numHalfStars(manag_wkld)" :key = "n" style="color: gold;" class="star" id="wkload_gold_stars_half">
-                                <i class = "fas fa-star-half-alt"></i>
+                              <span
+                                v-for="n in numHalfStars(manag_wkld)"
+                                :key="n"
+                                style="color: gold;"
+                                class="star"
+                                id="wkload_gold_stars_half"
+                              >
+                                <i class="fas fa-star-half-alt"></i>
                               </span>
-                              <span v-for = "n in (5 - numWholeStars(manag_wkld) - numHalfStars(manag_wkld))" :key="n" style="color: lightgrey;" class="star" id="wkload_grey_stars">
-                                <i class = "fa fa-star"></i>
+                              <span
+                                v-for="n in (5 - numWholeStars(manag_wkld) - numHalfStars(manag_wkld))"
+                                :key="n"
+                                style="color: lightgrey;"
+                                class="star"
+                                id="wkload_grey_stars"
+                              >
+                                <i class="fa fa-star"></i>
                               </span>
-                              <span style="padding:10px;font-size: 12px" id="workload">{{ manag_wkld }}</span>
+                              <span
+                                style="padding:10px;font-size: 12px"
+                                id="workload"
+                              >{{ manag_wkld }}</span>
                             </p>
                           </div>
                         </div>
@@ -205,22 +306,22 @@
                             @md-selected="showloading"
                           >
                             <md-option
-                              v-if = "findYears.includes('AY1920')"
+                              v-if="findYears.includes('AY1920')"
                               value="AY1920"
                               v-bind:class="{'disabledTab': loading,  '': !loading }"
                             >AY 1920</md-option>
                             <md-option
-                              v-if = "findYears.includes('AY1819')"
+                              v-if="findYears.includes('AY1819')"
                               value="AY1819"
                               v-bind:class="{'disabledTab': loading,  '': !loading }"
                             >AY 1819</md-option>
                             <md-option
-                              v-if = "findYears.includes('AY1718')"
+                              v-if="findYears.includes('AY1718')"
                               value="AY1718"
                               v-bind:class="{'disabledTab': loading,  '': !loading }"
                             >AY 1718</md-option>
                             <md-option
-                              v-if = "findYears.includes('AY1617')"
+                              v-if="findYears.includes('AY1617')"
                               value="AY1617"
                               v-bind:class="{'disabledTab': loading,  '': !loading }"
                             >AY 1617</md-option>
@@ -328,10 +429,15 @@ export default {
     findYears: function() {
       var years = [];
       for (var docu in this.reviewData) {
-        let sem = this.reviewData[docu].detailsForm.selectedSemester
-        if (!years.includes(this.reviewData[docu].detailsForm.selectedYear) && (sem.includes("Semester " + (this.chosenSem + 1)) ||
-                  sem.includes("Special Term " + (this.chosenSem - 1)))) {
-          years.push(this.reviewData[docu].detailsForm.selectedYear)
+        let sem = this.reviewData[docu].detailsForm.selectedSemester;
+        if (
+          !years.includes(this.reviewData[docu].detailsForm.selectedYear) &&
+          (isNaN(sem)
+            ? sem.includes("Semester " + (this.chosenSem + 1)) ||
+              sem.includes("Special Term " + (this.chosenSem - 1))
+            : sem == this.chosenSem)
+        ) {
+          years.push(this.reviewData[docu].detailsForm.selectedYear);
         }
       }
       return years;
@@ -390,6 +496,52 @@ export default {
         data: workload
       });
       return series;
+    },
+
+    formatDate: function(datetime) {
+      //2019-12-04T09:00:00.000Z
+      var monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ];
+      if (datetime !== null) {
+        var date = datetime.substring(0, 10).split("-");
+        var time = datetime.substring(11, 19).split(":");
+        var finishDate = new Date(
+          date[0],
+          date[1],
+          date[2],
+          time[0],
+          time[1],
+          time[2]
+        );
+        var hours = finishDate.getHours();
+        var minutes = finishDate.getMinutes();
+        var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        var strTime = hours + ":" + minutes + " " + ampm;
+        return (
+          finishDate.getDate() +
+          "-" +
+          monthNames[date[1] - 1] +
+          "-" +
+          date[0] +
+          " " +
+          strTime
+        );
+      }
     },
 
     checksemester(arr) {
@@ -477,75 +629,22 @@ export default {
       var num = sem.length;
       for (var i = 0; i < num; i++) {
         var semesters = [
-          { semester: "Semester 1", disabled: "disabledTab" },
-          { semester: "Semester 2", disabled: "disabledTab" },
-          { semester: "Special Term I", disabled: "disabledTab" },
-          { semester: "Special Term II", disabled: "disabledTab" }
+          "Semester 1",
+          "Semester 2",
+          "Special Term I",
+          "Special Term II"
         ];
         if (sem[i].semester == 3) {
-          totalsems += semesters[2].semester + " • ";
+          totalsems += semesters[2] + " • ";
         } else if (sem[i].semester == 4) {
-          totalsems += semesters[3].semester + " • ";
+          totalsems += semesters[3] + " • ";
         } else if (sem[i].semester == 2) {
-          totalsems += semesters[1].semester + " • ";
+          totalsems += semesters[1] + " • ";
         } else {
-          totalsems += semesters[0].semester + " • ";
+          totalsems += semesters[0] + " • ";
         }
       }
       return totalsems.slice(0, -3);
-    },
-    formatDate: function(datetime) {
-      //2019-12-04T09:00:00.000Z
-      var monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      if (datetime !== null) {
-        var date = datetime.substring(0, 10).split("-");
-        var time = datetime.substring(11, 19).split(":");
-        var finishDate = new Date(
-          date[0],
-          date[1],
-          date[2],
-          time[0],
-          time[1],
-          time[2]
-        );
-        var hours = finishDate.getHours();
-        var minutes = finishDate.getMinutes();
-        var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        var strTime = hours + ":" + minutes + " " + ampm;
-        return (
-          finishDate.getDate() +
-          "-" +
-          monthNames[date[1] - 1] +
-          "-" +
-          date[0] +
-          " " +
-          strTime
-        );
-      }
-      return "No Exam";
-    },
-    formatDur: function(duration) {
-      if (duration !== 0) {
-        return " | " + duration + " hours";
-      } else {
-        return "";
-      }
     },
     calcwork(arr) {
       arr = arr.info.workload;
@@ -583,8 +682,7 @@ export default {
           item = doc.data();
           item.id = doc.id;
           this.reviewData.push(item);
-          console.log(this.reviewData)
-          // console.log(doc.id)
+          console.log(this.reviewData);
         });
       });
     //get module details
@@ -614,12 +712,6 @@ export default {
     infodes: null,
     module_code: "",
     chosenSem: 0,
-    seriesStats: [
-      {
-        name: "Intake",
-        data: [150, 210, 186, 195]
-      }
-    ],
     Modules: []
   }),
   watch: {
@@ -627,7 +719,7 @@ export default {
       this.$root.$on("showValues", this.showValues);
     },
     chosenSem: function() {
-      this.shortload(900)
+      this.shortload(900);
     }
   }
 };
