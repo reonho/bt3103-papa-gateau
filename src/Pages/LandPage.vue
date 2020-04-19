@@ -176,7 +176,7 @@ export default {
     get_currentsem(obj_array) {
       var sem_no = 1;
       for (let i = 0; i < obj_array.length; i++) {
-        //console.log(obj_array[0][key])
+
         var value = obj_array[i];
         sem_no = i
         if (Object.entries(value).length == 0) {
@@ -187,7 +187,7 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-      console.log(this.sem);
+     
     },
 
     get_modules(modules) {
@@ -226,7 +226,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-        console.log(userData);
+     
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -241,6 +241,7 @@ export default {
         };
 
         self.User = result;
+       
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
