@@ -97,7 +97,7 @@ export default {
   },
   created() {
     var modlst = [];
-    console.log(this.course.moulde)
+    console.log(this.course.module)
     for (let i = 0; i < this.course.module.length; i++) {
       var mod = {};
       mod["amt"] = this.course.amount[i];

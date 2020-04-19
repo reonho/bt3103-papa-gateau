@@ -77,7 +77,7 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohortTopMods.amount[0]"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohort_loaded"></Feed>
       
       <br />
       <br />
@@ -135,7 +135,8 @@ export default {
       modules: [],
       sem: null,
       cohortTopMods: null,
-      showModal: false
+      showModal: false,
+      cohort_loaded: false
     };
   },
   methods: {
@@ -219,7 +220,10 @@ export default {
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
-          console.log(typeof self.cohortTopMods.amount)
+          console.log(self.cohortTopMods.amount[0])
+          if (self.cohortTopMods.amount[0]){
+            self.cohort_loaded = true
+          }
         });
         // query database for course attributes
         database.getFacultyAttributes(result.faculty).then(attributes => {
