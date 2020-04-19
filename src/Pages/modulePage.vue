@@ -10,43 +10,34 @@
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 10px"
         class="depFac"
-      >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
+      ><p>{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</p></div>
       <div
         style="color: #616a6b; margin-left: 22px; padding-top: 5px"
         class="depFac"
       >{{showsem(this.Modules[0].info.semesterData)}}</div>
       <hr />
       <div style="margin-left: 20px; margin-right:20px;font-size:2vh">
-        {{this.Modules[0].info.description}}
+        <p>{{this.Modules[0].info.description}}</p>
         <br />
         <br />
         <div class="row">
           <div class="col-5" style="text-align:left">
-            <span v-if="this.Modules[0].info.preclusion">
-              <b style="color: #616a6b">Preclusion(s)</b>
-              <br />
-              <span>{{this.Modules[0].info.preclusion}}</span>
-              <br />
-              <br />
-            </span>
-            <span v-if="this.Modules[0].info.prerequisite">
-              <b style="color: #616a6b">Prerequisite(s)</b>
-              <br />
-              {{this.Modules[0].info.prerequisite}}
-              <br />
-              <br />
-            </span>
-            <p v-for="sem in checksemester(this.Modules[0])" v-bind:key="sem.index">
-              <span v-if="sem.disabled == ''">
-                <b style="color: #616a6b">
-                  {{ sem.semester }} Exam
-                  <br />
-                </b>
-                <span v-if="sem.examDate == null">No Exam</span>
-                <span v-else>{{ formatDate(sem.examDate) }} • {{ sem.examDuration }} hrs</span>
-              </span>
-            </p>
+            <div v-show="showPreclusions(this.Modules[0].info.preclusion)">
+            <b style="color: #616a6b">Preclusion(s)</b>
             <br />
+            <p>{{this.Modules[0].info.preclusion}}</p>
+            <br />
+            <br />
+            </div>
+            <div v-show="showPrereq(this.Modules[0].info.prerequisite)">
+            <b style="color: #616a6b">Prerequisite(s)</b>
+            <br />
+            <p>{{this.Modules[0].info.prerequisite}}</p>
+            <br />
+            <br />
+            <b style="color: #616a6b">Exam</b>
+            <br /><p>28-Nov-2019 5:00 PM • 2 hours</p>
+            </div>
           </div>
           <div class="col-7">
             <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
@@ -137,7 +128,7 @@
                         >Features</h4>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                            <p style="font-weight:400; font-size:1.5vh">Easy to understand</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -174,7 +165,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                            <p style="font-weight:400; font-size:1.5vh">Manageable assignments</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -214,7 +205,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:2vh">Manageable exams</p>
+                            <p style="font-weight:400; font-size:1.5vh">Manageable exams</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -251,7 +242,7 @@
                         </div>
                         <div class="row">
                           <div class="col-6">
-                            <p style="font-weight:400; font-size:2vh">Manageable workload</p>
+                            <p style="font-weight:400; font-size:1.5vh">Manageable workload</p>
                           </div>
                           <div class="col-6" style="float:right">
                             <p>
@@ -354,7 +345,7 @@
         Reviews
         <a
           class="btn btn-primary btn-lg mr-4"
-          style="color: white; font-size: 2vh; float:right; background-color:teal; border-color:teal"
+          style="color: white; font-size:1.9vh; float:right; background-color:teal; border-color:teal"
           href="#"
           id="addReview"
           @click="review"
@@ -429,15 +420,11 @@ export default {
     findYears: function() {
       var years = [];
       for (var docu in this.reviewData) {
-        let sem = this.reviewData[docu].detailsForm.selectedSemester;
-        if (
-          !years.includes(this.reviewData[docu].detailsForm.selectedYear) &&
-          (isNaN(sem)
-            ? sem.includes("Semester " + (this.chosenSem + 1)) ||
-              sem.includes("Special Term " + (this.chosenSem - 1))
-            : sem == this.chosenSem)
-        ) {
-          years.push(this.reviewData[docu].detailsForm.selectedYear);
+        let sem = this.reviewData[docu].detailsForm.selectedSemester
+        console.log(sem)
+        if (!years.includes(this.reviewData[docu].detailsForm.selectedYear) && (sem == ("Semester " + (this.chosenSem + 1)) ||
+                  sem == ("Special Term " + (this.chosenSem - 1)))) {
+          years.push(this.reviewData[docu].detailsForm.selectedYear)
         }
       }
       return years;
@@ -668,6 +655,19 @@ export default {
       } else if (str == "manag_wkld") {
         this.manag_wkld = value;
       }
+    },
+    showPreclusions(val) {
+      console.log(val)
+      if (val != null) {
+        return true;
+      }
+      return false;
+    },
+    showPrereq(val) {
+      if (val != null) {
+        return true;
+      }
+      return false;
     }
   },
   created() {
@@ -728,10 +728,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
+p {
+   font-size: 1.8vh;
+  line-height: 1.5;
+}
 .header {
   padding: 1vh;
   padding-left: 0;
-  font-size: 1.8vw;
+  font-size: 3.5vh;
 }
 .miniheader {
   font-size: 1.2vw;

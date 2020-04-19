@@ -145,20 +145,24 @@ body {
 .button span {
   cursor: pointer;
   display: inline-block;
-
+  position: relative;
   transition: 0.5s;
 }
+
 .button span:after {
-  content: "\00bb";
+  content: '\00bb';
   position: absolute;
   opacity: 0;
-  top: -1vh !important;
-  font-size: 2.5vh;
+  font-size: 2vh;
+  top: -0.55vh;
+  right: -1vh;
   transition: 0.5s;
 }
+
 .button:hover span {
-  padding-right: 25px;
+  padding-right: 2.5vh;
 }
+
 .button:hover span:after {
   opacity: 1;
   right: 0;

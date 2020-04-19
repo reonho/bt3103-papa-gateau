@@ -44,12 +44,14 @@
                         enabled: true,
                         "formatter": function (val) {
                                 return val.toFixed(2)
-                            }
+                            },
+                         
                     },
                     colors:['#00aaff',  '#2cab93', '#ff9900',"#9500ff", '#E91E63', '#FF9800',],
                     fill: {
                         opacity: 0.5,
-                        colors: []
+                        colors: [],
+                       
                         }
                 },   
             }

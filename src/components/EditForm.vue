@@ -741,7 +741,7 @@ Tentative fix to css background
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 100vmax;
+  height: 100vh;
   padding: 0px;
 }
 </style>
