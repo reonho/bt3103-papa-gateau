@@ -77,7 +77,7 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohortTopMods"></Feed>
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohortTopMods.amount[0]"></Feed>
       
       <br />
       <br />
@@ -216,14 +216,15 @@ export default {
         };
 
         self.User = result;
-        console.log(result);
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
+          console.log(typeof self.cohortTopMods.amount)
         });
         // query database for course attributes
         database.getFacultyAttributes(result.faculty).then(attributes => {
-          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          self.facultyAttributes = attributes;
+        //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
         });
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);

@@ -150,14 +150,13 @@ export default {
         f_list.push(fac_attrs[m_code])
       }
       
-
-        
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
     }
   },
   created() {
+
    
    //console.log(this.fac_attr);
     this.parse_attr2(this.my_attr, this.fac_attr);
