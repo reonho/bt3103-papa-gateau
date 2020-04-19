@@ -593,7 +593,8 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      this.$router.push({ path: "/" });
+      // this.$router.push({ path: "/" });
+      this.$router.go(-1)
       // window.location.href = "/#/module";
     }
   },
