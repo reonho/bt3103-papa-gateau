@@ -63,22 +63,19 @@
                     return a.year - b.year
                 })
                 
-                console.log(obj_array)
                 var sap_series = []
                 var cum_series = []
-                for(let i=0; i < 8; i++){
-                    
+
+                for(let i=0; i < obj_array.length; i++){
                     //console.log(obj_array[0][key])
                     var value = obj_array[i]["cap"]
-                    
-                    if (!value){
-                        break
+                    if (typeof value != 'undefined'){
+                        sap_series.push(value)
+                        const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
+                        cum_series.push(average(sap_series))
+                        console.log(average(sap_series)     )
                     }
                     
-                    
-                    sap_series.push(value)
-                    const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
-                    cum_series.push(average(sap_series))
                     
                 }
                 this.series1[0].data = sap_series
@@ -87,6 +84,7 @@
         },
         created(){
             this.parse_sap(this.sap)
+            
             
         },
         

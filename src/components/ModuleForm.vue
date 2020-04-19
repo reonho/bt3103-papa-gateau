@@ -1,43 +1,59 @@
 <template>
   <div>
     <form>
-    
-      <md-field :class="getValidationClass('detailsForm', 'selectedModule')">
-        <label>Your Module</label>
-        <md-input v-model="detailsForm.selectedModule">
-          
-        </md-input>
-        <span
-          class="md-error"
-          v-if="!$v.detailsForm.selectedModule.required"
-        >This field is required</span>
-      </md-field>
+      <md-autocomplete
+        v-model="detailsForm.selectedModule"
+        :md-options="modules"
+        :class="getValidationClass('detailsForm', 'selectedModule')"
+      >
+        <label v-show="!detailsForm.selectedModule">Search for Module</label>
+        <label v-show="detailsForm.selectedModule">Module</label>
+        <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+          <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+        </template>
 
-      <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
-        <label>Grade obtained</label>
-        <md-select v-model="detailsForm.selectedGrade">
-          <md-option v-for="g in grades" v-bind:key="g.id" v-bind:value="g.title">{{g.title}}</md-option>
-        </md-select>
-        <span class="md-error" v-if="!$v.detailsForm.selectedGrade.required">This field is required</span>
-      </md-field>
+        <template
+          slot="md-autocomplete-empty"
+          slot-scope="{ term }"
+        >No Modules with "{{ term }}" were found.</template>
 
-      <md-field :class="getValidationClass('detailsForm', 'selectedSU')">
-        <label>Used SU Option</label>
-        <md-select v-model="detailsForm.selectedSU">
-          <md-option v-for="S in SU" v-bind:key="S.id" v-bind:value="S.title">{{S.title}}</md-option>
-        </md-select>
-        <span class="md-error" v-if="!$v.detailsForm.selectedSU.required">This field is required</span>
-      </md-field>
-
+        <span class="md-error" v-if="!$v.detailsForm.selectedModule.required">This field is required</span>
+      </md-autocomplete>
+      <div class="md-layout">
+        <div class="md-layout-item md-size-50">
+          <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
+            <label>Grade obtained</label>
+            <md-select v-model="detailsForm.selectedGrade">
+              <md-option v-for="g in grades" v-bind:key="g.id" v-bind:value="g.title">{{g.title}}</md-option>
+            </md-select>
+            <span
+              class="md-error"
+              v-if="!$v.detailsForm.selectedGrade.required"
+            >This field is required</span>
+          </md-field>
+        </div>
+        <div class="md-layout-item md-size-10"></div>
+        <div class="md-layout-item">
+          <div style="margin-top:0.5vw">
+            <md-radio
+              v-model="detailsForm.selectedSU"
+              class="md-primary"
+              style="padding-left:2vw"
+              value="Yes"
+            >SU</md-radio>
+            <md-radio
+              v-model="detailsForm.selectedSU"
+              class="md-primary"
+              style="padding-left:2vw"
+              value="No"
+            >No SU</md-radio>
+          </div>
+        </div>
+      </div>
+      <br />
       <md-card-actions class="md-layout md-alignment-center">
-        <md-button
-          class="md-primary md-raised"
-          type="submit"
-          v-on:click.prevent="submitForm"
-          >Submit</md-button>
-        
+        <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="submitForm">Submit</md-button>
       </md-card-actions>
-    
     </form>
   </div>
 </template>
@@ -46,7 +62,7 @@
 // import FollowUpModal from "./FollowUpModal.vue"
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
-import database from "../firebase.js"
+import database from "../firebase.js";
 export default {
   name: "ModuleForm",
   props: {
@@ -61,89 +77,69 @@ export default {
     return {
       showModal: false,
       searchlist: [],
-      Years: [{id:1, title: "AY1819"}, {id:1, title: "AY1920"}],
-      modules: [
-    {
-     id: 1,
-      Name: "CS2030",
-      Faculty: "SOC",
-      Prereq: ["CS1010S"],
-      MCs: 4,
-      Details: "This module is taught by proX"
-    },
-    {
-      id: 2,
-      Name: "MA1101R",
-      Faculty: "FOS",
-      Prereq: [],
-      MCs: 4,
-      Details: "This module is taught by proY"
-    },
-    {
-      id: 3,
-      Name: "BT2101",
-      Faculty: "SOC",
-      Prereq: ["MA1101R"],
-      MCs: 4,
-      Details: "This module is taught by proZ"
-    }
-  ],
+      Years: [
+        { id: 1, title: "AY1819" },
+        { id: 1, title: "AY1920" }
+      ],
+      modules: [],
       grades: [
-    {
-      id: 1,
-      title: "A+"
-    },
-    {
-      id: 2,
-      title: "A"
-    },
-    {
-      id: 3,
-      title: "A-"
-    },
-    {
-      id: 4,
-      title: "B+"
-    },
-    {
-      id: 5,
-      title: "B"
-    },
-    {
-      id: 6,
-      title: "B-"
-    },
-    {
-      id: 7,
-      title: "C+"
-    },
-    {
-      id: 8,
-      title: "C"
-    },
-    {
-      id: 9,
-      title: "D+"
-    },
-    {
-      id: 10,
-      title: "D"
-    },
-    {
-      id: 11,
-      title: "F"
-    },
-    {
-      id: 12,
-      title: "S"
-    },
-    {
-      id: 13,
-      title: "U"
-    }
-  ],
-      SU: [{id: 1,title: "Yes"},
-            {id:2, title: "No"}],
+        {
+          id: 1,
+          title: "A+"
+        },
+        {
+          id: 2,
+          title: "A"
+        },
+        {
+          id: 3,
+          title: "A-"
+        },
+        {
+          id: 4,
+          title: "B+"
+        },
+        {
+          id: 5,
+          title: "B"
+        },
+        {
+          id: 6,
+          title: "B-"
+        },
+        {
+          id: 7,
+          title: "C+"
+        },
+        {
+          id: 8,
+          title: "C"
+        },
+        {
+          id: 9,
+          title: "D+"
+        },
+        {
+          id: 10,
+          title: "D"
+        },
+        {
+          id: 11,
+          title: "F"
+        },
+        {
+          id: 12,
+          title: "S"
+        },
+        {
+          id: 13,
+          title: "U"
+        }
+      ],
+      SU: [
+        { id: 1, title: "Yes" },
+        { id: 2, title: "No" }
+      ],
       semesters: [
         {
           id: 1,
@@ -152,19 +148,18 @@ export default {
         },
         {
           id: 2,
-          title:"Semester 2",
+          title: "Semester 2",
           examDate: "2020-05-05T09:00:00.000Z",
           examDuration: 120
-        },
-       
+        }
       ],
       submitStatus: null,
       detailsForm: {
         selectedModule: null,
         selectedSemester: this.sem,
         selectedGrade: null,
-        selectedSU: null,
-        selectedYear:  this.year,
+        selectedSU: "No",
+        selectedYear: this.year
       }
     };
   },
@@ -174,14 +169,13 @@ export default {
       selectedModule: {
         required
       },
-    
+
       selectedGrade: {
         required
       },
-      selectedSU:{
+      selectedSU: {
         required
-      },
-      
+      }
     }
   },
   methods: {
@@ -194,35 +188,35 @@ export default {
       }
     },
     submitForm() {
-      
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("ok");
-        database.addModuleResults(this.detailsForm).then(e=>{
-          console.log(e)
+        database.addModuleResults(this.detailsForm).then(e => {
+          console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit('closeModal');
-
-        })
-       
-        
+          this.$root.$emit("closeModal");
+        });
       }
-    },
-    created() {
-    let self = this;
-    database.getUser().then(user => {
-      database.ifAddedModule(this.detailsForm.selectedModule, user).then(mod => {
-        console.log(mod);
-        if (mod !== null) {
-          self.added = true;
-          var df = self.mod;
-          df.selectedModule = mod.Name;
-          df.selectedGrade = mod.grade;
-          df.selectedSU = mod.SU;
-        }
-      });
-    });
+    }
   },
+  created() {
+    //Accumulating dropdown with modules in DB
+
+    database.firebase_data
+      .collection("modules")
+      .get()
+      .then(querySnapShot => {
+        var slookup = {};
+        //Loop through each item
+        querySnapShot.forEach(doc => {
+          var name = doc.data().info.moduleCode + " " + doc.data().info.title;
+          if (!(name in slookup)) {
+            slookup[name] = 1;
+            this.modules.push(doc.data().info.moduleCode);
+          }
+        });
+      });
+    console.log(this.modules);
   }
 };
 </script>
@@ -231,7 +225,12 @@ export default {
 @import "./style.css";
 .md-card {
   /* overflow: scroll; */
-  display:block;
+  display: block;
   /* min-height: 180px; */
+}
+</style>
+<style lang="scss">
+.md-menu-content {
+  z-index: 11;
 }
 </style>

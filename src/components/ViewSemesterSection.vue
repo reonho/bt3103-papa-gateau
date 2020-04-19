@@ -2,41 +2,58 @@
   <div id="ViewSemesterSection">
     <div>
       <div class="md-layout">
-        <div class="md-layout-item md-size-30">
-          <md-field style="margin:0;padding:0;min-height:4.5vh">
-            <label style="top:1.3vh;font-size:1vw">Year</label>
-            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
+        <div class="md-layout-item md-size-35">
+          <md-field class="mod-dropdown">
+            <label style="font-size:1vw">Year</label>
+            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
               <md-option
                 v-for="year in yearlist"
-                :key="year.index"
+                :key="year.value"
                 :id="year.value"
                 v-model="year.value"
-              >Year {{ year.value }}</md-option>
+              >{{ year.value }}</md-option>
             </md-select>
           </md-field>
+          <md-chips
+            class="mod-chips"
+            style="margin-bottom:0; padding:0"
+            v-model="yearchosen"
+            md-static
+          ></md-chips>
         </div>
         <div class="md-layout-item md-size-5"></div>
-        <div class="md-layout-item md-size-30">
-          <md-field style="margin:0;padding:0;min-height:4.5vh;">
-            <label style="top:1.3vh;font-size:1vw">Semester</label>
+        <div class="md-layout-item md-size-35">
+          <md-field class="mod-dropdown">
+            <label style="font-size:1vw">Semester</label>
             <md-select v-model="semchosen" name="semchosen" id="semchosen" multiple>
               <md-option
                 v-for="sem in semlist"
-                :key="sem.index"
+                :key="sem.value"
                 :id="sem.value"
                 v-model="sem.value"
-              >Semster {{ sem.value }}</md-option>
+              >{{ sem.value }}</md-option>
             </md-select>
           </md-field>
+          <md-chips
+            class="mod-chips"
+            style="margin-bottom:0; padding:0"
+            v-model="semchosen"
+            md-static
+          ></md-chips>
         </div>
-        <div class="md-layout-item md-size-10"></div>
+        <div class="md-layout-item md-size-5"></div>
         <div class="md-layout-item md-size-10">
-          <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
-            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
-          </b-button>
+          <md-field class="mod-dropdown" style="padding-top: 0;">
+            <b-button
+              style="width: 8.5vw; padding:1vh;"
+              v-on:click="clearfilter"
+              variant="outline-info"
+            >
+              <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+            </b-button>
+          </md-field>
         </div>
       </div>
-      <br />
       <br />
 
       <!-- Semester Details -->
@@ -155,14 +172,16 @@ export default {
   },
   data: () => ({
     showModal: false,
-    yearlist: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }],
-    semlist: [{ value: 1 }, { value: 2 }],
+    yearlist: [],
+    semlist: [],
     semnum: 0,
     semesters: [],
     usergrades: [],
     modalyear: null,
     modalsem: null,
-    currentdetails: []
+    currentdetails: [],
+    yearchosen: [],
+    semchosen: []
   }),
   components: {
     //AddModuleModal
@@ -211,8 +230,32 @@ export default {
         }
         semesters.push(sem);
       }
+      let filterData = semesters;
 
-      return semesters;
+      if (this.yearchosen.length > 0) {
+        console.log(this.yearchosen);
+
+        filterData = filterData.filter(item => {
+          if (this.yearchosen.includes(item.year.toString())) {
+            return true;
+          }
+
+          return false;
+        });
+      }
+      if (this.semchosen.length > 0) {
+        console.log(this.semchosen);
+
+        filterData = filterData.filter(item => {
+          if (this.semchosen.includes(item.semester.toString())) {
+            return true;
+          }
+
+          return false;
+        });
+      }
+
+      return filterData;
     },
     showbutton() {
       if ((this.semnum == 8) | (this.semnum == 0)) {
@@ -222,20 +265,25 @@ export default {
     }
   },
   methods: {
+    clearfilter() {
+      this.yearchosen = [];
+      this.semchosen = [];
+    },
     addsem() {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-      if (this.semnum > 0) {
-        var latest1 =
-          parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
-        var latest2 =
-          parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
-        latest = "AY" + latest1 + latest2;
-        latestsem = this.semesters[this.semnum - 1].semester;
 
+      if (this.semnum > 0) {
+        latestsem = this.semesters[this.semnum - 1].semester;
         if (latestsem == "Semester 1") {
+          latest = this.semesters[this.semnum - 1].year;
           latestsem = "Semester 2";
         } else {
+          var latest1 =
+            parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
+          var latest2 =
+            parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
+          latest = "AY" + latest1 + latest2;
           latestsem = "Semester 1";
         }
       }
@@ -244,7 +292,7 @@ export default {
         year: latest,
         semester: latestsem,
         mods: [],
-        cap: 0.00,
+        cap: 0.0,
         collapse: false
       });
 
@@ -293,10 +341,38 @@ export default {
     },
     accumulatesems() {
       let sems = this.User.sap_by_sem;
-
+      var years = [];
+      var semesters = [];
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
+
+          if (i == 0) {
+            years.push(sems[i].year);
+            semesters.push(sems[i].sem);
+
+            this.yearlist.push({
+              value: sems[i].year
+            });
+            this.semlist.push({
+              value: sems[i].sem
+            });
+          } else {
+            console.log(years);
+            console.log(years.includes(sems[i].year));
+            if (!years.includes(sems[i].year)) {
+              years.push(sems[i].year);
+              this.yearlist.push({
+                value: sems[i].year
+              });
+            }
+            if (!semesters.includes(sems[i].sem)) {
+              semesters.push(sems[i].sem);
+              this.semlist.push({
+                value: sems[i].sem
+              });
+            }
+          }
           this.semesters.push({
             year: sems[i].year,
             semester: sems[i].sem,
@@ -326,7 +402,6 @@ export default {
     },
 
     formatcap(cap) {
-  
       return cap.toFixed(2);
     },
     formatMC(sem) {
@@ -359,6 +434,9 @@ export default {
   overflow: auto;
   display: block;
 }
+.mod-dropdown.md-field {
+  margin: 0.3vw 0 0.5vw !important;
+}
 .btn-outline-info {
   color: teal;
   border-color: teal;
@@ -369,6 +447,11 @@ export default {
   color: white;
   background-color: teal;
   border-color: teal;
+}
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }
 
 .md-button.addsem {
