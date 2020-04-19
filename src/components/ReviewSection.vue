@@ -69,8 +69,5 @@ export default {
 
 
 <style scoped>
-.empty-state {
-  color: #2e4053;
-  /* color:  #17a2b8 */
-}
+
 </style>
