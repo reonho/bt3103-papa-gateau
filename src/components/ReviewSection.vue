@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div id="ReviewSection" v-if="hasReviews===true">
+    <div id="ReviewSection" v-show="hasReviews===true">
       <div v-for="r in reviewData" v-bind:key="'review'+r.id">
         <ReviewCard :review="r"></ReviewCard>
       </div>
     </div>
-    <div class="empty-state" id="EmptyState" v-if="hasReviews===false">
+    <div class="empty-state" id="EmptyState" v-show="hasReviews===false">
       <md-empty-state
-        class="md-accent"
+        style="color: #2e4053 !important;"
         md-icon="post_add"
         md-label="No Reviews"
         md-description="There are no reviews yet. Write a review now!"
@@ -20,6 +20,7 @@
 <script>
 // import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
+// import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 // import database from '../firebase.js';
 export default {
   name: "ReviewSection",
@@ -28,44 +29,45 @@ export default {
     mod: String,
     reviewData: Array
   },
+  methods: {
+    setReviewStatus(value) {
+      console.log('value ' + value)
+      if (value.length > 0) {
+        this.hasReviews = true;
+      } else {
+        this.hasReviews = false;
+      }
+
+    },
+
+  },
   // {
   //   reviewData: Array //should be an array of reviews from the backend
   // },
   data: () => ({
-    hasReviews: true
-    // reviewData: DataObject.reviewData
-    // reviewData: [],
-    //userid: 'e0123451'
+    hasReviews: false,
+    dataLoaded: false
+
   }),
-
   components: {
-    ReviewCard
+    ReviewCard,
   },
-  // created() {
-  //   console.log("ReviewSection " + this.reviewData)
-  //   if (this.reviewData.length > 0) {
-  //     this.hasReviews = true;
-  //   } else {
-  //     this.hasReviews = false;
-  //   }
-   
-  // },
 
-  beforeUpdated() {
-    console.log("ReviewSection " + this.reviewData)
-    if (this.reviewData.length > 0) {
-      this.hasReviews = true;
-    } else {
-      this.hasReviews = false;
+  created() {
+    this.setReviewStatus(this.reviewData);
+  },
+  watch: {
+    reviewData(value) {
+      console.log('watch')
+      this.setReviewStatus(value);
+      console.log(this.reviewData)
     }
   }
+  // }
 };
 </script>
 
 
 <style scoped>
-.empty-state {
-  /* color:  #17a2b8 */
-}
-</style>
 
+</style>

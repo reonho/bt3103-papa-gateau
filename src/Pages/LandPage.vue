@@ -65,13 +65,32 @@
         <div class="sub-contain-div2">
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
+            <!-- When using RadarChart to display My Attributes vs Faculty, set my_attr to be user attributes and fac_attr to be faculty -->
+            <!-- However, when using to display My Attributes vs Module Attributes, type as Faculty, set my_attr to be user attributes and fac_attr to be top student attributes.  -->
+            <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
+            <RadarChart
+              v-if="facultyAttributes"
+              v-bind:my_attr="User.attributes"
+              v-bind:fac_attr="facultyAttributes"
+              type='Faculty'
+              label_1='My Attributes'
+              label_2='Faculty Average'
+            ></RadarChart>
+            <!-- <RadarChart
+              v-if="facultyAttributes"
+              :my_attr="User.attributes"
+              :fac_attr="facultyAttributes"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart> -->
           </div>
-
+<!-- 
           <RadarChart
             v-if="facultyAttributes"
             :my_attr="User.attributes"
             :fac_attr="facultyAttributes"
-          ></RadarChart>
+          ></RadarChart> -->
         </div>
       </div>
 
@@ -222,6 +241,9 @@ export default {
           self.cohortTopMods = doc;
         });
         // query database for course attributes
+        // database.getModuleAttributes("BT2101").then(r => {
+        //   self.facultyAttributes = r;
+        // });
         database.getFacultyAttributes(result.faculty).then(attributes => {
 
           self.facultyAttributes = attributes;
