@@ -649,48 +649,48 @@ var database = {
   //=====================================//
   //----------- getModuleAttributes-----//
   //=====================================//
-  async getModuleAttributes(module_) {
-    var promise = new Promise((resolve) => {
-      database.firebase_data
-        .collection("module_grades")
-        .where("module", "==", module_)
-        .get().then(snapshot=>{
-          var attributes = []
-          snapshot.forEach(doc=>{
-            var grade_ = doc.data()
-              if (grade_.SU == "No"){
-                if (attributes.empty){
-                  attributes.push({
-                    amt: 1,
-                    att: grade_.attribute,
-                    grade : database.convertCap(grade_.grade)
-                  })
-                } else {
-                  var flag = false
-                  for (var att in attributes){
-                    if (attributes[att].att == grade_.attribute){
-                      flag = true
-                      attributes[att].grade = (attributes[att].grade*attributes[att].amt + database.convertCap(grade_.grade))/
-                        (attributes[att].amt + 1);
-                      attributes[att].amt += 1
-                      break;
-                    }
-                  }
-                  if (!flag){
-                    attributes.push({
-                      amt: 1,
-                      att: grade_.attribute,
-                      grade : database.convertCap(grade_.grade)
-                    })
-                  }
-                }
-              }            
-          })
-          resolve(attributes)
-        })
-    });
-    return promise;
-  },
+  // async getModuleAttributes(module_) {
+  //   var promise = new Promise((resolve) => {
+  //     database.firebase_data
+  //       .collection("module_grades")
+  //       .where("module", "==", module_)
+  //       .get().then(snapshot=>{
+  //         var attributes = []
+  //         snapshot.forEach(doc=>{
+  //           var grade_ = doc.data()
+  //             if (grade_.SU == "No"){
+  //               if (attributes.empty){
+  //                 attributes.push({
+  //                   amt: 1,
+  //                   att: grade_.attribute,
+  //                   grade : database.convertCap(grade_.grade)
+  //                 })
+  //               } else {
+  //                 var flag = false
+  //                 for (var att in attributes){
+  //                   if (attributes[att].att == grade_.attribute){
+  //                     flag = true
+  //                     attributes[att].grade = (attributes[att].grade*attributes[att].amt + database.convertCap(grade_.grade))/
+  //                       (attributes[att].amt + 1);
+  //                     attributes[att].amt += 1
+  //                     break;
+  //                   }
+  //                 }
+  //                 if (!flag){
+  //                   attributes.push({
+  //                     amt: 1,
+  //                     att: grade_.attribute,
+  //                     grade : database.convertCap(grade_.grade)
+  //                   })
+  //                 }
+  //               }
+  //             }            
+  //         })
+  //         resolve(attributes)
+  //       })
+  //   });
+  //   return promise;
+  // },
 
   //==============================================ModulePage and Review Page functions=====================================
   //=====================================//
