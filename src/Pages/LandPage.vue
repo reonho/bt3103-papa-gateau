@@ -14,7 +14,7 @@
             <md-button
               class="md-primary md-raised"
               style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
-    width:20vh;font-size: 1.6vh; margin:0"
+    width:20vh;font-size: 1.8vh; margin:0"
               @click="showModal = true"
             >EDIT DETAILS</md-button>
             <md-dialog :md-active.sync="showModal">
@@ -41,7 +41,7 @@
           <div class="sub-header-content">
             <div class="sub-header-title">GRADES</div>
 
-            <div class="grade-content">
+            <div class="grade-content" v-if="sem">
               <div class="md-layout md-gutter">
                 <div class="md-layout-item md-size-40">
                   <p class="sub-content-title">Current Semester</p>
@@ -52,7 +52,7 @@
                   <p
                     class="sub-content-text"
                     style="padding-bottom:0;"
-                    v-if="cohortTopMods"
+                    v-if="User.overall_cap"
                   >{{formatcap(User.overall_cap)}}</p>
                 </div>
               </div>
@@ -85,13 +85,19 @@
               label_2="My Attributes"
             ></RadarChart> -->
           </div>
+<!-- 
+          <RadarChart
+            v-if="facultyAttributes"
+            :my_attr="User.attributes"
+            :fac_attr="facultyAttributes"
+          ></RadarChart> -->
         </div>
       </div>
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
-
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohort_loaded"></Feed>
+      
       <br />
       <br />
       <div>
@@ -110,6 +116,7 @@
 import DataObject from "../Database.js";
 
 import EditUserDetailsForm from "../components/EditUserDetailsForm";
+//import ViewSemesterSection from "../components/ViewSemesterSection";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
 // //import TreeChart from "../components/TreeCharts/TreeChart"
@@ -133,7 +140,8 @@ export default {
     capline,
     NavBar,
     Feed,
-    ReviewSection
+    ReviewSection,
+   // ViewSemesterSection
     // // Ratings
   },
   data: function() {
@@ -146,7 +154,8 @@ export default {
       modules: [],
       sem: null,
       cohortTopMods: null,
-      showModal: false
+      showModal: false,
+      cohort_loaded: false
     };
   },
   methods: {
@@ -161,10 +170,11 @@ export default {
     },
     get_currentsem(obj_array) {
       var sem_no = 1;
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < obj_array.length; i++) {
         //console.log(obj_array[0][key])
         var value = obj_array[i];
-        if (Object.entries(value).length === 0) {
+        sem_no = i
+        if (Object.entries(value).length == 0) {
           sem_no = i;
           break;
         }
@@ -172,6 +182,7 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
+      console.log(this.sem)
     },
 
     get_modules(modules) {
@@ -210,7 +221,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-
+        console.log(userData);
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -225,23 +236,27 @@ export default {
         };
 
         self.User = result;
-        console.log(result);
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
+          console.log(self.cohortTopMods.amount[0])
+          if (self.cohortTopMods.amount[0]){
+            self.cohort_loaded = true
+          }
         });
         // query database for course attributes
         // database.getModuleAttributes("BT2101").then(r => {
         //   self.facultyAttributes = r;
         // });
         database.getFacultyAttributes(result.faculty).then(attributes => {
-          console.log(attributes.attributes)
-          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          self.facultyAttributes = attributes;
+        //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
         });
-
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
+
+      
   },
   mounted() {
     if (this.userPassed) {
@@ -292,7 +307,7 @@ export default {
 }
 .header {
   color: #566573;
-  font-size: 3vh;
+  font-size: 4vh;
   font-weight: 600;
 }
 .sub-header-title {
@@ -307,8 +322,6 @@ export default {
   background: white;
   text-align: left;
   padding: 0;
-  max-height: 100vh;
-  min-height: 52vh;
 }
 .sub-content-title {
   font-size: 1.9vh;
@@ -317,7 +330,7 @@ export default {
   color: #ec7663;
 }
 .sub-content-text {
-  font-size: 1.8vh;
+  font-size: 2.1vh;
   text-align: left;
   padding-bottom: 4vh;
   color: #2e4053;
@@ -338,7 +351,7 @@ export default {
   float: left;
 }
 .sub-contain-div2 {
-  width: 40vw;
+  width: 42vw;
   background-color: white;
   float: right;
 }

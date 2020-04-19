@@ -7,20 +7,33 @@ export default {
   //mixins: [reactiveProp],
   data: function () {
     return {
+      ratings: 0,
       datacollection: {
         labels: [],
         datasets: [
           {
             data: [],
             backgroundColor: [
-              "rgb(255, 99, 132)",
-              "rgb(54, 162, 235)",
-              "rgb(255, 205, 86)",
-              "rgb(185,168,242)",
-              "rgb(42,179,189)",
-              "rgb(41,227,199)",
-              "rgb(213,240,111)"
-            ]
+              "#CDB38B",
+              "#FCD59C",
+              "#CD6839",
+              "#E2DDB5",
+
+              "#CDC9A5",
+              "#BAAF07",
+              "#DBDB70",
+              "#4F4F2F",
+              
+              "#A2C257",
+              "#D4ED91",
+              "#F4F776",
+              "#615E3F",
+
+              "#F0E68C",
+              "#CDC9A5",
+              "#C6C3B5",
+              "#E8C782"              
+            ] // chose 16 colours - 16 faculties in NUS in total.
           }
         ]
       },
@@ -32,7 +45,10 @@ export default {
         },
         legend: {
           display: false
-        }
+        },
+        animation: {
+          animateRotate: true
+        } 
       }
     }
   },
@@ -60,27 +76,18 @@ export default {
           this.datacollection.labels.push(key)
           this.datacollection.datasets[0].data.push(value)
         })
-
-        document.getElementById("ratings").innerHTML = this.datacollection.datasets[0].data.reduce((a, b) => a + b, 0)
         if (display) this.renderChart(this.datacollection, this.options)
-        else {
-          this.options.title.text = "No Data"
-          this.options.responsive = true
-          this.renderChart(this.datacollection, this.options)
-        }
       })
+
     }
   },
   created() {
-    // this.chartData is created in the mixin.
-    // If you want to pass options please create a local options object
     this.fetchItems()
   },
   watch: {
     years: function () {
-      this._data._chart.destroy()
       this.datacollection.datasets[0].data = []
-      this.options.title.text = "Faculties"
+      this.options.animation.animateRotate = false
       this.fetchItems()
     }
   }

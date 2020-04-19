@@ -1,6 +1,14 @@
 <template>
   <div id="Radar">
-    <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
+    <apexchart type="radar" :options="chartOptions2" :series="series1" v-show="!showEmpty" ref="strengths"></apexchart>
+    <div v-show="showEmpty">
+      <md-empty-state id="statebox"
+      style="max-width:0 !important;  color: #2e4053;"
+      md-icon="layers"
+      md-label="No Attributes to Display"
+      md-description="Start by adding modules in the Grades section!">
+    </md-empty-state>
+    </div>
   </div>
 </template>
 
@@ -80,6 +88,14 @@ export default {
       }
     };
   },
+  computed: {
+    showEmpty() {
+      if (this.my_attr.length == 0) {
+        return true;
+      }
+      return false;
+    }
+  },
   methods: {
     parse_attr: function(my_attr, fac_attr) {
       var my_attrs = [];
@@ -113,10 +129,9 @@ export default {
       var lenf = fac_attr.length;
       //for each item in fac_attr
       for (let i = 0; i < lenf; i++) {
-        var f_code = fac_attr[i].att; //get the attribute (e.g. 'BT')
-        if (fac_attrs[f_code] == undefined) {
-          //create an obj like so {'BT':4}
-          fac_attrs[f_code] = fac_attr[i].grade;
+        var f_code = fac_attr[i].att;
+        if(fac_attrs[f_code] == undefined){
+          fac_attrs[f_code] = [fac_attr[i].grade.toFixed(2)]
         }
       }
 
@@ -148,6 +163,7 @@ export default {
     }
   },
   created() {
+   //console.log(this.fac_attr);
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
   }
@@ -158,4 +174,25 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "./style.css";
+
+</style>
+<style>
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size:9vw !important;
+  color: teal
+}
+
+#statebox .md-empty-state-label {
+  font-size:1.3vw !important;
+}
+
+#statebox .md-empty-state-description {
+  font-size:1vw !important;
+}
+
+#statebox .md-empty-state-container {
+  padding-top:5vh;
+  width: 42vw;
+
+}
 </style>
