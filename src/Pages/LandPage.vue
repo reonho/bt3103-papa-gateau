@@ -54,6 +54,11 @@
                     style="padding-bottom:0;"
                     v-if="User.overall_cap"
                   >{{formatcap(User.overall_cap)}}</p>
+                  <p
+                    class="sub-content-text"
+                    style="padding-bottom:0;"
+                    v-if="!User.overall_cap"
+                  >{{formatcap(User.overall_cap)}}</p>
                 </div>
               </div>
             </div>

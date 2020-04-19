@@ -33,7 +33,7 @@
                 <span class="md-suffix">@u.nus.edu</span>
                 <span class="md-error" v-if="!$v.regForm.username.required">This field is required</span>
               </md-field>
-              <md-field :class="getValidationClass('regForm', 'name')"> 
+              <md-field :class="getValidationClass('regForm', 'name')">
                 <label>Name</label>
                 <md-input type="name" id="name" v-model="regForm.name"></md-input>
                 <span class="md-error" v-if="!$v.regForm.name.required">This field is required</span>
@@ -41,14 +41,23 @@
               <md-field :class="getValidationClass('regForm', 'password')">
                 <label>Password</label>
                 <md-input type="password" id="password" v-model="regForm.password"></md-input>
-                   <span class="md-error" v-if="!$v.regForm.password.required">This field is required</span>
-                   <span class="md-error" v-if="!$v.regForm.password.minLength">Password must be at least 6 characters</span>
+                <span class="md-error" v-if="!$v.regForm.password.required">This field is required</span>
+                <span
+                  class="md-error"
+                  v-if="!$v.regForm.password.minLength"
+                >Password must be at least 6 characters</span>
               </md-field>
               <md-field :class="getValidationClass('regForm', 'cfmpassword')">
                 <label>Confirm Password</label>
                 <md-input type="password" id="cfmpassword" v-model="regForm.cfmpassword"></md-input>
-                <span class="md-error" v-if="!$v.regForm.cfmpassword.required">This field is required</span>
-                    <span class="md-error" v-if="!$v.regForm.password.sameAsPassword & $v.regForm.cfmpassword.required">Password does not match</span>
+                <span
+                  class="md-error"
+                  v-if="!$v.regForm.cfmpassword.required"
+                >This field is required</span>
+                <span
+                  class="md-error"
+                  v-if="!$v.regForm.password.sameAsPassword & $v.regForm.cfmpassword.required"
+                >Password does not match</span>
               </md-field>
               <br />
               <p class="reg-header">Education Info</p>
@@ -65,7 +74,10 @@
                         v-model="course.value"
                       >{{ course.value }}</md-option>
                     </md-select>
-                       <span class="md-error" v-if="!$v.regForm.coursechosen.required">This field is required</span>
+                    <span
+                      class="md-error"
+                      v-if="!$v.regForm.coursechosen.required"
+                    >This field is required</span>
                   </md-field>
                 </div>
                 <div class="md-layout-item md-size-5"></div>
@@ -84,7 +96,10 @@
                         v-model="year.value"
                       >{{ year.value }}</md-option>
                     </md-select>
-                       <span class="md-error" v-if="!$v.regForm.yearchosen.required">This field is required</span>
+                    <span
+                      class="md-error"
+                      v-if="!$v.regForm.yearchosen.required"
+                    >This field is required</span>
                   </md-field>
                 </div>
               </div>
@@ -101,10 +116,28 @@
                 :md-click-outside-to-close="false"
                 :md-active.sync="showSubmitMessage"
                 md-title="Success!"
-                md-content="Thank you for registering with MODEAUX! You can procced to login."
+                md-content="Thank you for registering with MODEAUX! You can procced to your dashboard."
                 @md-confirm="goLogin"
                 md-cancel-text
                 md-confirm-text="Nice"
+              />
+              <md-dialog-confirm
+                :md-click-outside-to-close="false"
+                :md-active.sync="showError1Message"
+                md-title="Invalid Email Address"
+                md-content="Email is badly formatted. Please try again."
+                @md-confirm="closemodal"
+                md-cancel-text
+                md-confirm-text="OK"
+              />
+              <md-dialog-confirm
+                :md-click-outside-to-close="false"
+                :md-active.sync="showError2Message"
+                md-title="Email Address Exists"
+                md-content="Email Address already exists. Please enter another email address."
+                @md-confirm="closemodal"
+                md-cancel-text
+                md-confirm-text="OK"
               />
             </div>
           </div>
@@ -119,7 +152,7 @@
 // import DataObject from "../Database.js"
 import database from "../firebase.js";
 import { validationMixin } from "vuelidate";
-import { required, sameAs, minLength} from "vuelidate/lib/validators";
+import { required, sameAs, minLength } from "vuelidate/lib/validators";
 export default {
   name: "Registration",
   components: {},
@@ -131,11 +164,12 @@ export default {
         password: null,
         cfmpassword: null,
         coursechosen: null,
-        yearchosen: null,
-        
+        yearchosen: null
       },
       courselist: [],
-        showSubmitMessage: false
+      showSubmitMessage: false,
+      showError1Message: false,
+      showError2Message: false
     };
   },
   mixins: [validationMixin],
@@ -153,8 +187,7 @@ export default {
       },
       cfmpassword: {
         required,
-        sameAsPassword: sameAs('password')
-
+        sameAsPassword: sameAs("password")
       },
       coursechosen: {
         required
@@ -271,18 +304,25 @@ export default {
           )
           .then(doc => {
             console.log(doc);
-             this.showSubmitMessage = true;
-             console.log(database.user);
+            this.showSubmitMessage = true;
+            console.log(database.user);
           })
           .catch(err => {
             console.log(err);
+            if (err == "The email address is badly formatted.") {
+              this.showError1Message = true;
+            } else if (err == "The email address is already in use by another account.") {
+              this.showError2Message = true;
+            }
           });
-       
-        
       }
     },
     goLogin() {
       this.$router.push({ path: "/" });
+    },
+    closemodal() {
+      this.showError1Message = false;
+      this.showError2Message = false;
     }
   },
   created() {
@@ -302,7 +342,6 @@ export default {
           });
         });
       });
-      
   }
 };
 </script>
@@ -341,7 +380,7 @@ body {
 }
 
 .button span:after {
-  content: '\00bb';
+  content: "\00bb";
   position: absolute;
   opacity: 0;
   font-size: 2vh;
