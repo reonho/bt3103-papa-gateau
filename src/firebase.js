@@ -243,38 +243,60 @@ var database = {
   //----------- getCohortTopModules------//
   //=====================================//
   async getCohortTopModules(batch) {
-    var promise = new Promise((resolve) => {
-      var modules = [];
-      var amt = [];
-      var students = [];
-      database.firebase_data
-        .collection("students")
-        .where("batch", "==", batch)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((user) => {
-            students.push(user.id);
-            database.firebase_data
-              .collection("module_grades")
-              .where("studentID", "==", user.id)
-              .get()
-              .then(snapshot=>{
-                snapshot.forEach(result=>{
-                  var result_ = result.data();
-                  if (modules.includes(result_.module)) {
-                    var index = modules.indexOf(result_.module);
-                    amt[index] += 1;
-                  } else {
-                    modules.push(result_.module);
-                    amt.push(1);
-                  }
-                })
-                resolve({module: modules, amount: amt})
-              })
-          });
-        });
+    var students = await database.getCohortStudents(batch);
+    console.log(students)
+    var modules = [];
+    var amt = [];
+    for (var x in students){
+      var mod_ = await database.getStudentModules(students[x])
+      for (var y in mod_){
+        var module_ = mod_[y]
+        if (modules.includes(module_)) {
+          var index = modules.indexOf(module_);
+          amt[index] += 1;
+        } else {
+          modules.push(module_);
+          amt.push(1);
+        }
+      }
+    }
+    return new Promise(resolve=>{
+      resolve({module: modules, amount: amt})
     });
-    return promise;
+  },
+
+  async getCohortStudents(batch){
+    var promise = new Promise(resolve =>{
+      var students = []
+      database.firebase_data
+      .collection("students")
+      .where("batch","==", batch)
+      .get()
+      .then(snapshot=>{
+        snapshot.forEach(result =>{
+          students.push(result.id)
+        })
+        resolve(students)
+      })
+    })
+    return promise
+  },
+
+  async getStudentModules(studentID){
+    var modules = []
+    var promise = new Promise(resolve=>{
+      database.firebase_data
+        .collection("module_grades")
+        .where("studentID", "==", studentID)
+        .get()
+        .then(snapshot=>{
+          snapshot.forEach(mod_=>{
+            modules.push(mod_.data().module)
+          })
+          resolve(modules)
+        })
+    })
+    return promise
   },
 
   //=====================================//
