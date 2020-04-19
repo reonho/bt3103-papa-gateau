@@ -1,13 +1,20 @@
 <template>
   <div id="Radar">
-    <apexchart type="radar" :options="chartOptions2" :series="series1" v-show="!showEmpty" ref="strengths"></apexchart>
+    <apexchart
+      type="radar"
+      :options="chartOptions2"
+      :series="series1"
+      v-show="!showEmpty"
+      ref="strengths"
+    ></apexchart>
     <div v-show="showEmpty">
-      <md-empty-state id="statebox"
-      style="max-width:0 !important;  color: #2e4053;"
-      md-icon="layers"
-      md-label="No Attributes to Display"
-      md-description="Start by adding modules in the Grades section!">
-    </md-empty-state>
+      <md-empty-state
+        id="statebox"
+        style="max-width:0 !important;  color: #2e4053;"
+        md-icon="layers"
+        md-label="No Attributes to Display"
+        md-description="Start by adding modules in the Grades section!"
+      ></md-empty-state>
     </div>
   </div>
 </template>
@@ -15,6 +22,7 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
+// import database from "../firebase";
 export default {
   name: "radar",
   components: {
@@ -22,13 +30,16 @@ export default {
   },
   props: {
     my_attr: Array,
-    fac_attr: Array
+    fac_attr: Array,
+    type: String,
+    label_1: String,
+    label_2: String
   },
   data: function() {
     return {
       series1: [
-        { name: "My Attributes", data: [5, 0] },
-        { name: "Faculty Average", data: [0, 5] }
+        { name: this.label_1, data: [] },
+        { name: this.label_2, data: [] }
       ],
       chartOptions2: {
         chart: {
@@ -47,7 +58,7 @@ export default {
         dataLabels: {
           enabled: true
         },
-       
+
         title: {
           text: ""
         },
@@ -112,8 +123,6 @@ export default {
         }
       }
 
-
-
       this.series1[0].data = my_attrs;
       this.series1[1].data = fac_attrs;
       this.chartOptions2.xaxis.categories = attr_labels;
@@ -122,44 +131,65 @@ export default {
     parse_attr2: function(my_attr, fac_attr) {
       var attr_labels = [];
       var fac_attrs = {};
-      var m_list = []
-      var f_list = []
-      var lenf = fac_attr.length;
+      var m_list = [];
+      var f_list = [];
 
-      for (let i = 0; i < lenf; i++) {
-        var f_code = fac_attr[i].att;
-        if(fac_attrs[f_code] == undefined){
-          fac_attrs[f_code] = [fac_attr[i].grade.toFixed(2)]
+      if (this.type == "Module" && !fac_attr && my_attr) {
+        //For ModuleRadarChart, if the user has no attributes
+        var len = my_attr.length;
+        if (len > 6) {
+          len = 6;
+        }
+        for (let i = 0; i < len; i++) {
+          var m_code = my_attr[i].att;
+          m_list.push(my_attr[i].grade.toFixed(2));
+          attr_labels.push(m_code);
+          f_list.push(0);
+        }
+      } else {
+        var lenf = fac_attr.length;
+
+        for (let i = 0; i < lenf; i++) {
+          var f_code = fac_attr[i].att;
+          if (fac_attrs[f_code] == undefined) {
+            fac_attrs[f_code] = fac_attr[i].grade.toFixed(2);
+          }
+        }
+
+        my_attr.sort(function(a, b) {
+          return b.grade - a.grade;
+        });
+
+        len = my_attr.length;
+        console.log(my_attr.length);
+        if (len > 6) {
+          len = 6;
+        }
+        for (let i = 0; i < len; i++) {
+          m_code = my_attr[i].att;
+          m_list.push(my_attr[i].grade.toFixed(2));
+          attr_labels.push(m_code);
+          if (fac_attrs[m_code] !== undefined) {
+            f_list.push(fac_attrs[m_code]);
+          } else {
+            f_list.push(0);
+          }
         }
       }
+      //for each item in fac_attr
 
-      my_attr.sort(function(a,b){
-        return b.grade - a.grade
-      })
+      console.log(m_list);
+      console.log(f_list);
 
-      
-
-      var len = my_attr.length
-      if(len > 6){
-        len = 6
-      }
-      for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].att;
-        m_list .push(my_attr[i].grade.toFixed(2))
-        attr_labels.push(m_code)
-        f_list.push(fac_attrs[m_code])
-      }
-      
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
     }
   },
   created() {
-
-   
-   //console.log(this.fac_attr);
+    //console.log(this.fac_attr);
     this.parse_attr2(this.my_attr, this.fac_attr);
+    // this.parse_attr2(this.fac_attr, this.my_attr);
   }
 };
 </script>
@@ -167,25 +197,23 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "./style.css";
-
 </style>
 <style>
 #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
-  font-size:9vw !important;
-  color: teal
+  font-size: 9vw !important;
+  color: teal;
 }
 
 #statebox .md-empty-state-label {
-  font-size:1.3vw !important;
+  font-size: 1.3vw !important;
 }
 
 #statebox .md-empty-state-description {
-  font-size:1vw !important;
+  font-size: 1vw !important;
 }
 
 #statebox .md-empty-state-container {
-  padding-top:5vh;
+  padding-top: 5vh;
   width: 42vw;
-
 }
 </style>

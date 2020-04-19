@@ -12,6 +12,9 @@ import Registration from './Pages/Registration'
 Vue.use(Router)
 
 let router = new Router({
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: '/ModuleList',
