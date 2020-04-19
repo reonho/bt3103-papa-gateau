@@ -198,20 +198,6 @@ export default {
     }
   },
   computed: {
-    updatesem() {
-      let allsems = this.semlist;
-      var semesters = [];
-      for (var k = 0; k < this.semnum; k++) {
-        semesters.push(allsems[k]);
-      }
-      return semesters;
-    },
-    showbutton() {
-      if (this.semnum == 8) {
-        return false;
-      }
-      return true;
-    },
     accumulateYear() {
       var yearlist = [];
       var latest = parseInt(new Date().getFullYear());
@@ -236,53 +222,6 @@ export default {
           "md-invalid": field.$invalid && field.$dirty
         };
       }
-    },
-    filtersem() {
-      var sem = ["Semester 2", "Semester 1"];
-      var semesters = [];
-      for (var k = 1; k <= 8; k++) {
-        if (k <= 2) {
-          //Year 1
-          semesters.push({
-            year: 1,
-            semester: sem[k % 2],
-            mods: []
-          });
-        } else if (k > 2 && k <= 4) {
-          //Year 2
-          semesters.push({
-            year: 2,
-            semester: sem[k % 2],
-            mods: []
-          });
-        } else if (k > 4 && k <= 6) {
-          //Year 3
-          semesters.push({
-            year: 3,
-            semester: sem[k % 2],
-            mods: []
-          });
-        } else if (k > 6 && k <= 8) {
-          //Year 4
-          semesters.push({
-            year: 4,
-            semester: sem[k % 2],
-            mods: []
-          });
-        }
-      }
-
-      this.semlist = semesters;
-    },
-
-    addsem() {
-      this.semnum++;
-    },
-    showmod: function(mods) {
-      if (Object.keys(mods).length > 0) {
-        return false;
-      }
-      return true;
     },
     addUser() {
       var batch = {
