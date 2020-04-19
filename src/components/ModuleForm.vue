@@ -195,7 +195,10 @@ export default {
           console.log(e);
           // create an alert saying you have already added this module
           this.$root.$emit("closeModal");
-        });
+        })
+        .catch( () => {
+          alert("Module already added!");
+          this.$root.$emit("closeModal");});
       }
     }
   },
