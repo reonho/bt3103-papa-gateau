@@ -107,7 +107,9 @@
 
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
-                <p class="mod-name">{{mod.code}} {{mod.name}}</p>
+                <p>
+                  <router-link class="mod-name" :to="'/'+mod.code">  {{mod.code}} {{mod.name}}</router-link>
+                </p>
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
@@ -478,7 +480,7 @@ export default {
   padding: 1vw 0vw 0vw 1.5vw;
 }
 .mod-name {
-  color: #ec7663;
+  color: #ec7663 !important;
   font-weight: bold;
   font-size: 0.9vw;
 }
