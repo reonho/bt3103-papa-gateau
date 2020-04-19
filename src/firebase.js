@@ -42,10 +42,14 @@ var database = {
   },
 
   login(email, password) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
+        .catch(function(error) {
+          var errorMessage = error.message;
+          reject(errorMessage);
+        })
         .then(
           (user) => {
             database.user = user.uid;

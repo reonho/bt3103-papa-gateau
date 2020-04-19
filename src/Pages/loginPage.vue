@@ -50,6 +50,24 @@
               <router-link class="reglink" :to="'/Registration'">Create an Account</router-link>
             </div>
           </div>
+          <md-dialog-confirm
+            :md-click-outside-to-close="false"
+            :md-active.sync="showError1Message"
+            md-title="Invalid Email Address"
+            md-content="Email is badly formatted. Please try again."
+            @md-confirm="closemodal"
+            md-cancel-text
+            md-confirm-text="OK"
+          />
+          <md-dialog-confirm
+            :md-click-outside-to-close="false"
+            :md-active.sync="showError2Message"
+            md-title="Invalid Email Address"
+            md-content="Email does not exist. Please try again"
+            @md-confirm="closemodal"
+            md-cancel-text
+            md-confirm-text="OK"
+          />
         </div>
       </div>
     </div>
@@ -69,7 +87,9 @@ export default {
       user: "",
       password: "",
       userObject: "Reon",
-      error: ""
+      error: "",
+      showError1Message: false,
+      showError2Message: false
     };
   },
   methods: {
@@ -87,13 +107,19 @@ export default {
     // },
     login() {
       const self = this;
-      database.login(this.user, this.password).then(function(e) {
-        if (e) {
+      database
+        .login(this.user, this.password)
+
+        .then(function() {
           self.$router.push({ path: "/" });
-        } else {
-          alert(e);
-        }
-      });
+        })
+        .catch(err => {
+          console.log(err);
+          if (err == "There is no user record corresponding to this identifier. The user may have been deleted.") {
+            this.showError1Message = true;
+          } 
+        });
+
       console.log(database.getUser());
     }
     // validate(){
@@ -150,7 +176,7 @@ body {
 }
 
 .button span:after {
-  content: '\00bb';
+  content: "\00bb";
   position: absolute;
   opacity: 0;
   font-size: 2vh;
@@ -299,5 +325,4 @@ body {
 .md-field.md-theme-default.md-focused label {
   color: teal;
 }
-
 </style>
