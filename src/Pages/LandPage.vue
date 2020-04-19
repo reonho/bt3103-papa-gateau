@@ -80,8 +80,8 @@
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
-
+      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohort_loaded"></Feed>
+      
       <br />
       <br />
       <div>
@@ -138,7 +138,8 @@ export default {
       modules: [],
       sem: null,
       cohortTopMods: null,
-      showModal: false
+      showModal: false,
+      cohort_loaded: false
     };
   },
   methods: {
@@ -156,7 +157,8 @@ export default {
       for (let i = 0; i < obj_array.length; i++) {
         //console.log(obj_array[0][key])
         var value = obj_array[i];
-        if (Object.entries(value).length === 0) {
+        sem_no = i
+        if (Object.entries(value).length == 0) {
           sem_no = i;
           break;
         }
@@ -218,14 +220,18 @@ export default {
         };
 
         self.User = result;
-        console.log(result);
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
+          console.log(self.cohortTopMods.amount[0])
+          if (self.cohortTopMods.amount[0]){
+            self.cohort_loaded = true
+          }
         });
         // query database for course attributes
         database.getFacultyAttributes(result.faculty).then(attributes => {
-          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          self.facultyAttributes = attributes;
+        //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
         });
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);

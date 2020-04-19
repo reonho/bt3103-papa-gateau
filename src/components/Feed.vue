@@ -98,21 +98,20 @@ export default {
   },
   created() {
     var modlst = [];
-
+    console.log(this.course.module)
     for (let i = 0; i < this.course.module.length; i++) {
       var mod = {};
       mod["amt"] = this.course.amount[i];
       mod["mod"] = this.course.module[i];
       modlst.push(mod);
     }
-    modlst = modlst.sort((a, b) => a.amt - b.amt);
-  console.log(modlst)
+    modlst = modlst.sort((a, b) => -a.amt + b.amt);
+    //console.log(modlst)
     for (let i = 0; i < this.course.module.length; i++) {
       this.series[0].data.push(modlst[i].amt);
       this.chartOptionsYear.xaxis.categories.push(modlst[i].mod);
     }
-
-    console.log(this.series[0].data);
+    //console.log(this.series[0].data);
   },
 
   methods: {
