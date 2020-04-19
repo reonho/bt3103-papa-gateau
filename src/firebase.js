@@ -684,6 +684,62 @@ var database = {
   },
 
   //=====================================//
+  //-----------getModuleAttributes------------//
+  //=====================================//
+
+  async getModuleAttributes(module_code) {
+    var top_attributes = [];
+    var top_students = [];
+    var attr_list = []
+    var promise = new Promise(function (resolve) {
+      database.firebase_data
+        .collection("module_grades")
+        .where("module", "==", module_code)
+        .where("grade", "in", ["A+", "A"])
+        .get()
+        .then(function (results) {
+          if (results.empty) {
+            resolve(null)
+          }
+          results.forEach(function (r) {
+            top_students.push({
+              studentID: r.data().studentID,
+              grade: r.data().grade
+            });
+          });
+          return top_students;
+        })
+        .then(function (ts) {
+          ts.forEach(function (s) {
+            database.firebase_data
+              .collection("students")
+              .doc(s.studentID)
+              .get()
+              .then(function (user) {
+                var attributes = user.data().attributes;
+                attributes.forEach(function (attribute) {
+                  var att = attribute.att.trim();
+                  var grade = attribute.grade;
+                  if (attr_list.includes(att)) {
+                    var idx = attr_list.indexOf(att)
+                    var old = top_attributes[idx]
+                    old['total'] = old['total'] + grade
+                    old['amt'] += 1
+                    old['grade'] = old['total'] / old['amt']
+                  } else {
+                    attr_list.push(att)
+                    top_attributes.push({ total: grade, amt: 1, att: att, grade: grade })
+                  }
+                });
+              });
+            resolve(top_attributes)
+          })
+        })
+    })
+    return promise
+  },
+
+  //=====================================//
   //----------- register-----------------//
   //=====================================//
   async register(email, password, name_, course_, enrolmentBatch) {
