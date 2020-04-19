@@ -153,7 +153,8 @@ export default {
       for (let i = 0; i < obj_array.length; i++) {
         //console.log(obj_array[0][key])
         var value = obj_array[i];
-        if (Object.entries(value).length === 0) {
+        sem_no = i
+        if (Object.entries(value).length == 0) {
           sem_no = i;
           break;
         }
