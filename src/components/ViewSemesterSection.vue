@@ -365,25 +365,29 @@ export default {
               value: sems[i].sem
             });
           }
+          this.semesters.push({
+            year: sems[i].year,
+            semester: sems[i].sem,
+            mods: [],
+            cap: sems[i].cap,
+            collapse: false
+          });
         }
-        this.semesters.push({
-          year: sems[i].year,
-          semester: sems[i].sem,
-          mods: [],
-          cap: sems[i].cap,
-          collapse: false
-        });
       }
     },
     updatefilter(year, sem) {
       var years = [];
       var sems = [];
       for (var i = 0; i < this.yearlist.length; i++) {
-        years.push(this.yearlist[i]);
+        years.push(this.yearlist[i].value);
       }
       for (var k = 0; k < this.semlist.length; k++) {
-        sems.push(this.semlist[i]);
+        sems.push(this.semlist[k].value);
       }
+      console.log(years)
+      console.log(sems);
+      console.log(!years.includes(year));
+      console.log(!sems.includes(sem));
       if (!years.includes(year)) {
         years.push(year);
         this.yearlist.push({
@@ -436,10 +440,15 @@ export default {
       }
       return total;
     },
-    closeThis(year, sem) {
+    closeThis1(val) {
+      console.log(val);
       this.showModal = false;
       this.readData();
-      this.updatefilter(year, sem);
+      this.updatefilter(val.year, val.sem);
+    },
+    closeThis2() {
+      this.showModal = false;
+      this.readData();
     },
     readData() {
       const self = this;
@@ -478,7 +487,8 @@ export default {
     this.accumulatesems();
   },
   mounted() {
-    this.$root.$on("closeModal", this.closeThis);
+    this.$root.$on("closeModal1", this.closeThis1);
+    this.$root.$on("closeModal2", this.closeThis2);
   }
 };
 </script>
