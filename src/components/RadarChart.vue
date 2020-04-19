@@ -53,10 +53,17 @@ export default {
             blur: 3,
             color: "#000",
             opacity: 0.3
+          },
+          toolbar: {
+            show: false
           }
         },
         dataLabels: {
           enabled: true
+        },
+
+        legend: {
+          position:'top'
         },
 
         title: {
@@ -94,14 +101,6 @@ export default {
         }
       }
     };
-  },
-  computed: {
-    showEmpty() {
-      if (this.my_attr.length == 0) {
-        return true;
-      }
-      return false;
-    }
   },
   methods: {
     parse_attr: function(my_attr, fac_attr) {
@@ -191,6 +190,7 @@ export default {
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
   }
+
 };
 </script>
 

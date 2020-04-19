@@ -10,6 +10,7 @@ import VueMaterial from 'vue-material'
 import { MdButton, MdContent, MdToolbar, MdTabs} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+import Scrollspy from "vue2-scrollspy";
 
 
 
@@ -20,6 +21,7 @@ Vue.use(MdToolbar)
 Vue.use(MdTabs)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(Scrollspy)
 
 
 Vue.config.productionTip = false
