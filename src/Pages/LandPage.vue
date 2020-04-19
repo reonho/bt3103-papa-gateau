@@ -86,7 +86,7 @@
       <br />
       <br />
       <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User" v-if="cohortTopMods"></Feed>
-
+   
       <br />
       <br />
       <div>
@@ -105,7 +105,6 @@
 import DataObject from "../Database.js";
 
 import EditUserDetailsForm from "../components/EditUserDetailsForm";
-//import ViewSemesterSection from "../components/ViewSemesterSection";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
 // //import TreeChart from "../components/TreeCharts/TreeChart"
@@ -129,8 +128,8 @@ export default {
     capline,
     NavBar,
     Feed,
-    ReviewSection
-    // ViewSemesterSection
+    ReviewSection,
+   
     // // Ratings
   },
   data: function() {
@@ -169,7 +168,7 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-      console.log(this.sem)
+      console.log(this.sem);
     },
 
     get_modules(modules) {
@@ -235,8 +234,6 @@ export default {
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
-
-      
   },
   mounted() {
     if (this.userPassed) {

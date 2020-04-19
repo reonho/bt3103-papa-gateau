@@ -108,7 +108,7 @@
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
                 <p>
-                  <router-link class="mod-name" :to="'/'+mod.code">  {{mod.code}} {{mod.name}}</router-link>
+                  <router-link class="mod-name" :to="'/'+mod.code">{{mod.code}} {{mod.name}}</router-link>
                 </p>
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
@@ -177,7 +177,8 @@ export default {
     modalsem: null,
     currentdetails: [],
     yearchosen: [],
-    semchosen: []
+    semchosen: [],
+    currentuser: null
   }),
   components: {
     //AddModuleModal
@@ -187,6 +188,7 @@ export default {
     updatesem() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
+
       var semesters = [];
 
       for (var k = 0; k < this.semnum; k++) {
@@ -229,8 +231,6 @@ export default {
       let filterData = semesters;
 
       if (this.yearchosen.length > 0) {
-        console.log(this.yearchosen);
-
         filterData = filterData.filter(item => {
           if (this.yearchosen.includes(item.year.toString())) {
             return true;
@@ -240,8 +240,6 @@ export default {
         });
       }
       if (this.semchosen.length > 0) {
-        console.log(this.semchosen);
-
         filterData = filterData.filter(item => {
           if (this.semchosen.includes(item.semester.toString())) {
             return true;
@@ -333,7 +331,8 @@ export default {
       this.semesters = currentsems;
     },
     accumulatesems() {
-      let sems = this.User.sap_by_sem;
+      let sems = this.currentuser.sap_by_sem;
+
       var years = [];
       var semesters = [];
       for (var i = 0; i < sems.length; i++) {
@@ -351,8 +350,6 @@ export default {
               value: sems[i].sem
             });
           } else {
-            console.log(years);
-            console.log(years.includes(sems[i].year));
             if (!years.includes(sems[i].year)) {
               years.push(sems[i].year);
               this.yearlist.push({
@@ -375,6 +372,10 @@ export default {
           });
         }
       }
+    },
+    updateData() {
+      let sems = this.currentuser.sap_by_sem;
+      console.log(sems);
     },
     setModuleDetails(mod) {
       database.getModules(mod).then(item => {
@@ -406,14 +407,47 @@ export default {
     },
     closeThis() {
       this.showModal = false;
+
+      this.readData();
+      console.log(this.usergrades);
+      console.log(this.currentuser);
+      this.updateData();
+    },
+    readData() {
+      const self = this;
+      database.getModuleResults().then(item => {
+        this.usergrades = item;
+      });
+      // query database for user info
+      database.firebase_data
+        .collection("students")
+        .doc(database.user)
+        .onSnapshot(function(user) {
+          var userData = user.data();
+
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sam_by_sem,
+            overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          };
+
+          self.currentuser = result;
+        });
+      console.log(self.currentuser);
     }
   },
 
   created() {
+    this.currentuser = this.User;
+    this.readData();
     this.accumulatesems();
-    database.getModuleResults().then(item => {
-      this.usergrades = item;
-    });
   },
   mounted() {
     this.$root.$on("closeModal", this.closeThis);

@@ -265,7 +265,6 @@ export default {
     }
   },
   created() {
-    this.filtersem();
     //const self = this;
     //  database.getCourses().then(item => {
     //   this.courselist = item;
