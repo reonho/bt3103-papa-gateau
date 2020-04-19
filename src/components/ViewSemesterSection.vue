@@ -90,7 +90,7 @@
           <div class="sem-box" v-show="!post.collapse">
             <div class="md-layout sem-content">
               <div class="md-layout-item">
-                <p>Total CAP : {{formatcap(post.cap)}}</p>
+                <p>Total CAP : {{formatcap(post)}}</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
               <div class="md-layout-item">
@@ -395,13 +395,24 @@ export default {
       });
     },
 
-    formatcap(cap) {
-      return cap.toFixed(2);
+    formatcap(sem) {
+      var total = 0;
+      var MC = 0;
+      if (sem.mods.length != 0) {
+        for (var i = 0; i < sem.mods.length; i++) {
+          total +=
+            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
+          MC += parseInt(sem.mods[i].MC);
+        }
+        total = total / MC;
+      }
+      return total.toFixed(2);
     },
     formatMC(sem) {
       var total = 0;
       for (var i = 0; i < sem.mods.length; i++) {
         total += parseInt(sem.mods[i].MC);
+        console.log(total);
       }
       return total;
     },

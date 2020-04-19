@@ -231,8 +231,7 @@ export default {
 
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        console.log(this.regForm);
-        console.log(batch);
+
         database
           .register(
             this.regForm.username + "@u.nus.edu",
