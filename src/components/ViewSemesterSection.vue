@@ -130,11 +130,11 @@
                   <md-button class="md-icon-button mod-icon" v-on:click="editmod(post)">
                     <md-icon>edit</md-icon>
                   </md-button>
-                  <md-dialog :md-active.sync="showModal">
+                  <!-- <md-dialog :md-active.sync="showModal">
                     <md-dialog-content>
                       <ModuleForm :grade="mod.grade" :SU="mod.SU" />
                     </md-dialog-content>
-                  </md-dialog>
+                  </md-dialog> -->
                   <md-button class="md-icon-button mod-icon">
                     <md-icon>delete</md-icon>
                   </md-button>
