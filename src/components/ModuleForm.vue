@@ -157,7 +157,7 @@ export default {
       detailsForm: {
         selectedModule: null,
         selectedSemester: this.sem,
-        selectedGrade: null,
+        selectedGrade: this.grade,
         selectedSU: "No",
         selectedYear: this.year
       }
