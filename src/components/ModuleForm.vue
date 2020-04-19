@@ -194,7 +194,7 @@ export default {
         database.addModuleResults(this.detailsForm).then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("closeModal");
+          this.$root.$emit("closeModal", this.selectedYear, this.selectedSemester);
         })
         .catch( () => {
           alert("Module already added!");
