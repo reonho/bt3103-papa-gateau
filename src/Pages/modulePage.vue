@@ -67,6 +67,20 @@
               label_1="Top Student Attributes"
               label_2="My Attributes"
             ></RadarChart>
+            <RadarChart
+              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
+              :my_attr="topAttributes"
+              :fac_attr="null"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart>
+            <md-empty-state
+              v-if="typeof myAttcheck === 'boolean' && typeof topAttCheck === 'boolean'"
+              md-description='There is insufficient data for this module.'
+              md-icon='assessment'
+              md-label='Insufficient Data'
+            />
           </div>
         </div>
       </div>
@@ -140,7 +154,11 @@
                         </span>
                         <span style="padding:8px;">{{ overallRating }} out of 5</span>
                       </p>
-                      <h5 style="font-weight:400">{{ratings}} <span v-if="ratings > 1">student ratings</span><span v-else>student rating</span></h5>
+                      <h5 style="font-weight:400">
+                        {{ratings}}
+                        <span v-if="ratings > 1">student ratings</span>
+                        <span v-else>student rating</span>
+                      </h5>
                       <bar-chart :semester="chosenSem" :code="code" :years="yrs" :loading="loading"></bar-chart>
                     </div>
                     <div class="col-7">
@@ -713,9 +731,9 @@ export default {
       .then(user => {
         var userData = user.data();
         this.myAttributes = userData.attributes;
-        console.log(typeof this.myAttCheck)
-        this.myAttCheck = userData.attributes[0].att
-        console.log("Check myAtt")
+        console.log(typeof this.myAttCheck);
+        this.myAttCheck = userData.attributes[0].att;
+        console.log("Check myAtt");
       });
 
     database.getModuleAttributes(this.code).then(ma => {
@@ -724,17 +742,16 @@ export default {
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
-      var self = this
-      async function check(self){
-        console.log(typeof ma[0])
-        while(typeof ma[0] == "undefined"){
-          await(sleep(2000))
-          console.log(typeof ma[0])
+      var self = this;
+      async function check(self) {
+        console.log(typeof ma[0]);
+        while (typeof ma[0] == "undefined") {
+          await sleep(2000);
+          console.log(typeof ma[0]);
         }
-        self.topAttCheck = ma[0].att  
+        self.topAttCheck = ma[0].att;
       }
-      check(self)
-
+      check(self);
     });
 
     //Query attributes of top scorers
