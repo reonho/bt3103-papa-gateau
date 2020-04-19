@@ -686,6 +686,7 @@ var database = {
   //---------- getModuleAttributes-------//
   //=====================================//
   async getModuleAttributes(module_code) {
+    var top_grades = ['A+', 'A']
     var top_attributes = [];
     var top_students = [];
     var attr_list = []
@@ -693,19 +694,24 @@ var database = {
       database.firebase_data
         .collection("module_grades")
         .where("module", "==", module_code)
-        .where("grade", "in", ["A+", "A"])
-        .get()
-        .then(function (results) {
+        .get().then(function (results) {
           if (results.empty) {
-            resolve(null)
+            resolve([])
           }
           results.forEach(function (r) {
-            top_students.push({
-              studentID: r.data().studentID,
-              grade: r.data().grade
-            });
-          });
-          return top_students;
+            var rdata = r.data()
+            if (top_grades.includes(rdata.grade)) {
+              top_students.push({
+                studentID: rdata.studentID,
+                grade: rdata.grade
+              })
+            }
+
+          })
+          if (top_students.length == 0) {
+            resolve([])
+          }
+          return top_students
         })
         .then(function (ts) {
           ts.forEach(function (s) {
