@@ -70,6 +70,7 @@
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
+              style="display: inline-block; width:50vw; height:50vh;"
             ></RadarChart>
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
@@ -78,12 +79,14 @@
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
+              style="display: inline-block; width:50vw; height:50vh;"
             ></RadarChart>
             <md-empty-state
               v-if="typeof myAttcheck === 'boolean' && typeof topAttCheck === 'boolean'"
               md-description='There is insufficient data for this module.'
               md-icon='assessment'
               md-label='Insufficient Data'
+              style="display: inline-block; width:50vw; height:50vh;"
             />
           </div>
         </section>
@@ -475,6 +478,7 @@ import RadarChart from "../components/RadarChart";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
+
 export default {
   props: {
     code: String
@@ -483,7 +487,6 @@ export default {
     PieChart,
     BarChart,
     workloadchart: WorkloadChartForMod,
-    RadarChart,
     ScaleLoader,
     NavBar,
     ReviewSection,
@@ -737,19 +740,6 @@ export default {
       } else if (str == "manag_wkld") {
         this.manag_wkld = value;
       }
-    },
-    showPreclusions(val) {
-      console.log(val)
-      if (val != null) {
-        return true;
-      }
-      return false;
-    },
-    showPrereq(val) {
-      if (val != null) {
-        return true;
-      }
-      return false;
     }
   },
   created() {
@@ -771,6 +761,7 @@ export default {
     database.getModules(this.code).then(item => {
       this.Modules.push(item);
     });
+
     database.firebase_data
       .collection("students")
       .doc(database.user)
@@ -867,14 +858,10 @@ export default {
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 @import "../assets/stylesheets/scrollSpy.scss";
-p {
-   font-size: 1.8vh;
-  line-height: 1.5;
-}
 .header {
   padding: 1vh;
   padding-left: 0;
-  font-size: 3.5vh;
+  font-size: 1.8vw;
 }
 .miniheader {
   font-size: 1.2vw;

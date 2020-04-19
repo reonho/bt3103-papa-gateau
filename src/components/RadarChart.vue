@@ -132,7 +132,6 @@ export default {
       var fac_attrs = {};
       var m_list = [];
       var f_list = [];
-
       if (this.type == "Module" && !fac_attr && my_attr) {
         //For ModuleRadarChart, if the user has no attributes
         var len = my_attr.length;
@@ -147,18 +146,15 @@ export default {
         }
       } else {
         var lenf = fac_attr.length;
-
         for (let i = 0; i < lenf; i++) {
           var f_code = fac_attr[i].att;
           if (fac_attrs[f_code] == undefined) {
             fac_attrs[f_code] = fac_attr[i].grade.toFixed(2);
           }
         }
-
         my_attr.sort(function(a, b) {
           return b.grade - a.grade;
         });
-
         len = my_attr.length;
         console.log(my_attr.length);
         if (len > 6) {
@@ -175,8 +171,6 @@ export default {
           }
         }
       }
-      //for each item in fac_attr
-
       console.log(m_list);
       console.log(f_list);
 
@@ -186,7 +180,6 @@ export default {
     }
   },
   created() {
-    //console.log(this.fac_attr);
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
   }
@@ -203,15 +196,12 @@ export default {
   font-size: 9vw !important;
   color: teal;
 }
-
 #statebox .md-empty-state-label {
   font-size: 1.3vw !important;
 }
-
 #statebox .md-empty-state-description {
   font-size: 1vw !important;
 }
-
 #statebox .md-empty-state-container {
   padding-top: 5vh;
   width: 42vw;
