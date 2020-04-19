@@ -25,15 +25,17 @@
                 <h1 style="color:DARKCYAN; font-size:3vh;">USER LOGIN</h1>
               </div>
               <br />
-              <md-field>
+              <md-field :class="getValidationClass('loginForm', 'username')">
                 <label>Enter Email</label>
-                <md-input type="username" id="username" v-model="user"></md-input>
+                <md-input type="username" id="username" v-model="loginForm.username"></md-input>
+                <span class="md-error" v-if="!$v.loginForm.username.required">This field is required</span>
               </md-field>
-              <md-field>
+              <md-field :class="getValidationClass('loginForm', 'password')">
                 <label>Enter Password</label>
-                <md-input type="password" id="password" v-model="password"></md-input>
+                <md-input type="password" id="password" v-model="loginForm.password"></md-input>
+                <span class="md-error" v-if="!$v.loginForm.password.required">This field is required</span>
               </md-field>
-
+              <br />
               <button
                 class="button btn btn-block text-uppercase"
                 type="submit"
@@ -50,6 +52,33 @@
               <router-link class="reglink" :to="'/Registration'">Create an Account</router-link>
             </div>
           </div>
+          <md-dialog-confirm
+            :md-click-outside-to-close="false"
+            :md-active.sync="showError1Message"
+            md-title="Invalid Email Address"
+            md-content="Email is badly formatted. Please try again."
+            @md-confirm="closemodal"
+            md-cancel-text
+            md-confirm-text="OK"
+          />
+          <md-dialog-confirm
+            :md-click-outside-to-close="false"
+            :md-active.sync="showError2Message"
+            md-title="Invalid User Account"
+            md-content="User account does not exist. Please try again."
+            @md-confirm="closemodal"
+            md-cancel-text
+            md-confirm-text="OK"
+          />
+          <md-dialog-confirm
+            :md-click-outside-to-close="false"
+            :md-active.sync="showError3Message"
+            md-title="Invalid Password"
+            md-content="User account password is incorrect. Please try again."
+            @md-confirm="closemodal"
+            md-cancel-text
+            md-confirm-text="OK"
+          />
         </div>
       </div>
     </div>
@@ -61,16 +90,35 @@
 <script>
 // import DataObject from "../Database.js"
 import database from "../firebase.js";
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "loginPage",
   components: {},
   data: function() {
     return {
-      user: "",
-      password: "",
+      loginForm: {
+        username: null,
+        password: null
+      },
       userObject: "Reon",
-      error: ""
+      error: "",
+      showError1Message: false,
+      showError2Message: false,
+      showError3Message: false
     };
+  },
+  mixins: [validationMixin],
+  validations: {
+    loginForm: {
+      username: {
+        required
+      },
+
+      password: {
+        required
+      }
+    }
   },
   methods: {
     // skip(){
@@ -85,16 +133,46 @@ export default {
     //     };
     //   this.$router.push({ path: "/", params: {userPassed: this.userObject}})
     // },
+    getValidationClass(formName, fieldName) {
+     
+      const field = this.$v[formName][fieldName];
+      if (field) {
+        return {
+          "md-invalid": field.$invalid && field.$dirty
+        };
+      }
+    },
     login() {
       const self = this;
-      database.login(this.user, this.password).then(function(e) {
-        if (e) {
-          self.$router.push({ path: "/" });
-        } else {
-          alert(e);
-        }
-      });
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        database
+          .login(this.loginForm.username, this.loginForm.password)
+
+          .then(function() {
+            self.$router.push({ path: "/" });
+          })
+          .catch(err => {
+            console.log(err);
+            if (err == "The email address is badly formatted.") {
+              this.showError1Message = true;
+            } else if (
+              err ==
+              "There is no user record corresponding to this identifier. The user may have been deleted."
+            ) {
+              this.showError2Message = true;
+            } else {
+              this.showError3Message = true;
+            }
+          });
+      }
+
       console.log(database.getUser());
+    },
+    closemodal() {
+      this.showError1Message = false;
+      this.showError2Message = false;
+       this.showError3Message = false;
     }
     // validate(){
     //   let data = DataObject.Students
@@ -150,7 +228,7 @@ body {
 }
 
 .button span:after {
-  content: '\00bb';
+  content: "\00bb";
   position: absolute;
   opacity: 0;
   font-size: 2vh;
@@ -299,5 +377,4 @@ body {
 .md-field.md-theme-default.md-focused label {
   color: teal;
 }
-
 </style>
