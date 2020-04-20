@@ -2,14 +2,13 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_APIKEY,
-  authDomain: "papa-gateau.firebaseapp.com",
-  databaseURL: "https://papa-gateau.firebaseio.com",
-  projectId: "papa-gateau",
-  storageBucket: "papa-gateau.appspot.com",
-  messagingSenderId: "945138208035",
-  appId: "1:945138208035:web:146ed078c96f9f09b81096",
-  measurementId: "G-B09D9JVQ0B",
+  apiKey: "AIzaSyBHfoVSLAYvW2SFO9FRftQ6c5EtV3w-g0g",
+  authDomain: "modeaux-3089e.firebaseapp.com",
+  databaseURL: "https://modeaux-3089e.firebaseio.com",
+  projectId: "modeaux-3089e",
+  storageBucket: "modeaux-3089e.appspot.com",
+  messagingSenderId: "648954694353",
+  appId: "1:648954694353:web:8a421abb78e90c8dd513f0"
 };
 
 console.log(process.env.VUE_APP_APIKEY )
