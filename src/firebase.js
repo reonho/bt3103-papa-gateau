@@ -11,6 +11,7 @@ const firebaseConfig = {
   appId: "1:648954694353:web:8a421abb78e90c8dd513f0"
 };
 
+
 console.log(process.env.VUE_APP_APIKEY)
 
 firebase.initializeApp(firebaseConfig);
@@ -813,7 +814,7 @@ var database = {
         .where("module", "==", module_code)
         .get().then(function (results) {
           if (results.empty) {
-            resolve([])
+            resolve('no data')
           }
           results.forEach(function (r) {
             var rdata = r.data()
@@ -825,8 +826,8 @@ var database = {
             }
 
           })
-          if (top_students.length == 0) {
-            resolve([])
+          if (top_students.length === 0) {
+            resolve('no data')
           }
           return top_students
         })
