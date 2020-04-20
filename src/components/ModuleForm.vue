@@ -198,6 +198,7 @@ export default {
         })
         .catch( () => {
           alert("Module already added!");
+          // database.updateModuleResults(this.detailsForm.selectedModule, this.detailsForm.selectedGrade);
           this.$root.$emit("closeModal");});
       }
     }
