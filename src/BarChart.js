@@ -69,6 +69,7 @@ export default {
             let sem = doc.data().detailsForm.selectedSemester;
             let modCode = doc.data().module_code;
             let yr = doc.data().detailsForm.selectedYear;
+            // console.log(sem)
             if (
               (isNaN(sem)
                 ? sem.includes("Semester " + (this.semester + 1)) ||
@@ -105,6 +106,8 @@ export default {
             exsum += eman[i] * (i + 1);
             wsum += work[i] * (i + 1);
           }
+          // console.log(sum)
+          // console.log(this.calc(sum))
           this.$root.$emit("showValues", this.calc(sum), "avg");
           this.$root.$emit("showValues", this.calc(esum), "easy");
           this.$root.$emit("showValues", this.calc(msum), "manag_asgn");

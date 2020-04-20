@@ -59,6 +59,7 @@ export default {
         var faculties = new Object()
         var display = false
         querySnapShot.forEach(doc => {
+          // console.log(doc.data())
           var sem = doc.data().detailsForm.selectedSemester
           var modCode = doc.data().module_code
           var yr = doc.data().detailsForm.selectedYear

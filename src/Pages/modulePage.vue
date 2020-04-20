@@ -3,42 +3,42 @@
     <NavBar />
     <main>
       <div id="modulePage" style="margin-top:5vh;">
-        <title>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
+        <title>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</title>
         <section id="details">
           <div style="color:#EC7663; margin-left: 1vw;" class="header">
-            <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
+            <b>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</b>
           </div>
 
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
+          >{{this.Module.info.department}} • {{this.Module.info.faculty}} • {{this.Module.info.moduleCredit}} MCs</div>
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{showsem(this.Modules[0].info.semesterData)}}</div>
+          >{{showsem(this.Module.info.semesterData)}}</div>
           <hr />
           <div style="margin-left: 1vw; margin-right:1vw;font-size:2vh">
-            {{this.Modules[0].info.description}}
+            {{this.Module.info.description}}
             <br />
             <br />
             <div class="row">
               <div class="col-4" style="text-align:left">
-                <span v-if="this.Modules[0].info.preclusion">
+                <span v-if="this.Module.info.preclusion">
                   <b style="color: #616a6b">Preclusion(s)</b>
                   <br />
-                  <span>{{this.Modules[0].info.preclusion}}</span>
+                  <span>{{this.Module.info.preclusion}}</span>
                   <br />
                   <br />
                 </span>
-                <span v-if="this.Modules[0].info.prerequisite">
+                <span v-if="this.Module.info.prerequisite">
                   <b style="color: #616a6b">Prerequisite(s)</b>
                   <br />
-                  {{this.Modules[0].info.prerequisite}}
+                  {{this.Module.info.prerequisite}}
                   <br />
                   <br />
                 </span>
-                <p v-for="sem in checksemester(this.Modules[0])" v-bind:key="sem.index">
+                <p v-for="sem in checksemester(this.Module)" v-bind:key="sem.index">
                   <span v-if="sem.disabled == ''">
                     <b style="color: #616a6b">
                       {{ sem.semester }} Exam
@@ -51,8 +51,8 @@
                 <br />
               </div>
               <div class="col-8">
-                <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
-                <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
+                <b style="color: #616a6b">Workload - {{calcwork(this.Module) + " hours"}}</b>
+                <workloadchart :seriesStats="formatwork(this.Module.info.workload)"></workloadchart>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
           >Attributes of top scorers in this module</span>
-          <div style="text-align:center; margin-top:4vh; margin-bottom:15vh">
+          <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
               :my_attr="topAttributes"
@@ -70,8 +70,24 @@
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-              style="display: inline-block; width:50vw; height:50vh;"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
+            <RadarChart
+              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
+              :my_attr="topAttributes"
+              :fac_attr="null"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+              style="display: inline-block; width:50%; height:50%; padding-top:2vh"
+            ></RadarChart>
+            <md-empty-state
+              style="padding-top:0;"
+              id = "statebox"
+              v-if="typeof topAttCheck === 'boolean'"
+              md-icon="assessment"
+              md-label="Insufficient Data"
+            />
           </div>
         </section>
         <hr />
@@ -88,7 +104,7 @@
             lazy
           >
             <b-tab
-              v-for="sem in checksemester(this.Modules[0])"
+              v-for="sem in checksemester(this.Module)"
               v-bind:key="sem.index"
               :title="sem.semester"
               :title-link-class="sem.disabled"
@@ -114,7 +130,9 @@
                       <div class="col-5" v-show="loading"></div>
                       <div class="col-5" v-show="showEmpty"></div>
                       <div class="col-5" v-show="!loading&&!showEmpty">
-                        <h4 style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh">Student reviews</h4>
+                        <h4
+                          style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh"
+                        >Student reviews</h4>
                         <p v-if="ratings != 0">
                           <span
                             v-for="n in numWholeStars(overallRating)"
@@ -367,14 +385,14 @@
                     <br />
                   </div>
 
-                  <div style="width: 100vw;" v-show="loading">
+                  <div style="width: 100%;" v-show="loading">
                     <md-empty-state
                       id="statebox"
                       style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
                       md-label="Loading..."
                     >
                       <br />
-                      <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
+                      <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
                     </md-empty-state>
                   </div>
                 </div>
@@ -533,7 +551,7 @@ export default {
               if (rev === null) {
                 this.$router.push({
                   name: "ReviewForm",
-                  params: { mod: this.Modules[0].info.moduleCode }
+                  params: { mod: this.Module.info.moduleCode }
                 });
               } else {
                 //user has already written a review, prompt them
@@ -743,7 +761,7 @@ export default {
       });
     //get module details
     database.getModules(this.code).then(item => {
-      this.Modules.push(item);
+      this.Module = item;
     });
 
     database.firebase_data
@@ -759,37 +777,41 @@ export default {
       });
 
     database.getModuleAttributes(this.code).then(ma => {
-      //console.log(ma);
       this.topAttributes = ma;
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
-      var self = this;
       async function check(self) {
         //console.log(typeof ma[0]);
-        while (typeof ma[0] == "undefined") {
-          await sleep(2000);
-          //console.log(typeof ma[0]);
+        if (ma != null) {
+          while (typeof ma[0] == "undefined") {
+            await sleep(2000);
+            //console.log(typeof ma[0]);
+          }
+          self.topAttCheck = ma[0].att;
         }
-        self.topAttCheck = ma[0].att;
       }
-      check(self);
+      if (ma != null) {
+        var self = this;
+        check(self);
+      } else return false;
     });
   },
   updated() {
+    // For the scrollspy
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         const id = entry.target.getAttribute("id");
-        if (entry.intersectionRatio > 0) {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.add("active");
-          console.log("hi");
-          console.log(id);
-        } else {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.remove("active");
+        if (document.querySelector(`nav li a[href="#${id}"]`) !== null) {
+          if (entry.intersectionRatio > 0) {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.add("active");
+          } else {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.remove("active");
+          }
         }
       });
     });
@@ -825,7 +847,7 @@ export default {
     infodes: null,
     module_code: "",
     chosenSem: 0,
-    Modules: []
+    Module: {'info': {'department':'', "description": '', "faculty": '', "moduleCode":'', "moduleCredit":'', "prerequisite":'', "semesterData":[],"title":'', "workload":[]}}
   }),
   watch: {
     yrs: function() {
@@ -833,6 +855,12 @@ export default {
     },
     chosenSem: function() {
       this.shortload(900);
+    },
+    myAttCheck: function() {
+      //console.log(this.myAttCheck)
+    },
+    topAttCheck: function() {
+      //console.log(this.topAttCheck)
     }
   }
 };
@@ -938,21 +966,21 @@ span {
 }
 
 #navlink {
-	text-decoration: none;
-	display: block;
-	padding: .125rem 0;
-	color: #ccc;
-	transition: all 50ms ease-in-out;
+  text-decoration: none;
+  display: block;
+  padding: 0.125rem 0;
+  color: #ccc;
+  transition: all 50ms ease-in-out;
 }
 
 #navlink:hover,
 #navlink:focus {
-	color: #666;
+  color: #666;
 }
 
 .section-nav li.active > #navlink {
-	color: #333;
-	font-weight: 500;
+  color: #333;
+  font-weight: 500;
 }
 </style>
 <style lang="scss">
@@ -962,4 +990,3 @@ span {
   opacity: 0.5;
 }
 </style>
-

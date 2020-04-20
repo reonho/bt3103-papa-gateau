@@ -1,6 +1,21 @@
 <template>
   <div id="Radar">
-    <apexchart type="radar" :options="chartOptions2" :series="series1" ref="strengths"></apexchart>
+    <apexchart
+      type="radar"
+      :options="chartOptions2"
+      :series="series1"
+      v-show="!showEmpty"
+      ref="strengths"
+    ></apexchart>
+    <div v-show="showEmpty">
+      <md-empty-state
+        id="statebox"
+        style="max-width:0 !important;  color: #2e4053;"
+        md-icon="layers"
+        md-label="No Attributes to Display"
+        md-description="Start by adding modules in the Grades section!"
+      ></md-empty-state>
+    </div>
   </div>
 </template>
 
@@ -117,33 +132,43 @@ export default {
       var fac_attrs = {};
       var m_list = [];
       var f_list = [];
-      var lenf = fac_attr.length;
-      //for each item in fac_attr
-      for (let i = 0; i < lenf; i++) {
-        var f_code = fac_attr[i].att; //get the attribute (e.g. 'BT')
-        if (fac_attrs[f_code] == undefined) {
-          //create an obj like so {'BT':4}
-          fac_attrs[f_code] = fac_attr[i].grade;
+      if (this.type == "Module" && !fac_attr && my_attr) {
+        //For ModuleRadarChart, if the user has no attributes
+        var len = my_attr.length;
+        if (len > 6) {
+          len = 6;
         }
-      }
-
-      my_attr.sort(function(a, b) {
-        return b.grade - a.grade;
-      });
-
-      var len = my_attr.length;
-      console.log(my_attr.length)
-      if (len > 6) {
-        len = 6;
-      }
-      for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].att;
-        m_list.push(my_attr[i].grade);
-        attr_labels.push(m_code);
-        if (fac_attrs[m_code] !== undefined) {
-          f_list.push(fac_attrs[m_code].toFixed(2));
-        } else {
+        for (let i = 0; i < len; i++) {
+          var m_code = my_attr[i].att;
+          m_list.push(my_attr[i].grade.toFixed(2));
+          attr_labels.push(m_code);
           f_list.push(0);
+        }
+      } else {
+        var lenf = fac_attr.length;
+        for (let i = 0; i < lenf; i++) {
+          var f_code = fac_attr[i].att;
+          if (fac_attrs[f_code] == undefined) {
+            fac_attrs[f_code] = fac_attr[i].grade.toFixed(2);
+          }
+        }
+        my_attr.sort(function(a, b) {
+          return b.grade - a.grade;
+        });
+        len = my_attr.length;
+        console.log(my_attr.length);
+        if (len > 6) {
+          len = 6;
+        }
+        for (let i = 0; i < len; i++) {
+          m_code = my_attr[i].att;
+          m_list.push(my_attr[i].grade.toFixed(2));
+          attr_labels.push(m_code);
+          if (fac_attrs[m_code] !== undefined) {
+            f_list.push(fac_attrs[m_code]);
+          } else {
+            f_list.push(0);
+          }
         }
       }
       console.log(m_list);
@@ -165,4 +190,20 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "./style.css";
+</style>
+<style>
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal;
+}
+#statebox .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+#statebox .md-empty-state-description {
+  font-size: 1vw !important;
+}
+#statebox .md-empty-state-container {
+  padding-top: 5vh;
+  width: 42vw;
+}
 </style>
