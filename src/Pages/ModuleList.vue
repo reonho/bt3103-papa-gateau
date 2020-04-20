@@ -99,6 +99,7 @@
             </div>
           </div>
           <div class="module-div" id="ModuleItem">
+            
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
                 <router-link
@@ -118,14 +119,23 @@
                     <br />
                     <br />
                     <br />
-                    <span class="module-preclusionhead" v-show="showPreclusions(post.info.preclusion)">
+                    <span
+                      class="module-preclusionhead"
+                      v-show="showPreclusions(post.info.preclusion)"
+                    >
                       Preclusions
                       <br />
                     </span>
-                    <span class="module-preclusion" v-show="showPreclusions(post.info.preclusion)">{{post.info.preclusion}}</span>
+                    <span
+                      class="module-preclusion"
+                      v-show="showPreclusions(post.info.preclusion)"
+                    >{{post.info.preclusion}}</span>
                     <br v-show="showPreclusions(post.info.preclusion)" />
                     <br v-show="showPreclusions(post.info.preclusion)" />
-                    <span class="module-prerequisitehead" v-show="showPrereq(post.info.prerequisite)">
+                    <span
+                      class="module-prerequisitehead"
+                      v-show="showPrereq(post.info.prerequisite)"
+                    >
                       Prerequisites
                       <br />
                     </span>
@@ -184,7 +194,7 @@
             </md-list>
 
             <div style="height:200px">
-              <div v-show="showEmpty">
+              <div v-show="!showEmpty">
                 <md-empty-state
                   id="statebox"
                   style="max-width:0 !important;  color: #2e4053;"
@@ -198,8 +208,8 @@
                   style="max-width:0 !important; color: #2e4053;"
                   md-label="Loading Modules..."
                 >
-                <br/>
-                <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
+                  <br />
+                  <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
                 </md-empty-state>
               </div>
             </div>
@@ -212,7 +222,7 @@
 
 <script>
 import database from "../firebase.js";
-import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
@@ -235,7 +245,7 @@ export default {
   data() {
     return {
       color: "#eda200",
-      loading: true,
+      loading: false,
       searchbar: "",
       modulenum: 0,
       modulesData: [],
@@ -350,8 +360,7 @@ export default {
         return true;
       }
       return false;
-    },
-    
+    }
   },
   methods: {
     readDatabase: function() {
@@ -367,9 +376,11 @@ export default {
           querySnapShot.forEach(doc => {
             //console.log(doc.id+"==>"+doc.data())
             var item = doc.data();
+
             this.modulesData.push(item);
-            var fac = doc.data().info.faculty;
-            var dept = doc.data().info.department;
+
+            var fac = item.info.faculty;
+            var dept = item.info.department;
             if (!(fac in flookup)) {
               flookup[fac] = 1;
               this.faculties.push({
@@ -395,6 +406,7 @@ export default {
             this.loading = false;
           });
         });
+
     },
     clearfilter: function() {
       this.searchbar = "";
@@ -482,7 +494,7 @@ export default {
           }
         }
       }
-      console.log(semesters);
+
       return semesters;
     },
 
@@ -568,7 +580,7 @@ export default {
       this.$router.push({ name: "modulePage", params: { code: code } });
     },
     showPreclusions(val) {
-      console.log(val)
+
       if (val != null) {
         return true;
       }
@@ -794,7 +806,7 @@ label {
 /* Empty State */
 #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
   font-size: 9vw !important;
-  color: teal
+  color: teal;
 }
 
 #statebox .md-empty-state-label {
