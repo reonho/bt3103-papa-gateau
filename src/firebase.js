@@ -2,14 +2,21 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_APIKEY,
-  authDomain: "papa-gateau.firebaseapp.com",
-  databaseURL: "https://papa-gateau.firebaseio.com",
-  projectId: "papa-gateau",
-  storageBucket: "papa-gateau.appspot.com",
-  messagingSenderId: "945138208035",
-  appId: "1:945138208035:web:146ed078c96f9f09b81096",
-  measurementId: "G-B09D9JVQ0B",
+  //apiKey: process.env.VUE_APP_APIKEY,
+  // authDomain: "papa-gateau.firebaseapp.com",
+  // databaseURL: "https://papa-gateau.firebaseio.com",
+  // projectId: "papa-gateau",
+  // storageBucket: "papa-gateau.appspot.com",
+  // messagingSenderId: "945138208035",
+  // appId: "1:945138208035:web:146ed078c96f9f09b81096",
+  // measurementId: "G-B09D9JVQ0B",
+  apiKey: "AIzaSyBHfoVSLAYvW2SFO9FRftQ6c5EtV3w-g0g",
+  authDomain: "modeaux-3089e.firebaseapp.com",
+  databaseURL: "https://modeaux-3089e.firebaseio.com",
+  projectId: "modeaux-3089e",
+  storageBucket: "modeaux-3089e.appspot.com",
+  messagingSenderId: "648954694353",
+  appId: "1:648954694353:web:8a421abb78e90c8dd513f0"
 };
 
 console.log(process.env.VUE_APP_APIKEY)
@@ -869,45 +876,47 @@ var database = {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+        .then(()=>{
+          database.firebase_data
+            .collection("departments")
+            .where("courses", "array-contains", course_)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc_) => {
+                var department = doc_.data().name;
+                database.firebase_data
+                  .collection("faculties")
+                  .where("departments", "array-contains", department)
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.forEach((_doc_) => {
+                      var faculty_ = _doc_.data().name;
+                      database.getUser().then((doc) => {
+                        database.firebase_data
+                          .collection("students")
+                          .doc(doc)
+                          .set({
+                            attributes: [],
+                            batch: enrolmentBatch,
+                            course: course_,
+                            name: name_,
+                            current_sem: {},
+                            dept: department,
+                            faculty: faculty_,
+                            modules_taken: [],
+                            overall_cap: 0,
+                            sam_by_sem: [{}, {}, {}, {}, {}, {}, {}, {}],
+                          });
+                        resolve("account created!");
+                      });
+                    });
+                  });
+              });
+            });
+        })
         .catch(function (error) {
           var errorMessage = error.message;
           reject(errorMessage);
-        });
-      database.firebase_data
-        .collection("departments")
-        .where("courses", "array-contains", course_)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc_) => {
-            var department = doc_.data().name;
-            database.firebase_data
-              .collection("faculties")
-              .where("departments", "array-contains", department)
-              .get()
-              .then((snapshot) => {
-                snapshot.forEach((_doc_) => {
-                  var faculty_ = _doc_.data().name;
-                  database.getUser().then((doc) => {
-                    database.firebase_data
-                      .collection("students")
-                      .doc(doc)
-                      .set({
-                        attributes: [],
-                        batch: enrolmentBatch,
-                        course: course_,
-                        name: name_,
-                        current_sem: {},
-                        dept: department,
-                        faculty: faculty_,
-                        modules_taken: [],
-                        overall_cap: 0,
-                        sam_by_sem: [{}, {}, {}, {}, {}, {}, {}, {}],
-                      });
-                    resolve("account created!");
-                  });
-                });
-              });
-          });
         });
     });
     return promise;
