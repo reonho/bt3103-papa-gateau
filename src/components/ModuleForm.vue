@@ -68,7 +68,9 @@ export default {
   props: {
     //msg: String
     sem: String,
-    year: String
+    year: String,
+    grade: String,
+    code: String
   },
   components: {
     // FollowUpModal

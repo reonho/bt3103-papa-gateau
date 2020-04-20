@@ -2,58 +2,41 @@
   <div id="ViewSemesterSection">
     <div>
       <div class="md-layout">
-        <div class="md-layout-item md-size-35">
-          <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Year</label>
-            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
+        <div class="md-layout-item md-size-30">
+          <md-field style="margin:0;padding:0;min-height:4.5vh">
+            <label style="top:1.3vh;font-size:1vw">Year</label>
+            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
               <md-option
                 v-for="year in yearlist"
-                :key="year.value"
+                :key="year.index"
                 :id="year.value"
                 v-model="year.value"
-              >{{ year.value }}</md-option>
+              >Year {{ year.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="yearchosen"
-            md-static
-          ></md-chips>
         </div>
         <div class="md-layout-item md-size-5"></div>
-        <div class="md-layout-item md-size-35">
-          <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Semester</label>
+        <div class="md-layout-item md-size-30">
+          <md-field style="margin:0;padding:0;min-height:4.5vh;">
+            <label style="top:1.3vh;font-size:1vw">Semester</label>
             <md-select v-model="semchosen" name="semchosen" id="semchosen" multiple>
               <md-option
                 v-for="sem in semlist"
-                :key="sem.value"
+                :key="sem.index"
                 :id="sem.value"
                 v-model="sem.value"
-              >{{ sem.value }}</md-option>
+              >Semster {{ sem.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="semchosen"
-            md-static
-          ></md-chips>
         </div>
-        <div class="md-layout-item md-size-5"></div>
+        <div class="md-layout-item md-size-10"></div>
         <div class="md-layout-item md-size-10">
-          <md-field class="mod-dropdown" style="padding-top: 0;">
-            <b-button
-              style="width: 8.5vw; padding:1vh;"
-              v-on:click="clearfilter"
-              variant="outline-info"
-            >
-              <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
-            </b-button>
-          </md-field>
+          <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+          </b-button>
         </div>
       </div>
+      <br />
       <br />
 
       <!-- Semester Details -->
@@ -90,7 +73,7 @@
           <div class="sem-box" v-show="!post.collapse">
             <div class="md-layout sem-content">
               <div class="md-layout-item">
-                <p>Total CAP : {{formatcap(post)}}</p>
+                <p>Total CAP : {{formatcap(post.cap)}}</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
               <div class="md-layout-item">
@@ -107,9 +90,7 @@
 
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
-                <p>
-                  <router-link class="mod-name" :to="'/'+mod.code">{{mod.code}} {{mod.name}}</router-link>
-                </p>
+                <p class="mod-name">{{mod.code}} {{mod.name}}</p>
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
@@ -127,15 +108,18 @@
                   </div>
                 </div>
                 <span class="footerright">
-                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(post)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(mod)">
                     <md-icon>edit</md-icon>
                   </md-button>
-                  <!-- <md-dialog :md-active.sync="showModal">
-                    <md-dialog-content>
-                      <ModuleForm :grade="mod.grade" :SU="mod.SU" />
-                    </md-dialog-content>
-                  </md-dialog> -->
-                  <md-button class="md-icon-button mod-icon">
+                  <md-dialog :md-active.sync="showModal">
+                    <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
+                        <md-dialog-content>
+                            
+                            <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                        </md-dialog-content>
+                    </md-dialog>
+
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
                     <md-icon>delete</md-icon>
                   </md-button>
                   
@@ -146,12 +130,7 @@
             <div class="mod-list" style="text-align:center" v-show="!showmod(post.mods)">
               <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
             </div>
-            <md-dialog :md-active.sync="showModal">
-              <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
-              <md-dialog-content>
-                <ModuleForm :sem="modalsem" :year="modalyear" />
-              </md-dialog-content>
-            </md-dialog>
+            
           </div>
         </md-list>
       </div>
@@ -174,17 +153,17 @@ export default {
   },
   data: () => ({
     showModal: false,
-    yearlist: [],
-    semlist: [],
+    yearlist: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }],
+    semlist: [{ value: 1 }, { value: 2 }],
+    grade: null,
+    code: null,
+    SU: null,
     semnum: 0,
     semesters: [],
     usergrades: [],
     modalyear: null,
     modalsem: null,
-    currentdetails: [],
-    yearchosen: [],
-    semchosen: [],
-    currentuser: null
+    currentdetails: []
   }),
   components: {
     //AddModuleModal
@@ -194,7 +173,6 @@ export default {
     updatesem() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
-
       var semesters = [];
 
       for (var k = 0; k < this.semnum; k++) {
@@ -234,28 +212,8 @@ export default {
         }
         semesters.push(sem);
       }
-      let filterData = semesters;
 
-      if (this.yearchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.yearchosen.includes(item.year.toString())) {
-            return true;
-          }
-
-          return false;
-        });
-      }
-      if (this.semchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.semchosen.includes(item.semester.toString())) {
-            return true;
-          }
-
-          return false;
-        });
-      }
-
-      return filterData;
+      return semesters;
     },
     showbutton() {
       if ((this.semnum == 8) | (this.semnum == 0)) {
@@ -265,25 +223,20 @@ export default {
     }
   },
   methods: {
-    clearfilter() {
-      this.yearchosen = [];
-      this.semchosen = [];
-    },
     addsem() {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-
       if (this.semnum > 0) {
+        var latest1 =
+          parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
+        var latest2 =
+          parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
+        latest = "AY" + latest1 + latest2;
         latestsem = this.semesters[this.semnum - 1].semester;
+
         if (latestsem == "Semester 1") {
-          latest = this.semesters[this.semnum - 1].year;
           latestsem = "Semester 2";
         } else {
-          var latest1 =
-            parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
-          var latest2 =
-            parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
-          latest = "AY" + latest1 + latest2;
           latestsem = "Semester 1";
         }
       }
@@ -292,7 +245,7 @@ export default {
         year: latest,
         semester: latestsem,
         mods: [],
-        cap: 0.0,
+        cap: 0.00,
         collapse: false
       });
 
@@ -308,12 +261,21 @@ export default {
       return this.semnum == 0;
     },
     addmod(sem) {
+      this.grade = "";
       this.modalsem = sem.semester;
       this.modalyear = sem.year;
       this.showModal = true;
     },
-    editmod() {
+    editmod(mod) {
       this.showModal = true;
+      this.grade = mod.grade;
+      this.code = mod.code;
+      console.log("ok");
+      database.updateModuleResults(mod);
+    },
+    deletemod(mod){
+        console.log("ok");
+        database.deleteModuleResults(mod);
     },
     hideContent(sem) {
       let currentsems = this.semesters;
@@ -340,38 +302,11 @@ export default {
       this.semesters = currentsems;
     },
     accumulatesems() {
-      let sems = this.currentuser.sap_by_sem;
+      let sems = this.User.sap_by_sem;
 
-      var years = [];
-      var semesters = [];
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
-
-          if (i == 0) {
-            years.push(sems[i].year);
-            semesters.push(sems[i].sem);
-
-            this.yearlist.push({
-              value: sems[i].year
-            });
-            this.semlist.push({
-              value: sems[i].sem
-            });
-          } else {
-            if (!years.includes(sems[i].year)) {
-              years.push(sems[i].year);
-              this.yearlist.push({
-                value: sems[i].year
-              });
-            }
-            if (!semesters.includes(sems[i].sem)) {
-              semesters.push(sems[i].sem);
-              this.semlist.push({
-                value: sems[i].sem
-              });
-            }
-          }
           this.semesters.push({
             year: sems[i].year,
             semester: sems[i].sem,
@@ -381,10 +316,6 @@ export default {
           });
         }
       }
-    },
-    updateData() {
-      let sems = this.currentuser.sap_by_sem;
-      console.log(sems);
     },
     setModuleDetails(mod) {
       database.getModules(mod).then(item => {
@@ -404,70 +335,27 @@ export default {
       });
     },
 
-    formatcap(sem) {
-      var total = 0;
-      var MC = 0;
-      if (sem.mods.length != 0) {
-        for (var i = 0; i < sem.mods.length; i++) {
-          total +=
-            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
-          MC += parseInt(sem.mods[i].MC);
-        }
-        total = total / MC;
-      }
-      return total.toFixed(2);
+    formatcap(cap) {
+  
+      return cap.toFixed(2);
     },
     formatMC(sem) {
       var total = 0;
       for (var i = 0; i < sem.mods.length; i++) {
         total += parseInt(sem.mods[i].MC);
-        console.log(total);
       }
       return total;
     },
     closeThis() {
       this.showModal = false;
-
-      this.readData();
-      console.log(this.usergrades);
-      console.log(this.currentuser);
-      this.updateData();
-    },
-    readData() {
-      const self = this;
-      database.getModuleResults().then(item => {
-        this.usergrades = item;
-      });
-      // query database for user info
-      database.firebase_data
-        .collection("students")
-        .doc(database.user)
-        .onSnapshot(function(user) {
-          var userData = user.data();
-
-          var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sam_by_sem,
-            overall_cap: userData.overall_cap,
-            batch: userData.batch, // for querying cohort top modules
-            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-            attributes: userData.attributes //individual attributes can be found in self.User.attributes
-          };
-
-          self.currentuser = result;
-        });
-      console.log(self.currentuser);
     }
   },
 
   created() {
-    this.currentuser = this.User;
-    this.readData();
     this.accumulatesems();
+    database.getModuleResults().then(item => {
+      this.usergrades = item;
+    });
   },
   mounted() {
     this.$root.$on("closeModal", this.closeThis);
@@ -481,9 +369,6 @@ export default {
   overflow: auto;
   display: block;
 }
-.mod-dropdown.md-field {
-  margin: 0.3vw 0 0.5vw !important;
-}
 .btn-outline-info {
   color: teal;
   border-color: teal;
@@ -494,11 +379,6 @@ export default {
   color: white;
   background-color: teal;
   border-color: teal;
-}
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
 }
 
 .md-button.addsem {
@@ -534,7 +414,7 @@ export default {
   padding: 1vw 0vw 0vw 1.5vw;
 }
 .mod-name {
-  color: #ec7663 !important;
+  color: #ec7663;
   font-weight: bold;
   font-size: 0.9vw;
 }
