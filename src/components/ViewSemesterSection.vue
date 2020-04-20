@@ -134,11 +134,10 @@
                     <md-dialog-content>
                       <ModuleForm :grade="mod.grade" :SU="mod.SU" />
                     </md-dialog-content>
-                  </md-dialog> -->
+                  </md-dialog>-->
                   <md-button class="md-icon-button mod-icon">
                     <md-icon>delete</md-icon>
                   </md-button>
-                  
                 </span>
               </div>
             </md-list>
@@ -308,8 +307,14 @@ export default {
       return this.semnum == 0;
     },
     addmod(sem) {
-      this.modalsem = sem.semester;
-      this.modalyear = sem.year;
+      if (sem.semester != null && sem.year != null) {
+        this.modalsem = sem.semester;
+        this.modalyear = sem.year;
+      } else {
+        this.modalsem = this.User.batch.sem;
+        this.modalyear = this.User.batch.year;
+      }
+
       this.showModal = true;
     },
     editmod() {
@@ -348,29 +353,17 @@ export default {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
 
-          if (i == 0) {
+          if (!years.includes(sems[i].year)) {
             years.push(sems[i].year);
-            semesters.push(sems[i].sem);
-
             this.yearlist.push({
               value: sems[i].year
             });
+          }
+          if (!semesters.includes(sems[i].sem)) {
+            semesters.push(sems[i].sem);
             this.semlist.push({
               value: sems[i].sem
             });
-          } else {
-            if (!years.includes(sems[i].year)) {
-              years.push(sems[i].year);
-              this.yearlist.push({
-                value: sems[i].year
-              });
-            }
-            if (!semesters.includes(sems[i].sem)) {
-              semesters.push(sems[i].sem);
-              this.semlist.push({
-                value: sems[i].sem
-              });
-            }
           }
           this.semesters.push({
             year: sems[i].year,
@@ -382,9 +375,31 @@ export default {
         }
       }
     },
-    updateData() {
-      let sems = this.currentuser.sap_by_sem;
+    updatefilter(year, sem) {
+      var years = [];
+      var sems = [];
+      for (var i = 0; i < this.yearlist.length; i++) {
+        years.push(this.yearlist[i].value);
+      }
+      for (var k = 0; k < this.semlist.length; k++) {
+        sems.push(this.semlist[k].value);
+      }
+      console.log(years)
       console.log(sems);
+      console.log(!years.includes(year));
+      console.log(!sems.includes(sem));
+      if (!years.includes(year)) {
+        years.push(year);
+        this.yearlist.push({
+          value: year
+        });
+      }
+      if (!sems.includes(sem)) {
+        sems.push(sem);
+        this.semlist.push({
+          value: sem
+        });
+      }
     },
     setModuleDetails(mod) {
       database.getModules(mod).then(item => {
@@ -425,13 +440,15 @@ export default {
       }
       return total;
     },
-    closeThis() {
+    closeThis1(val) {
+      console.log(val);
       this.showModal = false;
-
       this.readData();
-      console.log(this.usergrades);
-      console.log(this.currentuser);
-      this.updateData();
+      this.updatefilter(val.year, val.sem);
+    },
+    closeThis2() {
+      this.showModal = false;
+      this.readData();
     },
     readData() {
       const self = this;
@@ -470,7 +487,8 @@ export default {
     this.accumulatesems();
   },
   mounted() {
-    this.$root.$on("closeModal", this.closeThis);
+    this.$root.$on("closeModal1", this.closeThis1);
+    this.$root.$on("closeModal2", this.closeThis2);
   }
 };
 </script>
