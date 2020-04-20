@@ -38,13 +38,13 @@
             <md-radio
               v-model="detailsForm.selectedSU"
               class="md-primary"
-              style="padding-left:2vw"
+              style="padding-left:1vw"
               value="Yes"
             >SU</md-radio>
             <md-radio
               v-model="detailsForm.selectedSU"
               class="md-primary"
-              style="padding-left:2vw"
+              style="padding-left:1vw"
               value="No"
             >No SU</md-radio>
           </div>
@@ -194,8 +194,11 @@ export default {
         database.addModuleResults(this.detailsForm).then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("closeModal");
-        });
+          this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
+        })
+        .catch( () => {
+          alert("Module already added!");
+          this.$root.$emit("closeModal2");});
       }
     }
   },
@@ -231,6 +234,6 @@ export default {
 </style>
 <style lang="scss">
 .md-menu-content {
-  z-index: 11;
+  z-index: 11 !important;
 }
 </style>

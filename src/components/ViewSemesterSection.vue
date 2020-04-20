@@ -90,7 +90,7 @@
           <div class="sem-box" v-show="!post.collapse">
             <div class="md-layout sem-content">
               <div class="md-layout-item">
-                <p>Total CAP : {{formatcap(post.cap)}}</p>
+                <p>Total CAP : {{formatcap(post)}}</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
               <div class="md-layout-item">
@@ -107,7 +107,9 @@
 
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
-                <p class="mod-name">{{mod.code}} {{mod.name}}</p>
+                <p>
+                  <router-link class="mod-name" :to="'/'+mod.code">{{mod.code}} {{mod.name}}</router-link>
+                </p>
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
@@ -125,9 +127,14 @@
                   </div>
                 </div>
                 <span class="footerright">
-                  <md-button class="md-icon-button mod-icon">
+                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(post)">
                     <md-icon>edit</md-icon>
                   </md-button>
+                  <!-- <md-dialog :md-active.sync="showModal">
+                    <md-dialog-content>
+                      <ModuleForm :grade="mod.grade" :SU="mod.SU" />
+                    </md-dialog-content>
+                  </md-dialog>-->
                   <md-button class="md-icon-button mod-icon">
                     <md-icon>delete</md-icon>
                   </md-button>
@@ -175,7 +182,8 @@ export default {
     modalsem: null,
     currentdetails: [],
     yearchosen: [],
-    semchosen: []
+    semchosen: [],
+    currentuser: null
   }),
   components: {
     //AddModuleModal
@@ -185,6 +193,7 @@ export default {
     updatesem() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
+
       var semesters = [];
 
       for (var k = 0; k < this.semnum; k++) {
@@ -227,8 +236,6 @@ export default {
       let filterData = semesters;
 
       if (this.yearchosen.length > 0) {
-        console.log(this.yearchosen);
-
         filterData = filterData.filter(item => {
           if (this.yearchosen.includes(item.year.toString())) {
             return true;
@@ -238,8 +245,6 @@ export default {
         });
       }
       if (this.semchosen.length > 0) {
-        console.log(this.semchosen);
-
         filterData = filterData.filter(item => {
           if (this.semchosen.includes(item.semester.toString())) {
             return true;
@@ -302,8 +307,17 @@ export default {
       return this.semnum == 0;
     },
     addmod(sem) {
-      this.modalsem = sem.semester;
-      this.modalyear = sem.year;
+      if (sem.semester != null && sem.year != null) {
+        this.modalsem = sem.semester;
+        this.modalyear = sem.year;
+      } else {
+        this.modalsem = this.User.batch.sem;
+        this.modalyear = this.User.batch.year;
+      }
+
+      this.showModal = true;
+    },
+    editmod() {
       this.showModal = true;
     },
     hideContent(sem) {
@@ -331,38 +345,25 @@ export default {
       this.semesters = currentsems;
     },
     accumulatesems() {
-      let sems = this.User.sap_by_sem;
+      let sems = this.currentuser.sap_by_sem;
+
       var years = [];
       var semesters = [];
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
 
-          if (i == 0) {
+          if (!years.includes(sems[i].year)) {
             years.push(sems[i].year);
-            semesters.push(sems[i].sem);
-
             this.yearlist.push({
               value: sems[i].year
             });
+          }
+          if (!semesters.includes(sems[i].sem)) {
+            semesters.push(sems[i].sem);
             this.semlist.push({
               value: sems[i].sem
             });
-          } else {
-            console.log(years);
-            console.log(years.includes(sems[i].year));
-            if (!years.includes(sems[i].year)) {
-              years.push(sems[i].year);
-              this.yearlist.push({
-                value: sems[i].year
-              });
-            }
-            if (!semesters.includes(sems[i].sem)) {
-              semesters.push(sems[i].sem);
-              this.semlist.push({
-                value: sems[i].sem
-              });
-            }
           }
           this.semesters.push({
             year: sems[i].year,
@@ -372,6 +373,32 @@ export default {
             collapse: false
           });
         }
+      }
+    },
+    updatefilter(year, sem) {
+      var years = [];
+      var sems = [];
+      for (var i = 0; i < this.yearlist.length; i++) {
+        years.push(this.yearlist[i].value);
+      }
+      for (var k = 0; k < this.semlist.length; k++) {
+        sems.push(this.semlist[k].value);
+      }
+      console.log(years)
+      console.log(sems);
+      console.log(!years.includes(year));
+      console.log(!sems.includes(sem));
+      if (!years.includes(year)) {
+        years.push(year);
+        this.yearlist.push({
+          value: year
+        });
+      }
+      if (!sems.includes(sem)) {
+        sems.push(sem);
+        this.semlist.push({
+          value: sem
+        });
       }
     },
     setModuleDetails(mod) {
@@ -392,29 +419,76 @@ export default {
       });
     },
 
-    formatcap(cap) {
-      return cap.toFixed(2);
+    formatcap(sem) {
+      var total = 0;
+      var MC = 0;
+      if (sem.mods.length != 0) {
+        for (var i = 0; i < sem.mods.length; i++) {
+          total +=
+            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
+          MC += parseInt(sem.mods[i].MC);
+        }
+        total = total / MC;
+      }
+      return total.toFixed(2);
     },
     formatMC(sem) {
       var total = 0;
       for (var i = 0; i < sem.mods.length; i++) {
         total += parseInt(sem.mods[i].MC);
+        console.log(total);
       }
       return total;
     },
-    closeThis() {
+    closeThis1(val) {
+      console.log(val);
       this.showModal = false;
+      this.readData();
+      this.updatefilter(val.year, val.sem);
+    },
+    closeThis2() {
+      this.showModal = false;
+      this.readData();
+    },
+    readData() {
+      const self = this;
+      database.getModuleResults().then(item => {
+        this.usergrades = item;
+      });
+      // query database for user info
+      database.firebase_data
+        .collection("students")
+        .doc(database.user)
+        .onSnapshot(function(user) {
+          var userData = user.data();
+
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sam_by_sem,
+            overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          };
+
+          self.currentuser = result;
+        });
+      console.log(self.currentuser);
     }
   },
 
   created() {
+    this.currentuser = this.User;
+    this.readData();
     this.accumulatesems();
-    database.getModuleResults().then(item => {
-      this.usergrades = item;
-    });
   },
   mounted() {
-    this.$root.$on("closeModal", this.closeThis);
+    this.$root.$on("closeModal1", this.closeThis1);
+    this.$root.$on("closeModal2", this.closeThis2);
   }
 };
 </script>
@@ -478,7 +552,7 @@ export default {
   padding: 1vw 0vw 0vw 1.5vw;
 }
 .mod-name {
-  color: #ec7663;
+  color: #ec7663 !important;
   font-weight: bold;
   font-size: 0.9vw;
 }

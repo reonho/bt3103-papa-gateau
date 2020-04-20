@@ -14,7 +14,7 @@
             <md-button
               class="md-primary md-raised"
               style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
-    width:20vh;font-size: 1.8vh; margin:0"
+    width:10vw;height: 5vh;font-size: 1.8vh; margin:0"
               @click="showModal = true"
             >EDIT DETAILS</md-button>
             <md-dialog :md-active.sync="showModal">
@@ -54,30 +54,55 @@
                     style="padding-bottom:0;"
                     v-if="User.overall_cap"
                   >{{formatcap(User.overall_cap)}}</p>
+                  <p
+                    class="sub-content-text"
+                    style="padding-bottom:0;"
+                    v-if="!User.overall_cap"
+                  >{{formatcap(User.overall_cap)}}</p>
                 </div>
               </div>
             </div>
-
-            <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
+            <div class="sub-header-content" style="padding:2vw;">
+              <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
+            </div>
           </div>
         </div>
 
         <div class="sub-contain-div2">
           <div class="sub-header-content">
             <div class="sub-header-title" style="padding-bottom:8vh;">STRENGTHS</div>
+            <!-- When using RadarChart to display My Attributes vs Faculty, set my_attr to be user attributes and fac_attr to be faculty -->
+            <!-- However, when using to display My Attributes vs Module Attributes, type as Faculty, set my_attr to be user attributes and fac_attr to be top student attributes.  -->
+            <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
+            <RadarChart
+              v-if="facultyAttributes"
+              v-bind:my_attr="User.attributes"
+              v-bind:fac_attr="facultyAttributes"
+              type='Faculty'
+              label_1='My Attributes'
+              label_2='Faculty Average'
+            ></RadarChart>
+            <!-- <RadarChart
+              v-if="facultyAttributes"
+              :my_attr="User.attributes"
+              :fac_attr="facultyAttributes"
+              type="Module"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
+            ></RadarChart> -->
           </div>
-
+<!-- 
           <RadarChart
             v-if="facultyAttributes"
             :my_attr="User.attributes"
             :fac_attr="facultyAttributes"
-          ></RadarChart>
+          ></RadarChart> -->
         </div>
       </div>
 
       <br />
       <br />
-      <Feed :modules="modules" :course="cohortTopMods" :sem="sem" :User="User"  v-if="cohortTopMods"></Feed>
+      <Feed :modules="modules" :sem="sem" :User="User" :course= "cohortTopMods" v-if="User.sap_by_sem" ></Feed>
       
       <br />
       <br />
@@ -97,7 +122,6 @@
 import DataObject from "../Database.js";
 
 import EditUserDetailsForm from "../components/EditUserDetailsForm";
-//import ViewSemesterSection from "../components/ViewSemesterSection";
 // // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
 // //import TreeChart from "../components/TreeCharts/TreeChart"
@@ -122,7 +146,7 @@ export default {
     NavBar,
     Feed,
     ReviewSection,
-   // ViewSemesterSection
+   
     // // Ratings
   },
   data: function() {
@@ -135,7 +159,8 @@ export default {
       modules: [],
       sem: null,
       cohortTopMods: null,
-      showModal: false
+      showModal: false,
+      cohort_loaded: false
     };
   },
   methods: {
@@ -151,9 +176,10 @@ export default {
     get_currentsem(obj_array) {
       var sem_no = 1;
       for (let i = 0; i < obj_array.length; i++) {
-        //console.log(obj_array[0][key])
+
         var value = obj_array[i];
-        if (Object.entries(value).length === 0) {
+        sem_no = i
+        if (Object.entries(value).length == 0) {
           sem_no = i;
           break;
         }
@@ -161,7 +187,7 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-      console.log(this.sem)
+     
     },
 
     get_modules(modules) {
@@ -200,7 +226,7 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-        console.log(userData);
+     
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -215,21 +241,24 @@ export default {
         };
 
         self.User = result;
-        console.log(result);
+       
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
           console.log(doc.module.length)
         });
         // query database for course attributes
+        // database.getModuleAttributes("BT2101").then(r => {
+        //   self.facultyAttributes = r;
+        // });
         database.getFacultyAttributes(result.faculty).then(attributes => {
-          self.facultyAttributes = attributes.attributes; //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+
+          self.facultyAttributes = attributes;
+        //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
         });
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
-
-      
   },
   mounted() {
     if (this.userPassed) {
@@ -255,8 +284,6 @@ export default {
 
 .landPage {
   background: #ebecf0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
-    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
 }
 /* Header card css */
 .header-card {
@@ -327,5 +354,12 @@ export default {
   width: 42vw;
   background-color: white;
   float: right;
+}
+</style>
+<style>
+/* apply to all */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif !important;
 }
 </style>
