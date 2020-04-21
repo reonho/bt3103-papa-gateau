@@ -2,58 +2,41 @@
   <div id="ViewSemesterSection">
     <div>
       <div class="md-layout">
-        <div class="md-layout-item md-size-35">
-          <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Year</label>
-            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
+        <div class="md-layout-item md-size-30">
+          <md-field style="margin:0;padding:0;min-height:4.5vh">
+            <label style="top:1.3vh;font-size:1vw">Year</label>
+            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
               <md-option
                 v-for="year in yearlist"
-                :key="year.value"
+                :key="year.index"
                 :id="year.value"
                 v-model="year.value"
               >{{ year.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="yearchosen"
-            md-static
-          ></md-chips>
         </div>
         <div class="md-layout-item md-size-5"></div>
-        <div class="md-layout-item md-size-35">
-          <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Semester</label>
+        <div class="md-layout-item md-size-30">
+          <md-field style="margin:0;padding:0;min-height:4.5vh;">
+            <label style="top:1.3vh;font-size:1vw">Semester</label>
             <md-select v-model="semchosen" name="semchosen" id="semchosen" multiple>
               <md-option
                 v-for="sem in semlist"
-                :key="sem.value"
+                :key="sem.index"
                 :id="sem.value"
                 v-model="sem.value"
               >{{ sem.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="semchosen"
-            md-static
-          ></md-chips>
         </div>
-        <div class="md-layout-item md-size-5"></div>
+        <div class="md-layout-item md-size-10"></div>
         <div class="md-layout-item md-size-10">
-          <md-field class="mod-dropdown" style="padding-top: 0;">
-            <b-button
-              style="width: 8.5vw; padding:1vh;"
-              v-on:click="clearfilter"
-              variant="outline-info"
-            >
-              <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
-            </b-button>
-          </md-field>
+          <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+          </b-button>
         </div>
       </div>
+      <br />
       <br />
 
       <!-- Semester Details -->
@@ -107,9 +90,7 @@
 
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
-                <p>
-                  <router-link class="mod-name" :to="'/'+mod.code">{{mod.code}} {{mod.name}}</router-link>
-                </p>
+                <p class="mod-name">{{mod.code}} {{mod.name}}</p>
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
@@ -127,30 +108,39 @@
                   </div>
                 </div>
                 <span class="footerright">
-                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(post)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="editmod(mod)">
                     <md-icon>edit</md-icon>
                   </md-button>
-                  <!-- <md-dialog :md-active.sync="showModal">
+                  <md-dialog :md-active.sync="showModal">
+                    <md-dialog-title>Edit Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                     <md-dialog-content>
-                      <ModuleForm :grade="mod.grade" :SU="mod.SU" />
+                      <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
                     </md-dialog-content>
-                  </md-dialog>-->
-                  <md-button class="md-icon-button mod-icon">
+                  </md-dialog>
+
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod">
                     <md-icon>delete</md-icon>
                   </md-button>
+                  <md-dialog :md-active.sync="showDeleteModal">
+                    <md-dialog-title>Remove {{mod.code}} Module?</md-dialog-title>
+                    <md-dialog-content>
+                      Are You Sure?
+                      <ConfirmModal :code="mod.code" />
+                    </md-dialog-content>
+                  </md-dialog>
                 </span>
               </div>
             </md-list>
 
             <div class="mod-list" style="text-align:center" v-show="!showmod(post.mods)">
               <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
+              <md-dialog :md-active.sync="showAddModal">
+                <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
+                <md-dialog-content>
+                  <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                </md-dialog-content>
+              </md-dialog>
             </div>
-            <md-dialog :md-active.sync="showModal">
-              <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
-              <md-dialog-content>
-                <ModuleForm :sem="modalsem" :year="modalyear" />
-              </md-dialog-content>
-            </md-dialog>
           </div>
         </md-list>
       </div>
@@ -165,6 +155,7 @@
 <script>
 //import AddModuleModal from "./AddModuleModal.vue";
 import ModuleForm from "./ModuleForm.vue";
+import ConfirmModal from "./ConfirmModal.vue";
 import database from "../firebase.js";
 export default {
   name: "ViewSemesterSection",
@@ -173,8 +164,13 @@ export default {
   },
   data: () => ({
     showModal: false,
+    showAddModal: false,
+    showDeleteModal: false,
     yearlist: [],
     semlist: [],
+    grade: null,
+    code: null,
+    SU: null,
     semnum: 0,
     semesters: [],
     usergrades: [],
@@ -183,78 +179,83 @@ export default {
     currentdetails: [],
     yearchosen: [],
     semchosen: [],
-    currentuser: null
+    deleted: ""
   }),
   components: {
     //AddModuleModal
-    ModuleForm
+    ModuleForm,
+    ConfirmModal
   },
   computed: {
     updatesem() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
-
       var semesters = [];
-
+      var correctmods = [];
+      var flagsem = -1;
+      console.log(this.usergrades);
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
+        console.log(this.deleted);
         //read in the mods
-        for (var i = 0; i < Object.keys(usermods).length; i++) {
-          let mod = usermods[i];
+        if (this.deleted != "") {
+          //one mod has been deleted
+          for (var n = 0; n < sem.mods.length; n++) {
+            var modcode = sem.mods[n].code;
 
-          if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
-            var result = {
-              code: mod.module,
-              grade: mod.grade,
-              SU: mod.SU,
-              faculty: null,
-              MC: 0,
-              department: null,
-              name: null
-            };
-            //check if its in the mods
-            var flag = false;
-            for (var t = 0; t < sem.mods.length; t++) {
-              var modcode = sem.mods[t].code;
-              if (modcode == mod.module) {
-                //exists
-                flag = true;
-              }
-            }
-            if (flag) {
-              continue;
+             
+            if (modcode != this.deleted) {
+              //exists
+              correctmods.push(sem.mods[n]);
+              
             } else {
-              //fill in the other details
-              this.setModuleDetails(result.code);
+              flagsem = k;
+            }
+          }
+        } else {
+          for (var i = 0; i < Object.keys(usermods).length; i++) {
+            let mod = usermods[i];
 
-              sem.mods.push(result);
+            if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
+              var result = {
+                code: mod.module,
+                grade: mod.grade,
+                SU: mod.SU,
+                faculty: null,
+                MC: 0,
+                department: null,
+                name: null
+              };
+              //check if its in the mods
+              var flag = false;
+              for (var t = 0; t < sem.mods.length; t++) {
+                if (sem.mods[t].code == mod.module) {
+                  //exists
+                  flag = true;
+                }
+              }
+              if (flag) {
+                continue;
+              } else {
+                //fill in the other details
+                this.setModuleDetails(result.code);
+
+                sem.mods.push(result);
+              }
             }
           }
         }
+
         semesters.push(sem);
       }
-      let filterData = semesters;
-
-      if (this.yearchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.yearchosen.includes(item.year.toString())) {
-            return true;
-          }
-
-          return false;
-        });
-      }
-      if (this.semchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.semchosen.includes(item.semester.toString())) {
-            return true;
-          }
-
-          return false;
-        });
+      if (flagsem != -1) {
+        semesters[flagsem].mods = correctmods;
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.deleted = "";
+        
       }
 
-      return filterData;
+      return semesters;
     },
     showbutton() {
       if ((this.semnum == 8) | (this.semnum == 0)) {
@@ -264,25 +265,20 @@ export default {
     }
   },
   methods: {
-    clearfilter() {
-      this.yearchosen = [];
-      this.semchosen = [];
-    },
     addsem() {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-
       if (this.semnum > 0) {
+        var latest1 =
+          parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
+        var latest2 =
+          parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
+        latest = "AY" + latest1 + latest2;
         latestsem = this.semesters[this.semnum - 1].semester;
+
         if (latestsem == "Semester 1") {
-          latest = this.semesters[this.semnum - 1].year;
           latestsem = "Semester 2";
         } else {
-          var latest1 =
-            parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
-          var latest2 =
-            parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
-          latest = "AY" + latest1 + latest2;
           latestsem = "Semester 1";
         }
       }
@@ -314,11 +310,19 @@ export default {
         this.modalsem = this.User.batch.sem;
         this.modalyear = this.User.batch.year;
       }
-
-      this.showModal = true;
+      this.grade = "";
+      this.code = "";
+      this.showAddModal = true;
     },
-    editmod() {
+    editmod(mod) {
       this.showModal = true;
+      this.grade = mod.grade;
+      this.code = mod.code;
+      console.log("ok");
+      database.updateModuleResults(mod);
+    },
+    deletemod() {
+      this.showDeleteModal = true;
     },
     hideContent(sem) {
       let currentsems = this.semesters;
@@ -345,10 +349,10 @@ export default {
       this.semesters = currentsems;
     },
     accumulatesems() {
-      let sems = this.currentuser.sap_by_sem;
-
+      let sems = this.User.sap_by_sem;
       var years = [];
       var semesters = [];
+console.log(sems)
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
@@ -384,10 +388,6 @@ export default {
       for (var k = 0; k < this.semlist.length; k++) {
         sems.push(this.semlist[k].value);
       }
-      console.log(years)
-      console.log(sems);
-      console.log(!years.includes(year));
-      console.log(!sems.includes(sem));
       if (!years.includes(year)) {
         years.push(year);
         this.yearlist.push({
@@ -399,6 +399,22 @@ export default {
         this.semlist.push({
           value: sem
         });
+      }
+    },
+    updateSemestermod(mod) {
+      var semesters = this.semesters;
+      console.log(this.usergrades);
+      for (var i = 0; i < semesters.length; i++) {
+        let mods = semesters[i].mods;
+        console.log(mods);
+        console.log(mod);
+        for (var k = 0; k < mods.length; k++) {
+          if (mods[k].code == mod) {
+            this.semesters[i].mods.$remove(mods[k]);
+          }
+        }
+
+        console.log(this.semesters);
       }
     },
     setModuleDetails(mod) {
@@ -436,19 +452,26 @@ export default {
       var total = 0;
       for (var i = 0; i < sem.mods.length; i++) {
         total += parseInt(sem.mods[i].MC);
-        console.log(total);
       }
       return total;
     },
     closeThis1(val) {
-      console.log(val);
       this.showModal = false;
+      this.showAddModal = false;
       this.readData();
+      console.log(this.usergrades);
       this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
       this.showModal = false;
+      this.showAddModal = false;
       this.readData();
+    },
+    deleteitem(mod) {
+      this.showDeleteModal = false;
+      this.readData();
+      this.deleted = mod.code;
+      // this.updatefilter(val.year, val.sem);
     },
     readData() {
       const self = this;
@@ -477,18 +500,19 @@ export default {
 
           self.currentuser = result;
         });
-      console.log(self.currentuser);
     }
   },
 
   created() {
-    this.currentuser = this.User;
-    this.readData();
     this.accumulatesems();
+    database.getModuleResults().then(item => {
+      this.usergrades = item;
+    });
   },
   mounted() {
     this.$root.$on("closeModal1", this.closeThis1);
     this.$root.$on("closeModal2", this.closeThis2);
+    this.$root.$on("deleteitem", this.deleteitem);
   }
 };
 </script>
@@ -498,9 +522,6 @@ export default {
   width: 40vw;
   overflow: auto;
   display: block;
-}
-.mod-dropdown.md-field {
-  margin: 0.3vw 0 0.5vw !important;
 }
 .btn-outline-info {
   color: teal;
@@ -512,11 +533,6 @@ export default {
   color: white;
   background-color: teal;
   border-color: teal;
-}
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
 }
 
 .md-button.addsem {
@@ -552,7 +568,7 @@ export default {
   padding: 1vw 0vw 0vw 1.5vw;
 }
 .mod-name {
-  color: #ec7663 !important;
+  color: #ec7663;
   font-weight: bold;
   font-size: 0.9vw;
 }
