@@ -157,7 +157,7 @@ export default {
       ],
       submitStatus: null,
       detailsForm: {
-        selectedModule: null,
+        selectedModule: this.code,
         selectedSemester: this.sem,
         selectedGrade: this.grade,
         selectedSU: "No",
