@@ -180,7 +180,12 @@ export default {
     },
 
     formatcap(cap) {
+      if (cap >= 0) {
       return cap.toFixed(2);
+      } else {
+        cap = 0
+        return cap.toFixed(2);
+      }
     }
   },
   created() {
