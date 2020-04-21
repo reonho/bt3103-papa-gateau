@@ -99,7 +99,6 @@
             </div>
           </div>
           <div class="module-div" id="ModuleItem">
-            
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
                 <router-link
@@ -119,28 +118,23 @@
                     <br />
                     <br />
                     <br />
-                    <span
-                      class="module-preclusionhead"
-                      v-show="showPreclusions(post.info.preclusion)"
-                    >
-                      Preclusions
+                    <div v-show="showPreclusions(post.info.preclusion)">
+                      <span class="module-preclusionhead">
+                        Preclusions
+                        <br />
+                      </span>
+                      <span class="module-preclusion">{{post.info.preclusion}}</span>
                       <br />
-                    </span>
-                    <span
-                      class="module-preclusion"
-                      v-show="showPreclusions(post.info.preclusion)"
-                    >{{post.info.preclusion}}</span>
-                    <br v-show="showPreclusions(post.info.preclusion)" />
-                    <br v-show="showPreclusions(post.info.preclusion)" />
-                    <span
-                      class="module-prerequisitehead"
-                      v-show="showPrereq(post.info.prerequisite)"
-                    >
-                      Prerequisites
                       <br />
-                    </span>
+                    </div>
+                    <div v-show="showPrereq(post.info.prerequisite)">
+                      <span class="module-prerequisitehead">
+                        Prerequisites
+                        <br />
+                      </span>
 
-                    <span class="module-prerequisite">{{post.info.prerequisite}}</span>
+                      <span class="module-prerequisite">{{post.info.prerequisite}}</span>
+                    </div>
                     <br />
                   </div>
                   <div class="md-layout-item-30" style="padding-left:3vw">
@@ -153,7 +147,7 @@
                         active-nav-item-class="activetab"
                         class="semtabs"
                         content-class="mt-3"
-                        no-fade="false"
+                        no-fade
                         lazy
                       >
                         <b-tab
@@ -194,7 +188,7 @@
             </md-list>
 
             <div style="height:200px">
-              <div v-show="!showEmpty">
+              <div v-show="showEmpty">
                 <md-empty-state
                   id="statebox"
                   style="max-width:0 !important;  color: #2e4053;"
@@ -202,14 +196,14 @@
                   md-label="No Modules to Display"
                 ></md-empty-state>
               </div>
-              <div v-show="loading">
+              <div v-show="showLoading">
                 <md-empty-state
                   id="statebox"
                   style="max-width:0 !important; color: #2e4053;"
                   md-label="Loading Modules..."
                 >
                   <br />
-                  <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
+                  <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
                 </md-empty-state>
               </div>
             </div>
@@ -236,12 +230,6 @@ export default {
     workloadchart: WorkloadChart,
     ScaleLoader
   },
-  props: {
-    test: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
     return {
       color: "#eda200",
@@ -252,9 +240,7 @@ export default {
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
         { text: "Semester 1", value: "1", selected: false },
-        { text: "Semester 2", value: "2", selected: false },
-        { text: "Special Term 1", value: "3", selected: false },
-        { text: "Special Term 2", value: "4", selected: false }
+        { text: "Semester 2", value: "2", selected: false }
       ],
       levels: [
         { text: "1000", value: "1000", selected: false },
@@ -274,7 +260,6 @@ export default {
       faculties: [],
       departments: [],
       searchlist: [],
-      seriesStats: [{ data: [150, 210, 186, 195] }],
       chosenfac: [],
       chosendept: [],
       chosensems: [],
@@ -356,10 +341,14 @@ export default {
       return filterData;
     },
     showEmpty() {
+      
       if ((this.modulenum == 0) & (this.loading == false)) {
         return true;
       }
       return false;
+    },
+    showLoading() {
+      return this.loading;
     }
   },
   methods: {
@@ -406,7 +395,6 @@ export default {
             this.loading = false;
           });
         });
-
     },
     clearfilter: function() {
       this.searchbar = "";
@@ -419,6 +407,7 @@ export default {
     },
     checksemester(arr) {
       arr = arr.info.semesterData;
+
       var semesters = [
         {
           semester: "Semester 1",
@@ -433,46 +422,13 @@ export default {
           examDate: null,
           examDuration: 0,
           active: false
-        },
-        {
-          semester: "Special Term I",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
-        },
-        {
-          semester: "Special Term II",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
         }
       ];
+
       var num = arr.length;
       var flag = false;
       for (var i = 0; i < num; i++) {
-        if (arr[i].semester == 3) {
-          semesters[2].disabled = "";
-          if (flag === false) {
-            semesters[2].active = true;
-          }
-          flag = true;
-          if (Object.keys(arr[i]).length > 1) {
-            semesters[2].examDate = arr[i].examDate;
-            semesters[2].examDuration = arr[i].examDuration / 60;
-          }
-        } else if (arr[i].semester == 4) {
-          semesters[3].disabled = "";
-          if (flag === false) {
-            semesters[3].active = true;
-          }
-          flag = true;
-          if (Object.keys(arr[i]).length > 1) {
-            semesters[3].examDate = arr[i].examDate;
-            semesters[3].examDuration = arr[i].examDuration / 60;
-          }
-        } else if (arr[i].semester == 2) {
+        if (arr[i].semester == 2) {
           semesters[1].disabled = "";
           if (flag === false) {
             semesters[1].active = true;
@@ -576,11 +532,7 @@ export default {
         return modnum + " Modules ";
       }
     },
-    passmod: function(code) {
-      this.$router.push({ name: "modulePage", params: { code: code } });
-    },
     showPreclusions(val) {
-
       if (val != null) {
         return true;
       }
@@ -594,11 +546,8 @@ export default {
     }
   },
   mounted() {
-    //this.writeDatabase();
-
+    this.loading = true;
     this.readDatabase();
-
-    //console.log(this.modulesData);
   }
 };
 </script>

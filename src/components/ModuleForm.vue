@@ -68,7 +68,9 @@ export default {
   props: {
     //msg: String
     sem: String,
-    year: String
+    year: String,
+    grade: String,
+    code: String
   },
   components: {
     // FollowUpModal
@@ -155,9 +157,9 @@ export default {
       ],
       submitStatus: null,
       detailsForm: {
-        selectedModule: null,
+        selectedModule: this.code,
         selectedSemester: this.sem,
-        selectedGrade: null,
+        selectedGrade: this.grade,
         selectedSU: "No",
         selectedYear: this.year
       }
@@ -197,7 +199,8 @@ export default {
           this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
         })
         .catch( () => {
-          alert("Module already added!");
+          database.updateModuleResults(this.detailsForm);
+          alert("Module has been added!");
           this.$root.$emit("closeModal2");});
       }
     }
