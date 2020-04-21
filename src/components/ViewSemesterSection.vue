@@ -199,24 +199,35 @@ export default {
     updatesem() {
       var semnum = 0;
       let sems = this.User.sap_by_sem;
+      var available = 0;
+      for (var m = 0; m < sems.length; m++) {
+        if (Object.keys(sems[m]).length > 0) {
+          available++;
+        }
+      }
+
       let semesters = [];
       var years = [];
       var semesterslist = [];
       var batchyr = this.User.batch.year;
-      var flag = sems.length;
+      var flag = available;
       var flag2 = false;
       var latest = this.User.batch.year;
-      console.log(latest)
+      console.log(latest);
+      console.log(flag);
+            console.log(sems);
       var latestsem = "Semester 1";
       while (flag > 0) {
         var flag3 = false;
-        for (var i = 0; i < sems.length; i++) {
+        for (var i = 0; i < available; i++) {
+          console.log(sems[i]);
           if (Object.keys(sems[i]).length > 0) {
             if (
               semnum == 0 &&
               batchyr == sems[i].year &&
-              latestsem == "Semester 1"
+              latestsem == sems[i].sem
             ) {
+              
               if (!years.includes(sems[i].year)) {
                 years.push(sems[i].year);
                 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -244,16 +255,17 @@ export default {
               semnum++;
               break;
             } else if (flag2) {
+               console.log(sems[i]);
               if (flag3 == false) {
-              if (latestsem == "Semester 1") {
-                latestsem = "Semester 2";
-              } else {
-                var latest1 = parseInt(latest.substring(2, 4)) + 1;
-                var latest2 = parseInt(latest.substring(4, 6)) + 1;
-                latest = "AY" + latest1 + latest2;
-                latestsem = "Semester 1";
-              }
-              flag3 = true;
+                if (latestsem == "Semester 1") {
+                  latestsem = "Semester 2";
+                } else {
+                  var latest1 = parseInt(latest.substring(2, 4)) + 1;
+                  var latest2 = parseInt(latest.substring(4, 6)) + 1;
+                  latest = "AY" + latest1 + latest2;
+                  latestsem = "Semester 1";
+                }
+                flag3 = true;
               }
               if (latest == sems[i].year && latestsem == sems[i].sem) {
                 flag3 = false;
@@ -284,12 +296,13 @@ export default {
                 break;
               }
             } else {
+               console.log(sems[i]);
               continue;
             }
           }
         }
       }
-
+      console.log(this.semesters);
       for (var k = 0; k < semesters.length; k++) {
         var usermods = this.usergrades;
         console.log(usermods);
@@ -297,7 +310,7 @@ export default {
 
         for (var j = 0; j < Object.keys(usermods).length; j++) {
           let mod = usermods[j];
-          console.log(mod);
+
           if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
             if (mod.module != "") {
               var result = {
@@ -326,61 +339,6 @@ export default {
       this.semnum = semnum;
       return semesters;
     },
-    updatesem2() {
-      let allsems = this.semesters;
-      let usermods = this.usergrades;
-      var semesters = [];
-      var correctmods = [];
-      var flagsem = -1;
-      console.log(this.usergrades);
-      console.log(this.semesters);
-      for (var k = 0; k < this.semnum; k++) {
-        let sem = allsems[k];
-        console.log(this.deleted);
-        for (var i = 0; i < Object.keys(usermods).length; i++) {
-          let mod = usermods[i];
-
-          if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
-            var result = {
-              code: mod.module,
-              grade: mod.grade,
-              SU: mod.SU,
-              faculty: null,
-              MC: 0,
-              department: null,
-              name: null,
-              year: sem.year,
-              semester: sem.semester
-            };
-            //check if its in the mods
-            var flag = false;
-            for (var t = 0; t < sem.mods.length; t++) {
-              if (sem.mods[t].code == mod.module) {
-                //exists
-                flag = true;
-              }
-            }
-            if (flag) {
-              continue;
-            } else {
-              //fill in the other details
-              this.setModuleDetails(result.code);
-
-              sem.mods.push(result);
-            }
-          }
-        }
-
-        semesters.push(sem);
-      }
-      if (flagsem != -1) {
-        semesters[flagsem].mods = correctmods;
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.deleted = "";
-      }
-
-      return semesters;
-    },
     showbutton() {
       if ((this.semnum == 8) | (this.semnum == 0)) {
         return false;
@@ -394,7 +352,6 @@ export default {
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
 
-      console.log(this.semesters);
       //check if prev sem is filled with modules
 
       if (semnum > 0) {
@@ -412,8 +369,7 @@ export default {
           latestsem = "Semester 1";
         }
       }
-      console.log(latestsem);
-      console.log(semnum);
+
       /*
       this.semesters.push({
         year: latest,
@@ -472,12 +428,12 @@ export default {
       this.showModal = true;
       this.grade = mod.grade;
       this.code = mod.code;
-      console.log("ok");
       database.updateModuleResults(mod);
     },
     deletemod(mod) {
       this.mod = mod;
       this.code = mod.code;
+      console.log(mod);
       this.showDeleteModal = true;
     },
     hideContent(sem) {
@@ -508,7 +464,6 @@ export default {
       let sems = this.User.sap_by_sem;
       var years = [];
       var semesters = [];
-      console.log(sems);
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
@@ -559,18 +514,14 @@ export default {
     },
     updateSemestermod(mod) {
       var semesters = this.semesters;
-      console.log(this.usergrades);
+
       for (var i = 0; i < semesters.length; i++) {
         let mods = semesters[i].mods;
-        console.log(mods);
-        console.log(mod);
         for (var k = 0; k < mods.length; k++) {
           if (mods[k].code == mod) {
             this.semesters[i].mods.$remove(mods[k]);
           }
         }
-
-        console.log(this.semesters);
       }
     },
     setModuleDetails(mod) {
@@ -615,7 +566,6 @@ export default {
       this.showModal = false;
       this.showAddModal = false;
       this.readData();
-      console.log(this.usergrades);
       this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
@@ -623,36 +573,11 @@ export default {
       this.showAddModal = false;
       this.readData();
     },
-    deleteitem(mod) {
-      mod = mod.mod;
+    deleteitem() {
+    
       this.showDeleteModal = false;
       this.readData();
-      this.deleted = mod.code;
       //delete from this.semesters
-      let sems = this.semesters;
-      var newmods = [];
-      for (var i = 0; i < sems.length; i++) {
-        console.log(sems[i]);
-        console.log(mod);
-        console.log(mod.year);
-        console.log(mod.semester);
-        if (mod.year == sems[i].year && mod.semester == sems[i].semester) {
-          var mods = sems[i].mods;
-          for (var j = 0; j < mods.length; j++) {
-            console.log(mods[j].code != mod.code);
-            console.log(mod.code);
-            console.log(mods[j].code);
-            if (mods[j].code != mod.code) {
-              newmods.push(mods[j]);
-            }
-          }
-          sems[i].mods = newmods;
-        }
-      }
-      console.log(newmods);
-
-      this.semesters = sems;
-      console.log(this.semesters);
       // this.updatefilter(val.year, val.sem);
     },
     readData() {

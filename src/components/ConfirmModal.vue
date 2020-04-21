@@ -25,7 +25,7 @@ export default {
         .then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("deleteitem", {mod: this.mod});
+          this.$root.$emit("deleteitem");
         })
         .catch(() => {
           alert("Fail");
