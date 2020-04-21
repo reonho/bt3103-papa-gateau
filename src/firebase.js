@@ -212,6 +212,7 @@ var database = {
   //=====================================//
   async deleteModuleResults(module_){
     var user = await database.getUser()
+    console.log("deleting data")
     var module_delete = await database.firebase_data
       .collection("module_grades")
       .where("studentID","==",user)
@@ -219,6 +220,7 @@ var database = {
       .get()
     var promise = new Promise((resolve,reject) =>{
       module_delete.forEach(doc=>{
+        console.log(doc.data())
         doc.ref.delete().then(e=>{
           database.updateStudentInfo()
           resolve(e)
@@ -505,6 +507,11 @@ var database = {
     var student_modTaken = await database.getStudentModulesTaken();
     var student_overallCap = await database.getStudentOverallCap();
     var student_samBySem = await database.getStudentSam_by_sem();
+    console.log('hi')
+    console.log(student_att)
+    console.log(student_modTaken)
+    console.log(student_overallCap)
+    console.log(student_samBySem)
     var promise = new Promise((resolve) => {
       database.getUser().then((user) => {
         database.firebase_data
@@ -567,6 +574,8 @@ var database = {
                 }
               });
               resolve(attributes);
+            } else {
+              resolve([])
             }
           });
       });
@@ -595,8 +604,10 @@ var database = {
                   year: ModGrade.year,
                 });
               });
+              resolve(completedMods);
+            } else {
+              resolve ([])
             }
-            resolve(completedMods);
           });
       });
     });
@@ -623,8 +634,10 @@ var database = {
                   noOfModules++;
                 }
               });
-            }
             resolve(totalCap / noOfModules);
+            } else {
+              resolve(0)
+            }
           });
       });
     });
@@ -680,8 +693,11 @@ var database = {
                   }
                 }
               });
+              resolve(sam_by_sem);
+            } else {
+              resolve([])
             }
-            resolve(sam_by_sem);
+
           });
       });
     });
