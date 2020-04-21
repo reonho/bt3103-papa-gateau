@@ -120,26 +120,36 @@ var database = {
               .get()
               .then((snapshot) => {
                 if (snapshot.empty) {
-                  //add module_results
-                  var results = {
-                    SU: result.selectedSU,
-                    attribute: result.selectedModule.slice(0, 2),
-                    course: user_.course,
-                    faculty: user_.faculty,
-                    grade: result.selectedGrade,
-                    module: result.selectedModule,
-                    sem: result.selectedSemester,
-                    studentID: user,
-                    year: result.selectedYear,
-                  };
+                  //check if module exists
                   database.firebase_data
-                    .collection("module_grades")
-                    .add(results);
-
-                  //update student overall cap, modules taken, attributes, cap per semester
-                  database.updateStudentInfo();
-                  //update faculty attributes and number of students taken
-                  resolve("success");
+                    .collection("modules")
+                    .where("info.moduleCode", "==", result.selectedModule)
+                    .get()
+                    .then(snapshot_=>{
+                      if (!snapshot_.empty){
+                        var results = {
+                          SU: result.selectedSU,
+                          attribute: result.selectedModule.slice(0, 2),
+                          course: user_.course,
+                          faculty: user_.faculty,
+                          grade: result.selectedGrade,
+                          module: result.selectedModule,
+                          sem: result.selectedSemester,
+                          studentID: user,
+                          year: result.selectedYear,
+                        };
+                        database.firebase_data
+                          .collection("module_grades")
+                          .add(results);
+                        //update student overall cap, modules taken, attributes, cap per semester
+                        database.updateStudentInfo();
+                        //update faculty attributes and number of students taken
+                        resolve("success");
+                      } else {
+                        reject("Not a valid module!")
+                      }
+                    })
+                  //add module_results
                 } else {
                   reject("module already taken!");
                 }

@@ -197,12 +197,30 @@ export default {
         database.addModuleResults(this.detailsForm).then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
+          
+            this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
+          
+  
         })
-        .catch( () => {
-          database.updateModuleResults(this.detailsForm);
-          alert("Module has been added!");
-          this.$root.$emit("closeModal2");});
+        .catch(error => {
+          if(error == "Not a valid module!"){
+            alert("Invalid Module");
+            this.$root.$emit("closeModal2");
+          }
+          // else if(error == "module already taken!"){
+          //   alert("Module already taken!");
+          //   this.$root.$emit("closeModal2");
+          // }
+          else{
+            database.updateModuleResults(this.detailsForm);
+            this.$root.$emit("closeModal1");
+            alert("Module Successfully Updated!");
+            
+
+          }
+
+        });
+
       }
     }
   },

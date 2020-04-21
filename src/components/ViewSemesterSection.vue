@@ -126,7 +126,7 @@
                     </md-dialog-content>
                   </md-dialog>
 
-                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod.code)">
                     <md-icon>delete</md-icon>
                   </md-button>
                   <md-dialog :md-active.sync="showDeleteModal">
@@ -532,10 +532,10 @@ export default {
           var modules = semesterlist[i].mods;
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
-              modules[k].faculty = list.info.faculty;
-              modules[k].MC = list.info.moduleCredit;
-              modules[k].name = list.info.title;
-              modules[k].department = list.info.department;
+              modules[k].faculty = list.faculty;
+              modules[k].MC = list.moduleCredit;
+              modules[k].name = list.title;
+              modules[k].department = list.department;
             }
           }
         }
