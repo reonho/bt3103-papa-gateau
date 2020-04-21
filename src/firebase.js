@@ -199,19 +199,21 @@ var database = {
   //=====================================//
   //----------- deleteModuleResults -----//
   //=====================================//
-  async deleteModuleResults(module){
+  async deleteModuleResults(module_){
+    var user = await database.getUser()
+    var module_delete = await database.firebase_data
+      .collection("module_grades")
+      .where("studentID","==",user)
+      .where("module",'==',module_)
+      .get()
     var promise = new Promise((resolve,reject) =>{
-      database.getUser().then(user =>{
-        database.firebase_data
-          .collection("module_grades")
-          .where("studentID","==",user)
-          .where("module","==",module)
-          .delete().then(function(){
-            database.updateStudentInfo()
-            resolve(true)
-          }).catch(e =>{
-            reject(e)
-          })
+      module_delete.forEach(doc=>{
+        doc.ref.delete().then(e=>{
+          database.updateStudentInfo()
+          resolve(e)
+        }).catch(e=>{
+          reject(e)
+        })
       })
     })
     return promise
