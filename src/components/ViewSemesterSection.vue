@@ -119,7 +119,7 @@
                         </md-dialog-content>
                     </md-dialog>
 
-                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod.code)">
                     <md-icon>delete</md-icon>
                   </md-button>
                 </span>
