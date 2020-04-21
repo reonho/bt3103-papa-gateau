@@ -61,30 +61,31 @@
         <section id="attributes">
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module</span>
+          >Attributes of top scorers in this module </span>
+          <i class="far fa-question-circle" style="font-size:2vh" title="Average grades of students who have scored A and above in this module."></i>
           <div style="text-align:center;">
             <RadarChart
-              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
-              :my_attr="topAttributes"
-              :fac_attr="myAttributes"
+              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
+              :my_attr="myAttributes"
+              :fac_attr="topAttributes"
               type="Module"
-              label_1="Top Student Attributes"
-              label_2="My Attributes"
+              label_1="My Attributes"
+              label_2="Top Student Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
-              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
-              :my_attr="topAttributes"
-              :fac_attr="null"
+              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
+              :my_attr="null"
+              :fac_attr="topAttributes"
               type="Module"
-              label_1="Top Student Attributes"
-              label_2="My Attributes"
-              style="display: inline-block; width:50%; height:50%; padding-top:2vh"
+              label_1="My Attributes"
+              label_2="Top Student Attributes"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
               style="padding-top:0;"
               id = "statebox"
-              v-if="typeof topAttCheck === 'boolean'"
+              v-else
               md-icon="assessment"
               md-label="Insufficient Data"
             />
@@ -92,7 +93,8 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Statistics</span>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
+          <i class="far fa-question-circle" style="font-size:2vh" title="Statistics collected based on reviews gathered from users below."></i>
           <br />
           <br />
           <b-tabs
@@ -460,7 +462,7 @@
             <a href="#attributes" id="navlink">Top Scorers' Attributes</a>
           </li>
           <li>
-            <a href="#statistics" id="navlink">Statistics</a>
+            <a href="#statistics" id="navlink">Review Statistics</a>
           </li>
           <li>
             <a href="#reviews" id="navlink">Reviews</a>
@@ -482,6 +484,7 @@ import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 
 export default {
+  name: "ModulePage",
   props: {
     code: String
   },
@@ -774,10 +777,10 @@ export default {
           self.topAttCheck = ma[0].att;
         }
       }
-      if (ma != null) {
-        var self = this;
+      //no top students data
+      if (ma !== 'no data') {
         check(self);
-      } else return false;
+      }
     });
   },
   updated() {
@@ -839,11 +842,14 @@ export default {
     chosenSem: function() {
       this.shortload(900);
     },
-    myAttCheck: function() {
-      //console.log(this.myAttCheck)
-    },
     topAttCheck: function() {
-      //console.log(this.topAttCheck)
+      console.log(this.topAttCheck)
+    },
+    topAttributes: function() {
+      console.log(this.topAttributes)
+    },
+    myAttributes: function() {
+      console.log(this.myAttributes)
     }
   }
 };
