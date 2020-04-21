@@ -150,7 +150,7 @@
                     </md-dialog-content>
                   </md-dialog>
 
-                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod.code)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
                     <md-icon>delete</md-icon>
                   </md-button>
                   <md-dialog :md-active.sync="showDeleteModal">
@@ -415,6 +415,10 @@ export default {
     }
   },
   methods: {
+    clearfilter() {
+      this.yearchosen = [];
+      this.semchosen = [];
+    },
     addsem() {
       var semnum = this.semnum;
       var latest = this.User.batch.year;
@@ -618,11 +622,10 @@ export default {
       }
       return total;
     },
-    closeThis1(val) {
+    closeThis1() {
       this.showModal = false;
       this.showAddModal = false;
       this.readData();
-      this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
       this.showModal = false;

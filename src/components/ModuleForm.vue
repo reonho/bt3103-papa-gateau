@@ -201,10 +201,7 @@ export default {
               console.log(e);
               // create an alert saying you have already added this module
 
-              this.$root.$emit("closeModal1", {
-                year: this.detailsForm.selectedYear,
-                sem: this.detailsForm.selectedSemester
-              });
+              this.$root.$emit("closeModal1");
             })
             .catch(error => {
               if (error == "Not a valid module!") {
