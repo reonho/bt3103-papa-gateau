@@ -73,7 +73,7 @@
           <div class="sem-box" v-show="!post.collapse">
             <div class="md-layout sem-content">
               <div class="md-layout-item">
-                <p>Total CAP : {{formatcap(post.cap)}}</p>
+                <p>Total CAP : {{formatcap(post)}}</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
               <div class="md-layout-item">
@@ -113,15 +113,21 @@
                   </md-button>
                   <md-dialog :md-active.sync="showModal">
                     <md-dialog-title>Edit Module for {{modalyear}} {{modalsem}}</md-dialog-title>
-                        <md-dialog-content>
-                            
-                            <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
-                        </md-dialog-content>
-                    </md-dialog>
+                    <md-dialog-content>
+                      <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                    </md-dialog-content>
+                  </md-dialog>
 
-                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod">
                     <md-icon>delete</md-icon>
                   </md-button>
+                  <md-dialog :md-active.sync="showDeleteModal">
+                    <md-dialog-title>Remove {{mod.code}} Module?</md-dialog-title>
+                    <md-dialog-content>
+                      Are You Sure?
+                      <ConfirmModal :code="mod.code" />
+                    </md-dialog-content>
+                  </md-dialog>
                 </span>
               </div>
             </md-list>
@@ -129,14 +135,12 @@
             <div class="mod-list" style="text-align:center" v-show="!showmod(post.mods)">
               <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
               <md-dialog :md-active.sync="showAddModal">
-                    <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
-                        <md-dialog-content>
-                            
-                            <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
-                        </md-dialog-content>
-                    </md-dialog>
+                <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
+                <md-dialog-content>
+                  <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                </md-dialog-content>
+              </md-dialog>
             </div>
-            
           </div>
         </md-list>
       </div>
@@ -151,6 +155,7 @@
 <script>
 //import AddModuleModal from "./AddModuleModal.vue";
 import ModuleForm from "./ModuleForm.vue";
+import ConfirmModal from "./ConfirmModal.vue";
 import database from "../firebase.js";
 export default {
   name: "ViewSemesterSection",
@@ -160,6 +165,7 @@ export default {
   data: () => ({
     showModal: false,
     showAddModal: false,
+    showDeleteModal: false,
     yearlist: [],
     semlist: [],
     grade: null,
@@ -171,19 +177,20 @@ export default {
     modalyear: null,
     modalsem: null,
     currentdetails: [],
-    yearchosen : [],
-    semchosen : []
+    yearchosen: [],
+    semchosen: []
   }),
   components: {
     //AddModuleModal
-    ModuleForm
+    ModuleForm,
+    ConfirmModal
   },
   computed: {
     updatesem() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
       var semesters = [];
-
+ console.log(this.usergrades)
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
         //read in the mods
@@ -254,7 +261,7 @@ export default {
         year: latest,
         semester: latestsem,
         mods: [],
-        cap: 0.00,
+        cap: 0.0,
         collapse: false
       });
 
@@ -288,9 +295,8 @@ export default {
       console.log("ok");
       database.updateModuleResults(mod);
     },
-    deletemod(mod){
-        console.log("ok");
-        database.deleteModuleResults(mod);
+    deletemod() {
+      this.showDeleteModal = true;
     },
     hideContent(sem) {
       let currentsems = this.semesters;
@@ -369,6 +375,22 @@ export default {
         });
       }
     },
+    updateSemestermod(mod) {
+      var semesters = this.semesters;
+      console.log(this.usergrades);
+      for (var i = 0; i < semesters.length; i++) {
+        let mods = semesters[i].mods;
+        console.log(mods);
+        console.log(mod);
+        for (var k = 0; k < mods.length; k++) {
+          if (mods[k].code == mod) {
+            this.semesters[i].mods.$remove(mods[k]);
+          }
+        }
+
+        console.log(this.semesters);
+      }
+    },
     setModuleDetails(mod) {
       database.getModules(mod).then(item => {
         var list = item;
@@ -387,9 +409,18 @@ export default {
       });
     },
 
-    formatcap(cap) {
-  
-      return cap.toFixed(2);
+    formatcap(sem) {
+      var total = 0;
+      var MC = 0;
+      if (sem.mods.length != 0) {
+        for (var i = 0; i < sem.mods.length; i++) {
+          total +=
+            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
+          MC += parseInt(sem.mods[i].MC);
+        }
+        total = total / MC;
+      }
+      return total.toFixed(2);
     },
     formatMC(sem) {
       var total = 0;
@@ -402,12 +433,19 @@ export default {
       this.showModal = false;
       this.showAddModal = false;
       this.readData();
+       console.log(this.usergrades)
       this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
       this.showModal = false;
       this.showAddModal = false;
       this.readData();
+    },
+    deleteitem() {
+      this.showDeleteModal = false;
+      this.readData();
+      console.log(this.usergrades)
+      // this.updatefilter(val.year, val.sem);
     },
     readData() {
       const self = this;
@@ -436,7 +474,6 @@ export default {
 
           self.currentuser = result;
         });
-
     }
   },
 
@@ -449,6 +486,7 @@ export default {
   mounted() {
     this.$root.$on("closeModal1", this.closeThis1);
     this.$root.$on("closeModal2", this.closeThis2);
+    this.$root.$on("deleteitem", this.deleteitem);
   }
 };
 </script>
