@@ -178,7 +178,8 @@ export default {
     modalsem: null,
     currentdetails: [],
     yearchosen: [],
-    semchosen: []
+    semchosen: [],
+    deleted: ""
   }),
   components: {
     //AddModuleModal
@@ -190,43 +191,68 @@ export default {
       let allsems = this.semesters;
       let usermods = this.usergrades;
       var semesters = [];
- console.log(this.usergrades)
+      var correctmods = [];
+      var flagsem = -1;
+      console.log(this.usergrades);
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
+        console.log(this.deleted);
         //read in the mods
-        for (var i = 0; i < Object.keys(usermods).length; i++) {
-          let mod = usermods[i];
+        if (this.deleted != "") {
+          //one mod has been deleted
+          for (var n = 0; n < sem.mods.length; n++) {
+            var modcode = sem.mods[n].code;
 
-          if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
-            var result = {
-              code: mod.module,
-              grade: mod.grade,
-              SU: mod.SU,
-              faculty: null,
-              MC: 0,
-              department: null,
-              name: null
-            };
-            //check if its in the mods
-            var flag = false;
-            for (var t = 0; t < sem.mods.length; t++) {
-              var modcode = sem.mods[t].code;
-              if (modcode == mod.module) {
-                //exists
-                flag = true;
-              }
-            }
-            if (flag) {
-              continue;
+             
+            if (modcode != this.deleted) {
+              //exists
+              correctmods.push(sem.mods[n]);
+              
             } else {
-              //fill in the other details
-              this.setModuleDetails(result.code);
+              flagsem = k;
+            }
+          }
+        } else {
+          for (var i = 0; i < Object.keys(usermods).length; i++) {
+            let mod = usermods[i];
 
-              sem.mods.push(result);
+            if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
+              var result = {
+                code: mod.module,
+                grade: mod.grade,
+                SU: mod.SU,
+                faculty: null,
+                MC: 0,
+                department: null,
+                name: null
+              };
+              //check if its in the mods
+              var flag = false;
+              for (var t = 0; t < sem.mods.length; t++) {
+                if (sem.mods[t].code == mod.module) {
+                  //exists
+                  flag = true;
+                }
+              }
+              if (flag) {
+                continue;
+              } else {
+                //fill in the other details
+                this.setModuleDetails(result.code);
+
+                sem.mods.push(result);
+              }
             }
           }
         }
+
         semesters.push(sem);
+      }
+      if (flagsem != -1) {
+        semesters[flagsem].mods = correctmods;
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.deleted = "";
+        
       }
 
       return semesters;
@@ -326,7 +352,7 @@ export default {
       let sems = this.User.sap_by_sem;
       var years = [];
       var semesters = [];
-
+console.log(sems)
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
@@ -433,7 +459,7 @@ export default {
       this.showModal = false;
       this.showAddModal = false;
       this.readData();
-       console.log(this.usergrades)
+      console.log(this.usergrades);
       this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
@@ -441,10 +467,10 @@ export default {
       this.showAddModal = false;
       this.readData();
     },
-    deleteitem() {
+    deleteitem(mod) {
       this.showDeleteModal = false;
       this.readData();
-      console.log(this.usergrades)
+      this.deleted = mod.code;
       // this.updatefilter(val.year, val.sem);
     },
     readData() {
