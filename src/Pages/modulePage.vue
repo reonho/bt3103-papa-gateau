@@ -61,7 +61,8 @@
         <section id="attributes">
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module</span>
+          >Attributes of top scorers in this module </span>
+          <i class="far fa-question-circle" style="font-size:2vh" title="Average grades of students who have scored A in this module."></i>
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
@@ -92,7 +93,8 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Statistics</span>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
+          <i class="far fa-question-circle" style="font-size:2vh" title="Statistics collected based on reviews gathered from users below."></i>
           <br />
           <br />
           <b-tabs
@@ -460,7 +462,7 @@
             <a href="#attributes" id="navlink">Top Scorers' Attributes</a>
           </li>
           <li>
-            <a href="#statistics" id="navlink">Statistics</a>
+            <a href="#statistics" id="navlink">Review Statistics</a>
           </li>
           <li>
             <a href="#reviews" id="navlink">Reviews</a>
