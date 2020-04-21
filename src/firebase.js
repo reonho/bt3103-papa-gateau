@@ -215,18 +215,6 @@ var database = {
           reject(e)
         })
       })
-      // database.getUser().then(user =>{
-      //   database.firebase_data
-      //     .collection("module_grades")
-      //     .where("studentID","==",user)
-      //     .where("module","==",module)
-      //     .delete().then(function(){
-      //       database.updateStudentInfo()
-      //       resolve(true)
-      //     }).catch(e =>{
-      //       reject(e)
-      //     })
-      //})
     })
     return promise
   },
