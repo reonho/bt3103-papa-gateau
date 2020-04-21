@@ -70,11 +70,11 @@
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
-              :my_attr="myAttributes"
-              :fac_attr="topAttributes"
+              :my_attr="topAttributes"
+              :fac_attr="myAttributes"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
@@ -82,8 +82,8 @@
               :my_attr="topAttributes"
               :fac_attr="null"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
