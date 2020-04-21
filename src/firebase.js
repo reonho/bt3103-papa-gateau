@@ -734,7 +734,8 @@ var database = {
                 if (ModGrade.SU == "No") {
                   if (sam_by_sem.empty) {
                     sam_by_sem.push({
-                      amt: 1,
+
+                      amt: 0,
                       cap: database.convertCap(ModGrade.grade),
                       sem: ModGrade.sem,
                       year: ModGrade.year,
@@ -757,7 +758,7 @@ var database = {
                     }
                     if (!flag) {
                       sam_by_sem.push({
-                        amt: 1,
+                        amt: 0,
                         cap: database.convertCap(ModGrade.grade),
                         sem: ModGrade.sem,
                         year: ModGrade.year,
