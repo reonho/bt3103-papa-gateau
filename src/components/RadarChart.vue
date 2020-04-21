@@ -63,7 +63,7 @@ export default {
         },
 
         legend: {
-          position:'top'
+          position: "top"
         },
 
         title: {
@@ -185,13 +185,12 @@ export default {
   },
   computed: {
     showEmpty() {
-      if (this.type === 'Faculty' && this.my_attr.length === 0) {
-        return true
+      if (this.type === "Faculty" && this.my_attr.length === 0) {
+        return true;
       }
-      return false
+      return false;
     }
   }
-
 };
 </script>
 

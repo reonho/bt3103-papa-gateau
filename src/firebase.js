@@ -199,19 +199,21 @@ var database = {
   //=====================================//
   //----------- deleteModuleResults -----//
   //=====================================//
-  async deleteModuleResults(module){
+  async deleteModuleResults(module_){
+    var user = await database.getUser()
+    var module_delete = await database.firebase_data
+      .collection("module_grades")
+      .where("studentID","==",user)
+      .where("module",'==',module_)
+      .get()
     var promise = new Promise((resolve,reject) =>{
-      database.getUser().then(user =>{
-        database.firebase_data
-          .collection("module_grades")
-          .where("studentID","==",user)
-          .where("module","==",module)
-          .delete().then(function(){
-            database.updateStudentInfo()
-            resolve(true)
-          }).catch(e =>{
-            reject(e)
-          })
+      module_delete.forEach(doc=>{
+        doc.ref.delete().then(e=>{
+          database.updateStudentInfo()
+          resolve(e)
+        }).catch(e=>{
+          reject(e)
+        })
       })
     })
     return promise
@@ -869,45 +871,47 @@ var database = {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+        .then(()=>{
+          database.firebase_data
+            .collection("departments")
+            .where("courses", "array-contains", course_)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc_) => {
+                var department = doc_.data().name;
+                database.firebase_data
+                  .collection("faculties")
+                  .where("departments", "array-contains", department)
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.forEach((_doc_) => {
+                      var faculty_ = _doc_.data().name;
+                      database.getUser().then((doc) => {
+                        database.firebase_data
+                          .collection("students")
+                          .doc(doc)
+                          .set({
+                            attributes: [],
+                            batch: enrolmentBatch,
+                            course: course_,
+                            name: name_,
+                            current_sem: {},
+                            dept: department,
+                            faculty: faculty_,
+                            modules_taken: [],
+                            overall_cap: 0,
+                            sam_by_sem: [{}, {}, {}, {}, {}, {}, {}, {}],
+                          });
+                        resolve("account created!");
+                      });
+                    });
+                  });
+              });
+            });
+        })
         .catch(function (error) {
           var errorMessage = error.message;
           reject(errorMessage);
-        });
-      database.firebase_data
-        .collection("departments")
-        .where("courses", "array-contains", course_)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc_) => {
-            var department = doc_.data().name;
-            database.firebase_data
-              .collection("faculties")
-              .where("departments", "array-contains", department)
-              .get()
-              .then((snapshot) => {
-                snapshot.forEach((_doc_) => {
-                  var faculty_ = _doc_.data().name;
-                  database.getUser().then((doc) => {
-                    database.firebase_data
-                      .collection("students")
-                      .doc(doc)
-                      .set({
-                        attributes: [],
-                        batch: enrolmentBatch,
-                        course: course_,
-                        name: name_,
-                        current_sem: {},
-                        dept: department,
-                        faculty: faculty_,
-                        modules_taken: [],
-                        overall_cap: 0,
-                        sam_by_sem: [{}, {}, {}, {}, {}, {}, {}, {}],
-                      });
-                    resolve("account created!");
-                  });
-                });
-              });
-          });
         });
     });
     return promise;

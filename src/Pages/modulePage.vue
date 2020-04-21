@@ -3,42 +3,42 @@
     <NavBar />
     <main>
       <div id="modulePage" style="margin-top:5vh;">
-        <title>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
+        <title>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</title>
         <section id="details">
           <div style="color:#EC7663; margin-left: 1vw;" class="header">
-            <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
+            <b>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</b>
           </div>
 
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
+          >{{this.Module.info.department}} • {{this.Module.info.faculty}} • {{this.Module.info.moduleCredit}} MCs</div>
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{showsem(this.Modules[0].info.semesterData)}}</div>
+          >{{showsem(this.Module.info.semesterData)}}</div>
           <hr />
           <div style="margin-left: 1vw; margin-right:1vw;font-size:2vh">
-            {{this.Modules[0].info.description}}
+            {{this.Module.info.description}}
             <br />
             <br />
             <div class="row">
               <div class="col-4" style="text-align:left">
-                <span v-if="this.Modules[0].info.preclusion">
+                <span v-if="this.Module.info.preclusion">
                   <b style="color: #616a6b">Preclusion(s)</b>
                   <br />
-                  <span>{{this.Modules[0].info.preclusion}}</span>
+                  <span>{{this.Module.info.preclusion}}</span>
                   <br />
                   <br />
                 </span>
-                <span v-if="this.Modules[0].info.prerequisite">
+                <span v-if="this.Module.info.prerequisite">
                   <b style="color: #616a6b">Prerequisite(s)</b>
                   <br />
-                  {{this.Modules[0].info.prerequisite}}
+                  {{this.Module.info.prerequisite}}
                   <br />
                   <br />
                 </span>
-                <p v-for="sem in checksemester(this.Modules[0])" v-bind:key="sem.index">
+                <p v-for="sem in checksemester(this.Module)" v-bind:key="sem.index">
                   <span v-if="sem.disabled == ''">
                     <b style="color: #616a6b">
                       {{ sem.semester }} Exam
@@ -51,8 +51,8 @@
                 <br />
               </div>
               <div class="col-8">
-                <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
-                <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
+                <b style="color: #616a6b">Workload - {{calcwork(this.Module) + " hours"}}</b>
+                <workloadchart :seriesStats="formatwork(this.Module.info.workload)"></workloadchart>
               </div>
             </div>
           </div>
@@ -62,37 +62,48 @@
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
           >Attributes of top scorers in this module</span>
-          <div style="text-align:center; margin-top:4vh; margin-bottom:15vh">
+          <i
+            class="far fa-question-circle"
+            style="font-size:2vh"
+            title="Average grades of students who have scored A and above in this module."
+          ></i>
+          <div style="text-align:center;">
             <RadarChart
-              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
-              :my_attr="topAttributes"
-              :fac_attr="myAttributes"
+              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
+              :my_attr="myAttributes"
+              :fac_attr="topAttributes"
               type="Module"
-              label_1="Top Student Attributes"
-              label_2="My Attributes"
-              style="display: inline-block; width:50vw; height:50vh;"
+              label_1="My Attributes"
+              label_2="Top Student Attributes"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
-              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
+              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
-              :fac_attr="null"
+              :fac_attr='null'
               type="Module"
-              label_1="Top Student Attributes"
-              label_2="My Attributes"
-              style="display: inline-block; width:50vw; height:50vh;"
+              label_1="My Attributes"
+              label_2="Top Student Attributes"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
               v-if="topAttributes === 'no data'"
+              style="padding-top:0;"
+              id="statebox"
               md-description="There is insufficient data for this module."
               md-icon="assessment"
               md-label="Insufficient Data"
-              style="display: inline-block; width:50vw; height:50vh;"
             />
           </div>
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Statistics</span>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics</span>
+          <i
+            class="far fa-question-circle"
+            style="font-size:2vh"
+            title="Statistics collected based on reviews gathered from users below."
+          ></i>
           <br />
           <br />
           <b-tabs
@@ -104,7 +115,7 @@
             lazy
           >
             <b-tab
-              v-for="sem in checksemester(this.Modules[0])"
+              v-for="sem in checksemester(this.Module)"
               v-bind:key="sem.index"
               :title="sem.semester"
               :title-link-class="sem.disabled"
@@ -385,14 +396,14 @@
                     <br />
                   </div>
 
-                  <div style="width: 100vw;" v-show="loading">
+                  <div style="width: 100%;" v-show="loading">
                     <md-empty-state
                       id="statebox"
                       style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
                       md-label="Loading..."
                     >
                       <br />
-                      <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
+                      <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
                     </md-empty-state>
                   </div>
                 </div>
@@ -460,7 +471,7 @@
             <a href="#attributes" id="navlink">Top Scorers' Attributes</a>
           </li>
           <li>
-            <a href="#statistics" id="navlink">Statistics</a>
+            <a href="#statistics" id="navlink">Review Statistics</a>
           </li>
           <li>
             <a href="#reviews" id="navlink">Reviews</a>
@@ -505,8 +516,7 @@ export default {
         let sem = this.reviewData[docu].detailsForm.selectedSemester;
         if (
           isNaN(sem)
-            ? sem.includes("Semester " + (this.chosenSem + 1)) ||
-              sem.includes("Special Term " + (this.chosenSem - 1))
+            ? sem.includes("Semester " + (this.chosenSem + 1))
             : sem == this.chosenSem
         ) {
           years.push(this.reviewData[docu].detailsForm.selectedYear);
@@ -552,7 +562,7 @@ export default {
               if (rev === null) {
                 this.$router.push({
                   name: "ReviewForm",
-                  params: { mod: this.Modules[0].info.moduleCode }
+                  params: { mod: this.Module.info.moduleCode }
                 });
               } else {
                 //user has already written a review, prompt them
@@ -635,20 +645,6 @@ export default {
           examDate: null,
           examDuration: 0,
           active: false
-        },
-        {
-          semester: "Special Term I",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
-        },
-        {
-          semester: "Special Term II",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
         }
       ];
       var num = arr.length;
@@ -703,12 +699,7 @@ export default {
       var totalsems = "";
       var num = sem.length;
       for (var i = 0; i < num; i++) {
-        var semesters = [
-          "Semester 1",
-          "Semester 2",
-          "Special Term I",
-          "Special Term II"
-        ];
+        var semesters = ["Semester 1", "Semester 2"];
         if (sem[i].semester == 3) {
           totalsems += semesters[2] + " • ";
         } else if (sem[i].semester == 4) {
@@ -762,7 +753,7 @@ export default {
       });
     //get module details
     database.getModules(this.code).then(item => {
-      this.Modules.push(item);
+      this.Module = item;
     });
 
     database.firebase_data
@@ -792,28 +783,28 @@ export default {
           await sleep(2000);
         }
         self.topAttCheck = ma[0].att;
-        
       }
       //no top students data
-      if (ma !== 'no data') {
+      if (ma !== "no data") {
         check(self);
       }
     });
   },
   updated() {
+    // For the scrollspy
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         const id = entry.target.getAttribute("id");
-        if (entry.intersectionRatio > 0) {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.add("active");
-          // console.log("hi");
-          // console.log(id);
-        } else {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.remove("active");
+        if (document.querySelector(`nav li a[href="#${id}"]`) !== null) {
+          if (entry.intersectionRatio > 0) {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.add("active");
+          } else {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.remove("active");
+          }
         }
       });
     });
@@ -849,7 +840,19 @@ export default {
     infodes: null,
     module_code: "",
     chosenSem: 0,
-    Modules: []
+    Module: {
+      info: {
+        department: "",
+        description: "",
+        faculty: "",
+        moduleCode: "",
+        moduleCredit: "",
+        prerequisite: "",
+        semesterData: [],
+        title: "",
+        workload: []
+      }
+    }
   }),
   watch: {
     yrs: function() {
@@ -857,6 +860,15 @@ export default {
     },
     chosenSem: function() {
       this.shortload(900);
+    },
+    topAttCheck: function() {
+      console.log(this.topAttCheck);
+    },
+    topAttributes: function() {
+      console.log(this.topAttributes);
+    },
+    myAttributes: function() {
+      console.log(this.myAttributes);
     }
   }
 };
@@ -986,4 +998,3 @@ span {
   opacity: 0.5;
 }
 </style>
-

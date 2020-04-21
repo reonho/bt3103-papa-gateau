@@ -8,6 +8,7 @@
     <div class="empty-state" id="EmptyState" v-show="hasReviews===false">
       <md-empty-state
         style="color: #2e4053 !important;"
+        id="statebox"
         md-icon="post_add"
         md-label="No Reviews"
         md-description="There are no reviews yet. Write a review now!"

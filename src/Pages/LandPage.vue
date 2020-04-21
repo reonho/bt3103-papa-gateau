@@ -245,6 +245,7 @@ export default {
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
+          console.log(doc.module.length)
         });
         // query database for course attributes
         // database.getModuleAttributes("BT2101").then(r => {
