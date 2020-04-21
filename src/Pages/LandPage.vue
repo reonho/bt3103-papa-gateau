@@ -7,7 +7,6 @@
           <div class="md-layout-item md-size-85">
             <h1 class="header">
               Welcome to your dashboard, {{User.name}}
-              <!--button v-on:click="readDatabase">Greet</button-->
             </h1>
           </div>
           <div class="md-layout-item md-size-15">
@@ -141,6 +140,13 @@ export default {
     };
   },
   methods: {
+    // tester method
+    test(){
+      database.getNUSAttributes().then(e =>{
+        console.log(e)
+      })
+
+    },
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
