@@ -453,11 +453,13 @@
               md-confirm-text="Okay"
               md-title="Review already exists"
             />
-            <md-dialog-alert
+            <md-dialog-confirm
               :md-active.sync="showAddDialog"
-              md-content="Please add the module first before writing a review."
-              md-confirm-text="Okay"
+              md-content="Please add the module to your dashboard before writing a review."
+              md-confirm-text="Bring me there"
               md-title="Module not added"
+              md-cancel-text='Cancel'
+              @md-confirm="goLand"
             />
           </div>
         </section>
@@ -526,6 +528,9 @@ export default {
     }
   },
   methods: {
+    goLand() {
+      this.$router.push({name: 'LandPage'})
+    },
     countInArray(array, value) {
       return array.reduce((n, x) => n + (x === value), 0);
     },
