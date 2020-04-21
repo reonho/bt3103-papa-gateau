@@ -307,6 +307,8 @@ export default {
     },
     accumulatesems() {
       let sems = this.User.sap_by_sem;
+      var years = [];
+      var semesters = [];
 
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
