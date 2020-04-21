@@ -507,11 +507,6 @@ var database = {
     var student_modTaken = await database.getStudentModulesTaken();
     var student_overallCap = await database.getStudentOverallCap();
     var student_samBySem = await database.getStudentSam_by_sem();
-    console.log('hi')
-    console.log(student_att)
-    console.log(student_modTaken)
-    console.log(student_overallCap)
-    console.log(student_samBySem)
     var promise = new Promise((resolve) => {
       database.getUser().then((user) => {
         database.firebase_data
