@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-side-effects-in-computed-properties */
 <template>
   <div id="ViewSemesterSection">
     <div>
@@ -197,85 +196,6 @@ export default {
   },
   computed: {
     updatesem() {
-      let sems = this.User.sap_by_sem;
-      let semesters = [];
-      var years = [];
-      var semesterslist = [];
-      console.log(sems);
-      for (var i = 0; i < sems.length; i++) {
-        if (Object.keys(sems[i]).length > 0) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.semnum++;
-
-          if (!years.includes(sems[i].year)) {
-            years.push(sems[i].year);
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.yearlist.push({
-              value: sems[i].year
-            });
-          }
-          if (!semesterslist.includes(sems[i].sem)) {
-            semesterslist.push(sems[i].sem);
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.semlist.push({
-              value: sems[i].sem
-            });
-          }
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          semesters.push({
-            year: sems[i].year,
-            semester: sems[i].sem,
-            mods: [],
-            cap: sems[i].cap,
-            collapse: false
-          });
-        }
-      }
-      
-
-      for (var k = 0; k < semesters.length; k++) {
-        let usermods = this.usergrades;
-        let sem = semesters[k];
-
-        for (var j = 0; i < Object.keys(usermods).length; j++) {
-          let mod = usermods[j];
-
-          if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
-            var result = {
-              code: mod.module,
-              grade: mod.grade,
-              SU: mod.SU,
-              faculty: null,
-              MC: 0,
-              department: null,
-              name: null,
-              year: sem.year,
-              semester: sem.semester
-            };
-            //check if its in the mods
-            var flag = false;
-            for (var t = 0; t < sem.mods.length; t++) {
-              if (sem.mods[t].code == mod.module) {
-                //exists
-                flag = true;
-              }
-            }
-            if (flag) {
-              continue;
-            } else {
-              //fill in the other details
-              this.setModuleDetails(result.code);
-
-              sem.mods.push(result);
-            }
-          }
-        }
-      }
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.semesters = semesters;
-      return semesters;
-    },
-    updatesem2() {
       let allsems = this.semesters;
       let usermods = this.usergrades;
       var semesters = [];
@@ -286,6 +206,21 @@ export default {
       for (var k = 0; k < this.semnum; k++) {
         let sem = allsems[k];
         console.log(this.deleted);
+        //read in the mods
+        // if (this.deleted != "") {
+        //   //one mod has been deleted
+        //   for (var n = 0; n < sem.mods.length; n++) {
+        //     var modcode = sem.mods[n].code;
+
+        //     if (modcode != this.deleted) {
+        //       //exists
+        //       correctmods.push(sem.mods[n]);
+
+        //     } else {
+        //       flagsem = k;
+        //     }
+        //   }
+        // } else {
         for (var i = 0; i < Object.keys(usermods).length; i++) {
           let mod = usermods[i];
 
@@ -339,28 +274,25 @@ export default {
   },
   methods: {
     addsem() {
-      var semnum = Object.keys(this.User.sap_by_sem).length;
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-      console.log(latestsem)
-      console.log(semnum)
-      if (semnum > 0) {
-        latestsem = this.semesters[semnum - 1].semester;
+      if (this.semnum > 0) {
+        latestsem = this.semesters[this.semnum - 1].semester;
         if (latestsem == "Semester 1") {
-          latest = this.semesters[semnum - 1].year;
+          latest = this.semesters[this.semnum - 1].year;
           latestsem = "Semester 2";
           latestsem = "Semester 2";
         } else {
           var latest1 =
-            parseInt(this.semesters[semnum - 1].year.substring(2, 4)) + 1;
+            parseInt(this.semesters[this.semnum - 1].year.substring(2, 4)) + 1;
           var latest2 =
-            parseInt(this.semesters[semnum - 1].year.substring(4, 6)) + 1;
+            parseInt(this.semesters[this.semnum - 1].year.substring(4, 6)) + 1;
           latest = "AY" + latest1 + latest2;
           latestsem = "Semester 1";
           latestsem = "Semester 1";
         }
       }
-      /*
+
       this.semesters.push({
         year: latest,
         semester: latestsem,
@@ -368,30 +300,8 @@ export default {
         cap: 0.0,
         collapse: false
       });
-      */
 
-      //insert dummy module
-
-      var dummy = {
-        SU: "No",
-        attribute: "CS",
-        course: "Business Analytics",
-        faculty: "Computing",
-        grade: "",
-        module: "",
-        sem: latestsem,
-        year: latest
-      };
-      database
-        .addModuleDummy(dummy)
-        .then(e => {
-          console.log(e);
-          
-          // create an alert saying you have already added this module
-        })
-        .catch(() => {
-          alert("dummy Module has been added!");
-        });
+      this.semnum++;
     },
 
     showmod: function(mods) {
@@ -578,16 +488,18 @@ export default {
       let sems = this.semesters;
       var newmods = [];
       for (var i = 0; i < sems.length; i++) {
-        console.log(sems[i]);
-        console.log(mod);
-        console.log(mod.year);
-        console.log(mod.semester);
+
+       
+        console.log(sems[i])
+        console.log(mod)
+console.log(mod.year)
+console.log(mod.semester)
         if (mod.year == sems[i].year && mod.semester == sems[i].semester) {
           var mods = sems[i].mods;
           for (var j = 0; j < mods.length; j++) {
-            console.log(mods[j].code != mod.code);
-            console.log(mod.code);
-            console.log(mods[j].code);
+            console.log(mods[j].code != mod.code)
+            console.log(mod.code)
+            console.log(mods[j].code)
             if (mods[j].code != mod.code) {
               newmods.push(mods[j]);
             }
@@ -595,8 +507,8 @@ export default {
           sems[i].mods = newmods;
         }
       }
-      console.log(newmods);
-
+      console.log(newmods)
+      
       this.semesters = sems;
       console.log(this.semesters);
       // this.updatefilter(val.year, val.sem);
@@ -632,7 +544,7 @@ export default {
   },
 
   created() {
-    //this.accumulatesems();
+    this.accumulatesems();
     database.getModuleResults().then(item => {
       this.usergrades = item;
     });
