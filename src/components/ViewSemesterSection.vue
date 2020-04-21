@@ -90,7 +90,12 @@
 
             <md-list v-for="mod in post.mods" v-bind:key="mod.index" class="mod-list">
               <div class="mod-card">
-                <p class="mod-name">{{mod.code}} {{mod.name}}</p>
+                <p class="mod-name"><router-link
+                  class="mod-name"
+                  :to="'/'+mod.code"
+                  style="color:#EC7663;"
+                >{{mod.code}} {{mod.name}}</router-link></p>
+                
                 <p>{{mod.department}} • {{mod.faculty}} • {{mod.MC}} MCs</p>
                 <div class="md-layout mod-content">
                   <div class="md-layout-item">
