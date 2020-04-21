@@ -157,7 +157,7 @@
                     <md-dialog-title>Remove {{code}} Module?</md-dialog-title>
                     <md-dialog-content>
                       Are You Sure?
-                      <ConfirmModal :mod="mod" />
+                      <ConfirmModal :module="module" />
                     </md-dialog-content>
                   </md-dialog>
                 </span>
@@ -218,7 +218,8 @@ export default {
     yearchosen: [],
     semchosen: [],
     deleted: "",
-    code: ""
+    code: "",
+    module: ""
   }),
   components: {
     //AddModuleModal
@@ -490,7 +491,7 @@ export default {
       database.updateModuleResults(mod);
     },
     deletemod(mod) {
-      this.mod = mod;
+      this.module = mod;
       this.code = mod.code;
       console.log(mod);
       this.showDeleteModal = true;

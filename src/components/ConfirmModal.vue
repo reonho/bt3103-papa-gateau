@@ -14,14 +14,15 @@ export default {
 
   data: () => ({}),
   props: {
-    mod: Object
+    module: Object
   },
   components: {},
   methods: {
     deletemod() {
       console.log("ok");
+      console.log(this.module)
       database
-        .deleteModuleResults(this.mod.code)
+        .deleteModuleResults(this.module.code)
         .then(e => {
           console.log(e);
           // create an alert saying you have already added this module
