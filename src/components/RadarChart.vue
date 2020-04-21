@@ -35,7 +35,7 @@ export default {
     label_1: String,
     label_2: String
   },
-   computed: {
+  computed: {
     showEmpty() {
       if (this.my_attr.length == 0) {
         return true;
@@ -71,7 +71,7 @@ export default {
         },
 
         legend: {
-          position:'top'
+          position: "top"
         },
 
         title: {
@@ -118,14 +118,16 @@ export default {
       var len = my_attr.length;
       var lenf = fac_attr.length;
       for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].att;
-        attr_labels.push(m_code);
-        var m_val = my_attr[i].grade;
-        my_attrs.push(m_val);
-        for (let u = 0; u < lenf; u++) {
-          var f_code = fac_attr[u].att;
-          if (f_code == m_code) {
-            fac_attrs.push(fac_attr[u].grade);
+        if (my_attr[i].att != "") {
+          var m_code = my_attr[i].att;
+          attr_labels.push(m_code);
+          var m_val = my_attr[i].grade;
+          my_attrs.push(m_val);
+          for (let u = 0; u < lenf; u++) {
+            var f_code = fac_attr[u].att;
+            if (f_code == m_code) {
+              fac_attrs.push(fac_attr[u].grade);
+            }
           }
         }
       }
@@ -191,7 +193,6 @@ export default {
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
   }
-
 };
 </script>
 

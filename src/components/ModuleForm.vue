@@ -193,6 +193,7 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("ok");
+        
         database.addModuleResults(this.detailsForm).then(e => {
           console.log(e);
           // create an alert saying you have already added this module

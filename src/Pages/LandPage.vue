@@ -209,7 +209,12 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-     
+        var attr = [];
+        for (var i = 0; i < userData.attributes.length; i++) {
+            if (userData.attributes[i] != "") {
+              attr.push(userData.attributes[i])
+            }
+        }
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -220,7 +225,7 @@ export default {
           overall_cap: userData.overall_cap,
           batch: userData.batch, // for querying cohort top modules
           modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-          attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          attributes: attr //individual attributes can be found in self.User.attributes
         };
 
         self.User = result;

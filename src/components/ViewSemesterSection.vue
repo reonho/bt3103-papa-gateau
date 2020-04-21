@@ -197,73 +197,122 @@ export default {
   },
   computed: {
     updatesem() {
+      var semnum = 0;
       let sems = this.User.sap_by_sem;
       let semesters = [];
       var years = [];
       var semesterslist = [];
-      console.log(sems);
-      for (var i = 0; i < sems.length; i++) {
-        if (Object.keys(sems[i]).length > 0) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.semnum++;
+      var batchyr = this.User.batch.year;
+      var flag = sems.length;
+      var flag2 = false;
+      var latest = this.User.batch.year;
+      console.log(latest)
+      var latestsem = "Semester 1";
+      while (flag > 0) {
+        var flag3 = false;
+        for (var i = 0; i < sems.length; i++) {
+          if (Object.keys(sems[i]).length > 0) {
+            if (
+              semnum == 0 &&
+              batchyr == sems[i].year &&
+              latestsem == "Semester 1"
+            ) {
+              if (!years.includes(sems[i].year)) {
+                years.push(sems[i].year);
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                this.yearlist.push({
+                  value: sems[i].year
+                });
+              }
+              if (!semesterslist.includes(sems[i].sem)) {
+                semesterslist.push(sems[i].sem);
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                this.semlist.push({
+                  value: sems[i].sem
+                });
+              }
 
-          if (!years.includes(sems[i].year)) {
-            years.push(sems[i].year);
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.yearlist.push({
-              value: sems[i].year
-            });
+              semesters.push({
+                year: sems[i].year,
+                semester: sems[i].sem,
+                mods: [],
+                cap: sems[i].cap,
+                collapse: false
+              });
+              flag2 = true;
+              flag--;
+              semnum++;
+              break;
+            } else if (flag2) {
+              if (flag3 == false) {
+              if (latestsem == "Semester 1") {
+                latestsem = "Semester 2";
+              } else {
+                var latest1 = parseInt(latest.substring(2, 4)) + 1;
+                var latest2 = parseInt(latest.substring(4, 6)) + 1;
+                latest = "AY" + latest1 + latest2;
+                latestsem = "Semester 1";
+              }
+              flag3 = true;
+              }
+              if (latest == sems[i].year && latestsem == sems[i].sem) {
+                flag3 = false;
+                if (!years.includes(sems[i].year)) {
+                  years.push(sems[i].year);
+                  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                  this.yearlist.push({
+                    value: sems[i].year
+                  });
+                }
+                if (!semesterslist.includes(sems[i].sem)) {
+                  semesterslist.push(sems[i].sem);
+                  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                  this.semlist.push({
+                    value: sems[i].sem
+                  });
+                }
+
+                semesters.push({
+                  year: sems[i].year,
+                  semester: sems[i].sem,
+                  mods: [],
+                  cap: sems[i].cap,
+                  collapse: false
+                });
+                flag--;
+                semnum++;
+                break;
+              }
+            } else {
+              continue;
+            }
           }
-          if (!semesterslist.includes(sems[i].sem)) {
-            semesterslist.push(sems[i].sem);
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.semlist.push({
-              value: sems[i].sem
-            });
-          }
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          semesters.push({
-            year: sems[i].year,
-            semester: sems[i].sem,
-            mods: [],
-            cap: sems[i].cap,
-            collapse: false
-          });
         }
       }
-      
 
       for (var k = 0; k < semesters.length; k++) {
-        let usermods = this.usergrades;
+        var usermods = this.usergrades;
+        console.log(usermods);
         let sem = semesters[k];
 
-        for (var j = 0; i < Object.keys(usermods).length; j++) {
+        for (var j = 0; j < Object.keys(usermods).length; j++) {
           let mod = usermods[j];
-
+          console.log(mod);
           if ((mod.sem == sem.semester) & (mod.year == sem.year)) {
-            var result = {
-              code: mod.module,
-              grade: mod.grade,
-              SU: mod.SU,
-              faculty: null,
-              MC: 0,
-              department: null,
-              name: null,
-              year: sem.year,
-              semester: sem.semester
-            };
-            //check if its in the mods
-            var flag = false;
-            for (var t = 0; t < sem.mods.length; t++) {
-              if (sem.mods[t].code == mod.module) {
-                //exists
-                flag = true;
-              }
-            }
-            if (flag) {
-              continue;
-            } else {
-              //fill in the other details
+            if (mod.module != "") {
+              var result = {
+                code: mod.module,
+                grade: mod.grade,
+                SU: mod.SU,
+                faculty: null,
+                MC: 0,
+                department: null,
+                name: null,
+                year: sem.year,
+                semester: sem.semester
+              };
+              //check if its in the mods
+
               this.setModuleDetails(result.code);
 
               sem.mods.push(result);
@@ -273,6 +322,8 @@ export default {
       }
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.semesters = semesters;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.semnum = semnum;
       return semesters;
     },
     updatesem2() {
@@ -339,11 +390,13 @@ export default {
   },
   methods: {
     addsem() {
-      var semnum = Object.keys(this.User.sap_by_sem).length;
+      var semnum = this.semnum;
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-      console.log(latestsem)
-      console.log(semnum)
+
+      console.log(this.semesters);
+      //check if prev sem is filled with modules
+
       if (semnum > 0) {
         latestsem = this.semesters[semnum - 1].semester;
         if (latestsem == "Semester 1") {
@@ -357,9 +410,10 @@ export default {
             parseInt(this.semesters[semnum - 1].year.substring(4, 6)) + 1;
           latest = "AY" + latest1 + latest2;
           latestsem = "Semester 1";
-          latestsem = "Semester 1";
         }
       }
+      console.log(latestsem);
+      console.log(semnum);
       /*
       this.semesters.push({
         year: latest,
@@ -374,9 +428,9 @@ export default {
 
       var dummy = {
         SU: "No",
-        attribute: "CS",
+        attribute: "",
         course: "Business Analytics",
-        faculty: "Computing",
+        faculty: "",
         grade: "",
         module: "",
         sem: latestsem,
@@ -386,12 +440,11 @@ export default {
         .addModuleDummy(dummy)
         .then(e => {
           console.log(e);
-          
+          alert("dummy Module has been added!");
+          this.readData();
           // create an alert saying you have already added this module
         })
-        .catch(() => {
-          alert("dummy Module has been added!");
-        });
+        .catch(() => {});
     },
 
     showmod: function(mods) {
@@ -424,6 +477,7 @@ export default {
     },
     deletemod(mod) {
       this.mod = mod;
+      this.code = mod.code;
       this.showDeleteModal = true;
     },
     hideContent(sem) {
