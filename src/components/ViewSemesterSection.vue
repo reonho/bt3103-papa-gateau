@@ -11,7 +11,7 @@
                 :key="year.index"
                 :id="year.value"
                 v-model="year.value"
-              >Year {{ year.value }}</md-option>
+              >{{ year.value }}</md-option>
             </md-select>
           </md-field>
         </div>
@@ -25,7 +25,7 @@
                 :key="sem.index"
                 :id="sem.value"
                 v-model="sem.value"
-              >Semster {{ sem.value }}</md-option>
+              >{{ sem.value }}</md-option>
             </md-select>
           </md-field>
         </div>
@@ -112,7 +112,7 @@
                     <md-icon>edit</md-icon>
                   </md-button>
                   <md-dialog :md-active.sync="showModal">
-                    <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
+                    <md-dialog-title>Edit Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                         <md-dialog-content>
                             
                             <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
@@ -128,6 +128,13 @@
 
             <div class="mod-list" style="text-align:center" v-show="!showmod(post.mods)">
               <md-button class="addsem" :md-ripple="false" v-on:click="addmod(post)">Add Module</md-button>
+              <md-dialog :md-active.sync="showAddModal">
+                    <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
+                        <md-dialog-content>
+                            
+                            <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                        </md-dialog-content>
+                    </md-dialog>
             </div>
             
           </div>
@@ -152,8 +159,9 @@ export default {
   },
   data: () => ({
     showModal: false,
-    yearlist: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }],
-    semlist: [{ value: 1 }, { value: 2 }],
+    showAddModal: false,
+    yearlist: [],
+    semlist: [],
     grade: null,
     code: null,
     SU: null,
@@ -162,7 +170,9 @@ export default {
     usergrades: [],
     modalyear: null,
     modalsem: null,
-    currentdetails: []
+    currentdetails: [],
+    yearchosen : [],
+    semchosen : []
   }),
   components: {
     //AddModuleModal
@@ -267,8 +277,9 @@ export default {
         this.modalsem = this.User.batch.sem;
         this.modalyear = this.User.batch.year;
       }
-
-      this.showModal = true;
+      this.grade = "";
+      this.code = "";
+      this.showAddModal = true;
     },
     editmod(mod) {
       this.showModal = true;
@@ -345,10 +356,6 @@ export default {
       for (var k = 0; k < this.semlist.length; k++) {
         sems.push(this.semlist[k].value);
       }
-      console.log(years)
-      console.log(sems);
-      console.log(!years.includes(year));
-      console.log(!sems.includes(sem));
       if (!years.includes(year)) {
         years.push(year);
         this.yearlist.push({
@@ -392,13 +399,14 @@ export default {
       return total;
     },
     closeThis1(val) {
-      console.log(val);
       this.showModal = false;
+      this.showAddModal = false;
       this.readData();
       this.updatefilter(val.year, val.sem);
     },
     closeThis2() {
       this.showModal = false;
+      this.showAddModal = false;
       this.readData();
     },
     readData() {
@@ -428,7 +436,7 @@ export default {
 
           self.currentuser = result;
         });
-      console.log(self.currentuser);
+
     }
   },
 

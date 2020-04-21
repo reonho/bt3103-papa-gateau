@@ -35,6 +35,14 @@ export default {
     label_1: String,
     label_2: String
   },
+   computed: {
+    showEmpty() {
+      if (this.my_attr.length == 0) {
+        return true;
+      }
+      return false;
+    }
+  },
   data: function() {
     return {
       series1: [

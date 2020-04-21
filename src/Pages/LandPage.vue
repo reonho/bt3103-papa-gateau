@@ -11,19 +11,7 @@
             </h1>
           </div>
           <div class="md-layout-item md-size-15">
-            <md-button
-              class="md-primary md-raised"
-              style="background:teal; font-weight:600;color:white; border-radius: 4px;border: none;
-    width:10vw;height: 5vh;font-size: 1.8vh; margin:0"
-              @click="showModal = true"
-            >EDIT DETAILS</md-button>
-            <md-dialog :md-active.sync="showModal">
-              <md-dialog-title>Edit Your Personal Details</md-dialog-title>
-
-              <md-dialog-content>
-                <EditUserDetailsForm />
-              </md-dialog-content>
-            </md-dialog>
+            
           </div>
         </div>
         <div>
@@ -120,28 +108,17 @@
 </template>
 <script>
 import DataObject from "../Database.js";
-
-import EditUserDetailsForm from "../components/EditUserDetailsForm";
-// // import FollowUpModal from "../compononets/FollowUpModal"
 import RadarChart from "../components/RadarChart.vue";
-// //import TreeChart from "../components/TreeCharts/TreeChart"
-// //import OverallProgress from "../components/OverallProgress"
 import NavBar from "../components/NavBar";
 import capline from "../components/capline";
 import Feed from "../components/Feed";
-// // import Ratings from '../components/Ratings'
 import ReviewSection from "../components/ReviewSection";
 import database from "../firebase.js";
-//import coursetree from '../components/coursetree'
 export default {
   name: "LandPage",
   props: ["userPassed"],
   components: {
     RadarChart,
-    // //coursetree,
-    // //TreeChart,
-    // //OverallProgress,
-    EditUserDetailsForm,
     capline,
     NavBar,
     Feed,
