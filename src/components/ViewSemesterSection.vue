@@ -370,10 +370,10 @@ export default {
           var modules = semesterlist[i].mods;
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
-              modules[k].faculty = list.info.faculty;
-              modules[k].MC = list.info.moduleCredit;
-              modules[k].name = list.info.title;
-              modules[k].department = list.info.department;
+              modules[k].faculty = list.faculty;
+              modules[k].MC = list.moduleCredit;
+              modules[k].name = list.title;
+              modules[k].department = list.department;
             }
           }
         }

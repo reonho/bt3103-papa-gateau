@@ -102,44 +102,63 @@ var database = {
   //=====================================//
   //----------- addModuleResults---------//
   //=====================================//
-  async addModuleResults(module_result) { //input must have grade, module, sem, year, SU
-    var result = module_result
+  async addModuleResults(module_result) {
+    //input must have grade, module, sem, year, SU
+    var result = module_result;
     var promise = new Promise((resolve, reject) => {
-      database.getUser().then(user => {
-        database.firebase_data.collection('students').doc(user)
-        .get().then(userData =>{
-          var user_ = userData.data()
-          //check if module is added
-          database.firebase_data.collection('module_grades')
-          .where('module' ,"==",result.selectedModule)
-          .where('studentID', '==', user)
-          .get().then(snapshot =>{
-            if(snapshot.empty){
-              //add module_results
-              var results = {
-                SU: result.selectedSU,
-                attribute: result.selectedModule.slice(0,2),
-                course: user_.course,
-                faculty: user_.faculty,
-                grade: result.selectedGrade,
-                module: result.selectedModule,
-                sem: result.selectedSemester, 
-                studentID: user,
-                year: result.selectedYear 
-              }
-              database.firebase_data.collection('module_grades').add(results)
-              //update student overall cap, modules taken, attributes, cap per semester
-              database.updateStudentInfo()
-              //update faculty attributes and number of students taken
-              resolve("success")
-            } else {
-              reject("module already taken!")
-            }
-          })   
-        })
-      })
-    })
-    return promise
+      database.getUser().then((user) => {
+        database.firebase_data
+          .collection("students")
+          .doc(user)
+          .get()
+          .then((userData) => {
+            var user_ = userData.data();
+            //check if module is added
+            database.firebase_data
+              .collection("module_grades")
+              .where("module", "==", result.selectedModule)
+              .where("studentID", "==", user)
+              .get()
+              .then((snapshot) => {
+                if (snapshot.empty) {
+                  //check if module exists
+                  database.firebase_data
+                    .collection("modules")
+                    .where("info.moduleCode", "==", result.selectedModule)
+                    .get()
+                    .then(snapshot_=>{
+                      if (!snapshot_.empty){
+                        var results = {
+                          SU: result.selectedSU,
+                          attribute: result.selectedModule.slice(0, 2),
+                          course: user_.course,
+                          faculty: user_.faculty,
+                          grade: result.selectedGrade,
+                          module: result.selectedModule,
+                          sem: result.selectedSemester,
+                          studentID: user,
+                          year: result.selectedYear,
+                        };
+                        database.firebase_data
+                          .collection("module_grades")
+                          .add(results);
+                        //update student overall cap, modules taken, attributes, cap per semester
+                        database.updateStudentInfo();
+                        //update faculty attributes and number of students taken
+                        resolve("success");
+                      } else {
+                        reject("Not a valid module!")
+                      }
+                    })
+                  //add module_results
+                } else {
+                  reject("module already taken!");
+                }
+              });
+          });
+      });
+    });
+    return promise;
   },
 
   //=====================================//
