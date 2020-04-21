@@ -115,9 +115,7 @@
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
-                  <span
-                  class='md-error'
-                  v-if='!$v.detailsForm.selectedStaff.alpha'>This field can only contain alphabets</span>
+
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
