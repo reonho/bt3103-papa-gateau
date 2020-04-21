@@ -82,10 +82,10 @@
               style="display: inline-block; width:50vw; height:50vh;"
             ></RadarChart>
             <md-empty-state
-              v-if="typeof myAttcheck === 'boolean' && typeof topAttCheck === 'boolean'"
-              md-description='There is insufficient data for this module.'
-              md-icon='assessment'
-              md-label='Insufficient Data'
+              v-if="topAttributes === 'no data'"
+              md-description="There is insufficient data for this module."
+              md-icon="assessment"
+              md-label="Insufficient Data"
               style="display: inline-block; width:50vw; height:50vh;"
             />
           </div>
@@ -130,7 +130,9 @@
                       <div class="col-5" v-show="loading"></div>
                       <div class="col-5" v-show="showEmpty"></div>
                       <div class="col-5" v-show="!loading&&!showEmpty">
-                        <h4 style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh">Student reviews</h4>
+                        <h4
+                          style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh"
+                        >Student reviews</h4>
                         <p v-if="ratings != 0">
                           <span
                             v-for="n in numWholeStars(overallRating)"
@@ -480,6 +482,7 @@ import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
 
 export default {
+  name: "ModulePage",
   props: {
     code: String
   },
@@ -775,21 +778,26 @@ export default {
       });
 
     database.getModuleAttributes(this.code).then(ma => {
-      //console.log(ma);
+      console.log(ma);
       this.topAttributes = ma;
+
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
       var self = this;
       async function check(self) {
-        //console.log(typeof ma[0]);
+        // console.log(typeof ma );
+
         while (typeof ma[0] == "undefined") {
           await sleep(2000);
-          //console.log(typeof ma[0]);
         }
         self.topAttCheck = ma[0].att;
+        
       }
-      check(self);
+      //no top students data
+      if (ma !== 'no data') {
+        check(self);
+      }
     });
   },
   updated() {
@@ -800,8 +808,8 @@ export default {
           document
             .querySelector(`nav li a[href="#${id}"]`)
             .parentElement.classList.add("active");
-          console.log("hi");
-          console.log(id);
+          // console.log("hi");
+          // console.log(id);
         } else {
           document
             .querySelector(`nav li a[href="#${id}"]`)
@@ -954,21 +962,21 @@ span {
 }
 
 #navlink {
-	text-decoration: none;
-	display: block;
-	padding: .125rem 0;
-	color: #ccc;
-	transition: all 50ms ease-in-out;
+  text-decoration: none;
+  display: block;
+  padding: 0.125rem 0;
+  color: #ccc;
+  transition: all 50ms ease-in-out;
 }
 
 #navlink:hover,
 #navlink:focus {
-	color: #666;
+  color: #666;
 }
 
 .section-nav li.active > #navlink {
-	color: #333;
-	font-weight: 500;
+  color: #333;
+  font-weight: 500;
 }
 </style>
 <style lang="scss">
