@@ -72,8 +72,7 @@ export default {
             // console.log(sem)
             if (
               (isNaN(sem)
-                ? sem.includes("Semester " + (this.semester + 1)) ||
-                  sem.includes("Special Term " + (this.semester - 1))
+                ? sem.includes("Semester " + (this.semester + 1))
                 : sem == this.semester) &&
               modCode == this.code &&
               this.years.includes(yr)

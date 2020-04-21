@@ -504,8 +504,7 @@ export default {
         let sem = this.reviewData[docu].detailsForm.selectedSemester;
         if (
           isNaN(sem)
-            ? sem.includes("Semester " + (this.chosenSem + 1)) ||
-              sem.includes("Special Term " + (this.chosenSem - 1))
+            ? sem.includes("Semester " + (this.chosenSem + 1))
             : sem == this.chosenSem
         ) {
           years.push(this.reviewData[docu].detailsForm.selectedYear);
@@ -634,20 +633,6 @@ export default {
           examDate: null,
           examDuration: 0,
           active: false
-        },
-        {
-          semester: "Special Term I",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
-        },
-        {
-          semester: "Special Term II",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
         }
       ];
       var num = arr.length;
@@ -704,9 +689,7 @@ export default {
       for (var i = 0; i < num; i++) {
         var semesters = [
           "Semester 1",
-          "Semester 2",
-          "Special Term I",
-          "Special Term II"
+          "Semester 2"
         ];
         if (sem[i].semester == 3) {
           totalsems += semesters[2] + " • ";
