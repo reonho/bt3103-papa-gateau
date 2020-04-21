@@ -61,7 +61,7 @@
         <section id="attributes">
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module </span>
+          >Attributes of top scorers in this module</span>
           <i
             class="far fa-question-circle"
             style="font-size:3vh; color:grey"
@@ -80,7 +80,7 @@
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
-              :fac_attr='null'
+              :fac_attr="null"
               type="Module"
               label_1="My Attributes"
               label_2="Top Student Attributes"
@@ -98,7 +98,7 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics</span>
           <i
             class="far fa-question-circle"
             style="font-size:3vh; color: grey"
@@ -453,11 +453,13 @@
               md-confirm-text="Okay"
               md-title="Review already exists"
             />
-            <md-dialog-alert
+            <md-dialog-confirm
               :md-active.sync="showAddDialog"
-              md-content="Please add the module first before writing a review."
-              md-confirm-text="Okay"
+              md-content="Please add the module to your dashboard before writing a review."
+              md-confirm-text="Bring me there"
               md-title="Module not added"
+              md-cancel-text="Cancel"
+              @md-confirm="goLand"
             />
           </div>
         </section>
@@ -526,6 +528,9 @@ export default {
     }
   },
   methods: {
+    goLand() {
+      this.$router.push({ name: "LandPage" });
+    },
     countInArray(array, value) {
       return array.reduce((n, x) => n + (x === value), 0);
     },
