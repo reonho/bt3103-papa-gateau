@@ -485,8 +485,8 @@
 </template>
 
 <script>
-import PieChart from "../PieChart.js";
-import BarChart from "../BarChart.js";
+import PieChart from "../components/PieChart.js";
+import BarChart from "../components/BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import RadarChart from "../components/RadarChart";

@@ -456,7 +456,6 @@ import { required} from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
-import DataObject from "../Database.js";
 export default {
   name: "ReviewForm",
   props: ["mod"],
@@ -622,12 +621,6 @@ export default {
         df.selectedYear = mod.year;
         df.selectedSemester = mod.sem;
       });
-      if (this.added === false) {
-        this.faculties = DataObject.faculties;
-        this.grades = DataObject.grades;
-        this.years = DataObject.years;
-        this.semesters = DataObject.semesters;
-      }
     });
     // database.collection('faculties').get().then((querySnapShot) => {
     //   let item = {}

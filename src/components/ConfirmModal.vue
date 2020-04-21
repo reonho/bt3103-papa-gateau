@@ -42,6 +42,5 @@ export default {
   overflow: auto;
   display: block;
 }
-@import "./style.css";
 </style>
 

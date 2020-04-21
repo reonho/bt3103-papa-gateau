@@ -1,4 +1,4 @@
-import database from "./firebase.js"
+import database from "../firebase.js"
 import { Doughnut } from 'vue-chartjs'
 //const { reactiveProp } = mixins
 

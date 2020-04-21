@@ -107,7 +107,6 @@
   </div>
 </template>
 <script>
-import DataObject from "../Database.js";
 import RadarChart from "../components/RadarChart.vue";
 import NavBar from "../components/NavBar";
 import capline from "../components/capline";
@@ -129,7 +128,6 @@ export default {
   data: function() {
     return {
       // assign data into Data attribute
-      Data: this.findModule("CS2030", DataObject),
       User: {},
       reviewData: [],
       facultyAttributes: null,
