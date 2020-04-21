@@ -199,7 +199,8 @@ export default {
           this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
         })
         .catch( () => {
-          alert("Module already added!");
+          database.updateModuleResults(this.detailsForm);
+          alert("Module has been added!");
           this.$root.$emit("closeModal2");});
       }
     }
