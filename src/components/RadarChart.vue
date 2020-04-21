@@ -4,8 +4,18 @@
       type="radar"
       :options="chartOptions2"
       :series="series1"
+      v-show="!showEmpty"
       ref="strengths"
     ></apexchart>
+    <div v-show="showEmpty">
+      <md-empty-state
+        id="statebox"
+        style="max-width:0 !important;  color: #2e4053;"
+        md-icon="layers"
+        md-label="No Attributes to Display"
+        md-description="Start by adding modules in the Grades section!"
+      ></md-empty-state>
+    </div>
   </div>
 </template>
 
@@ -53,7 +63,7 @@ export default {
         },
 
         legend: {
-          position:'top'
+          position: "top"
         },
 
         title: {
@@ -172,8 +182,15 @@ export default {
   created() {
     this.parse_attr2(this.my_attr, this.fac_attr);
     // this.parse_attr2(this.fac_attr, this.my_attr);
+  },
+  computed: {
+    showEmpty() {
+      if (this.type === "Faculty" && this.my_attr.length === 0) {
+        return true;
+      }
+      return false;
+    }
   }
-
 };
 </script>
 

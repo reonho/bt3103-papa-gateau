@@ -61,8 +61,12 @@
         <section id="attributes">
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module </span>
-          <i class="far fa-question-circle" style="font-size:2vh" title="Average grades of students who have scored A and above in this module."></i>
+          >Attributes of top scorers in this module</span>
+          <i
+            class="far fa-question-circle"
+            style="font-size:2vh"
+            title="Average grades of students who have scored A and above in this module."
+          ></i>
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
@@ -75,17 +79,18 @@
             ></RadarChart>
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
-              :my_attr="null"
-              :fac_attr="topAttributes"
+              :my_attr="topAttributes"
+              :fac_attr='null'
               type="Module"
               label_1="My Attributes"
               label_2="Top Student Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
+              v-if="topAttributes === 'no data'"
               style="padding-top:0;"
-              id = "statebox"
-              v-else
+              id="statebox"
+              md-description="There is insufficient data for this module."
               md-icon="assessment"
               md-label="Insufficient Data"
             />
@@ -93,8 +98,12 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
-          <i class="far fa-question-circle" style="font-size:2vh" title="Statistics collected based on reviews gathered from users below."></i>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics</span>
+          <i
+            class="far fa-question-circle"
+            style="font-size:2vh"
+            title="Statistics collected based on reviews gathered from users below."
+          ></i>
           <br />
           <br />
           <b-tabs
@@ -690,10 +699,7 @@ export default {
       var totalsems = "";
       var num = sem.length;
       for (var i = 0; i < num; i++) {
-        var semesters = [
-          "Semester 1",
-          "Semester 2"
-        ];
+        var semesters = ["Semester 1", "Semester 2"];
         if (sem[i].semester == 3) {
           totalsems += semesters[2] + " • ";
         } else if (sem[i].semester == 4) {
@@ -763,22 +769,23 @@ export default {
       });
 
     database.getModuleAttributes(this.code).then(ma => {
+      console.log(ma);
       this.topAttributes = ma;
+
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
+      var self = this;
       async function check(self) {
-        //console.log(typeof ma[0]);
-        if (ma != null) {
-          while (typeof ma[0] == "undefined") {
-            await sleep(2000);
-            //console.log(typeof ma[0]);
-          }
-          self.topAttCheck = ma[0].att;
+        // console.log(typeof ma );
+
+        while (typeof ma[0] == "undefined") {
+          await sleep(2000);
         }
+        self.topAttCheck = ma[0].att;
       }
       //no top students data
-      if (ma !== 'no data') {
+      if (ma !== "no data") {
         check(self);
       }
     });
@@ -833,7 +840,19 @@ export default {
     infodes: null,
     module_code: "",
     chosenSem: 0,
-    Module: {'info': {'department':'', "description": '', "faculty": '', "moduleCode":'', "moduleCredit":'', "prerequisite":'', "semesterData":[],"title":'', "workload":[]}}
+    Module: {
+      info: {
+        department: "",
+        description: "",
+        faculty: "",
+        moduleCode: "",
+        moduleCredit: "",
+        prerequisite: "",
+        semesterData: [],
+        title: "",
+        workload: []
+      }
+    }
   }),
   watch: {
     yrs: function() {
@@ -843,13 +862,13 @@ export default {
       this.shortload(900);
     },
     topAttCheck: function() {
-      console.log(this.topAttCheck)
+      console.log(this.topAttCheck);
     },
     topAttributes: function() {
-      console.log(this.topAttributes)
+      console.log(this.topAttributes);
     },
     myAttributes: function() {
-      console.log(this.myAttributes)
+      console.log(this.myAttributes);
     }
   }
 };
