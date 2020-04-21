@@ -153,13 +153,13 @@ var database = {
   //-------- updateModuleResults---------//
   //=====================================//
   //newModuleGrades is an object with sem, year, grade attributes to be updated
-  async updateModuleResults(module, newModuleGrades) {
+  async updateModuleResults(module_result) {
     var promise = new Promise((resolve, reject) => {
       database.getUser().then((user) => {
         database.firebase_data
           .collection("module_grades")
           .where("studentID", "==", user)
-          .where("module", "==", module)
+          .where("module", "==", module_result.selectedModule)
           .get()
           .then((snapshot) => {
             if (!snapshot.empty) {
@@ -168,9 +168,9 @@ var database = {
                   .collection("module_grades")
                   .doc(doc.id)
                   .update({
-                    year: newModuleGrades.year,
-                    sem: newModuleGrades.sem,
-                    grade: newModuleGrades.grade,
+                    year: module_result.selectedYear,
+                    sem: module_result.selectedSemester,
+                    grade: module_result.selectedGrade,
                   });
                 database.updateStudentInfo();
                 resolve("Module Grade Updated!");
