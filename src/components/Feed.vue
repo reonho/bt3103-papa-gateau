@@ -31,7 +31,17 @@
       <div class="sub-contain-div2">
         <div class="sub-header-content">
           <div class="sub-header-title">TOP MODULES TAKEN BY YOUR COHORT</div>
-          <div class="sub-header-content" style="padding:2vw;">
+          <div v-show="loading">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading Modules..."
+                >
+                <br/>
+                <ScaleLoader :loading="loading" ></ScaleLoader>
+                </md-empty-state>
+          </div>
+          <div class="sub-header-content" style="padding-top:1vw;" v-show="!loading">
             <div id="chart">
               <apexchart type="bar" :options="chartOptionsYear" v-show="!showEmpty" :series="series"></apexchart>
               <div v-show="showEmpty">
@@ -55,20 +65,24 @@
 <script>
 import VueApexCharts from "vue-apexcharts";
 import ViewSemesterSection from "../components/ViewSemesterSection";
+import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
+import database from "../firebase.js";
 export default {
   name: "Feed",
   props: {
     modules: Array,
-    course: Object,
     sem: String,
     User: Object
   },
   components: {
     ViewSemesterSection,
-    apexchart: VueApexCharts
+    apexchart: VueApexCharts,
+    ScaleLoader
   },
   data: function() {
     return {
+      course:Object,
+      loading: true,
       series: [
         {
           data: []
@@ -97,22 +111,35 @@ export default {
     };
   },
   created() {
-    var modlst = [];
+    
+    const self = this
 
-    for (let i = 0; i < this.course.module.length; i++) {
-      var mod = {};
-      mod["amt"] = this.course.amount[i];
-      mod["mod"] = this.course.module[i];
-      modlst.push(mod);
-    }
-    modlst = modlst.sort((a, b) => a.amt - b.amt);
-  console.log(modlst)
-    for (let i = 0; i < this.course.module.length; i++) {
-      this.series[0].data.push(modlst[i].amt);
-      this.chartOptionsYear.xaxis.categories.push(modlst[i].mod);
-    }
+    
+        var result = self.User;
+        //query database for cohort top modules
+        database.getCohortTopModules(result.batch).then(doc => {
+          self.loading = false
+          self.course = doc;
+          var modlst = [];
+          
+          for (let i = 0; i < self.course.module.length; i++) {
+            var mod = {};
+            mod["amt"] = self.course.amount[i];
+            mod["mod"] = self.course.module[i];
+            modlst.push(mod);
+          }
+          
+          modlst = modlst.sort((a, b) => -a.amt + b.amt);
+          //console.log(modlst)
+          for (let i = 0; i < self.course.module.length; i++) {
+            self.series[0].data.push(modlst[i].amt);
+            self.chartOptionsYear.xaxis.categories.push(modlst[i].mod);
+          }
+        })
+      
 
-    console.log(this.series[0].data);
+    
+    //console.log(this.series[0].data);
   },
 
   methods: {
@@ -155,7 +182,7 @@ export default {
       };
     },
     showEmpty() {
-      if (this.series[0].data.length == 0) {
+      if (this.series[0].data.length == 0 && this.loading == false) {
         return true;
       }
       return false;

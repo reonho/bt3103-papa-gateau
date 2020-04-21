@@ -122,7 +122,6 @@
                   <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
                     <md-icon>delete</md-icon>
                   </md-button>
-                  
                 </span>
               </div>
             </md-list>
@@ -261,9 +260,14 @@ export default {
       return this.semnum == 0;
     },
     addmod(sem) {
-      this.grade = "";
-      this.modalsem = sem.semester;
-      this.modalyear = sem.year;
+      if (sem.semester != null && sem.year != null) {
+        this.modalsem = sem.semester;
+        this.modalyear = sem.year;
+      } else {
+        this.modalsem = this.User.batch.sem;
+        this.modalyear = this.User.batch.year;
+      }
+
       this.showModal = true;
     },
     editmod(mod) {
@@ -307,6 +311,19 @@ export default {
       for (var i = 0; i < sems.length; i++) {
         if (Object.keys(sems[i]).length > 0) {
           this.semnum++;
+
+          if (!years.includes(sems[i].year)) {
+            years.push(sems[i].year);
+            this.yearlist.push({
+              value: sems[i].year
+            });
+          }
+          if (!semesters.includes(sems[i].sem)) {
+            semesters.push(sems[i].sem);
+            this.semlist.push({
+              value: sems[i].sem
+            });
+          }
           this.semesters.push({
             year: sems[i].year,
             semester: sems[i].sem,
@@ -315,6 +332,32 @@ export default {
             collapse: false
           });
         }
+      }
+    },
+    updatefilter(year, sem) {
+      var years = [];
+      var sems = [];
+      for (var i = 0; i < this.yearlist.length; i++) {
+        years.push(this.yearlist[i].value);
+      }
+      for (var k = 0; k < this.semlist.length; k++) {
+        sems.push(this.semlist[k].value);
+      }
+      console.log(years)
+      console.log(sems);
+      console.log(!years.includes(year));
+      console.log(!sems.includes(sem));
+      if (!years.includes(year)) {
+        years.push(year);
+        this.yearlist.push({
+          value: year
+        });
+      }
+      if (!sems.includes(sem)) {
+        sems.push(sem);
+        this.semlist.push({
+          value: sem
+        });
       }
     },
     setModuleDetails(mod) {
@@ -346,8 +389,44 @@ export default {
       }
       return total;
     },
-    closeThis() {
+    closeThis1(val) {
+      console.log(val);
       this.showModal = false;
+      this.readData();
+      this.updatefilter(val.year, val.sem);
+    },
+    closeThis2() {
+      this.showModal = false;
+      this.readData();
+    },
+    readData() {
+      const self = this;
+      database.getModuleResults().then(item => {
+        this.usergrades = item;
+      });
+      // query database for user info
+      database.firebase_data
+        .collection("students")
+        .doc(database.user)
+        .onSnapshot(function(user) {
+          var userData = user.data();
+
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sam_by_sem,
+            overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          };
+
+          self.currentuser = result;
+        });
+      console.log(self.currentuser);
     }
   },
 
@@ -358,7 +437,8 @@ export default {
     });
   },
   mounted() {
-    this.$root.$on("closeModal", this.closeThis);
+    this.$root.$on("closeModal1", this.closeThis1);
+    this.$root.$on("closeModal2", this.closeThis2);
   }
 };
 </script>

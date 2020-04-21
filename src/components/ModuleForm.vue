@@ -196,12 +196,11 @@ export default {
         database.addModuleResults(this.detailsForm).then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("closeModal");
+          this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
         })
         .catch( () => {
           alert("Module already added!");
-          // database.updateModuleResults(this.detailsForm.selectedModule, this.detailsForm.selectedGrade);
-          this.$root.$emit("closeModal");});
+          this.$root.$emit("closeModal2");});
       }
     }
   },
