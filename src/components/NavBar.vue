@@ -82,7 +82,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import './style.css';
 .test {
     background: url('../assets/background.png') no-repeat;
     border:none;

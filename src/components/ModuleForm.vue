@@ -228,7 +228,6 @@ export default {
 </script>
 
 <style scoped>
-@import "./style.css";
 .md-card {
   /* overflow: scroll; */
   display: block;

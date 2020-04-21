@@ -61,7 +61,7 @@
         <section id="attributes">
           <span
             style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module </span>
+          >Attributes of top scorers in this module</span>
           <i
             class="far fa-question-circle"
             style="font-size:3vh; color:grey"
@@ -70,20 +70,20 @@
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
-              :my_attr="myAttributes"
-              :fac_attr="topAttributes"
+              :my_attr="topAttributes"
+              :fac_attr="myAttributes"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
-              :fac_attr='null'
+              :fac_attr="null"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
@@ -98,7 +98,7 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
+          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics</span>
           <i
             class="far fa-question-circle"
             style="font-size:3vh; color: grey"
@@ -458,7 +458,7 @@
               md-content="Please add the module to your dashboard before writing a review."
               md-confirm-text="Bring me there"
               md-title="Module not added"
-              md-cancel-text='Cancel'
+              md-cancel-text="Cancel"
               @md-confirm="goLand"
             />
           </div>
@@ -485,8 +485,8 @@
 </template>
 
 <script>
-import PieChart from "../PieChart.js";
-import BarChart from "../BarChart.js";
+import PieChart from "../components/PieChart.js";
+import BarChart from "../components/BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import RadarChart from "../components/RadarChart";
@@ -529,7 +529,7 @@ export default {
   },
   methods: {
     goLand() {
-      this.$router.push({name: 'LandPage'})
+      this.$router.push({ name: "LandPage" });
     },
     countInArray(array, value) {
       return array.reduce((n, x) => n + (x === value), 0);

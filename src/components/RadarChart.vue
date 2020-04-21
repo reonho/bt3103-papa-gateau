@@ -196,9 +196,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "./style.css";
-</style>
-<style>
 #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
   font-size: 9vw !important;
   color: teal;
