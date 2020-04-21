@@ -4,55 +4,37 @@
     <div>
       <div class="md-layout">
         <div class="md-layout-item md-size-30">
-           <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Year</label>
-            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
+          <md-field style="margin:0;padding:0;min-height:4.5vh">
+            <label style="top:1.3vh;font-size:1vw">Year</label>
+            <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" multiple>
               <md-option
-                v-for="year in showyears"
-                :key="year.value"
+                v-for="year in yearlist"
+                :key="year.index"
                 :id="year.value"
                 v-model="year.value"
               >{{ year.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="yearchosen"
-            md-static
-          ></md-chips>
         </div>
         <div class="md-layout-item md-size-5"></div>
         <div class="md-layout-item md-size-30">
-          <md-field class="mod-dropdown">
-            <label style="font-size:1vw">Semester</label>
+          <md-field style="margin:0;padding:0;min-height:4.5vh;">
+            <label style="top:1.3vh;font-size:1vw">Semester</label>
             <md-select v-model="semchosen" name="semchosen" id="semchosen" multiple>
               <md-option
-                v-for="sem in showsemesters"
-                :key="sem.value"
+                v-for="sem in semlist"
+                :key="sem.index"
                 :id="sem.value"
                 v-model="sem.value"
               >{{ sem.value }}</md-option>
             </md-select>
           </md-field>
-          <md-chips
-            class="mod-chips"
-            style="margin-bottom:0; padding:0"
-            v-model="semchosen"
-            md-static
-          ></md-chips>
         </div>
         <div class="md-layout-item md-size-10"></div>
         <div class="md-layout-item md-size-10">
-          <md-field class="mod-dropdown" style="padding-top: 0;">
-            <b-button
-              style="width: 8.5vw; padding:1vh;"
-              v-on:click="clearfilter"
-              variant="outline-info"
-            >
-              <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
-            </b-button>
-          </md-field>
+          <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+            <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+          </b-button>
         </div>
       </div>
       <br />
@@ -140,17 +122,11 @@
                   <md-dialog :md-active.sync="showModal">
                     <md-dialog-title>Edit Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                     <md-dialog-content>
-                      <ModuleForm
-                        :sem="modalsem"
-                        :year="modalyear"
-                        :grade="grade"
-                        :code="code"
-                        :purpose="'Edit'"
-                      />
+                      <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
                     </md-dialog-content>
                   </md-dialog>
 
-                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod.code)">
+                  <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
                     <md-icon>delete</md-icon>
                   </md-button>
                   <md-dialog :md-active.sync="showDeleteModal">
@@ -169,13 +145,7 @@
               <md-dialog :md-active.sync="showAddModal">
                 <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                 <md-dialog-content>
-                  <ModuleForm
-                    :sem="modalsem"
-                    :year="modalyear"
-                    :grade="grade"
-                    :code="code"
-                    :purpose="'Add'"
-                  />
+                  <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
                 </md-dialog-content>
               </md-dialog>
             </div>
@@ -245,7 +215,6 @@ export default {
       var latest = this.User.batch.year;
       console.log(latest);
       console.log(flag);
-      console.log(sems);
       var latestsem = "Semester 1";
       while (flag > 0) {
         var flag3 = false;
@@ -255,13 +224,21 @@ export default {
             if (
               semnum == 0 &&
               batchyr == sems[i].year &&
-              latestsem == sems[i].sem
+              latestsem == "Semester 1"
             ) {
               if (!years.includes(sems[i].year)) {
                 years.push(sems[i].year);
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                this.yearlist.push({
+                  value: sems[i].year
+                });
               }
               if (!semesterslist.includes(sems[i].sem)) {
                 semesterslist.push(sems[i].sem);
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                this.semlist.push({
+                  value: sems[i].sem
+                });
               }
 
               semesters.push({
@@ -276,7 +253,6 @@ export default {
               semnum++;
               break;
             } else if (flag2) {
-              console.log(sems[i]);
               if (flag3 == false) {
                 if (latestsem == "Semester 1") {
                   latestsem = "Semester 2";
@@ -293,10 +269,16 @@ export default {
                 if (!years.includes(sems[i].year)) {
                   years.push(sems[i].year);
                   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                  this.yearlist.push({
+                    value: sems[i].year
+                  });
                 }
                 if (!semesterslist.includes(sems[i].sem)) {
                   semesterslist.push(sems[i].sem);
                   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                  this.semlist.push({
+                    value: sems[i].sem
+                  });
                 }
 
                 semesters.push({
@@ -311,7 +293,6 @@ export default {
                 break;
               }
             } else {
-              console.log(sems[i]);
               continue;
             }
           }
@@ -352,66 +333,13 @@ export default {
       this.semesters = semesters;
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.semnum = semnum;
-
-      ///filtering
-      let filterData = semesters;
-      if (this.yearchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.yearchosen.includes(item.year.toString())) {
-            return true;
-          }
-
-          return false;
-        });
-      }
-      if (this.semchosen.length > 0) {
-        filterData = filterData.filter(item => {
-          if (this.semchosen.includes(item.semester.toString())) {
-            return true;
-          }
-
-          return false;
-        });
-      }
-
-      return filterData;
+      return semesters;
     },
     showbutton() {
       if ((this.semnum == 8) | (this.semnum == 0)) {
         return false;
       }
       return true;
-    },
-    showyears() {
-      let sems = this.semesters;
-      console.log(sems);
-      var years = [];
-      var yearlist = [];
-      for (var i = 0; i < sems.length; i++) {
-        if (!years.includes(sems[i].year)) {
-          years.push(sems[i].year);
-          yearlist.push({
-            value: sems[i].year
-          });
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        }
-      }
-      return yearlist;
-    },
-    showsemesters() {
-      let sems = this.semesters;
-      var semesters = [];
-      var semesterslist = [];
-
-      for (var i = 0; i < sems.length; i++) {
-        if (!semesters.includes(sems[i].semester)) {
-          semesters.push(sems[i].semester);
-          semesterslist.push({
-            value: sems[i].semester
-          });
-        }
-      }
-      return semesterslist;
     }
   },
   methods: {
@@ -438,6 +366,18 @@ export default {
         }
       }
 
+      /*
+      this.semesters.push({
+        year: latest,
+        semester: latestsem,
+        mods: [],
+        cap: 0.0,
+        collapse: false
+      });
+      */
+
+      //insert dummy module
+
       var dummy = {
         SU: "No",
         attribute: "",
@@ -452,8 +392,9 @@ export default {
         .addModuleDummy(dummy)
         .then(e => {
           console.log(e);
-
+          alert("dummy Module has been added!");
           this.readData();
+          // create an alert saying you have already added this module
         })
         .catch(() => {});
     },
@@ -488,7 +429,6 @@ export default {
     deletemod(mod) {
       this.mod = mod;
       this.code = mod.code;
-      console.log(mod);
       this.showDeleteModal = true;
     },
     hideContent(sem) {
@@ -585,7 +525,6 @@ export default {
         let semesterlist = this.semesters;
         for (var i = 0; i < semesterlist.length; i++) {
           var modules = semesterlist[i].mods;
-          console.log(list);
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
               modules[k].faculty = list.info.faculty;
@@ -629,9 +568,11 @@ export default {
       this.showAddModal = false;
       this.readData();
     },
-    deleteitem() {
+    deleteitem(mod) {
+      mod = mod.mod;
       this.showDeleteModal = false;
       this.readData();
+      this.deleted = mod.code;
       //delete from this.semesters
       // this.updatefilter(val.year, val.sem);
     },
@@ -685,24 +626,18 @@ export default {
   overflow: auto;
   display: block;
 }
-.mod-dropdown.md-field {
-  margin: 0.3vw 0 0.5vw !important;
-}
 .btn-outline-info {
   color: teal;
   border-color: teal;
   border: 2px solid;
 }
+
 .btn-outline-info:hover {
   color: white;
   background-color: teal;
   border-color: teal;
 }
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
-}
+
 .md-button.addsem {
   background-color: teal !important;
   font-weight: bold;
@@ -736,13 +671,15 @@ export default {
   padding: 1vw 0vw 0vw 1.5vw;
 }
 .mod-name {
-  color: #ec7663 !important;
+  color: #ec7663;
   font-weight: bold;
   font-size: 0.9vw;
 }
+
 .mod-name:hover {
   text-decoration: underline;
 }
+
 .mod-content {
   margin-top: 1vw;
   font-size: 0.8vw;
@@ -765,6 +702,7 @@ export default {
   width: 1.5vw;
   height: 1.5vw;
 }
+
 .md-icon {
   font-size: 1vw !important;
 }

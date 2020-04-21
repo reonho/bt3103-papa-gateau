@@ -14,18 +14,18 @@ export default {
 
   data: () => ({}),
   props: {
-    code: String
+    mod: Object
   },
   components: {},
   methods: {
     deletemod() {
       console.log("ok");
       database
-        .deleteModuleResults(this.code)
+        .deleteModuleResults(this.mod.code)
         .then(e => {
           console.log(e);
           // create an alert saying you have already added this module
-          this.$root.$emit("deleteitem", { code: this.code});
+          this.$root.$emit("deleteitem");
         })
         .catch(() => {
           alert("Fail");

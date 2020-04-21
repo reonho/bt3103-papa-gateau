@@ -70,7 +70,8 @@ export default {
     sem: String,
     year: String,
     grade: String,
-    code: String
+    code: String,
+    purpose: String
   },
   components: {
     // FollowUpModal
@@ -193,15 +194,40 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("ok");
-        database.addModuleResults(this.detailsForm).then(e => {
-          console.log(e);
-          // create an alert saying you have already added this module
-          this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
-        })
-        .catch( () => {
-          database.updateModuleResults(this.detailsForm);
-          alert("Module has been added!");
-          this.$root.$emit("closeModal2");});
+        if (this.purpose == "Add") {
+          database
+            .addModuleResults(this.detailsForm)
+            .then(e => {
+              console.log(e);
+              // create an alert saying you have already added this module
+
+              this.$root.$emit("closeModal1", {
+                year: this.detailsForm.selectedYear,
+                sem: this.detailsForm.selectedSemester
+              });
+            })
+            .catch(error => {
+              if (error == "Not a valid module!") {
+                alert("Invalid Module");
+                this.$root.$emit("closeModal2");
+              }
+            });
+        } else {
+          database.updateModuleResults(this.detailsForm).catch(error => {
+            if (error == "Not a valid module!") {
+              alert("Invalid Module");
+              this.$root.$emit("closeModal2");
+            } else {
+              this.$root.$emit("closeModal1");
+              alert("Module Successfully Updated!");
+            }
+          });
+        }
+
+        // else if(error == "module already taken!"){
+        //   alert("Module already taken!");
+        //   this.$root.$emit("closeModal2");
+        // }
       }
     }
   },
