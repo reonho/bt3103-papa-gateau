@@ -59,10 +59,11 @@ export default {
         var faculties = new Object()
         var display = false
         querySnapShot.forEach(doc => {
+          // console.log(doc.data())
           var sem = doc.data().detailsForm.selectedSemester
           var modCode = doc.data().module_code
           var yr = doc.data().detailsForm.selectedYear
-          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) || sem.includes("Special Term " + (this.semester - 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
+          if ((isNaN(sem) ? sem.includes("Semester " + (this.semester + 1)) : sem == this.semester) && modCode == this.code && this.years.includes(yr)) {
             display = true
             var fac = doc.data().detailsForm.selectedFaculty
             if (!Object.prototype.hasOwnProperty.call(faculties, fac)) {
