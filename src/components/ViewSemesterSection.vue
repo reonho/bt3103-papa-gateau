@@ -122,7 +122,7 @@
                   <md-dialog :md-active.sync="showModal">
                     <md-dialog-title>Edit Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                     <md-dialog-content>
-                      <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                      <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" :purpose="'Edit'"/>
                     </md-dialog-content>
                   </md-dialog>
 
@@ -145,7 +145,7 @@
               <md-dialog :md-active.sync="showAddModal">
                 <md-dialog-title>Add New Module for {{modalyear}} {{modalsem}}</md-dialog-title>
                 <md-dialog-content>
-                  <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" />
+                  <ModuleForm :sem="modalsem" :year="modalyear" :grade="grade" :code="code" :purpose="'Add'"/>
                 </md-dialog-content>
               </md-dialog>
             </div>
@@ -530,12 +530,13 @@ export default {
         let semesterlist = this.semesters;
         for (var i = 0; i < semesterlist.length; i++) {
           var modules = semesterlist[i].mods;
+          console.log(list);
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
-              modules[k].faculty = list.faculty;
-              modules[k].MC = list.moduleCredit;
-              modules[k].name = list.title;
-              modules[k].department = list.department;
+              modules[k].faculty = list.info.faculty;
+              modules[k].MC = list.info.moduleCredit;
+              modules[k].name = list.info.title;
+              modules[k].department = list.info.department;
             }
           }
         }
