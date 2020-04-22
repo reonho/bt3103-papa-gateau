@@ -5,13 +5,33 @@ import loginPage from './Pages/loginPage.vue'
 import ModuleList from './Pages/ModuleList.vue'
 import modulePage from './Pages/modulePage.vue'
 import ReviewForm from './components/ReviewForm'
+import EditForm from './components/EditForm'
 import database from './firebase.js'
-
+import Registration from './Pages/Registration'
 
 Vue.use(Router)
 
 let router = new Router({
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes: [
+    {
+      path: '/ModuleList',
+      name: 'ModuleList',
+      component: ModuleList,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/Registration',
+      name: 'Registration',
+      component: Registration,
+      meta: {
+        requiresGuest: true
+      }
+    },
     {
       path: '/',
       name: 'LandPage',
@@ -22,14 +42,7 @@ let router = new Router({
       }
     },
     // comment this block to test components
-    {
-      path: '/ModuleList',
-      name: 'ModuleList',
-      component: ModuleList,
-      meta: {
-        requiresAuth: true
-      }
-    },
+   
     {
       path: '/loginPage',
       name: 'loginPage',
@@ -39,17 +52,28 @@ let router = new Router({
       }
     },
     {
-      path: '/module',
+      path: '/:code',
       name: 'modulePage',
+      props: true,
       component: modulePage,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path:'/review',
-      name: 'reviewForm',
+      path:'/review/:mod',
+      name: 'ReviewForm',
       component: ReviewForm,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path:'/edit/:review.id',
+      name: 'EditForm',
+      component: EditForm,
+      props: true,
       meta: {
         requiresAuth: true
       }

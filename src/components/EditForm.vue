@@ -4,11 +4,11 @@
     <NavBar />
     <md-dialog-confirm
       :md-active.sync="exitDialog"
-      md-title="Exit review page?"
-      md-content="Your review will not be saved."
+      md-title="Stop editing review?"
+      md-content="Your changes will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
-      @md-confirm="goback"
+      @md-confirm='goback'
     />
     <div class="page">
       <div class="pageHeader">
@@ -18,7 +18,7 @@
       </div>
       <div class="pageContent">
         <form @submit.prevent="submitForm">
-          <md-steppers md-linear md-alternative :md-active-step.sync:="active">
+          <md-steppers md-alternative :md-active-step.sync:="active">
             <md-step
               id="first"
               md-label="Basic Details"
@@ -115,7 +115,6 @@
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
-
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
@@ -419,7 +418,7 @@
                 <label class="md-subheading">
                   <b>As a whole, how would you rate this module?</b>
                 </label>
-                <Ratings v-model="commentForm.rating" />
+                <Ratings v-model="commentForm.rating" :initialValue='commentForm.rating' />
                 <hr />
                 <br />
                 <md-field>
@@ -437,8 +436,8 @@
           <md-dialog-confirm
             :md-click-outside-to-close="false"
             :md-active.sync="showSubmitMessage"
-            md-title="Review Submitted!"
-            md-content="Thanks for submitting a review!"
+            md-title="Review Edited!"
+            md-content="Your changes have been recorded."
             @md-confirm="goback"
             md-cancel-text
             md-confirm-text="Okay"
@@ -452,14 +451,18 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
-import database from "../firebase.js";
-import firebase from 'firebase'
+import database from "../firebase";
+// import DataObject from '../Database'
 export default {
-  name: "ReviewForm",
-  props: ["mod"],
+  name: "EditForm",
+  props: {
+    msg: String,
+    value: Number,
+    review: Object //pass in review object from the previous page, to fill the existing data
+  },
   components: {
     Ratings,
     NavBar
@@ -474,7 +477,7 @@ export default {
         required
       },
       selectedStaff: {
-        required,
+        required
       },
       selectedGrade: {
         required
@@ -526,30 +529,21 @@ export default {
   },
   methods: {
     submitForm() {
-      let db = database.firebase_data;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
-        // this.goback()
-        database.getUser().then(user => {
-          db.collection("reviews").add({
-            userid: user, //change this to the user id
-            module_code: this.mod, //change this to the passed props from moduleinfo page
-            likes: 0,
-            users_liked: [],
-            dislikes: 0,
-            users_disliked: [],
+        // this.setDone("first", "second");
+        database.firebase_data
+          .collection("reviews")
+          .doc(this.review.id)
+          .update({
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
             tutorialForm: this.tutorialForm,
-            commentForm: this.commentForm,
-            review_date: firebase.firestore.Timestamp.now()
+            commentForm: this.commentForm
           });
-
-          // this.setDone("first", "second");
-        });
-        console.log("form submitted!");
+        console.log("form updated!");
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true;
@@ -599,40 +593,30 @@ export default {
     },
     goback() {
       this.showSubmitMessage = false;
-      this.$router.push({ name: "modulePage", params: { code: this.mod } });
+      // this.$router.push({ path: "/" });
+      this.$router.go(-1)
       // window.location.href = "/#/module";
     }
   },
-
   created() {
-    // var self = this
+    //replace this with firebase calls please
     let self = this;
     database.getUser().then(user => {
-      database.ifAddedModule(this.mod, user).then(mod => {
+      database.ifAddedModule(this.review.module_code, user).then(mod => {
         console.log(mod);
-        self.added = true;
-        // this.added = true
-        // this.faculties = [{id: 1, title: mod.faculty}]
-        // this.grades = [{id: 1, title: mod.grade}]
-        // this.years = [{id: 1, title: mod.year}]
-        // this.semesters = [{id: 1, title: mod.sem}]
-        // this.added = true
-        var df = self.detailsForm;
-        df.selectedFaculty = mod.faculty;
-        df.selectedGrade = mod.grade;
-        df.selectedYear = mod.year;
-        df.selectedSemester = mod.sem;
+        if (mod !== null) {
+          self.added = true;
+          var df = self.detailsForm;
+          df.selectedFaculty = mod.faculty;
+          df.selectedGrade = mod.grade;
+          df.selectedYear = mod.year;
+          df.selectedSemester = mod.sem;
+        }
       });
     });
-    // database.collection('faculties').get().then((querySnapShot) => {
-    //   let item = {}
-    //   querySnapShot.forEach(doc => {
-    //     item = doc.data()
-    //     this.faculties.push(item)
-    //   })
-    // })
     // database.getFaculties().then(r => {
     //   this.faculties = r;
+    //   console.log(this.faculties)
     // });
 
     // database.getGrades().then(g => {
@@ -640,14 +624,22 @@ export default {
     // });
 
     // database.getYears().then(y => {
-    //   this.years = y
-    // })
+    //   this.years = y;
+    // });
 
     // database.getSemesters().then(s => {
-    //   this.semesters = s
-    // })
+    //   this.semesters = s;
+    //   this.detailsForm = this.review.detailsForm;
+    //   this.lectureForm = this.review.lectureForm;
+    //   this.tutorialForm = this.review.tutorialForm;
+    //   this.commentForm = this.review.commentForm;
+    // });
+    this.detailsForm = this.review.detailsForm;
+    this.lectureForm = this.review.lectureForm;
+    this.tutorialForm = this.review.tutorialForm;
+    this.commentForm = this.review.commentForm;
+    // console.log(this.review);
   },
-
   data: () => ({
     detailsForm: {
       selectedYear: null,
@@ -659,6 +651,7 @@ export default {
     lectureForm: {
       lectureMaterial: "3",
       clarity: "3",
+      lectureComments: null,
       error: null
     },
     tutorialForm: {
@@ -691,22 +684,11 @@ export default {
     showSubmitMessage: false,
     showErrorMessage: false,
     lectureError: null,
-    added: false,
     grades: [],
-    years: [],
     semesters: [],
+    years: [],
     faculties: [],
-
-    staff: [
-      {
-        id: 1,
-        name: "Leong Wai Kay"
-      },
-      {
-        id: 2,
-        name: "Ben Leong"
-      }
-    ]
+    added: false
   })
 };
 </script>
@@ -733,7 +715,7 @@ export default {
 }
 
 .md-button.okaybtn {
-  background-color: teal !important;
+  background-color: #007bff !important;
   font-weight: bold;
   color: white !important;
 }
@@ -763,20 +745,5 @@ Tentative fix to css background
   ) !important;
   height: 100vh;
   padding: 0px;
-}
-</style>
-
-<style>
-.md-steppers.md-theme-default .md-stepper-header.md-active .md-stepper-number  {
-  background-color: teal !important;
-}
-.md-steppers.md-theme-default .md-stepper-header.md-done .md-stepper-number  {
-  background-color: teal !important;
-}
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container {
-  border-color: #EC7663 !important;
-}
-.md-radio.md-theme-default.md-checked.md-primary .md-radio-container:after {
-    background-color: #EC7663 !important;
 }
 </style>

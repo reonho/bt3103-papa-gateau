@@ -1,14 +1,12 @@
 <template>
   <div>
-    
-      <apexchart
-        style="background-color:white;width:350px;padding:10px"
-        type="bar"
-        height="150"
-        :options="chartOptions"
-        :series="seriesStats"
-      ></apexchart>
-    
+    <apexchart
+      style="background-color:white;width:100%;margin-top:-2%"
+      type="bar"
+      height=200
+      :options="chartOptions"
+      :series="seriesStats"
+    ></apexchart>
   </div>
 </template>
 
@@ -31,21 +29,30 @@ export default {
         chart: {
           type: "bar",
           toolbar: {
-            show: false,
+            show: false
           }
         },
         fill: {
-            colors: ['#1ABC9C']
+          colors: ["#B82D17"]
         },
         plotOptions: {
           bar: {
+          
             horizontal: true
           }
         },
         dataLabels: {
           enabled: false
         },
-        colors: ['#1ABC9C'],
+        colors: ["#B82D17"],
+        yaxis: {
+          labels: {
+            style: {
+              fontSize: "1.7vh",
+              
+            }
+          }
+        },
         xaxis: {
           categories: [
             "Lectures",
@@ -54,6 +61,11 @@ export default {
             "Project",
             "Preparation"
           ],
+          labels: {
+            style: {
+              fontSize: "1.7vh"
+            }
+          },
           tickAmount: 10,
           max: 10
         }
@@ -65,5 +77,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "./style.css";
 </style>

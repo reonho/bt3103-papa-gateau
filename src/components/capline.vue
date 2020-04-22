@@ -1,7 +1,5 @@
 <template>
 <div style="text-align:center">
-    <md-card style="background-color:#1ABC9C;; color:whitesmoke; padding:1vh">
-        <h1>My Grades</h1> </md-card>
     <apexchart type="line" :options="chartOptions2" :series="series1"></apexchart>
 </div>
 </template>
@@ -18,11 +16,9 @@
             msg: String,
             sap: Array
         },
-
         data: function(){ 
             return {
-                series1: [{ name: 'Semester Grade', data: [0,0],},
-                 { name: 'Cumulative Grade', data: [0,0],}],
+                series1: [{ name: 'Semester CAP',data: [],}, { name: 'Cumulative CAP',data: [],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
@@ -36,7 +32,7 @@
                     },
                     yaxis: [
                             {
-                            min: 3,
+                            min: 0,
                             max: 5,
                             "labels": {
                                 "formatter": function (val) {
@@ -44,41 +40,46 @@
                                 }
                             }
                             }],
-
                     dataLabels: {
                         enabled: true,
                         "formatter": function (val) {
                                 return val.toFixed(2)
-                            }
+                            },
+                         
                     },
-                    colors:['#00aaff', "#9500ff",'#ff9900', '#2cab93',  '#E91E63', '#FF9800',],
+                    colors:['#00aaff',  '#2cab93', '#ff9900',"#9500ff", '#E91E63', '#FF9800',],
                     fill: {
                         opacity: 0.5,
-                        colors: []
+                        colors: [],
+                       
                         }
-
                 },   
             }
         },
         methods:{
             parse_sap: function(obj_array){
-                console.log(obj_array[0].one)
+                obj_array = obj_array.sort(function(a,b){
+                    if(a.year == b.year){
+                        return a.sem - b.sem
+                    }
+                    return a.year - b.year
+                })
+                
                 var sap_series = []
                 var cum_series = []
-                var keys = ["one","two","three","four","five", "six", "seven", "eight"]
-                for(let i=0; i < 8; i++){
-                    var key = keys[i]
+
+                for(let i=0; i < obj_array.length; i++){
                     //console.log(obj_array[0][key])
-                    var value = obj_array[i][key]
-                    
-                    if (!value){
-                        break
+                    var value = obj_array[i]["cap"]
+                    if (typeof value != 'undefined' && value != 0){
+                        sap_series.push(value)
+                        const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
+
+                        console.log(sap_series)
+                        cum_series.push(average(sap_series))
+                        
                     }
                     
-                    
-                    sap_series.push(value)
-                    const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
-                    cum_series.push(average(sap_series))
                     
                 }
                 this.series1[0].data = sap_series
@@ -88,6 +89,7 @@
         created(){
             this.parse_sap(this.sap)
             
+            
         },
         
     }
@@ -95,5 +97,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import './style.css';
 </style>

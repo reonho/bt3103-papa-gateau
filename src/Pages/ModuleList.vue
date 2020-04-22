@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div>
-       <NavBar />
+    <div class="sticky-header">
+      <NavBar />
     </div>
-   
+
     <div class="md-layout">
       <div class="md-layout-item md-size-25">
         <!-- Filter -->
@@ -14,13 +14,9 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                <span>
-                  <md-button
-                    class="clear-filter"
-                    :md-ripple="false"
-                    v-on:click="clearfilter"
-                  >Clear Filters</md-button>
-                </span>
+                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+                  <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
+                </b-button>
               </td>
             </tr>
           </table>
@@ -81,56 +77,85 @@
       <div class="md-layout-item">
         <!-- Modules -->
         <div>
-          <div class="search-wrapper">
-            <md-field>
-              <label>Search for modules</label>
-              <md-input v-model="searchbar"></md-input>
-            </md-field>
-          </div>
+          <div class="module-header">
+            <div class="search-wrapper">
+              <md-autocomplete v-model="searchbar" :md-options="searchlist">
+                <label>Search for Modules...</label>
 
-          <div class="module-numberdiv">
-            <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
+                <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+                  <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+                </template>
+
+                <template
+                  slot="md-autocomplete-empty"
+                  slot-scope="{ term }"
+                >No Modules with "{{ term }}" were found.</template>
+              </md-autocomplete>
+            </div>
+
+            <div class="module-numberdiv">
+              <span class="modnum">{{checkmodnum(modulenum)}}Found</span>
+              <hr />
+            </div>
           </div>
-          <hr style="width:95%" />
-          <div id="ModuleItem">
+          <div class="module-div" id="ModuleItem">
             <md-list v-for="post in filteredList" v-bind:key="post.index">
               <div class="modulecard">
-                <a class="module-name" href="/#/module" style="color:#0B5345;">{{post.moduleCode}} - {{post.title}}</a>
+                <router-link
+                  class="module-name"
+                  :to="'/'+post.info.moduleCode"
+                  style="color:#EC7663;"
+                >{{post.info.moduleCode}} {{post.info.title}}</router-link>
+                <br />
+
                 <p
                   class="module-type"
-                >{{post.department}} • {{post.faculty}} • {{post.moduleCredit}} MCs</p>
-                <p class="module-desc">{{post.description}}</p>
+                >{{post.info.department}} • {{post.info.faculty}} • {{post.info.moduleCredit}} MCs</p>
+                <p class="module-desc">{{post.info.description}}</p>
 
                 <div class="md-layout">
                   <div class="md-layout-item md-size-30">
                     <br />
                     <br />
                     <br />
-                    <span class="module-preclusionhead">
-                      Preclusions
+                    <div v-show="showPreclusions(post.info.preclusion)">
+                      <span class="module-preclusionhead">
+                        Preclusions
+                        <br />
+                      </span>
+                      <span class="module-preclusion">{{post.info.preclusion}}</span>
                       <br />
-                    </span>
-                    <span class="module-preclusion">{{post.preclusion}}</span>
-                    <br />
-                    <br />
-                    <span class="module-prerequisitehead">
-                      Prerequisites
                       <br />
-                    </span>
+                    </div>
+                    <div v-show="showPrereq(post.info.prerequisite)">
+                      <span class="module-prerequisitehead">
+                        Prerequisites
+                        <br />
+                      </span>
 
-                    <span class="module-prerequisite">{{post.prerequisite}}</span>
+                      <span class="module-prerequisite">{{post.info.prerequisite}}</span>
+                    </div>
                     <br />
                   </div>
-                  <div class="md-layout-item-30" style="padding-left:25px">
+                  <div class="md-layout-item-30" style="padding-left:3vw">
                     <div>
                       <br />
                       <br />
-                      <md-tabs class="md-accent test" style="width:45vw;" md-alignment="fixed">
-                        <md-tab
-                          v-for="sem in checksemester(post.semesterData)"
+                      <b-tabs
+                        style="width:46vw;"
+                        id="moduletabs"
+                        active-nav-item-class="activetab"
+                        class="semtabs"
+                        content-class="mt-3"
+                        no-fade
+                        lazy
+                      >
+                        <b-tab
+                          v-for="sem in checksemester(post)"
                           v-bind:key="sem.index"
-                          :md-label="sem.semester"
-                          
+                          :title="sem.semester"
+                          :title-item-class="sem.disabled"
+                          :active="sem.active"
                         >
                           <div class="md-layout">
                             <div class="md-layout-item md-size-35">
@@ -146,25 +171,42 @@
                               <br />
                               <br />
                               <span class="examhead">
-                                Workload - {{calcwork(post.workload) + " hours"}}
-                                <md-tooltip class="mod-tooltip" md-direction="bottom">
-                                  <workloadchart :seriesStats="formatwork(post.workload)"></workloadchart>
-                                </md-tooltip>
+                                Workload - {{calcwork(post) + " hours"}}
                                 <br />
                               </span>
                             </div>
-                            <div style="width:27vw;background-color:white">
-                              <intakechart :seriesStats="seriesStats"></intakechart>
+                            <div style="width:29vw;background-color:white">
+                              <workloadchart :seriesStats="formatwork(post.info.workload)"></workloadchart>
                             </div>
                           </div>
-                        </md-tab>
-                      </md-tabs>
+                        </b-tab>
+                      </b-tabs>
                     </div>
                   </div>
                 </div>
               </div>
             </md-list>
-            <div style="height:200px"></div>
+
+            <div style="height:200px">
+              <div v-show="showEmpty">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important;  color: #2e4053;"
+                  md-icon="view_list"
+                  md-label="No Modules to Display"
+                ></md-empty-state>
+              </div>
+              <div v-show="showLoading">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading Modules..."
+                >
+                  <br />
+                  <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
+                </md-empty-state>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -173,9 +215,10 @@
 </template>
 
 <script>
-import DataObject from "../Database.js";
+import database from "../firebase.js";
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
-import StudentIntakeChart from "../components/StudentIntakeChart";
+//import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
 import VueApexCharts from "vue-apexcharts";
 export default {
@@ -183,26 +226,21 @@ export default {
     NavBar,
     // eslint-disable-next-line vue/no-unused-components
     apexchart: VueApexCharts,
-    intakechart: StudentIntakeChart,
-    workloadchart: WorkloadChart
-  },
-  props: {
-    test: {
-      type: Array,
-      required: true
-    }
+    //intakechart: StudentIntakeChart,
+    workloadchart: WorkloadChart,
+    ScaleLoader
   },
   data() {
     return {
+      color: "#eda200",
+      loading: false,
       searchbar: "",
-      modulesData: DataObject.Modules2,
       modulenum: 0,
+      modulesData: [],
       examarr: [{ text: "No Exam", value: "No Exam", selected: false }],
       semarr: [
         { text: "Semester 1", value: "1", selected: false },
-        { text: "Semester 2", value: "2", selected: false },
-        { text: "Special Term 1", value: "3", selected: false },
-        { text: "Special Term 2", value: "4", selected: false }
+        { text: "Semester 2", value: "2", selected: false }
       ],
       levels: [
         { text: "1000", value: "1000", selected: false },
@@ -219,29 +257,9 @@ export default {
         { text: "5-8 MC", value: "3", selected: false },
         { text: "More than 8 MC", value: "4", selected: false }
       ],
-      faculties: [
-        { text: "Computing", value: "Computing", selected: false },
-        { text: "Science", value: "Science", selected: false }
-      ],
-      departments: [
-        {
-          text: "Computer Science",
-          value: "Computer Science",
-          selected: false
-        },
-        {
-          text: "Mathematics",
-          value: "Mathematics",
-          selected: false
-        },
-        {
-          text: "Information Systems and Analytics",
-          value: "Information Systems and Analytics",
-          selected: false
-        }
-      ],
-
-      seriesStats: [{ data: [150, 210, 186, 195] }],
+      faculties: [],
+      departments: [],
+      searchlist: [],
       chosenfac: [],
       chosendept: [],
       chosensems: [],
@@ -255,9 +273,11 @@ export default {
       let filterData = this.modulesData;
       if (this.chosensems.length > 0) {
         filterData = filterData.filter(item => {
-          for (var i = 0; i < item.semesterData.length; i++) {
+          for (var i = 0; i < item.info.semesterData.length; i++) {
             if (
-              this.chosensems.includes(item.semesterData[i].semester.toString())
+              this.chosensems.includes(
+                item.info.semesterData[i].semester.toString()
+              )
             ) {
               return true;
             }
@@ -267,18 +287,16 @@ export default {
       }
       if (this.chosenexam) {
         filterData = filterData.filter(item => {
-          if (Object.keys(item.semesterData[0]).length === 1) {
+          if (Object.keys(item.info.semesterData[0]).length === 1) {
             return true;
           }
-
           return false;
         });
       }
       if (this.chosenlevel.length > 0) {
         filterData = filterData.filter(item => {
-          var str = item.moduleCode.toString();
+          var str = item.info.moduleCode.toString();
           var matches = str.match(/(\d+)/);
-          console.log(matches[0].charAt(0) + "000");
           if (this.chosenlevel.includes(matches[0].charAt(0) + "000")) {
             return true;
           }
@@ -287,8 +305,7 @@ export default {
       }
       if (this.chosenmc.length > 0) {
         filterData = filterData.filter(item => {
-          var mc = parseInt(item.moduleCredit);
-
+          var mc = parseInt(item.info.moduleCredit);
           if (mc < 4) {
             return this.chosenmc.includes("1");
           } else if (mc === 4) {
@@ -302,28 +319,85 @@ export default {
       }
       if (this.chosenfac.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosenfac.includes(item.faculty);
+          return this.chosenfac.includes(item.info.faculty);
         });
       }
       if (this.chosendept.length > 0) {
         filterData = filterData.filter(item => {
-          return this.chosendept.includes(item.department);
+          return this.chosendept.includes(item.info.department);
         });
       }
       if (this.searchbar !== "") {
         filterData = filterData.filter(item => {
-          return (
-            item.title.toLowerCase().indexOf(this.searchbar.toLowerCase()) > -1
-          );
+          var title =
+            item.info.moduleCode.toLowerCase() +
+            " " +
+            item.info.title.toLowerCase();
+          return title.indexOf(this.searchbar.toLowerCase()) > -1;
         });
       }
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.modulenum = filterData.length;
       return filterData;
+    },
+    showEmpty() {
+      
+      if ((this.modulenum == 0) & (this.loading == false)) {
+        return true;
+      }
+      return false;
+    },
+    showLoading() {
+      return this.loading;
     }
   },
   methods: {
+    readDatabase: function() {
+      database.firebase_data
+        .collection("modules")
+        .get()
+        .then(querySnapShot => {
+          this.loading = true;
+          var flookup = {};
+          var dlookup = {};
+          var slookup = {};
+          //Loop through each item
+          querySnapShot.forEach(doc => {
+            //console.log(doc.id+"==>"+doc.data())
+            var item = doc.data();
+
+            this.modulesData.push(item);
+
+            var fac = item.info.faculty;
+            var dept = item.info.department;
+            if (!(fac in flookup)) {
+              flookup[fac] = 1;
+              this.faculties.push({
+                text: fac,
+                value: fac,
+                selected: false
+              });
+            }
+            if (!(dept in dlookup)) {
+              dlookup[dept] = 1;
+              this.departments.push({
+                text: dept,
+                value: dept,
+                selected: false
+              });
+            }
+            //search list
+            var name = doc.data().info.moduleCode + " " + doc.data().info.title;
+            if (!(name in slookup)) {
+              slookup[name] = 1;
+              this.searchlist.push(name);
+            }
+            this.loading = false;
+          });
+        });
+    },
     clearfilter: function() {
+      this.searchbar = "";
       this.chosensems = [];
       this.chosenfac = [];
       this.chosendept = [];
@@ -331,49 +405,55 @@ export default {
       this.chosenlevel = [];
       this.chosenmc = [];
     },
-    checkexam(semester) {
-      if (semester.length === 1) {
-        return "No Exam";
-      }
-      return semester.examDate + " | " + semester.examDuration / 60 + " Hrs";
-    },
     checksemester(arr) {
-      var semesters = [];
-      var num = arr.length;
-      for (var i = 1; i <= 4; i++) {
-        var semname;
-        var examDate;
-        var examDuration;
-        if (i === 3) {
-          semname = "Special Term 1";
-        } else if (i === 4) {
-          semname = "Special Term 2";
-        } else {
-          semname = "Sem " + i;
+      arr = arr.info.semesterData;
+
+      var semesters = [
+        {
+          semester: "Semester 1",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
+        },
+        {
+          semester: "Semester 2",
+          disabled: "disabledTab",
+          examDate: null,
+          examDuration: 0,
+          active: false
         }
-        if (i > num) {
-          //leftover
-          examDate = null;
-          examDuration = 0;
+      ];
+
+      var num = arr.length;
+      var flag = false;
+      for (var i = 0; i < num; i++) {
+        if (arr[i].semester == 2) {
+          semesters[1].disabled = "";
+          if (flag === false) {
+            semesters[1].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[1].examDate = arr[i].examDate;
+            semesters[1].examDuration = arr[i].examDuration / 60;
+          }
         } else {
-          if (Object.keys(arr[i - 1]).length > 1) {
-            examDate = arr[i - 1].examDate;
-            examDuration = arr[i - 1].examDuration / 60;
-          } else {
-            examDate = null;
-            examDuration = 0;
+          semesters[0].disabled = "";
+          if (flag === false) {
+            semesters[0].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[0].examDate = arr[i].examDate;
+            semesters[0].examDuration = arr[i].examDuration / 60;
           }
         }
-
-        semesters.push({
-          semester: semname,
-          examDate: examDate,
-          examDuration: examDuration
-        });
       }
 
       return semesters;
     },
+
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -401,10 +481,9 @@ export default {
           time[1],
           time[2]
         );
-
         var hours = finishDate.getHours();
         var minutes = finishDate.getMinutes();
-        var ampm = hours >= 1 & hours <= 8 ? "PM" : "AM";
+        var ampm = (hours >= 1) & (hours <= 8) ? "PM" : "AM";
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? "0" + minutes : minutes;
@@ -423,24 +502,25 @@ export default {
     },
     formatDur: function(duration) {
       if (duration !== 0) {
-        return " | " + duration + " hours";
+        return " • " + duration + " hours";
       } else {
         return "";
       }
     },
-    calcwork(workload) {
+    calcwork(arr) {
+      arr = arr.info.workload;
       var num = 0;
-      for (var i = 0; i < workload.length; i++) {
-        num = num + workload[i];
+      for (var i = 0; i < arr.length; i++) {
+        num = num + arr[i];
       }
       return num;
     },
     formatwork(workload) {
       var series = [];
       series.push({
+        name: "Workload",
         data: workload
       });
-      console.log(series);
       return series;
     },
     checkmodnum(modnum) {
@@ -451,7 +531,23 @@ export default {
       } else {
         return modnum + " Modules ";
       }
+    },
+    showPreclusions(val) {
+      if (val != null) {
+        return true;
+      }
+      return false;
+    },
+    showPrereq(val) {
+      if (val != null) {
+        return true;
+      }
+      return false;
     }
+  },
+  mounted() {
+    this.loading = true;
+    this.readDatabase();
   }
 };
 </script>
@@ -459,48 +555,68 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
+p,
+span {
+  font-size: 2.1vh;
+  line-height: 1.5;
+}
+
 .md-content {
-  max-width: 400px;
-  max-height: 700px;
+  max-width: 22vw;
+  max-height: 100vh;
   overflow: auto;
-  padding: 20px;
-  padding-left: 30px;
-  
+  padding: 1vw;
+  padding-left: 1.5vw;
 }
-
-
-
-</style>
-<style>
-label {
-    font-weight: 100 !important; 
-}
-
 hr {
   height: 0px !important;
+  margin: 0 !important;
+  margin-top: 10px !important;
 }
+
+.sticky-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+}
+
 /* Filter section css */
+.md-content.md-scrollbar {
+  position: fixed;
+  margin-top: 3.5vw;
+  width: 22vw;
+}
 .filter-header {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  width: 50%;
+  margin-bottom: 1vw;
+  margin-top: 2.7vw;
+  width: 19vw;
 }
 .filter-head {
-  font-size: 130%;
+  font-size: 1.2vw;
   color: #616a6b;
   font-weight: bold;
-  margin-right: 80px;
+  margin-right: 3vw;
 }
 .minihead {
-  color: #0B5345;
-  font-size: 80%;
+  color: #616a6b;
+  font-size: 1.9vh;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.5vw;
   display: block;
 }
-.md-button.clear-filter {
-  background-color: #17A589 !important;
-  font-weight: bold;
+.btn-outline-info {
+  color: teal;
+  float: right;
+  border-color: teal;
+  border: 2px solid;
+}
+
+.btn-outline-info:hover {
+  color: white;
+  background-color: teal;
+  border-color: teal;
 }
 .md-button.clear-filter.md-theme-default {
   color: white !important;
@@ -509,92 +625,63 @@ hr {
   text-align: right;
 }
 .modnum {
-  margin-right: 30px;
-  color: #0B5345;
+  margin-right: 2vw;
+  color: #ec7663;
   font-weight: bold;
 }
-.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
-  background-color: #0B5345 !important;
-}
-.md-checkbox .md-checkbox-container {
-  border: 1px solid rgba(0, 0, 0, 0.54) !important;
-  border-radius: 3px !important;
-}
-.md-checkbox.md-checked .md-checkbox-container:after {
-  border-color: white !important;
-  top: 1px;
-  left: 6px;
-}
+
 .md-checkbox {
   display: flex !important;
-  margin: 5px 5px 5px 0px !important;
-}
-.levelcheck {
-  padding: 11px;
-  padding-top: 0px;
+  margin: 0.3vw 0.3vw 0.3vw 0 !important;
 }
 
 .mod-dropdown.md-field {
-  margin: 4px 0px 10px !important;
-}
-
-/* Chips css */
-.md-chips.md-field.mod-chips.md-theme-default:after {
-  background-color: white !important;
-}
-.mod-chips .md-chip.md-theme-default {
-  background-color: #0B5345 !important;
-  color: white !important;
-  font-weight: bold !important;
+  margin: 0.3vw 0 0.5vw !important;
 }
 
 /* Module Card css */
+#ModuleItem {
+  margin-top: 25vh;
+}
 .modulecard {
-  margin: 30px;
-  margin-bottom: 0px !important;
+  margin: 2vw;
+  margin-bottom: 0 !important;
 }
 .module-name {
-  font-size: 150%;
-  color: #1ABC9C;
+  font-size: 1.4vw;
   font-weight: bold;
 }
+.module-type {
+  padding-top: 1vh;
+}
 .module-preclusionhead {
-  font-size: 120%;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
 .module-prerequisitehead {
-  font-size: 120%;
+  font-size: 2.3vh;
   color: #616a6b;
   font-weight: bold;
 }
 .search-wrapper {
-  width: 95%;
   margin: 0 auto;
-  margin-bottom: 20px;
-  margin-top: 35px;
+  margin-bottom: 1vw;
+  margin-top: 5.5vw;
+}
+.module-header {
+  position: fixed;
+  background-color: white;
+  margin-top: 1vw;
+  margin-right: 2vw;
+  top: 0;
+  right: 0;
+  width: 71vw;
+  z-index: 1;
 }
 
-.md-tabs.md-theme-default.md-accent.test .md-tab-nav-button.md-theme-default {
-  font-weight: bold !important;
-}
-.md-tabs.md-theme-default.md-accent.test .md-tabs-navigation {
-  background-color: #1ABC9C !important;
-  width:47vw;
-}
-.md-tabs.md-theme-default.md-accent.test .md-active {
-  background-color: #148F77 !important;
-  width:47vw;
-}
-.md-tabs.test .md-tabs-content {
-  height: 190px !important;
-  max-width: 100% !important;
-  padding-left: 0px !important;
-  padding-right: 10px !important;
-  padding-top: 5px !important;
-}
 .examhead {
-  font-size: 110%;
+  font-size: 2vh;
   color: #616a6b;
   font-weight: bold;
 }
@@ -603,5 +690,84 @@ hr {
 }
 .md-tooltip.mod-tooltip.md-theme-default {
   background-color: transparent !important;
+}
+</style>
+
+<style>
+.md-field label {
+  font-size: 1.7vh !important;
+}
+label {
+  font-weight: 400 !important;
+  font-size: 1.7vh;
+}
+
+/* Module Sem Tab CSS */
+#moduletabs .nav-item .nav-link.activetab {
+  background-color: teal !important;
+  font-weight: bold !important;
+}
+.md-theme-default #moduletabs .nav-link.active:not(.md-button) {
+  color: white !important;
+  font-size: 1.8vh;
+}
+.md-theme-default #moduletabs .nav-link:not(.md-button) {
+  color: teal !important;
+  font-weight: bold !important;
+  font-size: 1.8vh;
+}
+#moduletabs .disabledTab {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* checkbox css */
+
+.md-checkbox.md-theme-default.md-checked .md-checkbox-container {
+  background-color: #ec7663 !important;
+}
+.md-checkbox .md-checkbox-container {
+  border: 1px solid #616a6b !important;
+  border-radius: 3px !important;
+}
+.md-checkbox.md-checked .md-checkbox-container:after {
+  border-color: white !important;
+  top: 1px;
+  left: 6px;
+}
+
+/* Chips css */
+.md-chips.md-field.mod-chips.md-theme-default:after {
+  background-color: white !important;
+}
+.mod-chips .md-chip.md-theme-default {
+  background-color: #ec7663 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.md-list.md-theme-default .md-selected .md-list-item-content,
+.md-list.md-theme-default .router-link-active .md-list-item-content {
+  color: #b82d17 !important;
+}
+
+/* Empty State */
+#statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+  font-size: 9vw !important;
+  color: teal;
+}
+
+#statebox .md-empty-state-label {
+  font-size: 1.3vw !important;
+}
+
+#statebox .md-empty-state-description {
+  font-size: 1vw !important;
+}
+
+#statebox .md-empty-state-container {
+  padding-top: 5vh;
+  width: 42vw;
 }
 </style>
