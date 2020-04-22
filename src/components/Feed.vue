@@ -38,7 +38,7 @@
                   md-label="Loading Modules..."
                 >
                 <br/>
-                <ScaleLoader :loading="loading" ></ScaleLoader>
+                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
                 </md-empty-state>
           </div>
           <div class="sub-header-content" style="padding-top:1vw;" v-show="!loading">
@@ -82,6 +82,7 @@ export default {
   data: function() {
     return {
       course:Object,
+      color: "#eda200",
       loading: true,
       series: [
         {
