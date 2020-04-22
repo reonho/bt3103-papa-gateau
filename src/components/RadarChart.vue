@@ -158,7 +158,7 @@ export default {
           return b.grade - a.grade;
         });
         len = my_attr.length;
-        console.log(my_attr.length);
+       
         if (len > 6) {
           len = 6;
         }
@@ -173,8 +173,7 @@ export default {
           }
         }
       }
-      console.log(m_list);
-      console.log(f_list);
+  
 
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;

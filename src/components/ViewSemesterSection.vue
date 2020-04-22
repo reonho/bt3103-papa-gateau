@@ -244,14 +244,11 @@ export default {
       var flag = available;
       var flag2 = false;
       var latest = this.User.batch.year;
-      console.log(latest);
-      console.log(flag);
-      console.log(sems);
       var latestsem = "Semester 1";
       while (flag > 0) {
         var flag3 = false;
         for (var i = 0; i < available; i++) {
-          console.log(sems[i]);
+ 
           if (Object.keys(sems[i]).length > 0) {
             if (
               semnum == 0 &&
@@ -277,7 +274,7 @@ export default {
               semnum++;
               break;
             } else if (flag2) {
-              console.log(sems[i]);
+
               if (flag3 == false) {
                 if (latestsem == "Semester 1") {
                   latestsem = "Semester 2";
@@ -312,16 +309,16 @@ export default {
                 break;
               }
             } else {
-              console.log(sems[i]);
+            
               continue;
             }
           }
         }
       }
-      console.log(this.semesters);
+ 
       for (var k = 0; k < semesters.length; k++) {
         var usermods = this.usergrades;
-        console.log(usermods);
+       
         let sem = semesters[k];
 
         for (var j = 0; j < Object.keys(usermods).length; j++) {
@@ -385,7 +382,7 @@ export default {
     },
     showyears() {
       let sems = this.semesters;
-      console.log(sems);
+     
       var years = [];
       var yearlist = [];
       for (var i = 0; i < sems.length; i++) {
@@ -493,7 +490,7 @@ export default {
     deletemod(mod) {
       this.module = mod;
       this.code = mod.code;
-      console.log(mod);
+
       this.showDeleteModal = true;
     },
     hideContent(sem) {
@@ -590,7 +587,7 @@ export default {
         let semesterlist = this.semesters;
         for (var i = 0; i < semesterlist.length; i++) {
           var modules = semesterlist[i].mods;
-          console.log(list);
+        
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
               modules[k].faculty = list.info.faculty;

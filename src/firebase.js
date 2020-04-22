@@ -336,7 +336,7 @@ var database = {
   //=====================================//
   async getCohortTopModules(batch) {
     var students = await database.getCohortStudents(batch);
-    console.log(students);
+
     var modules = [];
     var amt = [];
     for (var x in students) {
