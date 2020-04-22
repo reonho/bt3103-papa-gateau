@@ -19,10 +19,8 @@
 
 
 <script>
-// import DataObject from "../Database.js";
 import ReviewCard from "./ReviewCard";
-// import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
-// import database from '../firebase.js';
+
 export default {
   name: "ReviewSection",
   props: {

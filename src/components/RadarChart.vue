@@ -110,14 +110,16 @@ export default {
       var len = my_attr.length;
       var lenf = fac_attr.length;
       for (let i = 0; i < len; i++) {
-        var m_code = my_attr[i].att;
-        attr_labels.push(m_code);
-        var m_val = my_attr[i].grade;
-        my_attrs.push(m_val);
-        for (let u = 0; u < lenf; u++) {
-          var f_code = fac_attr[u].att;
-          if (f_code == m_code) {
-            fac_attrs.push(fac_attr[u].grade);
+        if (my_attr[i].att != "") {
+          var m_code = my_attr[i].att;
+          attr_labels.push(m_code);
+          var m_val = my_attr[i].grade;
+          my_attrs.push(m_val);
+          for (let u = 0; u < lenf; u++) {
+            var f_code = fac_attr[u].att;
+            if (f_code == m_code) {
+              fac_attrs.push(fac_attr[u].grade);
+            }
           }
         }
       }
@@ -156,7 +158,7 @@ export default {
           return b.grade - a.grade;
         });
         len = my_attr.length;
-        console.log(my_attr.length);
+       
         if (len > 6) {
           len = 6;
         }
@@ -171,8 +173,7 @@ export default {
           }
         }
       }
-      console.log(m_list);
-      console.log(f_list);
+  
 
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
@@ -196,9 +197,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "./style.css";
-</style>
-<style>
 #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
   font-size: 9vw !important;
   color: teal;

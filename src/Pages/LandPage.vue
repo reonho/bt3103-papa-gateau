@@ -7,7 +7,6 @@
           <div class="md-layout-item md-size-85">
             <h1 class="header">
               Welcome to your dashboard, {{User.name}}
-              <!--button v-on:click="readDatabase">Greet</button-->
             </h1>
           </div>
           <div class="md-layout-item md-size-15">
@@ -107,7 +106,6 @@
   </div>
 </template>
 <script>
-import DataObject from "../Database.js";
 import RadarChart from "../components/RadarChart.vue";
 import NavBar from "../components/NavBar";
 import capline from "../components/capline";
@@ -129,7 +127,6 @@ export default {
   data: function() {
     return {
       // assign data into Data attribute
-      Data: this.findModule("CS2030", DataObject),
       User: {},
       reviewData: [],
       facultyAttributes: null,
@@ -141,6 +138,13 @@ export default {
     };
   },
   methods: {
+    // tester method
+    test(){
+      database.getNUSAttributes().then(e =>{
+        console.log(e)
+      })
+
+    },
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
@@ -176,7 +180,12 @@ export default {
     },
 
     formatcap(cap) {
+      if (cap >= 0) {
       return cap.toFixed(2);
+      } else {
+        cap = 0
+        return cap.toFixed(2);
+      }
     }
   },
   created() {
@@ -203,7 +212,12 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-     
+        var attr = [];
+        for (var i = 0; i < userData.attributes.length; i++) {
+            if (userData.attributes[i] != "") {
+              attr.push(userData.attributes[i])
+            }
+        }
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -214,7 +228,7 @@ export default {
           overall_cap: userData.overall_cap,
           batch: userData.batch, // for querying cohort top modules
           modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-          attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          attributes: attr //individual attributes can be found in self.User.attributes
         };
 
         self.User = result;
@@ -222,7 +236,7 @@ export default {
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
-          console.log(doc.module.length)
+         
         });
         // query database for course attributes
         // database.getModuleAttributes("BT2101").then(r => {

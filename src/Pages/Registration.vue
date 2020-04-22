@@ -149,7 +149,6 @@
 </template>
 
 <script>
-// import DataObject from "../Database.js"
 import database from "../firebase.js";
 import { validationMixin } from "vuelidate";
 import { required, sameAs, minLength } from "vuelidate/lib/validators";

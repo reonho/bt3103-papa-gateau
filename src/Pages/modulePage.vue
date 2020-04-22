@@ -72,11 +72,11 @@
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
-              :my_attr="myAttributes"
-              :fac_attr="topAttributes"
+              :my_attr="topAttributes"
+              :fac_attr="myAttributes"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
@@ -84,8 +84,8 @@
               :my_attr="topAttributes"
               :fac_attr="null"
               type="Module"
-              label_1="My Attributes"
-              label_2="Top Student Attributes"
+              label_1="Top Student Attributes"
+              label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
@@ -437,11 +437,13 @@
               md-confirm-text="Okay"
               md-title="Review already exists"
             />
-            <md-dialog-alert
+            <md-dialog-confirm
               :md-active.sync="showAddDialog"
-              md-content="Please add the module first before writing a review."
-              md-confirm-text="Okay"
+              md-content="Please add the module to your dashboard before writing a review."
+              md-confirm-text="Bring me there"
               md-title="Module not added"
+              md-cancel-text="Cancel"
+              @md-confirm="goLand"
             />
           </div>
         </section>
@@ -467,8 +469,8 @@
 </template>
 
 <script>
-import PieChart from "../PieChart.js";
-import BarChart from "../BarChart.js";
+import PieChart from "../components/PieChart.js";
+import BarChart from "../components/BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import RadarChart from "../components/RadarChart";
@@ -510,6 +512,9 @@ export default {
     }
   },
   methods: {
+    goLand() {
+      this.$router.push({ name: "LandPage" });
+    },
     countInArray(array, value) {
       return array.reduce((n, x) => n + (x === value), 0);
     },

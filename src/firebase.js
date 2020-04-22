@@ -120,25 +120,36 @@ var database = {
               .get()
               .then((snapshot) => {
                 if (snapshot.empty) {
-                  //add module_results
-                  var results = {
-                    SU: result.selectedSU,
-                    attribute: result.selectedModule.slice(0, 2),
-                    course: user_.course,
-                    faculty: user_.faculty,
-                    grade: result.selectedGrade,
-                    module: result.selectedModule,
-                    sem: result.selectedSemester,
-                    studentID: user,
-                    year: result.selectedYear,
-                  };
+                  //check if module exists
                   database.firebase_data
-                    .collection("module_grades")
-                    .add(results);
-                  //update student overall cap, modules taken, attributes, cap per semester
-                  database.updateStudentInfo();
-                  //update faculty attributes and number of students taken
-                  resolve("success");
+                    .collection("modules")
+                    .where("info.moduleCode", "==", result.selectedModule)
+                    .get()
+                    .then(snapshot_=>{
+                      if (!snapshot_.empty){
+                        var results = {
+                          SU: result.selectedSU,
+                          attribute: result.selectedModule.slice(0, 2),
+                          course: user_.course,
+                          faculty: user_.faculty,
+                          grade: result.selectedGrade,
+                          module: result.selectedModule,
+                          sem: result.selectedSemester,
+                          studentID: user,
+                          year: result.selectedYear,
+                        };
+                        database.firebase_data
+                          .collection("module_grades")
+                          .add(results);
+                        //update student overall cap, modules taken, attributes, cap per semester
+                        database.updateStudentInfo();
+                        //update faculty attributes and number of students taken
+                        resolve("success");
+                      } else {
+                        reject("Not a valid module!")
+                      }
+                    })
+                  //add module_results
                 } else {
                   reject("module already taken!");
                 }
@@ -153,13 +164,13 @@ var database = {
   //-------- updateModuleResults---------//
   //=====================================//
   //newModuleGrades is an object with sem, year, grade attributes to be updated
-  async updateModuleResults(module, newModuleGrades) {
+  async updateModuleResults(module_result) {
     var promise = new Promise((resolve, reject) => {
       database.getUser().then((user) => {
         database.firebase_data
           .collection("module_grades")
           .where("studentID", "==", user)
-          .where("module", "==", module)
+          .where("module", "==", module_result.selectedModule)
           .get()
           .then((snapshot) => {
             if (!snapshot.empty) {
@@ -168,9 +179,9 @@ var database = {
                   .collection("module_grades")
                   .doc(doc.id)
                   .update({
-                    year: newModuleGrades.year,
-                    sem: newModuleGrades.sem,
-                    grade: newModuleGrades.grade,
+                    year: module_result.selectedYear,
+                    sem: module_result.selectedSemester,
+                    grade: module_result.selectedGrade,
                   });
                 database.updateStudentInfo();
                 resolve("Module Grade Updated!");
@@ -210,24 +221,89 @@ var database = {
   //=====================================//
   //----------- deleteModuleResults -----//
   //=====================================//
-  async deleteModuleResults(module_){
-    var user = await database.getUser()
+  async deleteModuleResults(module_) {
+    var user = await database.getUser();
+    console.log("deleting data");
     var module_delete = await database.firebase_data
       .collection("module_grades")
-      .where("studentID","==",user)
-      .where("module",'==',module_)
-      .get()
-    var promise = new Promise((resolve,reject) =>{
-      module_delete.forEach(doc=>{
-        doc.ref.delete().then(e=>{
-          database.updateStudentInfo()
-          resolve(e)
-        }).catch(e=>{
-          reject(e)
-        })
-      })
-    })
-    return promise
+      .where("studentID", "==", user)
+      .where("module", "==", module_)
+      .get();
+    var promise = new Promise((resolve, reject) => {
+      module_delete.forEach((doc) => {
+        console.log(doc.data());
+        doc.ref
+          .delete()
+          .then((e) => {
+            database.updateStudentInfo();
+            resolve(e);
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    });
+    return promise;
+  },
+  //=====================================//
+  //----------- deleteModuleResults -----//
+  //=====================================//
+  async deleteModuleDummy(module_, year, semester) {
+    var user = await database.getUser();
+    console.log("deleting data");
+    var module_delete = await database.firebase_data
+      .collection("module_grades")
+      .where("studentID", "==", user)
+      .where("module", "==", module_)
+      .where("year", "==", year)
+      .where("semester", "==", semester)
+      .get();
+    var promise = new Promise((resolve, reject) => {
+      module_delete.forEach((doc) => {
+        console.log(doc.data());
+        doc.ref
+          .delete()
+          .then((e) => {
+            database.updateStudentInfo();
+            resolve(e);
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    });
+    return promise;
+  },
+  //=====================================//
+  //----------- addModuleDummy------------//
+  //=====================================//
+  async addModuleDummy(module_result) {
+    //input must have grade, module, sem, year, SU
+    var result = module_result;
+    var promise = new Promise((resolve) => {
+      database.getUser().then((user) => {
+        //check if module is added
+
+        //add module_results
+        var results = {
+          SU: result.SU,
+          attribute: result.attribute,
+          course: result.course,
+          faculty: result.faculty,
+          grade: result.grade,
+          module: result.module,
+          sem: result.sem,
+          studentID: user,
+          year: result.year,
+        };
+        database.firebase_data.collection("module_grades").add(results);
+        //update student overall cap, modules taken, attributes, cap per semester
+        database.updateStudentInfo();
+        //update faculty attributes and number of students taken
+        resolve("success");
+      });
+    });
+    return promise;
   },
 
   //=====================================//
@@ -260,19 +336,21 @@ var database = {
   //=====================================//
   async getCohortTopModules(batch) {
     var students = await database.getCohortStudents(batch);
-    console.log(students);
+
     var modules = [];
     var amt = [];
     for (var x in students) {
       var mod_ = await database.getStudentModules(students[x]);
       for (var y in mod_) {
         var module_ = mod_[y];
-        if (modules.includes(module_)) {
-          var index = modules.indexOf(module_);
-          amt[index] += 1;
-        } else {
-          modules.push(module_);
-          amt.push(1);
+        if (module_ != "") {
+          if (modules.includes(module_)) {
+            var index = modules.indexOf(module_);
+            amt[index] += 1;
+          } else {
+            modules.push(module_);
+            amt.push(1);
+          }
         }
       }
     }
@@ -328,32 +406,34 @@ var database = {
           var attributes = [];
           snapshot.forEach((doc) => {
             var grade_ = doc.data();
-            if (grade_.SU == "No") {
-              if (attributes.empty) {
-                attributes.push({
-                  amt: 1,
-                  att: grade_.attribute,
-                  grade: database.convertCap(grade_.grade),
-                });
-              } else {
-                var flag = false;
-                for (var att in attributes) {
-                  if (attributes[att].att == grade_.attribute) {
-                    flag = true;
-                    attributes[att].grade =
-                      (attributes[att].grade * attributes[att].amt +
-                        database.convertCap(grade_.grade)) /
-                      (attributes[att].amt + 1);
-                    attributes[att].amt += 1;
-                    break;
-                  }
-                }
-                if (!flag) {
+            if (grade_.attribute != "") {
+              if (grade_.SU == "No") {
+                if (attributes.empty) {
                   attributes.push({
                     amt: 1,
                     att: grade_.attribute,
                     grade: database.convertCap(grade_.grade),
                   });
+                } else {
+                  var flag = false;
+                  for (var att in attributes) {
+                    if (attributes[att].att == grade_.attribute) {
+                      flag = true;
+                      attributes[att].grade =
+                        (attributes[att].grade * attributes[att].amt +
+                          database.convertCap(grade_.grade)) /
+                        (attributes[att].amt + 1);
+                      attributes[att].amt += 1;
+                      break;
+                    }
+                  }
+                  if (!flag) {
+                    attributes.push({
+                      amt: 1,
+                      att: grade_.attribute,
+                      grade: database.convertCap(grade_.grade),
+                    });
+                  }
                 }
               }
             }
@@ -567,6 +647,8 @@ var database = {
                 }
               });
               resolve(attributes);
+            } else {
+              resolve([]);
             }
           });
       });
@@ -595,8 +677,10 @@ var database = {
                   year: ModGrade.year,
                 });
               });
+              resolve(completedMods);
+            } else {
+              resolve([]);
             }
-            resolve(completedMods);
           });
       });
     });
@@ -618,13 +702,15 @@ var database = {
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
                 var ModGrade = grade.data();
-                if (ModGrade.SU == "No") {
+                if (ModGrade.SU == "No" && ModGrade.grade != "") {
                   totalCap += database.convertCap(ModGrade.grade);
                   noOfModules++;
                 }
               });
+              resolve(totalCap / noOfModules);
+            } else {
+              resolve(0);
             }
-            resolve(totalCap / noOfModules);
           });
       });
     });
@@ -648,7 +734,8 @@ var database = {
                 if (ModGrade.SU == "No") {
                   if (sam_by_sem.empty) {
                     sam_by_sem.push({
-                      amt: 1,
+
+                      amt: 0,
                       cap: database.convertCap(ModGrade.grade),
                       sem: ModGrade.sem,
                       year: ModGrade.year,
@@ -671,7 +758,7 @@ var database = {
                     }
                     if (!flag) {
                       sam_by_sem.push({
-                        amt: 1,
+                        amt: 0,
                         cap: database.convertCap(ModGrade.grade),
                         sem: ModGrade.sem,
                         year: ModGrade.year,
@@ -680,8 +767,10 @@ var database = {
                   }
                 }
               });
+              resolve(sam_by_sem);
+            } else {
+              resolve([]);
             }
-            resolve(sam_by_sem);
           });
       });
     });

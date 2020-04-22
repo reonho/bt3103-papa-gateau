@@ -1,5 +1,5 @@
 import { HorizontalBar } from "vue-chartjs";
-import database from "./firebase.js";
+import database from "../firebase.js";
 //const { reactiveProp } = mixins
 
 export default {
