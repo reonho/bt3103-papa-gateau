@@ -66,7 +66,6 @@
             <i
               class="far fa-question-circle"
               style="color:grey"
-              title=""
             ><md-tooltip md-direction="right">Average grades of students who have scored A and above in this module.</md-tooltip></i>
           </h2>
           <div style="text-align:center;">
@@ -99,15 +98,12 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh;margin-left:1vw">
+          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
             Review Statistics
-            
             <i
               class="far fa-question-circle"
-              style="color: grey; font-size: 1.5vw"
-              title=""
-            > <md-tooltip md-direction="right">Statistics collected based on reviews gathered from users below.</md-tooltip></i>
-           
+              style="color: grey"
+            ><md-tooltip md-direction="right">Statistics collected based on reviews gathered from users below.</md-tooltip></i>
           </h2>
           <b-tabs
             active-nav-item-class="activetab"
@@ -483,7 +479,6 @@ import RadarChart from "../components/RadarChart";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
   name: "ModulePage",
   props: {
@@ -568,7 +563,6 @@ export default {
         });
       });
     },
-
     formatwork(workload) {
       var series = [];
       series.push({
@@ -577,7 +571,6 @@ export default {
       });
       return series;
     },
-
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -623,7 +616,6 @@ export default {
         );
       }
     },
-
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -651,7 +643,6 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -732,6 +723,7 @@ export default {
     },
     changeSort(value) {
       this.sortingMethod = value;
+      this.sortingRev = true;
       if (value == "Best") {
         this.reviewData.sort(function(a, b) {
           let diff = b.likes - a.likes
@@ -764,12 +756,18 @@ export default {
           item.id = doc.id;
           this.reviewData.push(item);
         });
+        this.reviewData.sort(function(a, b) {
+          let diff = b.likes - a.likes
+          if (diff == 0) {
+            return b.review_date.toDate() - a.review_date.toDate()
+          }  // sort by number of likes then by newest
+          return diff;
+        });
     });
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
     });
-
     database.firebase_data
       .collection("students")
       .doc(database.user)
@@ -781,18 +779,15 @@ export default {
         this.myAttCheck = userData.attributes[0].att;
         //console.log("Check myAtt");
       });
-
     database.getModuleAttributes(this.code).then(ma => {
       //console.log(ma);
       this.topAttributes = ma;
-
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
       var self = this;
       async function check(self) {
         // console.log(typeof ma );
-
         while (typeof ma[0] == "undefined") {
           await sleep(2000);
         }
@@ -822,7 +817,6 @@ export default {
         }
       });
     });
-
     // Track all sections that have an `id` applied
     document.querySelectorAll("section[id]").forEach(section => {
       observer.observe(section);
@@ -834,7 +828,8 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
-    sortingMethod: "Newest",
+    sortingRev: false,
+    sortingMethod: "Best",
     topAttributes: null,
     myAttributes: null,
     myAttCheck: false,
@@ -877,7 +872,8 @@ export default {
       this.shortload(900);
     },
     reviewData: function() {
-      this.yrs = [...new Set(this.findYears)]
+      if (this.sortingRev == true) this.sortingRev = false;
+      else this.yrs = [...new Set(this.findYears)]
     }
   }
 };
@@ -887,7 +883,6 @@ export default {
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 @import "../assets/stylesheets/scrollSpy.scss";
-
 .depFac {
   font-size: 100%;
 }
@@ -901,11 +896,9 @@ export default {
   font-weight: bold !important;
   font-size: 1vw !important;
 }
-
 .dropdown-item h5 {
   color: darkblue;
 }
-
 .sidebar {
   position: fixed;
   top: 30px;
@@ -913,27 +906,22 @@ export default {
   max-width: 230px;
   font-size: 18px;
 }
-
 .menu-item {
   margin-bottom: 20px;
 }
-
 .menu-item a {
   cursor: pointer;
 }
-
 .menu {
   padding: 0;
   list-style: none;
 }
-
 .customActive {
   color: #178ce6;
   border-left: 1px solid #178ce6;
   padding-left: 5px;
   transition: all 0.5s;
 }
-
 #navlink {
   text-decoration: none;
   display: block;
@@ -941,44 +929,39 @@ export default {
   color: #ccc;
   transition: all 50ms ease-in-out;
 }
-
 #navlink:hover,
 #navlink:focus {
   color: #666;
 }
-
 .section-nav li.active > #navlink {
   color: #333;
   font-weight: 500;
 }
 
+.md-tooltip {	
+  font-size: 1.6vh !important;	
+}
 @media screen and (min-width: 1800px) {
   main {
     font-size: 20px;
     line-height: 30px;
   }
-
   h1 {
     font-size: 190%;
   }
-
   h2 {
     font-size: 140%;
   }
-
   h4 {
     font-size: 110%;
   }
-
   h5 {
     font-size: 90%;
   }
-
   #addReview {
     font-size: 1.6vh;
   }
 }
-
 @media screen and (min-width: 1300px) {
   // adjust charts  
 }
@@ -989,12 +972,10 @@ export default {
   cursor: not-allowed;
   opacity: 0.5;
 }
-
 @media screen and (min-width: 1800px) {
   button#sortBy__BV_toggle_ {
     font-size: 18px;
   }
-
   .dropdown-item > h5 {
     font-size: 18px;
   }
