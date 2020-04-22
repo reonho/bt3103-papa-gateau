@@ -29,7 +29,7 @@ export default {
           this.$root.$emit("deleteitem");
         })
         .catch(() => {
-          alert("Fail");
+          //alert("Fail");
           this.$root.$emit("closeModal2");
         });
     }

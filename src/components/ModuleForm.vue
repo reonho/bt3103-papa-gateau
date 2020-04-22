@@ -252,7 +252,7 @@ export default {
                 year: this.detailsForm.selectedYear,
                 sem: this.detailsForm.selectedSemester
               });
-              alert("Module Successfully Updated!");
+             // alert("Module Successfully Updated!");
             })
             .catch(error => {
               alert(error);
