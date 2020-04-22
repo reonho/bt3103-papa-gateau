@@ -730,6 +730,14 @@ export default {
         this.reviewData.sort(function(a, b) {
           return b.likes - a.likes;
         });
+      } else if (value == "Newest") {
+        this.reviewData.sort(function(a, b) {
+          return b.review_date.toDate() - a.review_date.toDate()
+        })
+      } else if (value == "Oldest") {
+        this.reviewData.sort(function(a, b) {
+          return a.review_date.toDate() - b.review_date.toDate()
+        })
       }
     }
   },
@@ -747,10 +755,6 @@ export default {
           this.reviewData.push(item);
         });
       });
-    this.reviewData = this.reviewData.sort(function(a, b) {
-      return b.likes - a.likes;
-    });
-    console.log(this.reviewData);
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
@@ -820,7 +824,7 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
-    sortingMethod: "Best",
+    sortingMethod: "Newest",
     topAttributes: null,
     myAttributes: null,
     myAttCheck: false,
