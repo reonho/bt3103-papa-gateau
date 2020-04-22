@@ -151,7 +151,7 @@ var database = {
                     })
                   //add module_results
                 } else {
-                  reject("module already taken!");
+                  reject("Module already taken!");
                 }
               });
           });
