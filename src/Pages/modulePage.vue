@@ -946,7 +946,7 @@ export default {
   }
 
   h2 {
-    font-size: 150%;
+    font-size: 140%;
   }
 
   h4 {
@@ -973,11 +973,13 @@ export default {
   opacity: 0.5;
 }
 
-button#sortBy__BV_toggle_ {
-    font-size: 20px;
-}
+@media screen and (min-width: 1800px) {
+  button#sortBy__BV_toggle_ {
+    font-size: 18px;
+  }
 
-.dropdown-item > h5 {
-  font-size: 18px;
+  .dropdown-item > h5 {
+    font-size: 18px;
+  }
 }
 </style>
