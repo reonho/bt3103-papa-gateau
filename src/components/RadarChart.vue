@@ -142,9 +142,11 @@ export default {
         }
         for (let i = 0; i < len; i++) {
           var m_code = my_attr[i].att;
-          m_list.push(my_attr[i].grade.toFixed(2));
-          attr_labels.push(m_code);
-          f_list.push(0);
+          if (m_code !== "") {
+            m_list.push(my_attr[i].grade.toFixed(2));
+            attr_labels.push(m_code);
+            f_list.push(0);
+          }
         }
       } else {
         var lenf = fac_attr.length;
@@ -158,22 +160,23 @@ export default {
           return b.grade - a.grade;
         });
         len = my_attr.length;
-       
+
         if (len > 6) {
           len = 6;
         }
         for (let i = 0; i < len; i++) {
           m_code = my_attr[i].att;
-          m_list.push(my_attr[i].grade.toFixed(2));
-          attr_labels.push(m_code);
-          if (fac_attrs[m_code] !== undefined) {
-            f_list.push(fac_attrs[m_code]);
-          } else {
-            f_list.push(0);
+          if (m_code !== "") {
+            m_list.push(my_attr[i].grade.toFixed(2));
+            attr_labels.push(m_code);
+            if (fac_attrs[m_code] !== undefined) {
+              f_list.push(fac_attrs[m_code]);
+            } else {
+              f_list.push(0);
+            }
           }
         }
       }
-  
 
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
