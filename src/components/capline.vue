@@ -18,7 +18,7 @@
         },
         data: function(){ 
             return {
-                series1: [{ name: 'Semester AP',data: [],}, { name: 'Cumulative CAP',data: [],}],
+                series1: [{ name: 'Semester CAP',data: [],}, { name: 'Cumulative CAP',data: [],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
