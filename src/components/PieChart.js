@@ -89,8 +89,10 @@ export default {
   watch: {
     years: function () {
       this.datacollection.datasets[0].data = []
-      this.options.animation.animateRotate = false
-      this.fetchItems()
+      if (this.$data._chart !== null) {
+        this.$data._chart.destroy()
+        this.fetchItems()
+      }
     }
   }
 }

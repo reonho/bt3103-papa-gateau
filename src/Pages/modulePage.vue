@@ -223,7 +223,8 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" id="easy">{{ easy }}</span>
+                                <span style="padding-left:12px" v-if="easy != 0" id="easy">{{ easy }}</span>
+                                <span style="padding-left:12px" v-else id="easy">N.A.</span>
                               </p>
                             </div>
                           </div>
@@ -260,7 +261,8 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" id="manageable">{{ manag_asgn }}</span>
+                                <span style="padding-left:12px" v-if="manag_asgn!=0" id="manageable">{{ manag_asgn }}</span>
+                                <span style="padding-left:12px" v-else id="manageable">N.A.</span>
                               </p>
                             </div>
                           </div>
@@ -297,7 +299,8 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px;" id="exam">{{ manag_exam }}</span>
+                                <span style="padding-left:12px;" v-if="manag_exam != 0" id="exam">{{ manag_exam }}</span>
+                                <span style="padding-left:12px;" v-else id="exam">N.A.</span>
                               </p>
                             </div>
                           </div>
@@ -334,7 +337,8 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" id="workload">{{ manag_wkld }}</span>
+                                <span style="padding-left:12px" id="workload" v-if="manag_wkld != 0">{{ manag_wkld }}</span>
+                                <span style="padding-left:12px" id="workload" v-else>N.A.</span>
                               </p>
                             </div>
                           </div>
@@ -494,7 +498,7 @@ export default {
   },
   computed: {
     showEmpty: function() {
-      return this.ratings == 0;
+      return this.reviewData.length == 0 || this.ratings == 0;
     },
     findYears: function() {
       var years = [];
@@ -758,7 +762,7 @@ export default {
           item.id = doc.id;
           this.reviewData.push(item);
         });
-      });
+    });
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
@@ -869,6 +873,9 @@ export default {
     },
     chosenSem: function() {
       this.shortload(900);
+    },
+    reviewData: function() {
+      this.yrs = [...new Set(this.findYears)]
     }
   }
 };

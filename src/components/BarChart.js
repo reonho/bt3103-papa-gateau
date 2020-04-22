@@ -80,19 +80,19 @@ export default {
               this.numPpl += 1;
               display = true;
               let rating = doc.data().commentForm.rating;
-              numbers[rating - 1] += 1;
+              if (rating != 0) numbers[rating - 1] += 1;
 
               let easiness = doc.data().commentForm.difficulty;
-              easy[easiness - 1] += 1;
+              if (easiness != 0) easy[easiness - 1] += 1;
 
               let asgnmt = doc.data().tutorialForm.ap;
-              manag[asgnmt - 1] += 1;
+              if (asgnmt != 0) manag[asgnmt - 1] += 1;
 
               let exam = doc.data().tutorialForm.exam;
-              eman[exam - 1] += 1;
+              if (exam != 0) eman[exam - 1] += 1;
 
               let wkload = doc.data().commentForm.workload;
-              work[wkload - 1] += 1;
+              if (wkload != 0) work[wkload - 1] += 1;
             }
           });
 
@@ -125,6 +125,6 @@ export default {
       this.datacollection.datasets[0].data = []
       this.options.animation.animateRotate = false
       this.fetchItems();
-    },
+    }
   },
 };
