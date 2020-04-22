@@ -66,8 +66,8 @@
             <i
               class="far fa-question-circle"
               style="color:grey"
-              title="Average grades of students who have scored A and above in this module."
-            ></i>
+              title=""
+            ><md-tooltip md-direction="right">Average grades of students who have scored A and above in this module.</md-tooltip></i>
           </h2>
           <div style="text-align:center;">
             <RadarChart
@@ -99,13 +99,15 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
+          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh;margin-left:1vw">
             Review Statistics
+            
             <i
               class="far fa-question-circle"
-              style="color: grey"
-              title="Statistics collected based on reviews gathered from users below."
-            ></i>
+              style="color: grey; font-size: 1.5vw"
+              title=""
+            > <md-tooltip md-direction="right">Statistics collected based on reviews gathered from users below.</md-tooltip></i>
+           
           </h2>
           <b-tabs
             active-nav-item-class="activetab"

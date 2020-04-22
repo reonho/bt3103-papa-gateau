@@ -61,6 +61,7 @@
               v-if="!$v.detailsForm.selectedGrade.required"
             >This field is required</span>
           </md-field>
+          <span style="color:red" v-show="showError">{{error}}</span>
         </div>
         <div class="md-layout-item md-size-10"></div>
         <div class="md-layout-item">
@@ -109,6 +110,8 @@ export default {
   data: function() {
     return {
       showModal: false,
+      error: "",
+      showError: false,
       searchlist: [],
       Years: [
         { id: 1, title: "AY1819" },
@@ -220,7 +223,7 @@ export default {
         };
       }
     },
-    
+
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -231,15 +234,18 @@ export default {
             .then(e => {
               console.log(e);
               // create an alert saying you have already added this module
-
+              this.showError = false;
+              this.error = "";
               this.$root.$emit("closeModal1", {
                 year: this.detailsForm.selectedYear,
                 sem: this.detailsForm.selectedSemester
               });
             })
             .catch(error => {
-              alert(error);
-              this.$root.$emit("closeModal2");
+              this.showError = true;
+              this.error = error;
+
+              //this.$root.$emit("closeModal2");
             });
         } else {
           database
@@ -252,11 +258,12 @@ export default {
                 year: this.detailsForm.selectedYear,
                 sem: this.detailsForm.selectedSemester
               });
-             // alert("Module Successfully Updated!");
+              // alert("Module Successfully Updated!");
             })
             .catch(error => {
-              alert(error);
-              this.$root.$emit("closeModal2");
+              this.showError = true;
+              this.error = error;
+              //this.$root.$emit("closeModal2");
             });
         }
 
@@ -269,19 +276,17 @@ export default {
   },
   computed: {
     allowedit() {
-   
       if (this.purpose == "Edit") {
         return true;
       }
       return false;
     },
     disallowedit() {
-    
       if (this.purpose == "Edit") {
         return false;
       }
       return true;
-    },
+    }
   },
   created() {
     //Accumulating dropdown with modules in DB
@@ -300,7 +305,6 @@ export default {
           }
         });
       });
-   
   }
 };
 </script>

@@ -3,7 +3,7 @@
   <div id="ViewSemesterSection">
     <div>
       <div class="md-layout">
-        <div class="md-layout-item md-size-30">
+        <div class="md-layout-item md-size-35">
            <md-field class="mod-dropdown">
             <label style="font-size:1vw">Year</label>
             <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
@@ -23,7 +23,7 @@
           ></md-chips>
         </div>
         <div class="md-layout-item md-size-5"></div>
-        <div class="md-layout-item md-size-30">
+        <div class="md-layout-item md-size-35">
           <md-field class="mod-dropdown">
             <label style="font-size:1vw">Semester</label>
             <md-select v-model="semchosen" name="semchosen" id="semchosen" multiple>
@@ -42,11 +42,11 @@
             md-static
           ></md-chips>
         </div>
-        <div class="md-layout-item md-size-10"></div>
+        <div class="md-layout-item md-size-5"></div>
         <div class="md-layout-item md-size-10">
           <md-field class="mod-dropdown" style="padding-top: 0;">
             <b-button
-              style="width: 8.5vw; padding:1vh;"
+              style="padding:1vh;"
               v-on:click="clearfilter"
               variant="outline-info"
             >
@@ -55,7 +55,6 @@
           </md-field>
         </div>
       </div>
-      <br />
       <br />
 
       <!-- Semester Details -->
