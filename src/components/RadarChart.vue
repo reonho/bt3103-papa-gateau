@@ -210,7 +210,22 @@ export default {
   font-size: 1vw !important;
 }
 #statebox .md-empty-state-container {
-  padding-top: 5vh;
   width: 42vw;
+}
+
+@media screen and (min-width: 1700px) {
+  #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+    font-size: 5vw !important;
+    color: teal;
+  }
+  #statebox .md-empty-state-label {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-description {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-container {
+    width: 42vw;
+  }
 }
 </style>

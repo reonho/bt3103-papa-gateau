@@ -5,8 +5,10 @@
       <div id="modulePage" style="margin-top:5vh;">
         <title>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</title>
         <section id="details">
-          <div style="color:#EC7663; margin-left: 1vw;" class="header">
-            <b>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</b>
+          <div style="color:#EC7663; margin-left: 1vw;">
+            <h1>
+              <b>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</b>
+            </h1>
           </div>
 
           <div
@@ -18,7 +20,7 @@
             class="depFac"
           >{{showsem(this.Module.info.semesterData)}}</div>
           <hr />
-          <div style="margin-left: 1vw; margin-right:1vw;font-size:2vh">
+          <div style="margin-left: 1vw; margin-right:1vw;">
             {{this.Module.info.description}}
             <br />
             <br />
@@ -59,14 +61,14 @@
         </section>
         <hr />
         <section id="attributes">
-          <span
-            style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module </span>
-          <i
-            class="far fa-question-circle"
-            style="font-size:3vh; color:grey"
-            title="Average grades of students who have scored A and above in this module."
-          ></i>
+          <h2 style="color:#EC7663; margin-left:1vw; margin-top:1vh;">
+            Attributes of top scorers in this module
+            <i
+              class="far fa-question-circle"
+              style="color:grey"
+              title="Average grades of students who have scored A and above in this module."
+            ></i>
+          </h2>
           <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
@@ -80,7 +82,7 @@
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
-              :fac_attr='null'
+              :fac_attr="null"
               type="Module"
               label_1="My Attributes"
               label_2="Top Student Attributes"
@@ -90,7 +92,6 @@
               v-if="topAttributes === 'no data'"
               style="padding-top:0;"
               id="statebox"
-              md-description="There is insufficient data for this module."
               md-icon="assessment"
               md-label="Insufficient Data"
             />
@@ -98,14 +99,14 @@
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Review Statistics </span>
-          <i
-            class="far fa-question-circle"
-            style="font-size:3vh; color: grey"
-            title="Statistics collected based on reviews gathered from users below."
-          ></i>
-          <br />
-          <br />
+          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
+            Review Statistics
+            <i
+              class="far fa-question-circle"
+              style="color: grey"
+              title="Statistics collected based on reviews gathered from users below."
+            ></i>
+          </h2>
           <b-tabs
             active-nav-item-class="activetab"
             class="semtabs"
@@ -133,7 +134,7 @@
                 <div class="row">
                   <div class="col-4" v-show="loading"></div>
                   <div class="col-4" v-show="showEmpty"></div>
-                  <div class="col-4" v-show="!loading&&!showEmpty">
+                  <div class="col-4" v-show="!loading&&!showEmpty" style="position: relative;">
                     <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                   </div>
                   <div class="col-8 box">
@@ -141,15 +142,13 @@
                       <div class="col-5" v-show="loading"></div>
                       <div class="col-5" v-show="showEmpty"></div>
                       <div class="col-5" v-show="!loading&&!showEmpty">
-                        <h4
-                          style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh"
-                        >Student reviews</h4>
+                        <h4 style="padding-top: 1.5vh;color:#616a6b;">Student reviews</h4>
                         <p v-if="ratings != 0">
                           <span
                             v-for="n in numWholeStars(overallRating)"
                             :key="n"
                             style="color: gold;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_gold_stars"
                           >
                             <i class="fa fa-star"></i>
@@ -158,7 +157,7 @@
                             v-for="n in numHalfStars(overallRating)"
                             :key="n"
                             style="color: gold;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_gold_stars_half"
                           >
                             <i class="fas fa-star-half-alt"></i>
@@ -167,12 +166,12 @@
                             v-for="n in (5 - numWholeStars(overallRating) - numHalfStars(overallRating))"
                             :key="n"
                             style="color: lightgrey;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_grey_stars"
                           >
                             <i class="fa fa-star"></i>
                           </span>
-                          <span style="padding:1.25vh;">{{ overallRating }} out of 5</span>
+                          <span style="padding-left:1.25vh;">{{ overallRating }} out of 5</span>
                         </p>
                         <h5 style="font-weight:400">
                           {{ratings}}
@@ -190,12 +189,10 @@
                         <div v-show="loading"></div>
                         <div v-show="showEmpty"></div>
                         <div v-show="!loading&&!showEmpty" v-if="ratings != 0">
-                          <h4
-                            style="padding-top:1.5vh;color:#616a6b; padding-bottom:1vh;font-size:2.5vh"
-                          >Features</h4>
+                          <h4 style="padding-top:1.5vh;color:#616a6b; padding-bottom:1vh">Features</h4>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                              <p style="font-weight:400;">Easy to understand</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -226,13 +223,13 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding:1.25vh;font-size: 2vh" id="easy">{{ easy }}</span>
+                                <span style="padding-left:12px" id="easy">{{ easy }}</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                              <p style="font-weight:400;">Manageable assignments</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -263,16 +260,13 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding:1.25vh;font-size: 2vh"
-                                  id="manageable"
-                                >{{ manag_asgn }}</span>
+                                <span style="padding-left:12px" id="manageable">{{ manag_asgn }}</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable exams</p>
+                              <p style="font-weight:400;">Manageable exams</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -303,16 +297,13 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding:1.25vh;font-size: 2vh"
-                                  id="exam"
-                                >{{ manag_exam }}</span>
+                                <span style="padding-left:12px;" id="exam">{{ manag_exam }}</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable workload</p>
+                              <p style="font-weight:400;">Manageable workload</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -343,10 +334,7 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding:1.25vh;font-size: 2vh"
-                                  id="workload"
-                                >{{ manag_wkld }}</span>
+                                <span style="padding-left:12px" id="workload">{{ manag_wkld }}</span>
                               </p>
                             </div>
                           </div>
@@ -355,9 +343,7 @@
                         <br />
 
                         <div v-show="!loading && !(findYears.length == 0)">
-                          <h4
-                            style="padding-top: 1.3vh;color:#0B5345; font-size:2.5vh"
-                          >Filter by Year</h4>
+                          <h4 style="padding-top: 1.3vh;color:#0B5345">Filter by Year</h4>
 
                           <md-field style="width: 20vw">
                             <label for="years">Years Selected</label>
@@ -414,36 +400,34 @@
         <hr />
         <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
         <section id="reviews">
-          <div style="color:#EC7663; margin-top:1vh; margin-left:1vw; font-size: 3vh">
+          <h2 style="color:#EC7663; margin-top:1vh; margin-left:1vw;">
             Reviews
             <a
               class="btn btn-primary btn-lg mr-4"
-              style="color: white; font-size: 2vh; float:right; background-color:teal; border-color:teal"
-              href="#"
+              style="color: white; float:right; background-color:teal; border-color:teal"
               id="addReview"
               @click="review"
             >New Review</a>
             <b-dropdown
               size="lg"
+              id="sortBy"
               variant="link"
               toggle-class="text-decoration-none"
-              style="float:right"
-              no-caret
+              style="float:right;"
+              v-model="sortingMethod"
+              v-bind:text="'Sort by ' + this.sortingMethod"
             >
-              <template v-slot:button-content>
-                <h5>Sort by Newest &#9662;</h5>
-              </template>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Best')">
                 <h5>Best</h5>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Newest')">
                 <h5>Newest</h5>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Oldest')">
                 <h5>Oldest</h5>
               </b-dropdown-item>
             </b-dropdown>
-          </div>
+          </h2>
           <br />
           <div>
             <ReviewSection :reviewData="reviewData" />
@@ -734,6 +718,14 @@ export default {
       } else if (str == "manag_wkld") {
         this.manag_wkld = value;
       }
+    },
+    changeSort(value) {
+      this.sortingMethod = value;
+      if (value == "Best") {
+        this.reviewData.sort(function(a, b) {
+          return b.likes - a.likes;
+        });
+      }
     }
   },
   created() {
@@ -748,9 +740,12 @@ export default {
           item = doc.data();
           item.id = doc.id;
           this.reviewData.push(item);
-          //console.log(this.reviewData);
         });
       });
+    this.reviewData = this.reviewData.sort(function(a, b) {
+      return b.likes - a.likes;
+    });
+    console.log(this.reviewData);
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
@@ -769,7 +764,7 @@ export default {
       });
 
     database.getModuleAttributes(this.code).then(ma => {
-      console.log(ma);
+      //console.log(ma);
       this.topAttributes = ma;
 
       function sleep(ms) {
@@ -820,6 +815,7 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
+    sortingMethod: "Best",
     topAttributes: null,
     myAttributes: null,
     myAttCheck: false,
@@ -860,15 +856,6 @@ export default {
     },
     chosenSem: function() {
       this.shortload(900);
-    },
-    topAttCheck: function() {
-      console.log(this.topAttCheck);
-    },
-    topAttributes: function() {
-      console.log(this.topAttributes);
-    },
-    myAttributes: function() {
-      console.log(this.myAttributes);
     }
   }
 };
@@ -878,57 +865,9 @@ export default {
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 @import "../assets/stylesheets/scrollSpy.scss";
-.header {
-  padding: 1vh;
-  padding-left: 0;
-  font-size: 1.8vw;
-}
-.miniheader {
-  font-size: 1.2vw;
-  color: #616a6b;
-  font-weight: bold;
-}
+
 .depFac {
-  font-size: 2vh;
-}
-span {
-  font-size: 2.1vh;
-  line-height: 1.5;
-}
-.button {
-  display: block;
-  border-radius: 4px;
-  background-color: #f4511e;
-  border: none;
-  color: white;
-  text-align: center;
-  font-size: 15px;
-  padding: 15px;
-  width: 200px;
-  transition: all 0.5s;
-  cursor: pointer;
-  margin: 10px;
-}
-.button span {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: 0.5s;
-}
-.button span:after {
-  content: "\00bb";
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-.button:hover span {
-  padding-right: 25px;
-}
-.button:hover span:after {
-  opacity: 1;
-  right: 0;
+  font-size: 100%;
 }
 .box {
   border-style: solid;
@@ -942,7 +881,7 @@ span {
 }
 
 .dropdown-item h5 {
-  color: #ec7663;
+  color: darkblue;
 }
 
 .sidebar {
@@ -990,11 +929,50 @@ span {
   color: #333;
   font-weight: 500;
 }
+
+@media screen and (min-width: 1800px) {
+  main {
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  h1 {
+    font-size: 190%;
+  }
+
+  h2 {
+    font-size: 150%;
+  }
+
+  h4 {
+    font-size: 110%;
+  }
+
+  h5 {
+    font-size: 90%;
+  }
+
+  #addReview {
+    font-size: 1.6vh;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  // adjust charts
+}
 </style>
 <style lang="scss">
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+button#sortBy__BV_toggle_ {
+    font-size: 20px;
+}
+
+.dropdown-item > h5 {
+  font-size: 18px;
 }
 </style>

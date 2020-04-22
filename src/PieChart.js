@@ -8,6 +8,7 @@ export default {
   data: function () {
     return {
       ratings: 0,
+      responsive: true,
       datacollection: {
         labels: [],
         datasets: [
