@@ -728,7 +728,11 @@ export default {
       this.sortingMethod = value;
       if (value == "Best") {
         this.reviewData.sort(function(a, b) {
-          return b.likes - a.likes;
+          let diff = b.likes - a.likes
+          if (diff == 0) {
+            return b.review_date.toDate() - a.review_date.toDate()
+          }  // sort by number of likes then by newest
+          return diff;
         });
       } else if (value == "Newest") {
         this.reviewData.sort(function(a, b) {
@@ -967,7 +971,7 @@ export default {
 }
 
 @media screen and (min-width: 1300px) {
-  // adjust charts
+  // adjust charts  
 }
 </style>
 <style lang="scss">

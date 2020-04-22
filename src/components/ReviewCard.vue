@@ -93,6 +93,9 @@
           <b>Grade obtained:</b>
           {{review.detailsForm.selectedGrade}}
         </p>
+        <p style="float:right">
+          Posted on {{formatDate(review.review_date.toDate())}}
+        </p>
       </md-card-content>
       <hr />
       <!-- <md-divider/> -->
@@ -194,6 +197,10 @@ export default {
     });
   },
   methods: {
+    formatDate(d) {
+      let short_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return (d.getDate() + " " + short_months[d.getMonth()] + " " + d.getFullYear());
+    },
     remove(array, item) {
       const index = array.indexOf(item);
       if (index > -1) {
