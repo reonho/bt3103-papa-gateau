@@ -214,10 +214,11 @@ export default {
         var userData = user.data();
         var attr = [];
         for (var i = 0; i < userData.attributes.length; i++) {
-            if (userData.attributes[i] != "") {
+            if (userData.attributes[i].att != "") {
               attr.push(userData.attributes[i])
             }
         }
+        console.log(attr)
         var result = {
           name: userData.name,
           faculty: userData.faculty,
