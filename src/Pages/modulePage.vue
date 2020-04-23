@@ -72,7 +72,7 @@
               >Average grades of students who have scored A and above in this module.</md-tooltip>
             </i>
           </h2>
-          <div style="text-align:center;height:40vh">
+          <div style="text-align:center;height:50vh">
              <div v-show="loading2">
                 <md-empty-state
                   id="statebox"
