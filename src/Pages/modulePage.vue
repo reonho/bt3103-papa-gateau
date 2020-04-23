@@ -130,8 +130,6 @@
                   ></md-empty-state>
                 </div>
                 <div class="row">
-                  <div class="col-4" v-show="loading"></div>
-                  <div class="col-4" v-show="showEmpty"></div>
                   <div class="col-4" v-show="!loading&&!showEmpty" style="position: relative;">
                     <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                   </div>
@@ -958,26 +956,40 @@ export default {
   h5 {
     font-size: 90%;
   }
-  #addReview {
-    font-size: 1.6vh;
-  }
 }
 @media screen and (min-width: 1300px) {
   // adjust charts  
 }
 </style>
+
 <style lang="scss">
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
-@media screen and (min-width: 1800px) {
+@media screen and (min-width: 1700px) {
+  #addReview {
+    font-size: 18px;
+  }
   button#sortBy__BV_toggle_ {
     font-size: 18px;
   }
   .dropdown-item > h5 {
     font-size: 18px;
+  }
+  #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+    font-size: 5vw !important;
+    color: teal;
+  }
+  #statebox .md-empty-state-label {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-description {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-container {
+    width: 42vw;
   }
 }
 </style>

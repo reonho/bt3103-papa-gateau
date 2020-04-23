@@ -19,18 +19,18 @@
           <p>
             <md-chip class="info-chip">
               <md-tooltip>Lecturer</md-tooltip>
-              <md-icon class = 'chip-icon'>person</md-icon>
+              <i class="fas fa-user"></i>
               {{review.detailsForm.selectedStaff}}
             </md-chip>
 
             <md-chip class="info-chip">
               <md-tooltip>Lecturer Clarity</md-tooltip>
-              <md-icon class = 'chip-icon'>school</md-icon>
+              <i class="fas fa-graduation-cap"></i>
               {{review.lectureForm.clarity}}/5
             </md-chip>
             <md-chip class="info-chip">
               <md-tooltip>Lecture Material</md-tooltip>
-              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              <i class="fas fa-book-open"></i>
               {{review.lectureForm.lectureMaterial}}/5
             </md-chip>
           </p>
@@ -46,7 +46,7 @@
           <p>
             <md-chip class="info-chip">
               <md-tooltip>Tutorial Material</md-tooltip>
-              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              <i class='fa fa-chalkboard-teacher'></i>
               {{review.tutorialForm.tutorialMaterial}}/5
             </md-chip>
           </p>
@@ -62,7 +62,7 @@
           <p>
             <md-chip class="info-chip">
               <md-tooltip>Assignment Manageability</md-tooltip>
-              <md-icon class = 'chip-icon'>assignment</md-icon>
+              <i class="fas fa-clipboard-check"></i>
               {{review.tutorialForm.ap}}/5
             </md-chip>
           </p>
@@ -78,7 +78,7 @@
           <p>
             <md-chip class="info-chip">
               <md-tooltip>Exam Manageability</md-tooltip>
-              <md-icon class = 'chip-icon'>menu_book</md-icon>
+              <i class="fas fa-book"></i>
               {{review.tutorialForm.exam}}/5
             </md-chip>
           </p>
@@ -89,7 +89,7 @@
           <div class = 'md-subheading'><b>Comments</b></div>
           <p class="comments">{{review.commentForm.comments}}</p>
         </div>
-        <p>
+        <p class = "grades" style="padding-top:1.2vh">
           <b>Grade obtained:</b>
           {{review.detailsForm.selectedGrade}}
         </p>
@@ -343,13 +343,18 @@ export default {
 
 
 <style scoped>
+.md-tooltip {	
+  font-size: 1.6vh !important;	
+}
+i {
+  color: rgba(0,0,0,0.54)
+}
 .md-card {
   display: block;
   align-self: center;
   padding: 1%;
   margin-bottom: 2%;
   overflow: auto;
-
   /* vertical-align: top; */
 }
 
@@ -397,6 +402,20 @@ export default {
 
 .footerLeft {
   float: left;
+}
+@media screen and (min-width: 1800px) {
+  .para {
+    font-size: 128%
+  }
+  .info-chip {
+    font-size: 100%
+  }
+  .md-subheading {
+    font-size: 90%
+  }
+  .grades {
+    font-size: 118%
+  }
 }
 
 .md-chip.md-theme-default {
