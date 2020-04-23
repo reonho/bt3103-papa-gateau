@@ -72,7 +72,7 @@
               >Average grades of students who have scored A and above in this module.</md-tooltip>
             </i>
           </h2>
-          <div style="text-align:center;height:40vh">
+          <div style="text-align:center;">
              <div v-show="loading2">
                 <md-empty-state
                   id="statebox"
@@ -91,7 +91,7 @@
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
+              style="display: inline-block; width:50%; height:50%;"
             ></RadarChart></div>
             <div  v-show="!loading2">
             <RadarChart
@@ -101,7 +101,7 @@
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
+              style="display: inline-block; width:50%; height:50%;"
             ></RadarChart>
           
             </div>
@@ -904,7 +904,7 @@ export default {
         if (this.liked) {
           this.liked = false;
         }
-        else this.yrs = [...new Set(this.findYears)];
+        else if (! this.loading) this.yrs = [...new Set(this.findYears)];
       }
     }
   }

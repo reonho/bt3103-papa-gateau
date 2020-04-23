@@ -63,7 +63,7 @@ export default {
         },
 
         legend: {
-          position: "top"
+          position: "bottom"
         },
 
         title: {
