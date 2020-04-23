@@ -1,24 +1,54 @@
 <template>
   <div>
     <form>
-      <md-autocomplete
-        v-model="detailsForm.selectedModule"
-        :md-options="modules"
-        :class="getValidationClass('detailsForm', 'selectedModule')"
-      >
-        <label v-show="!detailsForm.selectedModule">Search for Module</label>
-        <label v-show="detailsForm.selectedModule">Module</label>
-        <template slot="md-autocomplete-item" slot-scope="{ item, term }">
-          <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
-        </template>
+      <div v-show="allowedit">
+        <md-autocomplete
+          v-model="detailsForm.selectedModule"
+          :md-options="modules"
+          disabled
+          :class="getValidationClass('detailsForm', 'selectedModule')"
+        >
+          <label v-show="!detailsForm.selectedModule">Search for Module</label>
+          <label v-show="detailsForm.selectedModule">Module</label>
+          <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+            <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+          </template>
 
-        <template
-          slot="md-autocomplete-empty"
-          slot-scope="{ term }"
-        >No Modules with "{{ term }}" were found.</template>
+          <template
+            slot="md-autocomplete-empty"
+            slot-scope="{ term }"
+          >No Modules with "{{ term }}" were found.</template>
 
-        <span class="md-error" v-if="!$v.detailsForm.selectedModule.required">This field is required</span>
-      </md-autocomplete>
+          <span
+            class="md-error"
+            v-if="!$v.detailsForm.selectedModule.required"
+          >This field is required</span>
+        </md-autocomplete>
+      </div>
+      <div v-show="disallowedit">
+        <md-autocomplete
+          v-model="detailsForm.selectedModule"
+          :md-options="modules"
+          :class="getValidationClass('detailsForm', 'selectedModule')"
+        >
+          <label v-show="!detailsForm.selectedModule">Search for Module</label>
+          <label v-show="detailsForm.selectedModule">Module</label>
+          <template slot="md-autocomplete-item" slot-scope="{ item, term }">
+            <md-highlight-text :md-term="term">{{ item }}</md-highlight-text>
+          </template>
+
+          <template
+            slot="md-autocomplete-empty"
+            slot-scope="{ term }"
+          >No Modules with "{{ term }}" were found.</template>
+
+          <span
+            class="md-error"
+            v-if="!$v.detailsForm.selectedModule.required"
+          >This field is required</span>
+        </md-autocomplete>
+      </div>
+
       <div class="md-layout">
         <div class="md-layout-item md-size-50">
           <md-field :class="getValidationClass('detailsForm', 'selectedGrade')">
@@ -31,6 +61,7 @@
               v-if="!$v.detailsForm.selectedGrade.required"
             >This field is required</span>
           </md-field>
+          <span style="color:red" v-show="showError">{{error}}</span>
         </div>
         <div class="md-layout-item md-size-10"></div>
         <div class="md-layout-item">
@@ -70,7 +101,8 @@ export default {
     sem: String,
     year: String,
     grade: String,
-    code: String
+    code: String,
+    purpose: String
   },
   components: {
     // FollowUpModal
@@ -78,6 +110,8 @@ export default {
   data: function() {
     return {
       showModal: false,
+      error: "",
+      showError: false,
       searchlist: [],
       Years: [
         { id: 1, title: "AY1819" },
@@ -189,20 +223,69 @@ export default {
         };
       }
     },
+
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("ok");
-        database.addModuleResults(this.detailsForm).then(e => {
-          console.log(e);
-          // create an alert saying you have already added this module
-          this.$root.$emit("closeModal1", { year: this.detailsForm.selectedYear, sem : this.detailsForm.selectedSemester});
-        })
-        .catch( () => {
-          database.updateModuleResults(this.detailsForm);
-          alert("Module has been added!");
-          this.$root.$emit("closeModal2");});
+        if (this.purpose == "Add") {
+          database
+            .addModuleResults(this.detailsForm)
+            .then(e => {
+              console.log(e);
+              // create an alert saying you have already added this module
+              this.showError = false;
+              this.error = "";
+              this.$root.$emit("closeModal1", {
+                year: this.detailsForm.selectedYear,
+                sem: this.detailsForm.selectedSemester
+              });
+            })
+            .catch(error => {
+              this.showError = true;
+              this.error = error;
+
+              //this.$root.$emit("closeModal2");
+            });
+        } else {
+          database
+            .updateModuleResults(this.detailsForm)
+            .then(e => {
+              console.log(e);
+              // create an alert saying you have already added this module
+
+              this.$root.$emit("closeModal1", {
+                year: this.detailsForm.selectedYear,
+                sem: this.detailsForm.selectedSemester
+              });
+              // alert("Module Successfully Updated!");
+            })
+            .catch(error => {
+              this.showError = true;
+              this.error = error;
+              //this.$root.$emit("closeModal2");
+            });
+        }
+
+        // else if(error == "module already taken!"){
+        //   alert("Module already taken!");
+        //   this.$root.$emit("closeModal2");
+        // }
       }
+    }
+  },
+  computed: {
+    allowedit() {
+      if (this.purpose == "Edit") {
+        return true;
+      }
+      return false;
+    },
+    disallowedit() {
+      if (this.purpose == "Edit") {
+        return false;
+      }
+      return true;
     }
   },
   created() {
@@ -222,7 +305,6 @@ export default {
           }
         });
       });
-    console.log(this.modules);
   }
 };
 </script>

@@ -456,6 +456,7 @@ import { required} from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
+import firebase from 'firebase'
 export default {
   name: "ReviewForm",
   props: ["mod"],
@@ -542,7 +543,8 @@ export default {
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
             tutorialForm: this.tutorialForm,
-            commentForm: this.commentForm
+            commentForm: this.commentForm,
+            review_date: firebase.firestore.Timestamp.now()
           });
 
           // this.setDone("first", "second");
@@ -759,7 +761,7 @@ Tentative fix to css background
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 100vh;
+  height: 140vh;
   padding: 0px;
 }
 </style>

@@ -7,7 +7,6 @@
           <div class="md-layout-item md-size-85">
             <h1 class="header">
               Welcome to your dashboard, {{User.name}}
-              <!--button v-on:click="readDatabase">Greet</button-->
             </h1>
           </div>
           <div class="md-layout-item md-size-15">
@@ -139,6 +138,13 @@ export default {
     };
   },
   methods: {
+    // tester method
+    test(){
+      database.getNUSAttributes().then(e =>{
+        console.log(e)
+      })
+
+    },
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
@@ -174,7 +180,12 @@ export default {
     },
 
     formatcap(cap) {
+      if (cap >= 0) {
       return cap.toFixed(2);
+      } else {
+        cap = 0
+        return cap.toFixed(2);
+      }
     }
   },
   created() {
@@ -201,7 +212,9 @@ export default {
       .doc(database.user)
       .onSnapshot(function(user) {
         var userData = user.data();
-     
+        var attr = [];
+        
+        console.log(attr)
         var result = {
           name: userData.name,
           faculty: userData.faculty,
@@ -220,7 +233,7 @@ export default {
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
-          console.log(doc.module.length)
+         
         });
         // query database for course attributes
         // database.getModuleAttributes("BT2101").then(r => {
