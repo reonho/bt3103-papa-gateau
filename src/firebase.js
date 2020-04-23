@@ -936,10 +936,12 @@ var database = {
         .where("module", "==", module_code)
         .get()
         .then(function(results) {
+         
           if (results.empty) {
             resolve("no data");
           }
           results.forEach(function(r) {
+           
             var rdata = r.data();
             if (top_grades.includes(rdata.grade)) {
               top_students.push({
@@ -955,11 +957,13 @@ var database = {
         })
         .then(function(ts) {
           ts.forEach(function(s) {
+       
             database.firebase_data
               .collection("students")
               .doc(s.studentID)
               .get()
               .then(function(user) {
+               
                 var attributes = user.data().attributes;
                 attributes.forEach(function(attribute) {
                   var att = attribute.att.trim();
@@ -980,6 +984,7 @@ var database = {
                     });
                   }
                 });
+              
               });
             resolve(top_attributes);
           });
