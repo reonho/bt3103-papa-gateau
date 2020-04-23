@@ -248,6 +248,7 @@ export default {
               //this.$root.$emit("closeModal2");
             });
         } else {
+          console.log(this.detailsForm.selectedYear,)
           database
             .updateModuleResults(this.detailsForm)
             .then(e => {
