@@ -67,7 +67,7 @@
                 
                 var sap_series = []
                 var cum_series = []
-
+ console.log(obj_array)
                 for(let i=0; i < obj_array.length; i++){
                     //console.log(obj_array[0][key])
                     var value = obj_array[i]["cap"]
