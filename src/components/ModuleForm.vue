@@ -229,6 +229,7 @@ export default {
       if (!this.$v.$invalid) {
         console.log("ok");
         if (this.purpose == "Add") {
+         
           database
             .addModuleResults(this.detailsForm)
             .then(e => {
@@ -248,6 +249,7 @@ export default {
               //this.$root.$emit("closeModal2");
             });
         } else {
+          console.log(this.detailsForm.selectedYear,)
           database
             .updateModuleResults(this.detailsForm)
             .then(e => {
