@@ -229,6 +229,7 @@ export default {
       if (!this.$v.$invalid) {
         console.log("ok");
         if (this.purpose == "Add") {
+         
           database
             .addModuleResults(this.detailsForm)
             .then(e => {
