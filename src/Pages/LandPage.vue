@@ -61,7 +61,20 @@
             <!-- When using RadarChart to display My Attributes vs Faculty, set my_attr to be user attributes and fac_attr to be faculty -->
             <!-- However, when using to display My Attributes vs Module Attributes, type as Faculty, set my_attr to be user attributes and fac_attr to be top student attributes.  -->
             <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
+            <div v-if="!facultyAttributes">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading Attributes..."
+                >
+                <br/>
+                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
+                </md-empty-state>
+          </div>
+          <div  v-show="facultyAttributes">
+          
             <RadarChart
+           
               v-if="facultyAttributes"
               v-bind:my_attr="User.attributes"
               v-bind:fac_attr="facultyAttributes"
@@ -77,6 +90,7 @@
               label_1="Top Student Attributes"
               label_2="My Attributes"
             ></RadarChart> -->
+          </div>
           </div>
 <!-- 
           <RadarChart
@@ -112,6 +126,7 @@ import capline from "../components/capline";
 import Feed from "../components/Feed";
 import ReviewSection from "../components/ReviewSection";
 import database from "../firebase.js";
+import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
 export default {
   name: "LandPage",
   props: ["userPassed"],
@@ -121,7 +136,7 @@ export default {
     NavBar,
     Feed,
     ReviewSection,
-   
+   ScaleLoader
     // // Ratings
   },
   data: function() {
@@ -134,7 +149,8 @@ export default {
       sem: null,
       cohortTopMods: null,
       showModal: false,
-      cohort_loaded: false
+      cohort_loaded: false,
+       color: "#eda200",
     };
   },
   methods: {
@@ -205,11 +221,11 @@ export default {
           });
         });
     });
-
+    database.getUser().then(user => {
     // query database for user info
     database.firebase_data
       .collection("students")
-      .doc(database.user)
+      .doc(user)
       .onSnapshot(function(user) {
         var userData = user.data();
         var attr = [];
@@ -229,7 +245,7 @@ export default {
         };
 
         self.User = result;
-       
+       console.log(database.getStudentSam_by_sem())
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
@@ -247,6 +263,8 @@ export default {
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
+    });
+    
   },
   mounted() {
     if (this.userPassed) {

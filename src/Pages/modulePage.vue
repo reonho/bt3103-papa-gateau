@@ -66,9 +66,24 @@
             <i
               class="far fa-question-circle"
               style="color:grey"
-            ><md-tooltip md-direction="right">Average grades of students who have scored A and above in this module.</md-tooltip></i>
+            >
+              <md-tooltip
+                md-direction="right"
+              >Average grades of students who have scored A and above in this module.</md-tooltip>
+            </i>
           </h2>
-          <div style="text-align:center;">
+          <div style="text-align:center;height:40vh">
+             <div v-show="loading2">
+                <md-empty-state
+                  id="statebox"
+                  style="max-width:0 !important; color: #2e4053;"
+                  md-label="Loading Attributes..."
+                >
+                <br/>
+                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
+                </md-empty-state>
+          </div>
+            <div v-show="!loading2">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
               :my_attr="topAttributes"
@@ -77,7 +92,8 @@
               label_1="Top Student Attributes"
               label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
-            ></RadarChart>
+            ></RadarChart></div>
+            <div  v-show="!loading2">
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
@@ -87,7 +103,9 @@
               label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
-            <md-empty-state
+          
+            </div>
+              <md-empty-state
               v-if="topAttributes === 'no data'"
               style="padding-top:0;"
               id="statebox"
@@ -100,10 +118,11 @@
         <section id="statistics" style="margin-left:1vw;">
           <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
             Review Statistics
-            <i
-              class="far fa-question-circle"
-              style="color: grey"
-            ><md-tooltip md-direction="right">Statistics collected based on reviews gathered from users below.</md-tooltip></i>
+            <i class="far fa-question-circle" style="color: grey">
+              <md-tooltip
+                md-direction="right"
+              >Statistics collected based on reviews gathered from users below.</md-tooltip>
+            </i>
           </h2>
           <b-tabs
             active-nav-item-class="activetab"
@@ -130,6 +149,8 @@
                   ></md-empty-state>
                 </div>
                 <div class="row">
+                  <div class="col-4" v-show="loading"></div>
+                  <div class="col-4" v-show="showEmpty"></div>
                   <div class="col-4" v-show="!loading&&!showEmpty" style="position: relative;">
                     <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                   </div>
@@ -219,7 +240,11 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" v-if="easy != 0" id="easy">{{ easy }}</span>
+                                <span
+                                  style="padding-left:12px"
+                                  v-if="easy != 0"
+                                  id="easy"
+                                >{{ easy }}</span>
                                 <span style="padding-left:12px" v-else id="easy">N.A.</span>
                               </p>
                             </div>
@@ -257,7 +282,11 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" v-if="manag_asgn!=0" id="manageable">{{ manag_asgn }}</span>
+                                <span
+                                  style="padding-left:12px"
+                                  v-if="manag_asgn!=0"
+                                  id="manageable"
+                                >{{ manag_asgn }}</span>
                                 <span style="padding-left:12px" v-else id="manageable">N.A.</span>
                               </p>
                             </div>
@@ -295,7 +324,11 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px;" v-if="manag_exam != 0" id="exam">{{ manag_exam }}</span>
+                                <span
+                                  style="padding-left:12px;"
+                                  v-if="manag_exam != 0"
+                                  id="exam"
+                                >{{ manag_exam }}</span>
                                 <span style="padding-left:12px;" v-else id="exam">N.A.</span>
                               </p>
                             </div>
@@ -333,7 +366,11 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding-left:12px" id="workload" v-if="manag_wkld != 0">{{ manag_wkld }}</span>
+                                <span
+                                  style="padding-left:12px"
+                                  id="workload"
+                                  v-if="manag_wkld != 0"
+                                >{{ manag_wkld }}</span>
                                 <span style="padding-left:12px" id="workload" v-else>N.A.</span>
                               </p>
                             </div>
@@ -616,6 +653,7 @@ export default {
     },
     checksemester(arr) {
       arr = arr.info.semesterData;
+
       var semesters = [
         {
           semester: "Semester 1",
@@ -632,30 +670,11 @@ export default {
           active: false
         }
       ];
+
       var num = arr.length;
       var flag = false;
       for (var i = 0; i < num; i++) {
-        if (arr[i].semester == 3) {
-          semesters[2].disabled = "";
-          if (flag === false) {
-            semesters[2].active = true;
-          }
-          flag = true;
-          if (Object.keys(arr[i]).length > 1) {
-            semesters[2].examDate = arr[i].examDate;
-            semesters[2].examDuration = arr[i].examDuration / 60;
-          }
-        } else if (arr[i].semester == 4) {
-          semesters[3].disabled = "";
-          if (flag === false) {
-            semesters[3].active = true;
-          }
-          flag = true;
-          if (Object.keys(arr[i]).length > 1) {
-            semesters[3].examDate = arr[i].examDate;
-            semesters[3].examDuration = arr[i].examDuration / 60;
-          }
-        } else if (arr[i].semester == 2) {
+        if (arr[i].semester == 2) {
           semesters[1].disabled = "";
           if (flag === false) {
             semesters[1].active = true;
@@ -677,6 +696,7 @@ export default {
           }
         }
       }
+
       return semesters;
     },
     showsem(sem) {
@@ -704,6 +724,9 @@ export default {
       }
       return num;
     },
+    likes(value) {
+      this.liked = value;
+    },
     showValues(value, str) {
       if (str == "ratings") {
         this.ratings = value;
@@ -724,20 +747,20 @@ export default {
       this.sortingRev = true;
       if (value == "Best") {
         this.reviewData.sort(function(a, b) {
-          let diff = b.likes - a.likes
+          let diff = b.likes - a.likes;
           if (diff == 0) {
-            return b.review_date.toDate() - a.review_date.toDate()
-          }  // sort by number of likes then by newest
+            return b.review_date.toDate() - a.review_date.toDate();
+          } // sort by number of likes then by newest
           return diff;
         });
       } else if (value == "Newest") {
         this.reviewData.sort(function(a, b) {
-          return b.review_date.toDate() - a.review_date.toDate()
-        })
+          return b.review_date.toDate() - a.review_date.toDate();
+        });
       } else if (value == "Oldest") {
         this.reviewData.sort(function(a, b) {
-          return a.review_date.toDate() - b.review_date.toDate()
-        })
+          return a.review_date.toDate() - b.review_date.toDate();
+        });
       }
     }
   },
@@ -755,28 +778,30 @@ export default {
           this.reviewData.push(item);
         });
         this.reviewData.sort(function(a, b) {
-          let diff = b.likes - a.likes
+          let diff = b.likes - a.likes;
           if (diff == 0) {
-            return b.review_date.toDate() - a.review_date.toDate()
-          }  // sort by number of likes then by newest
+            return b.review_date.toDate() - a.review_date.toDate();
+          } // sort by number of likes then by newest
           return diff;
         });
-    });
+      });
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
     });
+     database.getUser().then(user => {
     database.firebase_data
       .collection("students")
-      .doc(database.user)
+      .doc(user)
       .get()
-      .then(user => {
-        var userData = user.data();
+      .then(doc => {
+        var userData = doc.data();
         this.myAttributes = userData.attributes;
         //console.log(typeof this.myAttCheck);
         this.myAttCheck = userData.attributes[0].att;
         //console.log("Check myAtt");
       });
+     })
     database.getModuleAttributes(this.code).then(ma => {
       //console.log(ma);
       this.topAttributes = ma;
@@ -787,7 +812,7 @@ export default {
       async function check(self) {
         // console.log(typeof ma );
         while (typeof ma[0] == "undefined") {
-          await sleep(2000);
+          await sleep(1000);
         }
         self.topAttCheck = ma[0].att;
       }
@@ -795,6 +820,7 @@ export default {
       if (ma !== "no data") {
         check(self);
       }
+      this.loading2 = false;
     });
   },
   updated() {
@@ -826,6 +852,7 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
+    liked: false,
     sortingRev: false,
     sortingMethod: "Best",
     topAttributes: null,
@@ -840,6 +867,7 @@ export default {
     manag_exam: 0,
     manag_wkld: 0,
     loading: true,
+    loading2: true,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
@@ -871,7 +899,13 @@ export default {
     },
     reviewData: function() {
       if (this.sortingRev == true) this.sortingRev = false;
-      else this.yrs = [...new Set(this.findYears)]
+      else {
+        this.$root.$on("likes", this.likes);
+        if (this.liked) {
+          this.liked = false;
+        }
+        else this.yrs = [...new Set(this.findYears)];
+      }
     }
   }
 };
@@ -936,8 +970,8 @@ export default {
   font-weight: 500;
 }
 
-.md-tooltip {	
-  font-size: 1.6vh !important;	
+.md-tooltip {
+  font-size: 1.8vh !important;
 }
 @media screen and (min-width: 1800px) {
   main {
@@ -958,7 +992,7 @@ export default {
   }
 }
 @media screen and (min-width: 1300px) {
-  // adjust charts  
+  // adjust charts
 }
 </style>
 
