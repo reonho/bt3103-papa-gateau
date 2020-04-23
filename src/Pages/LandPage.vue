@@ -205,11 +205,13 @@ export default {
           });
         });
     });
+database.getUser().then(user => {
+
 
     // query database for user info
     database.firebase_data
       .collection("students")
-      .doc(database.user)
+      .doc(user)
       .onSnapshot(function(user) {
         var userData = user.data();
         var attr = [];
@@ -247,6 +249,7 @@ export default {
         self.get_currentsem(self.User.sap_by_sem);
         self.get_modules(self.User.modules_taken);
       });
+      })
   },
   mounted() {
     if (this.userPassed) {
