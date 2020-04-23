@@ -1,9 +1,9 @@
 <template>
-<div class="NavBar" style="border-bottom:1px solid white;border-bottom-color:grey;">
+<div class="NavBar" style="border-bottom:1px solid white;border-bottom-color:grey;font-family:'PT Sans', 'Dosis', 'Fira Sans'">
    <md-toolbar class="test" style="" md-elevation="0">
-       <h3 class="md-title" style="flex: 2;  margin-left:4vh;color:white;font-weight:bold">
+       <h3 class="md-title" style="flex: 2; color:white;font-weight:bold">
         <router-link class="nav-link" to="/">
-           <md-button style="font-size: 200%;color:white;font-weight:bold">Modeaux</md-button>
+           <md-button style="font-size: 150%;color:white;font-family: 'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</md-button>
         </router-link>
         </h3>
           <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>
@@ -90,5 +90,14 @@
 }
 html {
     margin:0
+}
+.nav-link.router-link-active {
+    padding-left:0;
+}
+.md-ripple {
+    padding-left:0;
+}
+.md-toolbar.test.md-theme-default.md-elevation-0 {
+    padding-left:0;
 }
 </style>
