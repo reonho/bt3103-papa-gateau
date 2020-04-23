@@ -3,42 +3,44 @@
     <NavBar />
     <main>
       <div id="modulePage" style="margin-top:5vh;">
-        <title>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</title>
+        <title>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</title>
         <section id="details">
-          <div style="color:#EC7663; margin-left: 1vw;" class="header">
-            <b>{{this.Modules[0].info.moduleCode}} - {{this.Modules[0].info.title}}</b>
+          <div style="color:#EC7663; margin-left: 1vw;">
+            <h1>
+              <b>{{this.Module.info.moduleCode}} - {{this.Module.info.title}}</b>
+            </h1>
           </div>
 
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{this.Modules[0].info.department}} • {{this.Modules[0].info.faculty}} • {{this.Modules[0].info.moduleCredit}} MCs</div>
+          >{{this.Module.info.department}} • {{this.Module.info.faculty}} • {{this.Module.info.moduleCredit}} MCs</div>
           <div
             style="color: #616a6b; margin-left: 1vw; padding-top: 1vh"
             class="depFac"
-          >{{showsem(this.Modules[0].info.semesterData)}}</div>
+          >{{showsem(this.Module.info.semesterData)}}</div>
           <hr />
-          <div style="margin-left: 1vw; margin-right:1vw;font-size:2vh">
-            {{this.Modules[0].info.description}}
+          <div style="margin-left: 1vw; margin-right:1vw;">
+            {{this.Module.info.description}}
             <br />
             <br />
             <div class="row">
               <div class="col-4" style="text-align:left">
-                <span v-if="this.Modules[0].info.preclusion">
+                <span v-if="this.Module.info.preclusion">
                   <b style="color: #616a6b">Preclusion(s)</b>
                   <br />
-                  <span>{{this.Modules[0].info.preclusion}}</span>
+                  <span>{{this.Module.info.preclusion}}</span>
                   <br />
                   <br />
                 </span>
-                <span v-if="this.Modules[0].info.prerequisite">
+                <span v-if="this.Module.info.prerequisite">
                   <b style="color: #616a6b">Prerequisite(s)</b>
                   <br />
-                  {{this.Modules[0].info.prerequisite}}
+                  {{this.Module.info.prerequisite}}
                   <br />
                   <br />
                 </span>
-                <p v-for="sem in checksemester(this.Modules[0])" v-bind:key="sem.index">
+                <p v-for="sem in checksemester(this.Module)" v-bind:key="sem.index">
                   <span v-if="sem.disabled == ''">
                     <b style="color: #616a6b">
                       {{ sem.semester }} Exam
@@ -51,50 +53,63 @@
                 <br />
               </div>
               <div class="col-8">
-                <b style="color: #616a6b">Workload - {{calcwork(this.Modules[0]) + " hours"}}</b>
-                <workloadchart :seriesStats="formatwork(this.Modules[0].info.workload)"></workloadchart>
+                <b style="color: #616a6b">Workload - {{calcwork(this.Module) + " hours"}}</b>
+                <workloadchart :seriesStats="formatwork(this.Module.info.workload)"></workloadchart>
               </div>
             </div>
           </div>
         </section>
         <hr />
         <section id="attributes">
-          <span
-            style="color:#EC7663; margin-left:1vw; margin-top:1vh; font-size: 3vh"
-          >Attributes of top scorers in this module</span>
-          <div style="text-align:center; margin-top:4vh; margin-bottom:15vh">
+          <h2 style="color:#EC7663; margin-left:1vw; margin-top:1vh;">
+            Attributes of top scorers in this module
+            <i
+              class="far fa-question-circle"
+              style="color:grey"
+            >
+              <md-tooltip
+                md-direction="right"
+              >Average grades of students who have scored A and above in this module.</md-tooltip>
+            </i>
+          </h2>
+          <div style="text-align:center;">
             <RadarChart
-              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string' "
+              v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
               :my_attr="topAttributes"
               :fac_attr="myAttributes"
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-              style="display: inline-block; width:50vw; height:50vh;"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <RadarChart
-              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string' "
+              v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
               :fac_attr="null"
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-              style="display: inline-block; width:50vw; height:50vh;"
+              style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
             <md-empty-state
               v-if="topAttributes === 'no data'"
-              md-description="There is insufficient data for this module."
+              style="padding-top:0;"
+              id="statebox"
               md-icon="assessment"
               md-label="Insufficient Data"
-              style="display: inline-block; width:50vw; height:50vh;"
             />
           </div>
         </section>
         <hr />
         <section id="statistics" style="margin-left:1vw;">
-          <span style="color:#EC7663;margin-top:1vh; font-size: 3vh">Statistics</span>
-          <br />
-          <br />
+          <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
+            Review Statistics
+            <i class="far fa-question-circle" style="color: grey">
+              <md-tooltip
+                md-direction="right"
+              >Statistics collected based on reviews gathered from users below.</md-tooltip>
+            </i>
+          </h2>
           <b-tabs
             active-nav-item-class="activetab"
             class="semtabs"
@@ -104,7 +119,7 @@
             lazy
           >
             <b-tab
-              v-for="sem in checksemester(this.Modules[0])"
+              v-for="sem in checksemester(this.Module)"
               v-bind:key="sem.index"
               :title="sem.semester"
               :title-link-class="sem.disabled"
@@ -122,7 +137,7 @@
                 <div class="row">
                   <div class="col-4" v-show="loading"></div>
                   <div class="col-4" v-show="showEmpty"></div>
-                  <div class="col-4" v-show="!loading&&!showEmpty">
+                  <div class="col-4" v-show="!loading&&!showEmpty" style="position: relative;">
                     <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                   </div>
                   <div class="col-8 box">
@@ -130,15 +145,13 @@
                       <div class="col-5" v-show="loading"></div>
                       <div class="col-5" v-show="showEmpty"></div>
                       <div class="col-5" v-show="!loading&&!showEmpty">
-                        <h4
-                          style="padding-top: 1.5vh;color:#616a6b; font-size:2.5vh"
-                        >Student reviews</h4>
+                        <h4 style="padding-top: 1.5vh;color:#616a6b;">Student reviews</h4>
                         <p v-if="ratings != 0">
                           <span
                             v-for="n in numWholeStars(overallRating)"
                             :key="n"
                             style="color: gold;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_gold_stars"
                           >
                             <i class="fa fa-star"></i>
@@ -147,7 +160,7 @@
                             v-for="n in numHalfStars(overallRating)"
                             :key="n"
                             style="color: gold;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_gold_stars_half"
                           >
                             <i class="fas fa-star-half-alt"></i>
@@ -156,12 +169,12 @@
                             v-for="n in (5 - numWholeStars(overallRating) - numHalfStars(overallRating))"
                             :key="n"
                             style="color: lightgrey;font-size:2.5vh;"
-                            class="star"
+                            class="big_star"
                             id="avg_grey_stars"
                           >
                             <i class="fa fa-star"></i>
                           </span>
-                          <span style="padding:1.25vh;">{{ overallRating }} out of 5</span>
+                          <span style="padding-left:1.25vh;">{{ overallRating }} out of 5</span>
                         </p>
                         <h5 style="font-weight:400">
                           {{ratings}}
@@ -179,12 +192,10 @@
                         <div v-show="loading"></div>
                         <div v-show="showEmpty"></div>
                         <div v-show="!loading&&!showEmpty" v-if="ratings != 0">
-                          <h4
-                            style="padding-top:1.5vh;color:#616a6b; padding-bottom:1vh;font-size:2.5vh"
-                          >Features</h4>
+                          <h4 style="padding-top:1.5vh;color:#616a6b; padding-bottom:1vh">Features</h4>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Easy to understand</p>
+                              <p style="font-weight:400;">Easy to understand</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -215,13 +226,18 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span style="padding:1.25vh;font-size: 2vh" id="easy">{{ easy }}</span>
+                                <span
+                                  style="padding-left:12px"
+                                  v-if="easy != 0"
+                                  id="easy"
+                                >{{ easy }}</span>
+                                <span style="padding-left:12px" v-else id="easy">N.A.</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable assignments</p>
+                              <p style="font-weight:400;">Manageable assignments</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -253,15 +269,17 @@
                                   <i class="fa fa-star"></i>
                                 </span>
                                 <span
-                                  style="padding:1.25vh;font-size: 2vh"
+                                  style="padding-left:12px"
+                                  v-if="manag_asgn!=0"
                                   id="manageable"
                                 >{{ manag_asgn }}</span>
+                                <span style="padding-left:12px" v-else id="manageable">N.A.</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable exams</p>
+                              <p style="font-weight:400;">Manageable exams</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -293,15 +311,17 @@
                                   <i class="fa fa-star"></i>
                                 </span>
                                 <span
-                                  style="padding:1.25vh;font-size: 2vh"
+                                  style="padding-left:12px;"
+                                  v-if="manag_exam != 0"
                                   id="exam"
                                 >{{ manag_exam }}</span>
+                                <span style="padding-left:12px;" v-else id="exam">N.A.</span>
                               </p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-6">
-                              <p style="font-weight:400; font-size:2vh">Manageable workload</p>
+                              <p style="font-weight:400;">Manageable workload</p>
                             </div>
                             <div class="col-6" style="float:right">
                               <p>
@@ -333,9 +353,11 @@
                                   <i class="fa fa-star"></i>
                                 </span>
                                 <span
-                                  style="padding:1.25vh;font-size: 2vh"
+                                  style="padding-left:12px"
                                   id="workload"
+                                  v-if="manag_wkld != 0"
                                 >{{ manag_wkld }}</span>
+                                <span style="padding-left:12px" id="workload" v-else>N.A.</span>
                               </p>
                             </div>
                           </div>
@@ -344,9 +366,7 @@
                         <br />
 
                         <div v-show="!loading && !(findYears.length == 0)">
-                          <h4
-                            style="padding-top: 1.3vh;color:#0B5345; font-size:2.5vh"
-                          >Filter by Year</h4>
+                          <h4 style="padding-top: 1.3vh;color:#0B5345">Filter by Year</h4>
 
                           <md-field style="width: 20vw">
                             <label for="years">Years Selected</label>
@@ -385,14 +405,14 @@
                     <br />
                   </div>
 
-                  <div style="width: 100vw;" v-show="loading">
+                  <div style="width: 100%;" v-show="loading">
                     <md-empty-state
                       id="statebox"
                       style="max-width:0 !important; margin-top:-2vw; margin-bottom:5vw;color: #2e4053;"
                       md-label="Loading..."
                     >
                       <br />
-                      <ScaleLoader :loading="loading" :color="color" :size="size"></ScaleLoader>
+                      <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
                     </md-empty-state>
                   </div>
                 </div>
@@ -403,36 +423,34 @@
         <hr />
         <!-- First query if user has already written a review for the module, if yes then show a dialog else navigate to review page. Should pass module code here -->
         <section id="reviews">
-          <div style="color:#EC7663; margin-top:1vh; margin-left:1vw; font-size: 3vh">
+          <h2 style="color:#EC7663; margin-top:1vh; margin-left:1vw;">
             Reviews
             <a
               class="btn btn-primary btn-lg mr-4"
-              style="color: white; font-size: 2vh; float:right; background-color:teal; border-color:teal"
-              href="#"
+              style="color: white; float:right; background-color:teal; border-color:teal"
               id="addReview"
               @click="review"
             >New Review</a>
             <b-dropdown
               size="lg"
+              id="sortBy"
               variant="link"
               toggle-class="text-decoration-none"
-              style="float:right"
-              no-caret
+              style="float:right;"
+              v-model="sortingMethod"
+              v-bind:text="'Sort by ' + this.sortingMethod"
             >
-              <template v-slot:button-content>
-                <h5>Sort by Newest &#9662;</h5>
-              </template>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Best')">
                 <h5>Best</h5>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Newest')">
                 <h5>Newest</h5>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
+              <b-dropdown-item v-on:click="changeSort('Oldest')">
                 <h5>Oldest</h5>
               </b-dropdown-item>
             </b-dropdown>
-          </div>
+          </h2>
           <br />
           <div>
             <ReviewSection :reviewData="reviewData" />
@@ -442,11 +460,13 @@
               md-confirm-text="Okay"
               md-title="Review already exists"
             />
-            <md-dialog-alert
+            <md-dialog-confirm
               :md-active.sync="showAddDialog"
-              md-content="Please add the module first before writing a review."
-              md-confirm-text="Okay"
+              md-content="Please add the module to your dashboard before writing a review."
+              md-confirm-text="Bring me there"
               md-title="Module not added"
+              md-cancel-text="Cancel"
+              @md-confirm="goLand"
             />
           </div>
         </section>
@@ -460,7 +480,7 @@
             <a href="#attributes" id="navlink">Top Scorers' Attributes</a>
           </li>
           <li>
-            <a href="#statistics" id="navlink">Statistics</a>
+            <a href="#statistics" id="navlink">Review Statistics</a>
           </li>
           <li>
             <a href="#reviews" id="navlink">Reviews</a>
@@ -472,15 +492,14 @@
 </template>
 
 <script>
-import PieChart from "../PieChart.js";
-import BarChart from "../BarChart.js";
+import PieChart from "../components/PieChart.js";
+import BarChart from "../components/BarChart.js";
 import WorkloadChartForMod from "../components/WorkloadChartForMod";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import RadarChart from "../components/RadarChart";
 import NavBar from "../components/NavBar";
 import database from "../firebase";
 import ReviewSection from "../components/ReviewSection";
-
 export default {
   name: "ModulePage",
   props: {
@@ -497,7 +516,7 @@ export default {
   },
   computed: {
     showEmpty: function() {
-      return this.ratings == 0;
+      return this.reviewData.length == 0 || this.ratings == 0;
     },
     findYears: function() {
       var years = [];
@@ -505,8 +524,7 @@ export default {
         let sem = this.reviewData[docu].detailsForm.selectedSemester;
         if (
           isNaN(sem)
-            ? sem.includes("Semester " + (this.chosenSem + 1)) ||
-              sem.includes("Special Term " + (this.chosenSem - 1))
+            ? sem.includes("Semester " + (this.chosenSem + 1))
             : sem == this.chosenSem
         ) {
           years.push(this.reviewData[docu].detailsForm.selectedYear);
@@ -516,6 +534,9 @@ export default {
     }
   },
   methods: {
+    goLand() {
+      this.$router.push({ name: "LandPage" });
+    },
     countInArray(array, value) {
       return array.reduce((n, x) => n + (x === value), 0);
     },
@@ -552,7 +573,7 @@ export default {
               if (rev === null) {
                 this.$router.push({
                   name: "ReviewForm",
-                  params: { mod: this.Modules[0].info.moduleCode }
+                  params: { mod: this.Module.info.moduleCode }
                 });
               } else {
                 //user has already written a review, prompt them
@@ -563,7 +584,6 @@ export default {
         });
       });
     },
-
     formatwork(workload) {
       var series = [];
       series.push({
@@ -572,7 +592,6 @@ export default {
       });
       return series;
     },
-
     formatDate: function(datetime) {
       //2019-12-04T09:00:00.000Z
       var monthNames = [
@@ -618,7 +637,6 @@ export default {
         );
       }
     },
-
     checksemester(arr) {
       arr = arr.info.semesterData;
       var semesters = [
@@ -635,20 +653,6 @@ export default {
           examDate: null,
           examDuration: 0,
           active: false
-        },
-        {
-          semester: "Special Term I",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
-        },
-        {
-          semester: "Special Term II",
-          disabled: "disabledTab",
-          examDate: null,
-          examDuration: 0,
-          active: false
         }
       ];
       var num = arr.length;
@@ -660,7 +664,6 @@ export default {
             semesters[2].active = true;
           }
           flag = true;
-
           if (Object.keys(arr[i]).length > 1) {
             semesters[2].examDate = arr[i].examDate;
             semesters[2].examDuration = arr[i].examDuration / 60;
@@ -703,12 +706,7 @@ export default {
       var totalsems = "";
       var num = sem.length;
       for (var i = 0; i < num; i++) {
-        var semesters = [
-          "Semester 1",
-          "Semester 2",
-          "Special Term I",
-          "Special Term II"
-        ];
+        var semesters = ["Semester 1", "Semester 2"];
         if (sem[i].semester == 3) {
           totalsems += semesters[2] + " • ";
         } else if (sem[i].semester == 4) {
@@ -729,6 +727,9 @@ export default {
       }
       return num;
     },
+    likes(value) {
+      this.liked = value;
+    },
     showValues(value, str) {
       if (str == "ratings") {
         this.ratings = value;
@@ -742,6 +743,27 @@ export default {
         this.manag_exam = value;
       } else if (str == "manag_wkld") {
         this.manag_wkld = value;
+      }
+    },
+    changeSort(value) {
+      this.sortingMethod = value;
+      this.sortingRev = true;
+      if (value == "Best") {
+        this.reviewData.sort(function(a, b) {
+          let diff = b.likes - a.likes;
+          if (diff == 0) {
+            return b.review_date.toDate() - a.review_date.toDate();
+          } // sort by number of likes then by newest
+          return diff;
+        });
+      } else if (value == "Newest") {
+        this.reviewData.sort(function(a, b) {
+          return b.review_date.toDate() - a.review_date.toDate();
+        });
+      } else if (value == "Oldest") {
+        this.reviewData.sort(function(a, b) {
+          return a.review_date.toDate() - b.review_date.toDate();
+        });
       }
     }
   },
@@ -757,14 +779,19 @@ export default {
           item = doc.data();
           item.id = doc.id;
           this.reviewData.push(item);
-          //console.log(this.reviewData);
+        });
+        this.reviewData.sort(function(a, b) {
+          let diff = b.likes - a.likes;
+          if (diff == 0) {
+            return b.review_date.toDate() - a.review_date.toDate();
+          } // sort by number of likes then by newest
+          return diff;
         });
       });
     //get module details
     database.getModules(this.code).then(item => {
-      this.Modules.push(item);
+      this.Module = item;
     });
-
     database.firebase_data
       .collection("students")
       .doc(database.user)
@@ -776,48 +803,44 @@ export default {
         this.myAttCheck = userData.attributes[0].att;
         //console.log("Check myAtt");
       });
-
     database.getModuleAttributes(this.code).then(ma => {
-      console.log(ma);
+      //console.log(ma);
       this.topAttributes = ma;
-
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
       var self = this;
       async function check(self) {
         // console.log(typeof ma );
-
         while (typeof ma[0] == "undefined") {
           await sleep(2000);
         }
         self.topAttCheck = ma[0].att;
-        
       }
       //no top students data
-      if (ma !== 'no data') {
+      if (ma !== "no data") {
         check(self);
       }
     });
   },
   updated() {
+    // For the scrollspy
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         const id = entry.target.getAttribute("id");
-        if (entry.intersectionRatio > 0) {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.add("active");
-          // console.log("hi");
-          // console.log(id);
-        } else {
-          document
-            .querySelector(`nav li a[href="#${id}"]`)
-            .parentElement.classList.remove("active");
+        if (document.querySelector(`nav li a[href="#${id}"]`) !== null) {
+          if (entry.intersectionRatio > 0) {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.add("active");
+          } else {
+            document
+              .querySelector(`nav li a[href="#${id}"]`)
+              .parentElement.classList.remove("active");
+          }
         }
       });
     });
-
     // Track all sections that have an `id` applied
     document.querySelectorAll("section[id]").forEach(section => {
       observer.observe(section);
@@ -829,6 +852,9 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
+    liked: false,
+    sortingRev: false,
+    sortingMethod: "Best",
     topAttributes: null,
     myAttributes: null,
     myAttCheck: false,
@@ -849,7 +875,19 @@ export default {
     infodes: null,
     module_code: "",
     chosenSem: 0,
-    Modules: []
+    Module: {
+      info: {
+        department: "",
+        description: "",
+        faculty: "",
+        moduleCode: "",
+        moduleCredit: "",
+        prerequisite: "",
+        semesterData: [],
+        title: "",
+        workload: []
+      }
+    }
   }),
   watch: {
     yrs: function() {
@@ -857,6 +895,16 @@ export default {
     },
     chosenSem: function() {
       this.shortload(900);
+    },
+    reviewData: function() {
+      if (this.sortingRev == true) this.sortingRev = false;
+      else {
+        this.$root.$on("likes", this.likes);
+        if (this.liked) {
+          this.liked = false;
+        }
+        else this.yrs = [...new Set(this.findYears)];
+      }
     }
   }
 };
@@ -866,57 +914,8 @@ export default {
 <style lang="scss" scoped>
 @import "~vue-material/src/theme/engine";
 @import "../assets/stylesheets/scrollSpy.scss";
-.header {
-  padding: 1vh;
-  padding-left: 0;
-  font-size: 1.8vw;
-}
-.miniheader {
-  font-size: 1.2vw;
-  color: #616a6b;
-  font-weight: bold;
-}
 .depFac {
-  font-size: 2vh;
-}
-span {
-  font-size: 2.1vh;
-  line-height: 1.5;
-}
-.button {
-  display: block;
-  border-radius: 4px;
-  background-color: #f4511e;
-  border: none;
-  color: white;
-  text-align: center;
-  font-size: 15px;
-  padding: 15px;
-  width: 200px;
-  transition: all 0.5s;
-  cursor: pointer;
-  margin: 10px;
-}
-.button span {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: 0.5s;
-}
-.button span:after {
-  content: "\00bb";
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-.button:hover span {
-  padding-right: 25px;
-}
-.button:hover span:after {
-  opacity: 1;
-  right: 0;
+  font-size: 100%;
 }
 .box {
   border-style: solid;
@@ -928,11 +927,9 @@ span {
   font-weight: bold !important;
   font-size: 1vw !important;
 }
-
 .dropdown-item h5 {
-  color: #ec7663;
+  color: darkblue;
 }
-
 .sidebar {
   position: fixed;
   top: 30px;
@@ -940,27 +937,22 @@ span {
   max-width: 230px;
   font-size: 18px;
 }
-
 .menu-item {
   margin-bottom: 20px;
 }
-
 .menu-item a {
   cursor: pointer;
 }
-
 .menu {
   padding: 0;
   list-style: none;
 }
-
 .customActive {
   color: #178ce6;
   border-left: 1px solid #178ce6;
   padding-left: 5px;
   transition: all 0.5s;
 }
-
 #navlink {
   text-decoration: none;
   display: block;
@@ -968,22 +960,69 @@ span {
   color: #ccc;
   transition: all 50ms ease-in-out;
 }
-
 #navlink:hover,
 #navlink:focus {
   color: #666;
 }
-
 .section-nav li.active > #navlink {
   color: #333;
   font-weight: 500;
 }
+
+.md-tooltip {
+  font-size: 1.8vh !important;
+}
+@media screen and (min-width: 1800px) {
+  main {
+    font-size: 20px;
+    line-height: 30px;
+  }
+  h1 {
+    font-size: 190%;
+  }
+  h2 {
+    font-size: 140%;
+  }
+  h4 {
+    font-size: 110%;
+  }
+  h5 {
+    font-size: 90%;
+  }
+}
+@media screen and (min-width: 1300px) {
+  // adjust charts
+}
 </style>
+
 <style lang="scss">
 .disabledTab {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
+@media screen and (min-width: 1700px) {
+  #addReview {
+    font-size: 18px;
+  }
+  button#sortBy__BV_toggle_ {
+    font-size: 18px;
+  }
+  .dropdown-item > h5 {
+    font-size: 18px;
+  }
+  #statebox .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
+    font-size: 5vw !important;
+    color: teal;
+  }
+  #statebox .md-empty-state-label {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-description {
+    font-size: 1vw !important;
+  }
+  #statebox .md-empty-state-container {
+    width: 42vw;
+  }
+}
 </style>
-

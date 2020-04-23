@@ -120,27 +120,38 @@ var database = {
               .get()
               .then((snapshot) => {
                 if (snapshot.empty) {
-                  //add module_results
-                  var results = {
-                    SU: result.selectedSU,
-                    attribute: result.selectedModule.slice(0, 2),
-                    course: user_.course,
-                    faculty: user_.faculty,
-                    grade: result.selectedGrade,
-                    module: result.selectedModule,
-                    sem: result.selectedSemester,
-                    studentID: user,
-                    year: result.selectedYear,
-                  };
+                  //check if module exists
                   database.firebase_data
-                    .collection("module_grades")
-                    .add(results);
-                  //update student overall cap, modules taken, attributes, cap per semester
-                  database.updateStudentInfo();
-                  //update faculty attributes and number of students taken
-                  resolve("success");
+                    .collection("modules")
+                    .where("info.moduleCode", "==", result.selectedModule)
+                    .get()
+                    .then(snapshot_=>{
+                      if (!snapshot_.empty){
+                        var results = {
+                          SU: result.selectedSU,
+                          attribute: result.selectedModule.slice(0, 2),
+                          course: user_.course,
+                          faculty: user_.faculty,
+                          grade: result.selectedGrade,
+                          module: result.selectedModule,
+                          sem: result.selectedSemester,
+                          studentID: user,
+                          year: result.selectedYear,
+                        };
+                        database.firebase_data
+                          .collection("module_grades")
+                          .add(results);
+                        //update student overall cap, modules taken, attributes, cap per semester
+                        database.updateStudentInfo();
+                        //update faculty attributes and number of students taken
+                        resolve("success");
+                      } else {
+                        reject("Not a valid module!")
+                      }
+                    })
+                  //add module_results
                 } else {
-                  reject("module already taken!");
+                  reject("Module already taken!");
                 }
               });
           });
@@ -210,26 +221,89 @@ var database = {
   //=====================================//
   //----------- deleteModuleResults -----//
   //=====================================//
-  async deleteModuleResults(module_){
-    var user = await database.getUser()
-    console.log("deleting data")
+  async deleteModuleResults(module_) {
+    var user = await database.getUser();
+    console.log("deleting data");
     var module_delete = await database.firebase_data
       .collection("module_grades")
-      .where("studentID","==",user)
-      .where("module",'==',module_)
-      .get()
-    var promise = new Promise((resolve,reject) =>{
-      module_delete.forEach(doc=>{
-        console.log(doc.data())
-        doc.ref.delete().then(e=>{
-          database.updateStudentInfo()
-          resolve(e)
-        }).catch(e=>{
-          reject(e)
-        })
-      })
-    })
-    return promise
+      .where("studentID", "==", user)
+      .where("module", "==", module_)
+      .get();
+    var promise = new Promise((resolve, reject) => {
+      module_delete.forEach((doc) => {
+        console.log(doc.data());
+        doc.ref
+          .delete()
+          .then((e) => {
+            database.updateStudentInfo();
+            resolve(e);
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    });
+    return promise;
+  },
+  //=====================================//
+  //----------- deleteModuleResults -----//
+  //=====================================//
+  async deleteModuleDummy(module_, year, semester) {
+    var user = await database.getUser();
+    console.log("deleting data");
+    var module_delete = await database.firebase_data
+      .collection("module_grades")
+      .where("studentID", "==", user)
+      .where("module", "==", module_)
+      .where("year", "==", year)
+      .where("semester", "==", semester)
+      .get();
+    var promise = new Promise((resolve, reject) => {
+      module_delete.forEach((doc) => {
+        console.log(doc.data());
+        doc.ref
+          .delete()
+          .then((e) => {
+            database.updateStudentInfo();
+            resolve(e);
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    });
+    return promise;
+  },
+  //=====================================//
+  //----------- addModuleDummy------------//
+  //=====================================//
+  async addModuleDummy(module_result) {
+    //input must have grade, module, sem, year, SU
+    var result = module_result;
+    var promise = new Promise((resolve) => {
+      database.getUser().then((user) => {
+        //check if module is added
+
+        //add module_results
+        var results = {
+          SU: result.SU,
+          attribute: result.attribute,
+          course: result.course,
+          faculty: result.faculty,
+          grade: result.grade,
+          module: result.module,
+          sem: result.sem,
+          studentID: user,
+          year: result.year,
+        };
+        database.firebase_data.collection("module_grades").add(results);
+        //update student overall cap, modules taken, attributes, cap per semester
+        database.updateStudentInfo();
+        //update faculty attributes and number of students taken
+        resolve("success");
+      });
+    });
+    return promise;
   },
 
   //=====================================//
@@ -262,19 +336,21 @@ var database = {
   //=====================================//
   async getCohortTopModules(batch) {
     var students = await database.getCohortStudents(batch);
-    console.log(students);
+
     var modules = [];
     var amt = [];
     for (var x in students) {
       var mod_ = await database.getStudentModules(students[x]);
       for (var y in mod_) {
         var module_ = mod_[y];
-        if (modules.includes(module_)) {
-          var index = modules.indexOf(module_);
-          amt[index] += 1;
-        } else {
-          modules.push(module_);
-          amt.push(1);
+        if (module_ != "") {
+          if (modules.includes(module_)) {
+            var index = modules.indexOf(module_);
+            amt[index] += 1;
+          } else {
+            modules.push(module_);
+            amt.push(1);
+          }
         }
       }
     }
@@ -330,32 +406,34 @@ var database = {
           var attributes = [];
           snapshot.forEach((doc) => {
             var grade_ = doc.data();
-            if (grade_.SU == "No") {
-              if (attributes.empty) {
-                attributes.push({
-                  amt: 1,
-                  att: grade_.attribute,
-                  grade: database.convertCap(grade_.grade),
-                });
-              } else {
-                var flag = false;
-                for (var att in attributes) {
-                  if (attributes[att].att == grade_.attribute) {
-                    flag = true;
-                    attributes[att].grade =
-                      (attributes[att].grade * attributes[att].amt +
-                        database.convertCap(grade_.grade)) /
-                      (attributes[att].amt + 1);
-                    attributes[att].amt += 1;
-                    break;
-                  }
-                }
-                if (!flag) {
+            if (grade_.attribute != "") {
+              if (grade_.SU == "No") {
+                if (attributes.empty) {
                   attributes.push({
                     amt: 1,
                     att: grade_.attribute,
                     grade: database.convertCap(grade_.grade),
                   });
+                } else {
+                  var flag = false;
+                  for (var att in attributes) {
+                    if (attributes[att].att == grade_.attribute) {
+                      flag = true;
+                      attributes[att].grade =
+                        (attributes[att].grade * attributes[att].amt +
+                          database.convertCap(grade_.grade)) /
+                        (attributes[att].amt + 1);
+                      attributes[att].amt += 1;
+                      break;
+                    }
+                  }
+                  if (!flag) {
+                    attributes.push({
+                      amt: 1,
+                      att: grade_.attribute,
+                      grade: database.convertCap(grade_.grade),
+                    });
+                  }
                 }
               }
             }
@@ -570,7 +648,7 @@ var database = {
               });
               resolve(attributes);
             } else {
-              resolve([])
+              resolve([]);
             }
           });
       });
@@ -601,7 +679,7 @@ var database = {
               });
               resolve(completedMods);
             } else {
-              resolve ([])
+              resolve([]);
             }
           });
       });
@@ -624,14 +702,14 @@ var database = {
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
                 var ModGrade = grade.data();
-                if (ModGrade.SU == "No") {
+                if (ModGrade.SU == "No" && ModGrade.grade != "") {
                   totalCap += database.convertCap(ModGrade.grade);
                   noOfModules++;
                 }
               });
-            resolve(totalCap / noOfModules);
+              resolve(totalCap / noOfModules);
             } else {
-              resolve(0)
+              resolve(0);
             }
           });
       });
@@ -656,7 +734,8 @@ var database = {
                 if (ModGrade.SU == "No") {
                   if (sam_by_sem.empty) {
                     sam_by_sem.push({
-                      amt: 1,
+
+                      amt: 0,
                       cap: database.convertCap(ModGrade.grade),
                       sem: ModGrade.sem,
                       year: ModGrade.year,
@@ -679,7 +758,7 @@ var database = {
                     }
                     if (!flag) {
                       sam_by_sem.push({
-                        amt: 1,
+                        amt: 0,
                         cap: database.convertCap(ModGrade.grade),
                         sem: ModGrade.sem,
                         year: ModGrade.year,
@@ -690,9 +769,8 @@ var database = {
               });
               resolve(sam_by_sem);
             } else {
-              resolve([])
+              resolve([]);
             }
-
           });
       });
     });
@@ -1042,233 +1120,233 @@ export default database;
 //   return promise
 // },
 //
-//=====================================//
-//----------- updateStudentInfo--------//
-//=====================================//
-//For use in addModuleModal to update the data in database
-// async updateStudentInfo() {
-//   //update overall cap
-//   database.firebase_data
-//     .collection("students")
-//     .doc(module_results.studentID)
-//     .get()
-//     .then((user) => {
-//       var cap = user.data().overall_cap;
-//       var mod_taken = user.data().modules_taken;
-//       var mod_counted = 0;
-//       var x;
-//       if (!mod_taken.empty) {
-//         for (x in mod_taken) {
-//           if (!mod_taken[x].SU) {
-//             mod_counted++;
-//           }
-//         }
-//         if (module_results.SU == "No") {
-//           database.firebase_data
-//             .collection("students")
-//             .doc(module_results.studentID)
-//             .update({
-//               overall_cap:
-//                 (cap * mod_counted +
-//                   database.convertCap(module_results.grade)) /
-//                 (mod_counted + 1),
-//             });
-//           //update attributes
-//           var att = user.data().attributes;
-//           var y;
-//           if (!att.empty) {
-//             var flag = false;
-//             for (y in att) {
-//               if (att[y].att == module_results.attribute) {
-//                 flag = true;
-//                 att[y].grade =
-//                   (att[y].grade * att[y].amt +
-//                     database.convertCap(module_results.grade)) /
-//                   (att[y].amt + 1);
-//                 att[y].amt += 1;
-//               }
-//             }
-//             if (!flag) {
-//               database.firebase_data
-//                 .collection("students")
-//                 .doc(module_results.studentID)
-//                 .update({
-//                   attributes: firebase.firestore.FieldValue.arrayUnion({
-//                     att: module_results.attribute,
-//                     amt: 1,
-//                     grade: database.convertCap(module_results.grade),
-//                   }),
-//                 });
-//             } else {
-//               database.firebase_data
-//                 .collection("students")
-//                 .doc(module_results.studentID)
-//                 .update({
-//                   attributes: att,
-//                 });
-//             }
-//           } else {
-//             database.firebase_data
-//               .collection("students")
-//               .doc(module_results.studentID)
-//               .update({
-//                 attributes: firebase.firestore.FieldValue.arrayUnion({
-//                   att: module_results.attribute,
-//                   amt: 1,
-//                   grade: database.convertCap(module_results.grade),
-//                 }),
-//               });
-//           }
-//         }
-//       } else {
-//         if (module_results.SU == "No") {
-//           database.firebase_data
-//             .collection("students")
-//             .doc(module_results.studentID)
-//             .update({
-//               overall_cap: database.convertCap(module_results.grade),
-//             });
-//           database.firebase_data
-//             .collection("students")
-//             .doc(module_results.studentID)
-//             .update({
-//               attributes: firebase.firestore.FieldValue.arrayUnion({
-//                 att: module_results.attribute,
-//                 amt: 1,
-//                 grade: database.convertCap(module_results.grade),
-//               }),
-//             });
-//         }
-//       }
-//       //addmodule into modules_taken
-//       var temp = null;
-//       if (module_results.SU == "No") {
-//         temp = false;
-//       } else {
-//         temp = true;
-//       }
-//       database.firebase_data
-//         .collection("students")
-//         .doc(module_results.studentID)
-//         .update({
-//           modules_taken: firebase.firestore.FieldValue.arrayUnion({
-//             SU: temp,
-//             module: module_results.module,
-//             sem: module_results.sem,
-//             year: module_results.year,
-//           }),
-//         });
-//       //update sam_by_sem
-//       if (module_results.SU == "No") {
-//         var arr = user.data().sam_by_sem;
-//         var z;
-//         var flag_ = 0;
-//         for (z in arr) {
-//           if (
-//             arr[z].year == module_results.year &&
-//             arr[z].sem == module_results.sem
-//           ) {
-//             flag_ = false;
-//             arr[z].cap =
-//               (arr[z].cap * arr[z].amt +
-//                 database.convertCap(module_results.grade)) /
-//               (arr[z].amt + 1);
-//             arr[z].amt += 1;
-//             break;
-//           } else if (arr[z].year == null) {
-//             flag_ = z;
-//             break;
-//           }
-//         }
-//         if (flag_) {
-//           arr[flag_] = {
-//             year: module_results.year,
-//             sem: module_results.sem,
-//             amt: 1,
-//             cap: database.convertCap(module_results.grade),
-//           };
-//         }
-//         database.firebase_data
-//           .collection("students")
-//           .doc(module_results.studentID)
-//           .update({
-//             sam_by_sem: arr,
-//           });
-//         //update current_sem
-//         var year = 0;
-//         var semester = 0;
-//         var total_sems = arr;
-//         for (var sem in total_sems) {
-//           if (total_sems[sem].year != null) {
-//             if (total_sems[sem].year > year) {
-//               year = total_sems[sem].year;
-//               semester = total_sems[sem].sem;
-//             } else if (
-//               total_sems[sem].year == year &&
-//               total_sems[sem].sem > semester
-//             ) {
-//               year = total_sems[sem].year;
-//               semester = total_sems[sem].sem;
-//             }
-//           } else if (total_sems[sem].year == null && sem != 0) {
-//             break;
-//           }
-//         }
-//         if (year != 0 && semester != 0) {
-//           var current_sem = {
-//             sem: semester,
-//             year: year,
-//           };
-//           database.firebase_data
-//             .collection("students")
-//             .doc(module_results.studentID)
-//             .update({
-//               current_sem: current_sem,
-//             });
-//         }
-//       }
-//       //update faculty attributes
-//       if (module_results.SU == "No") {
-//         database.firebase_data
-//           .collection("faculties")
-//           .where("name", "==", module_results.faculty)
-//           .get()
-//           .then((snapshot) => {
-//             snapshot.forEach((faculty) => {
-//               var attr = faculty.data().attributes;
-//               if (!attr.empty) {
-//                 var flag = false;
-//                 for (var x in attr) {
-//                   if (attr[x].att == module_results.attribute) {
-//                     attr[x].grade =
-//                       (attr[x].grade * attr[x].amt +
-//                         database.convertCap(module_results.grade)) /
-//                       (attr[x].amt + 1);
-//                     attr[x].amt += 1;
-//                   }
-//                 }
-//                 if (!flag) {
-//                   attr.push({
-//                     att: module_results.attribute,
-//                     amt: 1,
-//                     grade: database.convertCap(module_results.grade),
-//                   });
-//                 }
-//               } else {
-//                 attr.push({
-//                   att: module_results.attribute,
-//                   amt: 1,
-//                   grade: database.convertCap(module_results.grade),
-//                 });
-//               }
-//               database.firebase_data
-//                 .collection("faculties")
-//                 .doc(faculty.id)
-//                 .update({
-//                   attributes: attr,
-//                 });
-//             });
-//           });
-//       }
-//     });
-// },
+  //=====================================//
+  //----------- updateStudentInfo--------//
+  //=====================================//
+  //For use in addModuleModal to update the data in database
+  // async updateStudentInfo() {
+  //   //update overall cap
+  //   database.firebase_data
+  //     .collection("students")
+  //     .doc(module_results.studentID)
+  //     .get()
+  //     .then((user) => {
+  //       var cap = user.data().overall_cap;
+  //       var mod_taken = user.data().modules_taken;
+  //       var mod_counted = 0;
+  //       var x;
+  //       if (!mod_taken.empty) {
+  //         for (x in mod_taken) {
+  //           if (!mod_taken[x].SU) {
+  //             mod_counted++;
+  //           }
+  //         }
+  //         if (module_results.SU == "No") {
+  //           database.firebase_data
+  //             .collection("students")
+  //             .doc(module_results.studentID)
+  //             .update({
+  //               overall_cap:
+  //                 (cap * mod_counted +
+  //                   database.convertCap(module_results.grade)) /
+  //                 (mod_counted + 1),
+  //             });
+  //           //update attributes
+  //           var att = user.data().attributes;
+  //           var y;
+  //           if (!att.empty) {
+  //             var flag = false;
+  //             for (y in att) {
+  //               if (att[y].att == module_results.attribute) {
+  //                 flag = true;
+  //                 att[y].grade =
+  //                   (att[y].grade * att[y].amt +
+  //                     database.convertCap(module_results.grade)) /
+  //                   (att[y].amt + 1);
+  //                 att[y].amt += 1;
+  //               }
+  //             }
+  //             if (!flag) {
+  //               database.firebase_data
+  //                 .collection("students")
+  //                 .doc(module_results.studentID)
+  //                 .update({
+  //                   attributes: firebase.firestore.FieldValue.arrayUnion({
+  //                     att: module_results.attribute,
+  //                     amt: 1,
+  //                     grade: database.convertCap(module_results.grade),
+  //                   }),
+  //                 });
+  //             } else {
+  //               database.firebase_data
+  //                 .collection("students")
+  //                 .doc(module_results.studentID)
+  //                 .update({
+  //                   attributes: att,
+  //                 });
+  //             }
+  //           } else {
+  //             database.firebase_data
+  //               .collection("students")
+  //               .doc(module_results.studentID)
+  //               .update({
+  //                 attributes: firebase.firestore.FieldValue.arrayUnion({
+  //                   att: module_results.attribute,
+  //                   amt: 1,
+  //                   grade: database.convertCap(module_results.grade),
+  //                 }),
+  //               });
+  //           }
+  //         }
+  //       } else {
+  //         if (module_results.SU == "No") {
+  //           database.firebase_data
+  //             .collection("students")
+  //             .doc(module_results.studentID)
+  //             .update({
+  //               overall_cap: database.convertCap(module_results.grade),
+  //             });
+  //           database.firebase_data
+  //             .collection("students")
+  //             .doc(module_results.studentID)
+  //             .update({
+  //               attributes: firebase.firestore.FieldValue.arrayUnion({
+  //                 att: module_results.attribute,
+  //                 amt: 1,
+  //                 grade: database.convertCap(module_results.grade),
+  //               }),
+  //             });
+  //         }
+  //       }
+  //       //addmodule into modules_taken
+  //       var temp = null;
+  //       if (module_results.SU == "No") {
+  //         temp = false;
+  //       } else {
+  //         temp = true;
+  //       }
+  //       database.firebase_data
+  //         .collection("students")
+  //         .doc(module_results.studentID)
+  //         .update({
+  //           modules_taken: firebase.firestore.FieldValue.arrayUnion({
+  //             SU: temp,
+  //             module: module_results.module,
+  //             sem: module_results.sem,
+  //             year: module_results.year,
+  //           }),
+  //         });
+  //       //update sam_by_sem
+  //       if (module_results.SU == "No") {
+  //         var arr = user.data().sam_by_sem;
+  //         var z;
+  //         var flag_ = 0;
+  //         for (z in arr) {
+  //           if (
+  //             arr[z].year == module_results.year &&
+  //             arr[z].sem == module_results.sem
+  //           ) {
+  //             flag_ = false;
+  //             arr[z].cap =
+  //               (arr[z].cap * arr[z].amt +
+  //                 database.convertCap(module_results.grade)) /
+  //               (arr[z].amt + 1);
+  //             arr[z].amt += 1;
+  //             break;
+  //           } else if (arr[z].year == null) {
+  //             flag_ = z;
+  //             break;
+  //           }
+  //         }
+  //         if (flag_) {
+  //           arr[flag_] = {
+  //             year: module_results.year,
+  //             sem: module_results.sem,
+  //             amt: 1,
+  //             cap: database.convertCap(module_results.grade),
+  //           };
+  //         }
+  //         database.firebase_data
+  //           .collection("students")
+  //           .doc(module_results.studentID)
+  //           .update({
+  //             sam_by_sem: arr,
+  //           });
+  //         //update current_sem
+  //         var year = 0;
+  //         var semester = 0;
+  //         var total_sems = arr;
+  //         for (var sem in total_sems) {
+  //           if (total_sems[sem].year != null) {
+  //             if (total_sems[sem].year > year) {
+  //               year = total_sems[sem].year;
+  //               semester = total_sems[sem].sem;
+  //             } else if (
+  //               total_sems[sem].year == year &&
+  //               total_sems[sem].sem > semester
+  //             ) {
+  //               year = total_sems[sem].year;
+  //               semester = total_sems[sem].sem;
+  //             }
+  //           } else if (total_sems[sem].year == null && sem != 0) {
+  //             break;
+  //           }
+  //         }
+  //         if (year != 0 && semester != 0) {
+  //           var current_sem = {
+  //             sem: semester,
+  //             year: year,
+  //           };
+  //           database.firebase_data
+  //             .collection("students")
+  //             .doc(module_results.studentID)
+  //             .update({
+  //               current_sem: current_sem,
+  //             });
+  //         }
+  //       }
+  //       //update faculty attributes
+  //       if (module_results.SU == "No") {
+  //         database.firebase_data
+  //           .collection("faculties")
+  //           .where("name", "==", module_results.faculty)
+  //           .get()
+  //           .then((snapshot) => {
+  //             snapshot.forEach((faculty) => {
+  //               var attr = faculty.data().attributes;
+  //               if (!attr.empty) {
+  //                 var flag = false;
+  //                 for (var x in attr) {
+  //                   if (attr[x].att == module_results.attribute) {
+  //                     attr[x].grade =
+  //                       (attr[x].grade * attr[x].amt +
+  //                         database.convertCap(module_results.grade)) /
+  //                       (attr[x].amt + 1);
+  //                     attr[x].amt += 1;
+  //                   }
+  //                 }
+  //                 if (!flag) {
+  //                   attr.push({
+  //                     att: module_results.attribute,
+  //                     amt: 1,
+  //                     grade: database.convertCap(module_results.grade),
+  //                   });
+  //                 }
+  //               } else {
+  //                 attr.push({
+  //                   att: module_results.attribute,
+  //                   amt: 1,
+  //                   grade: database.convertCap(module_results.grade),
+  //                 });
+  //               }
+  //               database.firebase_data
+  //                 .collection("faculties")
+  //                 .doc(faculty.id)
+  //                 .update({
+  //                   attributes: attr,
+  //                 });
+  //             });
+  //           });
+  //       }
+  //     });
+  // },

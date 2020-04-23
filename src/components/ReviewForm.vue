@@ -115,9 +115,7 @@
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
-                  <span
-                  class='md-error'
-                  v-if='!$v.detailsForm.selectedStaff.alpha'>This field can only contain alphabets</span>
+
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
@@ -458,7 +456,7 @@ import { required} from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
-import DataObject from "../Database.js";
+import firebase from 'firebase'
 export default {
   name: "ReviewForm",
   props: ["mod"],
@@ -545,7 +543,8 @@ export default {
             detailsForm: this.detailsForm,
             lectureForm: this.lectureForm,
             tutorialForm: this.tutorialForm,
-            commentForm: this.commentForm
+            commentForm: this.commentForm,
+            review_date: firebase.firestore.Timestamp.now()
           });
 
           // this.setDone("first", "second");
@@ -624,12 +623,6 @@ export default {
         df.selectedYear = mod.year;
         df.selectedSemester = mod.sem;
       });
-      if (this.added === false) {
-        this.faculties = DataObject.faculties;
-        this.grades = DataObject.grades;
-        this.years = DataObject.years;
-        this.semesters = DataObject.semesters;
-      }
     });
     // database.collection('faculties').get().then((querySnapShot) => {
     //   let item = {}
@@ -768,7 +761,7 @@ Tentative fix to css background
     #cfd9df 0%,
     #e2ebf0 100%
   ) !important;
-  height: 100vh;
+  height: 140vh;
   padding: 0px;
 }
 </style>

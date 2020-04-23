@@ -18,7 +18,7 @@
         },
         data: function(){ 
             return {
-                series1: [{ name: 'Semester AP',data: [],}, { name: 'Cumulative CAP',data: [],}],
+                series1: [{ name: 'Semester CAP',data: [],}, { name: 'Cumulative CAP',data: [],}],
                 chartOptions2: {
                     chart: {
                         type: 'area',
@@ -32,7 +32,7 @@
                     },
                     yaxis: [
                             {
-                            min: 3,
+                            min: 0,
                             max: 5,
                             "labels": {
                                 "formatter": function (val) {
@@ -67,15 +67,17 @@
                 
                 var sap_series = []
                 var cum_series = []
-
+                
                 for(let i=0; i < obj_array.length; i++){
                     //console.log(obj_array[0][key])
                     var value = obj_array[i]["cap"]
-                    if (typeof value != 'undefined'){
+                    if (typeof value != 'undefined' && value != 0){
                         sap_series.push(value)
                         const average = list => list.reduce((prev, curr) => prev + curr) / list.length;
+
+                        console.log(sap_series)
                         cum_series.push(average(sap_series))
-                        console.log(average(sap_series)     )
+                        
                     }
                     
                     
@@ -95,5 +97,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import './style.css';
 </style>
