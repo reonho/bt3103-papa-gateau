@@ -66,11 +66,7 @@
             <i
               class="far fa-question-circle"
               style="color:grey"
-            >
-              <md-tooltip
-                md-direction="right"
-              >Average grades of students who have scored A and above in this module.</md-tooltip>
-            </i>
+            ><md-tooltip md-direction="right">Average grades of students who have scored A and above in this module.</md-tooltip></i>
           </h2>
           <div style="text-align:center;">
             <RadarChart
@@ -104,11 +100,10 @@
         <section id="statistics" style="margin-left:1vw;">
           <h2 style="color:#EC7663;margin-top:1vh;margin-bottom:2vh">
             Review Statistics
-            <i class="far fa-question-circle" style="color: grey">
-              <md-tooltip
-                md-direction="right"
-              >Statistics collected based on reviews gathered from users below.</md-tooltip>
-            </i>
+            <i
+              class="far fa-question-circle"
+              style="color: grey"
+            ><md-tooltip md-direction="right">Statistics collected based on reviews gathered from users below.</md-tooltip></i>
           </h2>
           <b-tabs
             active-nav-item-class="activetab"
@@ -135,8 +130,6 @@
                   ></md-empty-state>
                 </div>
                 <div class="row">
-                  <div class="col-4" v-show="loading"></div>
-                  <div class="col-4" v-show="showEmpty"></div>
                   <div class="col-4" v-show="!loading&&!showEmpty" style="position: relative;">
                     <pie-chart :semester="chosenSem" :code="code" :years="yrs"></pie-chart>
                   </div>
@@ -226,11 +219,7 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding-left:12px"
-                                  v-if="easy != 0"
-                                  id="easy"
-                                >{{ easy }}</span>
+                                <span style="padding-left:12px" v-if="easy != 0" id="easy">{{ easy }}</span>
                                 <span style="padding-left:12px" v-else id="easy">N.A.</span>
                               </p>
                             </div>
@@ -268,11 +257,7 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding-left:12px"
-                                  v-if="manag_asgn!=0"
-                                  id="manageable"
-                                >{{ manag_asgn }}</span>
+                                <span style="padding-left:12px" v-if="manag_asgn!=0" id="manageable">{{ manag_asgn }}</span>
                                 <span style="padding-left:12px" v-else id="manageable">N.A.</span>
                               </p>
                             </div>
@@ -310,11 +295,7 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding-left:12px;"
-                                  v-if="manag_exam != 0"
-                                  id="exam"
-                                >{{ manag_exam }}</span>
+                                <span style="padding-left:12px;" v-if="manag_exam != 0" id="exam">{{ manag_exam }}</span>
                                 <span style="padding-left:12px;" v-else id="exam">N.A.</span>
                               </p>
                             </div>
@@ -352,11 +333,7 @@
                                 >
                                   <i class="fa fa-star"></i>
                                 </span>
-                                <span
-                                  style="padding-left:12px"
-                                  id="workload"
-                                  v-if="manag_wkld != 0"
-                                >{{ manag_wkld }}</span>
+                                <span style="padding-left:12px" id="workload" v-if="manag_wkld != 0">{{ manag_wkld }}</span>
                                 <span style="padding-left:12px" id="workload" v-else>N.A.</span>
                               </p>
                             </div>
@@ -727,9 +704,6 @@ export default {
       }
       return num;
     },
-    likes(value) {
-      this.liked = value;
-    },
     showValues(value, str) {
       if (str == "ratings") {
         this.ratings = value;
@@ -750,20 +724,20 @@ export default {
       this.sortingRev = true;
       if (value == "Best") {
         this.reviewData.sort(function(a, b) {
-          let diff = b.likes - a.likes;
+          let diff = b.likes - a.likes
           if (diff == 0) {
-            return b.review_date.toDate() - a.review_date.toDate();
-          } // sort by number of likes then by newest
+            return b.review_date.toDate() - a.review_date.toDate()
+          }  // sort by number of likes then by newest
           return diff;
         });
       } else if (value == "Newest") {
         this.reviewData.sort(function(a, b) {
-          return b.review_date.toDate() - a.review_date.toDate();
-        });
+          return b.review_date.toDate() - a.review_date.toDate()
+        })
       } else if (value == "Oldest") {
         this.reviewData.sort(function(a, b) {
-          return a.review_date.toDate() - b.review_date.toDate();
-        });
+          return a.review_date.toDate() - b.review_date.toDate()
+        })
       }
     }
   },
@@ -781,13 +755,13 @@ export default {
           this.reviewData.push(item);
         });
         this.reviewData.sort(function(a, b) {
-          let diff = b.likes - a.likes;
+          let diff = b.likes - a.likes
           if (diff == 0) {
-            return b.review_date.toDate() - a.review_date.toDate();
-          } // sort by number of likes then by newest
+            return b.review_date.toDate() - a.review_date.toDate()
+          }  // sort by number of likes then by newest
           return diff;
         });
-      });
+    });
     //get module details
     database.getModules(this.code).then(item => {
       this.Module = item;
@@ -852,7 +826,6 @@ export default {
     this.$root.$on("showValues", this.showValues);
   },
   data: () => ({
-    liked: false,
     sortingRev: false,
     sortingMethod: "Best",
     topAttributes: null,
@@ -898,13 +871,7 @@ export default {
     },
     reviewData: function() {
       if (this.sortingRev == true) this.sortingRev = false;
-      else {
-        this.$root.$on("likes", this.likes);
-        if (this.liked) {
-          this.liked = false;
-        }
-        else this.yrs = [...new Set(this.findYears)];
-      }
+      else this.yrs = [...new Set(this.findYears)]
     }
   }
 };
@@ -969,8 +936,8 @@ export default {
   font-weight: 500;
 }
 
-.md-tooltip {
-  font-size: 1.8vh !important;
+.md-tooltip {	
+  font-size: 1.6vh !important;	
 }
 @media screen and (min-width: 1800px) {
   main {
@@ -991,7 +958,7 @@ export default {
   }
 }
 @media screen and (min-width: 1300px) {
-  // adjust charts
+  // adjust charts  
 }
 </style>
 

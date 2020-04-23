@@ -3,7 +3,7 @@
    <md-toolbar class="test" style="" md-elevation="0">
        <h3 class="md-title" style="flex: 2; color:white;font-weight:bold">
         <router-link class="nav-link" to="/">
-           <md-button style="font-weight:600;font-size: 150%;color:white;font-family: 'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</md-button>
+           <md-button style="font-size: 150%;color:white;font-family: 'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</md-button>
         </router-link>
         </h3>
           <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>

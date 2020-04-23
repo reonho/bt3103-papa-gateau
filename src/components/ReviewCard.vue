@@ -38,7 +38,7 @@
         </div>
 
         <!-- <div v-if="hasComment(review.tutorialForm.comments)" class="para"> -->
-        <div class="para" v-if="hasComment(review.tutorialForm.tutorialMaterial)">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.tutorialMaterial)'>
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
           <p class="md-subheading">
             <b>Tutorials</b>
@@ -46,17 +46,17 @@
           <p>
             <md-chip class="info-chip">
               <md-tooltip>Tutorial Material</md-tooltip>
-              <i class="fa fa-chalkboard-teacher"></i>
+              <i class='fa fa-chalkboard-teacher'></i>
               {{review.tutorialForm.tutorialMaterial}}/5
             </md-chip>
           </p>
 
           <p class="comments">{{review.tutorialForm.comments}}</p>
         </div>
-        <div class="para" v-if="hasComment(review.tutorialForm.ap)">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.ap)'>
           <!-- <div v-if="hasComment(review.tutorialForm.apcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <p class="md-subheading">
+          <p class="md-subheading" >
             <b>Assignments & Projects</b>
           </p>
           <p>
@@ -69,10 +69,10 @@
           <p class="comments">{{review.tutorialForm.apcomments}}</p>
         </div>
 
-        <div class="para" v-if="hasComment(review.tutorialForm.exam)">
+        <div class="para" v-if = 'hasComment(review.tutorialForm.exam)'>
           <!-- <div v-if="hasComment(review.tutorialForm.examcomments)" class="para"> -->
           <!-- <div class = 'md-subheading'>Tutorials</div> -->
-          <p class="md-subheading">
+          <p class="md-subheading" >
             <b>Examinations</b>
           </p>
           <p>
@@ -86,16 +86,16 @@
         </div>
 
         <div v-if="hasComment(review.commentForm.comments)" class="para">
-          <div class="md-subheading">
-            <b>Comments</b>
-          </div>
+          <div class = 'md-subheading'><b>Comments</b></div>
           <p class="comments">{{review.commentForm.comments}}</p>
         </div>
-        <p class="grades" style="padding-top:1.2vh">
+        <p class = "grades" style="padding-top:1.2vh">
           <b>Grade obtained:</b>
           {{review.detailsForm.selectedGrade}}
         </p>
-        <p style="float:right">Posted on {{formatDate(review.review_date.toDate())}}</p>
+        <p style="float:right">
+          Posted on {{formatDate(review.review_date.toDate())}}
+        </p>
       </md-card-content>
       <hr />
       <!-- <md-divider/> -->
@@ -198,23 +198,8 @@ export default {
   },
   methods: {
     formatDate(d) {
-      let short_months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      return (
-        d.getDate() + " " + short_months[d.getMonth()] + " " + d.getFullYear()
-      );
+      let short_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return (d.getDate() + " " + short_months[d.getMonth()] + " " + d.getFullYear());
     },
     remove(array, item) {
       const index = array.indexOf(item);
@@ -228,7 +213,6 @@ export default {
     },
 
     like() {
-      this.$root.$emit("likes", true);
       let db = database.firebase_data;
       //if user has neither liked nor disliked yet
       if (this.liked === false && this.disliked === false) {
@@ -260,26 +244,24 @@ export default {
         this.liked = true;
         //add user to users_liked
         this.review.users_liked.push(this.userid);
+        db.collection("reviews")
+          .doc(this.review.id)
+          .update({
+            likes: this.review.users_liked.length,
+            users_liked: this.review.users_liked
+          });
+
         if (this.disliked === true) {
           //if user previously disliked, remove the dislike
           this.disliked = false;
+
           //remove user from users_disliked
           this.remove(this.review.users_disliked, this.userid);
-
           db.collection("reviews")
             .doc(this.review.id)
             .update({
-              likes: this.review.users_liked.length,
-              users_liked: this.review.users_liked,
               users_disliked: this.review.users_disliked,
               dislikes: this.review.users_disliked.length
-            });
-        } else {
-          db.collection("reviews")
-            .doc(this.review.id)
-            .update({
-              likes: this.review.users_liked.length,
-              users_liked: this.review.users_liked
             });
         }
         //update count in db
@@ -287,7 +269,6 @@ export default {
     },
 
     dislike() {
-      this.$root.$emit("likes", true);
       let db = database.firebase_data;
       //if user has yet to like/dislike the review
       if (this.liked === false && this.disliked === false) {
@@ -315,25 +296,22 @@ export default {
         //else dislike the post
         this.disliked = true;
         this.review.users_disliked.push(this.userid);
+        db.collection("reviews")
+          .doc(this.review.id)
+          .update({
+            users_disliked: this.review.users_disliked,
+            dislikes: this.review.users_disliked.length
+          });
+
         if (this.liked === true) {
           //if user previously liked the review, remove the like
           this.remove(this.review.users_liked, this.userid);
           this.liked = false;
-
           db.collection("reviews")
             .doc(this.review.id)
             .update({
-              users_disliked: this.review.users_disliked,
-              dislikes: this.review.users_disliked.length,
               users_liked: this.review.users_liked,
               likes: this.review.users_liked.length
-            });
-        } else {
-          db.collection("reviews")
-            .doc(this.review.id)
-            .update({
-              users_disliked: this.review.users_disliked,
-              dislikes: this.review.users_disliked.length
             });
         }
       }
@@ -365,11 +343,11 @@ export default {
 
 
 <style scoped>
-.md-tooltip {
-  font-size: 1.8vh !important;
+.md-tooltip {	
+  font-size: 1.6vh !important;	
 }
 i {
-  color: rgba(0, 0, 0, 0.54);
+  color: rgba(0,0,0,0.54)
 }
 .md-card {
   display: block;
@@ -427,17 +405,25 @@ i {
 }
 @media screen and (min-width: 1800px) {
   .para {
-    font-size: 128%;
+    font-size: 128%
   }
   .info-chip {
-    font-size: 100%;
+    font-size: 100%
   }
   .md-subheading {
-    font-size: 90%;
+    font-size: 90%
   }
   .grades {
-    font-size: 118%;
+    font-size: 118%
   }
+}
+
+.md-chip.md-theme-default {
+  /* background-color: #17a2b8; */
+  /* color: white; */
+}
+.chip-icon {
+  /* color: black !important; */
 }
 </style>
 
