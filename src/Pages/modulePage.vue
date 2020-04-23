@@ -72,18 +72,7 @@
               >Average grades of students who have scored A and above in this module.</md-tooltip>
             </i>
           </h2>
-          <div style="text-align:center;height:40vh">
-             <div v-show="loading2">
-                <md-empty-state
-                  id="statebox"
-                  style="max-width:0 !important; color: #2e4053;"
-                  md-label="Loading Attributes..."
-                >
-                <br/>
-                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
-                </md-empty-state>
-          </div>
-            <div v-show="!loading2">
+          <div style="text-align:center;">
             <RadarChart
               v-if="typeof myAttCheck == 'string' && typeof topAttCheck == 'string'"
               :my_attr="topAttributes"
@@ -92,8 +81,7 @@
               label_1="Top Student Attributes"
               label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
-            ></RadarChart></div>
-            <div  v-show="!loading2">
+            ></RadarChart>
             <RadarChart
               v-if="typeof myAttCheck === 'boolean' && typeof topAttCheck === 'string'"
               :my_attr="topAttributes"
@@ -103,9 +91,7 @@
               label_2="My Attributes"
               style="display: inline-block; width:50%; height:50%; padding-top: 2vh"
             ></RadarChart>
-          
-            </div>
-              <md-empty-state
+            <md-empty-state
               v-if="topAttributes === 'no data'"
               style="padding-top:0;"
               id="statebox"
@@ -653,7 +639,6 @@ export default {
     },
     checksemester(arr) {
       arr = arr.info.semesterData;
-
       var semesters = [
         {
           semester: "Semester 1",
@@ -670,11 +655,30 @@ export default {
           active: false
         }
       ];
-
       var num = arr.length;
       var flag = false;
       for (var i = 0; i < num; i++) {
-        if (arr[i].semester == 2) {
+        if (arr[i].semester == 3) {
+          semesters[2].disabled = "";
+          if (flag === false) {
+            semesters[2].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[2].examDate = arr[i].examDate;
+            semesters[2].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 4) {
+          semesters[3].disabled = "";
+          if (flag === false) {
+            semesters[3].active = true;
+          }
+          flag = true;
+          if (Object.keys(arr[i]).length > 1) {
+            semesters[3].examDate = arr[i].examDate;
+            semesters[3].examDuration = arr[i].examDuration / 60;
+          }
+        } else if (arr[i].semester == 2) {
           semesters[1].disabled = "";
           if (flag === false) {
             semesters[1].active = true;
@@ -696,7 +700,6 @@ export default {
           }
         }
       }
-
       return semesters;
     },
     showsem(sem) {
@@ -789,19 +792,17 @@ export default {
     database.getModules(this.code).then(item => {
       this.Module = item;
     });
-     database.getUser().then(user => {
     database.firebase_data
       .collection("students")
-      .doc(user)
+      .doc(database.user)
       .get()
-      .then(doc => {
-        var userData = doc.data();
+      .then(user => {
+        var userData = user.data();
         this.myAttributes = userData.attributes;
         //console.log(typeof this.myAttCheck);
         this.myAttCheck = userData.attributes[0].att;
         //console.log("Check myAtt");
       });
-     })
     database.getModuleAttributes(this.code).then(ma => {
       //console.log(ma);
       this.topAttributes = ma;
@@ -812,7 +813,7 @@ export default {
       async function check(self) {
         // console.log(typeof ma );
         while (typeof ma[0] == "undefined") {
-          await sleep(1000);
+          await sleep(2000);
         }
         self.topAttCheck = ma[0].att;
       }
@@ -820,7 +821,6 @@ export default {
       if (ma !== "no data") {
         check(self);
       }
-      this.loading2 = false;
     });
   },
   updated() {
@@ -867,7 +867,6 @@ export default {
     manag_exam: 0,
     manag_wkld: 0,
     loading: true,
-    loading2: true,
     showAddDialog: false,
     showDialog: false,
     yrs: ["AY1920", "AY1819", "AY1718", "AY1617"],
