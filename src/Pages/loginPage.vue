@@ -3,10 +3,10 @@
   <div class="loginPage">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
-          <div class="cardbox card-signin my-5">
+        <div class="col-sm-2 col-md-7 col-lg-5 mx-auto" style="height: 0">
+          <div class="cardbox card-signin">
             <div style="padding:5%;  border-radius: 1rem 1rem 0 0;">
-              <h1 class="text-center" style="color:white; font-weight:600;font-size:6vh;">MODEAUX</h1>
+              <h1 class="text-center" style="color:white;font-weight:600;font-size:6vh;font-family:'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</h1>
             </div>
             <div class="card-body">
               <!---form>
@@ -206,10 +206,9 @@ h1 {
 }
 body {
   background: url("../assets/background.png") no-repeat;
-  overflow: hidden;
   background-size: cover;
-  width: 100%;
-  min-height: 100vh;
+background-position:fixed;
+    height: 120vh
 }
 .button {
   font-family: Gill Sans;
