@@ -477,7 +477,9 @@ export default {
       this.showModal = true;
       this.grade = mod.grade;
       this.code = mod.code;
-      database.updateModuleResults(mod);
+      this.modalsem = mod.semester;
+      this.modalyear = mod.year
+      //database.updateModuleResults(mod);
     },
     deletemod(mod) {
       this.module = mod;
