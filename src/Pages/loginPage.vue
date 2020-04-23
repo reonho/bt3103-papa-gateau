@@ -206,10 +206,9 @@ h1 {
 }
 body {
   background: url("../assets/background.png") no-repeat;
-  overflow: hidden;
   background-size: cover;
-  width: 100%;
-  min-height: 100vh;
+background-position:fixed;
+    height: 120vh
 }
 .button {
   font-family: Gill Sans;

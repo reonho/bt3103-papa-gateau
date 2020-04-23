@@ -299,9 +299,16 @@ export default {
         //Loop through each item
         querySnapShot.forEach(doc => {
           var name = doc.data().info.moduleCode + " " + doc.data().info.title;
-          if (!(name in slookup)) {
-            slookup[name] = 1;
-            this.modules.push(doc.data().info.moduleCode);
+          var sems = doc.data().info.semesterData;
+          for (var sem in sems) {
+           
+            if ("Semester " + sems[sem].semester == this.detailsForm.selectedSemester) {
+              if (!(name in slookup)) {
+                slookup[name] = 1;
+                this.modules.push(doc.data().info.moduleCode);
+              }
+              break;
+            }
           }
         });
       });

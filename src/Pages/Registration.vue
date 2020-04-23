@@ -3,7 +3,7 @@
   <div class="Registration">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-2 col-md-7 col-lg-5 mx-auto">
+        <div class="col-sm-2 col-md-7 col-lg-5 mx-auto" style="height: 0">
           <div class="cardbox card-signin my-5">
             <div style="padding:5%;  border-radius: 1rem 1rem 0 0;">
               <h1 class="text-center" style="color:white;font-weight:600;font-size:6vh;font-family:'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</h1>
@@ -284,6 +284,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 :root {
   --input-padding-x: 2rem;
   --input-padding-y: 2rem;
@@ -293,11 +294,9 @@ h1 {
 }
 body {
   background: url("../assets/background.png") no-repeat;
-
-  background-size: cover;
-  width: 100%;
-  min-height: 100vh;
-  height: 125vh;
+background-position:fixed;
+ background-size: cover;
+  height: 120vh
 }
 .button {
   font-family: Gill Sans;
@@ -342,7 +341,6 @@ body {
 }
 .card-signin {
   border: 0;
-  top: 13vh;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
 }
