@@ -21,14 +21,16 @@ let router = new Router({
       name: 'ModuleList',
       component: ModuleList,
       meta: {
+        title: "Modeaux - Modules",
         requiresAuth: false
       }
     },
-    {
+    {    
       path: '/Registration',
       name: 'Registration',
       component: Registration,
       meta: {
+        title: "Modeaux - Registration",  
         requiresGuest: true
       }
     },
@@ -38,6 +40,7 @@ let router = new Router({
       component: LandPage,
       props: true,
       meta: {
+      title: "Modeaux - Dashboard",
         requiresAuth: true
       }
     },
@@ -48,15 +51,17 @@ let router = new Router({
       name: 'loginPage',
       component: loginPage,
       meta: {
+        title: "Modeaux - Login",
         requiresGuest: true
       }
     },
-    {
+    {  
       path: '/:code',
       name: 'modulePage',
       props: true,
       component: modulePage,
       meta: {
+        title: "Modeaux - Modules",    
         requiresAuth: true
       }
     },
@@ -66,6 +71,7 @@ let router = new Router({
       component: ReviewForm,
       props: true,
       meta: {
+        title: "Modeaux - Reviews",
         requiresAuth: true
       }
     },
@@ -75,6 +81,7 @@ let router = new Router({
       component: EditForm,
       props: true,
       meta: {
+        title: "Modeaux - Reviews",
         requiresAuth: true
       }
     }
@@ -83,6 +90,14 @@ let router = new Router({
 
 // Nav Guard
 router.beforeEach((to, from, next) => {
+
+  // This goes through the matched routes from last to first, finding the closest route with a title.
+  // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
+  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+
+  // If a route with a title was found, set the document (page) title to that value.
+  if(nearestWithTitle) document.title = nearestWithTitle.meta.title;
+  
   // Check for requiresAuth guard
   database.getUser().then(function(user){
     if (to.matched.some(record => record.meta.requiresAuth)) {
