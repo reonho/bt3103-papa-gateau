@@ -739,6 +739,8 @@ var database = {
             var sam_by_sem = [];
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
+                console.log(ModGrade);
+                console.log(sam_by_sem);
                 var ModGrade = grade.data();
                 if (ModGrade.SU == "No") {
                   var flag = "dummy";
@@ -775,7 +777,14 @@ var database = {
                       break;
                     }
                   }
-                  if (flag == "dummy") {
+                  if (flag == "dummy" && ModGrade.grade == "") {
+                    sam_by_sem.push({
+                      amt: 0,
+                      cap: database.convertCap(ModGrade.grade),
+                      sem: ModGrade.sem,
+                      year: ModGrade.year,
+                    });
+                  } else if (flag == "dummy" && ModGrade.grade != "") {
                     sam_by_sem.push({
                       amt: 0,
                       cap: database.convertCap(ModGrade.grade),

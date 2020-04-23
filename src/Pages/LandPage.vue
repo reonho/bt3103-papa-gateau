@@ -245,7 +245,7 @@ export default {
         };
 
         self.User = result;
-       console.log(database.getStudentSam_by_sem())
+       console.log(result)
         //query database for cohort top modules
         database.getCohortTopModules(result.batch).then(doc => {
           self.cohortTopMods = doc;
