@@ -286,8 +286,10 @@ export default {
         });
       }
       if (this.chosenexam) {
+       
         filterData = filterData.filter(item => {
-          if (Object.keys(item.info.semesterData[0]).length === 1) {
+         console.log(item.info.semesterData)
+          if (Object.keys(item.info.semesterData).length === 1) {
             return true;
           }
           return false;

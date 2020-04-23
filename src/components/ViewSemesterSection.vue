@@ -4,7 +4,7 @@
     <div>
       <div class="md-layout">
         <div class="md-layout-item md-size-35">
-           <md-field class="mod-dropdown">
+          <md-field class="mod-dropdown">
             <label style="font-size:1vw">Year</label>
             <md-select v-model="yearchosen" name="yearchosen" id="yearchosen" md-dense multiple>
               <md-option
@@ -45,11 +45,7 @@
         <div class="md-layout-item md-size-5"></div>
         <div class="md-layout-item md-size-10">
           <md-field class="mod-dropdown" style="padding-top: 0;">
-            <b-button
-              style="padding:1vh;"
-              v-on:click="clearfilter"
-              variant="outline-info"
-            >
+            <b-button style="padding:1vh;" v-on:click="clearfilter" variant="outline-info">
               <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
             </b-button>
           </md-field>
@@ -247,7 +243,6 @@ export default {
       while (flag > 0) {
         var flag3 = false;
         for (var i = 0; i < available; i++) {
- 
           if (Object.keys(sems[i]).length > 0) {
             if (
               semnum == 0 &&
@@ -273,7 +268,6 @@ export default {
               semnum++;
               break;
             } else if (flag2) {
-
               if (flag3 == false) {
                 if (latestsem == "Semester 1") {
                   latestsem = "Semester 2";
@@ -308,16 +302,15 @@ export default {
                 break;
               }
             } else {
-            
               continue;
             }
           }
         }
       }
- 
+
       for (var k = 0; k < semesters.length; k++) {
         var usermods = this.usergrades;
-       
+
         let sem = semesters[k];
 
         for (var j = 0; j < Object.keys(usermods).length; j++) {
@@ -381,7 +374,7 @@ export default {
     },
     showyears() {
       let sems = this.semesters;
-     
+
       var years = [];
       var yearlist = [];
       for (var i = 0; i < sems.length; i++) {
@@ -586,7 +579,7 @@ export default {
         let semesterlist = this.semesters;
         for (var i = 0; i < semesterlist.length; i++) {
           var modules = semesterlist[i].mods;
-        
+
           for (var k = 0; k < modules.length; k++) {
             if (modules[k].code == mod) {
               modules[k].faculty = list.info.faculty;
@@ -640,10 +633,11 @@ export default {
       database.getModuleResults().then(item => {
         this.usergrades = item;
       });
+      
       // query database for user info
       database.firebase_data
         .collection("students")
-        .doc(database.user)
+        .doc(database.getUser())
         .onSnapshot(function(user) {
           var userData = user.data();
 
@@ -667,9 +661,8 @@ export default {
 
   created() {
     //this.accumulatesems();
-    database.getModuleResults().then(item => {
-      this.usergrades = item;
-    });
+console.log(database.getUser())
+    this.readData();
   },
   mounted() {
     this.$root.$on("closeModal1", this.closeThis1);
