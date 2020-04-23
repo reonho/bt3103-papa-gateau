@@ -731,21 +731,25 @@ var database = {
             var sam_by_sem = [];
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
+                console.log(ModGrade);
+                console.log(sam_by_sem);
                 var ModGrade = grade.data();
                 if (ModGrade.SU == "No") {
                   var flag = "dummy";
-
+                  
                   console.log(ModGrade);
                   console.log(sam_by_sem);
                   for (var sem = 0; sem < sam_by_sem.length; sem++) {
                     if (sam_by_sem.amt >= 0 && ModGrade == "") {
-                      flag = "not dummy";
+                      flag = "not dummy"
                       break;
-                    }
+                    } 
                     if (
                       sam_by_sem[sem].year == ModGrade.year &&
                       sam_by_sem[sem].sem == ModGrade.sem
+                 
                     ) {
+
                       if (sam_by_sem[sem].cap == 0) {
                         console.log(ModGrade);
                         sam_by_sem[sem].cap = database.convertCap(
@@ -765,7 +769,14 @@ var database = {
                       break;
                     }
                   }
-                  if (flag == "dummy") {
+                  if (flag == "dummy" && ModGrade.grade == "") {
+                    sam_by_sem.push({
+                      amt: 0,
+                      cap: database.convertCap(ModGrade.grade),
+                      sem: ModGrade.sem,
+                      year: ModGrade.year,
+                    });
+                  } else if (flag == "dummy" && ModGrade.grade != "") {
                     sam_by_sem.push({
                       amt: 0,
                       cap: database.convertCap(ModGrade.grade),
@@ -775,8 +786,9 @@ var database = {
                   }
                 }
               });
-
+             
               resolve(sam_by_sem);
+              
             } else {
               resolve([]);
             }
@@ -785,6 +797,7 @@ var database = {
     });
     return promise;
   },
+
 
   //=====================================//
   //----------- getModules---------------//
