@@ -629,33 +629,11 @@ export default {
       // this.updatefilter(val.year, val.sem);
     },
     readData() {
-      const self = this;
+      
       database.getModuleResults().then(item => {
         this.usergrades = item;
       });
-      
-      // query database for user info
-      database.firebase_data
-        .collection("students")
-        .doc(database.getUser())
-        .onSnapshot(function(user) {
-          var userData = user.data();
-
-          var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sam_by_sem,
-            overall_cap: userData.overall_cap,
-            batch: userData.batch, // for querying cohort top modules
-            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-            attributes: userData.attributes //individual attributes can be found in self.User.attributes
-          };
-
-          self.currentuser = result;
-        });
+    
     }
   },
 
