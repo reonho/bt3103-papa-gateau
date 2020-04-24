@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-     
+
       <div class="contain-div">
         <div class="sub-contain-div1">
           <div class="sub-header-content">
@@ -46,7 +46,13 @@
               </div>
             </div>
             <div class="sub-header-content" style="padding:2vw;">
-              <capline v-if="User.sap_by_sem" :sap="User.sap_by_sem" style="margin-right:2vh" />
+              <capline
+                v-if="User.sap_by_sem"
+                ::User="User"
+                :usergrades="usergrades"
+                :sap="User.sap_by_sem"
+                style="margin-right:2vh"
+              />
             </div>
           </div>
         </div>
@@ -137,8 +143,8 @@ export default {
     NavBar,
     Feed,
     ReviewSection,
-    ScaleLoader,
-    
+    ScaleLoader
+
     // // Ratings
   },
   data: function() {
@@ -155,7 +161,8 @@ export default {
       cohort_loaded: false,
       color: "#eda200",
       updatedtime: "",
-      loading: false
+      loading: false,
+      usergrades: []
     };
   },
   methods: {
@@ -227,6 +234,18 @@ export default {
           });
         });
     });
+    database.getModuleResults().then(item => {
+      var mod = item;
+
+      for (var i = 0; i < mod.length; i++) {
+     
+        if (mod[i].module != "") {
+          self.usergrades.push(mod[i])
+        }
+      }
+     
+     
+    });
     database.getUser().then(user => {
       // query database for user info
       database.firebase_data
@@ -234,9 +253,7 @@ export default {
         .doc(user)
         .onSnapshot(function(user) {
           var userData = user.data();
-          var attr = [];
-
-          console.log(attr);
+        
           var result = {
             name: userData.name,
             faculty: userData.faculty,
@@ -251,7 +268,7 @@ export default {
           };
 
           self.User = result;
-          console.log(result);
+
           //query database for cohort top modules
           database.getCohortTopModules(result.batch).then(doc => {
             self.cohortTopMods = doc;
@@ -267,7 +284,7 @@ export default {
               modlst.push(mod);
             }
             self.modlist = modlst;
-            console.log(modlst)
+      
           });
           // query database for course attributes
           // database.getModuleAttributes("BT2101").then(r => {

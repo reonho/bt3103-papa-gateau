@@ -142,7 +142,7 @@ export default {
         }
         for (let i = 0; i < len; i++) {
           m_code = my_attr[i].att;
-          console.log(m_code);
+   
           if (m_code !== "") {
             m_list.push(my_attr[i].grade.toFixed(2));
             attr_labels.push(m_code);
@@ -158,7 +158,7 @@ export default {
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
-      console.log(attr_labels);
+   
     }
   },
   created() {
@@ -175,7 +175,7 @@ export default {
   },
   watch: {
     my_attr: function() {
-      console.log("changed");
+      //console.log("changed");
       this.parse_attr2(this.my_attr, this.fac_attr);
       this.$refs.strengths.updateSeries(
         [
