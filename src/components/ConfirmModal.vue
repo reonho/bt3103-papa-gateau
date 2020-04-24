@@ -20,7 +20,7 @@ export default {
   methods: {
     deletemod() {
       console.log("ok");
-      console.log(this.module)
+
       database
         .deleteModuleResults(this.module.code)
         .then(e => {
