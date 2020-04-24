@@ -46,13 +46,7 @@
               </div>
             </div>
             <div class="sub-header-content" style="padding:2vw;">
-              <capline
-                v-if="User.sap_by_sem"
-                ::User="User"
-                :usergrades="usergrades"
-                :sap="User.sap_by_sem"
-                style="margin-right:2vh"
-              />
+              <capline v-if="User.sap_by_sem" :User="User" style="margin-right:2vh" />
             </div>
           </div>
         </div>
@@ -234,68 +228,74 @@ export default {
           });
         });
     });
-    database.getModuleResults().then(item => {
-      var mod = item;
 
-      for (var i = 0; i < mod.length; i++) {
-     
-        if (mod[i].module != "") {
-          self.usergrades.push(mod[i])
-        }
-      }
-     
-     
-    });
-    database.getUser().then(user => {
+    database.getUser().then(user1 => {
       // query database for user info
       database.firebase_data
         .collection("students")
-        .doc(user)
+        .doc(user1)
         .onSnapshot(function(user) {
           var userData = user.data();
-        
-          var result = {
-            name: userData.name,
-            faculty: userData.faculty,
-            dept: userData.dept,
-            course: userData.course,
-            modules: userData.modules_taken,
-            sap_by_sem: userData.sam_by_sem,
-            overall_cap: userData.overall_cap,
-            batch: userData.batch, // for querying cohort top modules
-            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-            attributes: userData.attributes //individual attributes can be found in self.User.attributes
-          };
 
-          self.User = result;
+          var modulelist = [];
+          database.firebase_data
+            .collection("module_grades")
+            .where("studentID", "==", user1)
+            .get()
+            .then(snapshot => {
+              snapshot.forEach(doc => {
+                var mod = doc.data();
 
-          //query database for cohort top modules
-          database.getCohortTopModules(result.batch).then(doc => {
-            self.cohortTopMods = doc;
-          });
-          database.getCohortTopModules(result.batch).then(doc => {
-            var course = doc;
-            var modlst = [];
+                if (typeof mod != "undefined")  {
+                  if (mod.module != "") {
+                  modulelist.push(mod);
+                  }
+                }
+              });
 
-            for (let i = 0; i < course.module.length; i++) {
-              var mod = {};
-              mod["amt"] = course.amount[i];
-              mod["mod"] = course.module[i];
-              modlst.push(mod);
-            }
-            self.modlist = modlst;
-      
-          });
-          // query database for course attributes
-          // database.getModuleAttributes("BT2101").then(r => {
-          //   self.facultyAttributes = r;
-          // });
-          database.getFacultyAttributes(result.faculty).then(attributes => {
-            self.facultyAttributes = attributes;
-            //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
-          });
-          self.get_currentsem(self.User.sap_by_sem);
-          self.get_modules(self.User.modules_taken);
+              var result = {
+                name: userData.name,
+                faculty: userData.faculty,
+                dept: userData.dept,
+                course: userData.course,
+                modules: userData.modules_taken,
+                sap_by_sem: userData.sam_by_sem,
+                overall_cap: userData.overall_cap,
+                batch: userData.batch, // for querying cohort top modules
+                modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+                attributes: userData.attributes, //individual attributes can be found in self.User.attributes
+                usergrades: modulelist
+              };
+
+              self.User = result;
+              console.log(modulelist);
+              //query database for cohort top modules
+              database.getCohortTopModules(result.batch).then(doc => {
+                self.cohortTopMods = doc;
+              });
+              database.getCohortTopModules(result.batch).then(doc => {
+                var course = doc;
+                var modlst = [];
+
+                for (let i = 0; i < course.module.length; i++) {
+                  var mod = {};
+                  mod["amt"] = course.amount[i];
+                  mod["mod"] = course.module[i];
+                  modlst.push(mod);
+                }
+                self.modlist = modlst;
+              });
+              // query database for course attributes
+              // database.getModuleAttributes("BT2101").then(r => {
+              //   self.facultyAttributes = r;
+              // });
+              database.getFacultyAttributes(result.faculty).then(attributes => {
+                self.facultyAttributes = attributes;
+                //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+              });
+              self.get_currentsem(self.User.sap_by_sem);
+              self.get_modules(self.User.modules_taken);
+            });
         });
     });
     var today = new Date();
