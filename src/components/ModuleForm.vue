@@ -83,7 +83,7 @@
       </div>
       <br />
       <md-card-actions class="md-layout md-alignment-center">
-        <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="submitForm">Submit</md-button>
+        <md-button type="submit" class="addsem" v-on:click.prevent="submitForm">Submit</md-button>
       </md-card-actions>
     </form>
   </div>
@@ -240,7 +240,7 @@ export default {
               this.showError = true;
               this.error = error;
 
-              //this.$root.$emit("closeModal2");
+  
             });
         } else {
           console.log(this.detailsForm.selectedYear,)
@@ -260,14 +260,10 @@ export default {
             .catch(error => {
               this.showError = true;
               this.error = error;
-              //this.$root.$emit("closeModal2");
+            
             });
         }
 
-        // else if(error == "module already taken!"){
-        //   alert("Module already taken!");
-        //   this.$root.$emit("closeModal2");
-        // }
       }
     }
   },
@@ -321,6 +317,13 @@ export default {
 }
 </style>
 <style lang="scss">
+.md-button.addsem {
+  background-color: teal !important;
+  color: white !important;
+  margin-top: 1vh;
+  width: 8vw;
+  font-size: 1vw;
+}
 .md-menu-content {
   z-index: 11 !important;
 }

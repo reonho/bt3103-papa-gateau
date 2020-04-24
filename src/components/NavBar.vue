@@ -19,33 +19,6 @@
         </md-menu>
         
     </md-toolbar>
-    
-    <!-- Navigation>
-    <nav class="navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container-fluid">
-        <a class="navbar-brand ml-1" href="#">
-         
-            <img src="https://www.iconsdb.com/icons/preview/white/nike-xxl.png" alt="" height=50 width=50>
-            </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-            <router-link to="/"/>
-            <li class="nav-item">
-            <router-link class="nav-link" to="/LandPage">Dashboard</router-link>
-            </li>
-            <li class="nav-item">
-           
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-            </li>
-        </ul>
-        </div>
-    </div>
-    </nav-->
 </div>
 </template>
 

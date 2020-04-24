@@ -9,18 +9,6 @@
               <h1 class="text-center" style="color:white;font-weight:600;font-size:6vh;font-family:'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</h1>
             </div>
             <div class="card-body">
-              <!---form>
-                      <div class="form-group">
-                        <label for="username"> Username:</label>
-                        <input type="username" id="username" placeholder="Enter username" v-model = "user">
-                      </div>
-                      <div class="form-group">
-                        <label for="Password"> Password:</label>
-                        <input type="password" id="password" placeholder="Password" v-model = "password">
-                      </div>
-                      <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" v-on:click = "validate">Sign In</button>
-                      <span> {{this.error}}</span>
-              </form-->
               <div style="text-align:center">
                 <h1 style="color:DARKCYAN; font-size:3vh;">USER LOGIN</h1>
               </div>
@@ -121,18 +109,6 @@ export default {
     }
   },
   methods: {
-    // skip(){
-    //   this.userObject = {
-    //       User: this.user,
-    //       Password: "12345",
-    //       ModulesTaken: ["MA1101R","CS2030","CS1010S"],
-    //       Course: "Business Analytics",
-    //       Minor: "",
-    //       SecondMajor: "",
-    //       DoubleDegree: ""
-    //     };
-    //   this.$router.push({ path: "/", params: {userPassed: this.userObject}})
-    // },
     getValidationClass(formName, fieldName) {
      
       const field = this.$v[formName][fieldName];
@@ -174,23 +150,7 @@ export default {
       this.showError2Message = false;
        this.showError3Message = false;
     }
-    // validate(){
-    //   let data = DataObject.Students
-    //   var error = true
-    //   for (var i = 0; i < data.length; ++i){
-    //       if (data[i].User == this.user && data[i].Password == this.password) {
-    //           this.userObject = data[i]
-    //           this.$router.push({ name: 'LandPage', params: {userPassed: this.userObject}})
-    //           error = false
-    //           break
-    //       }
-    //   }
-    //   if (error == true){
-    //     this.error = "Wrong username or passowrd!"
-    //   } else {
-    //     this.error = ""
-    //   }
-    // }
+   
   }
 };
 </script>

@@ -76,22 +76,8 @@
                 label_1="My Attributes"
                 label_2="Faculty Average"
               ></RadarChart>
-              <!-- <RadarChart
-              v-if="facultyAttributes"
-              :my_attr="User.attributes"
-              :fac_attr="facultyAttributes"
-              type="Module"
-              label_1="Top Student Attributes"
-              label_2="My Attributes"
-              ></RadarChart>-->
             </div>
           </div>
-          <!-- 
-          <RadarChart
-            v-if="facultyAttributes"
-            :my_attr="User.attributes"
-            :fac_attr="facultyAttributes"
-          ></RadarChart>-->
         </div>
       </div>
 
@@ -160,12 +146,6 @@ export default {
     };
   },
   methods: {
-    // tester method
-    test() {
-      database.getNUSAttributes().then(e => {
-        console.log(e);
-      });
-    },
     //use this method to find data of a specific module
     findModule(mod, database) {
       var data = database.Modules;
@@ -268,7 +248,7 @@ export default {
               };
 
               self.User = result;
-              console.log(modulelist);
+
               //query database for cohort top modules
               database.getCohortTopModules(result.batch).then(doc => {
                 self.cohortTopMods = doc;
@@ -285,10 +265,6 @@ export default {
                 }
                 self.modlist = modlst;
               });
-              // query database for course attributes
-              // database.getModuleAttributes("BT2101").then(r => {
-              //   self.facultyAttributes = r;
-              // });
               database.getFacultyAttributes(result.faculty).then(attributes => {
                 self.facultyAttributes = attributes;
                 //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
