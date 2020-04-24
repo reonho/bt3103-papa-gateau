@@ -18,30 +18,7 @@
           </div>
         </div>
       </div>
-      <div style="margin-bottom:2vh">
-        <table>
-          <tr>
-            <td>
-              <span>Last Refreshed at {{updatedtime}}</span>
-            </td>
-            <td>
-              <md-button
-                class="addsem"
-                style="margin-left:3vh"
-                :md-ripple="false"
-                v-on:click="refreshpage"
-              >Refresh</md-button>
-            </td>
-            <td>
-              <ClipLoader
-                style="margin-bottom: -0.5vh; margin-left:1vh"
-                :loading="loading"
-                :color="color"
-              ></ClipLoader>
-            </td>
-          </tr>
-        </table>
-      </div>
+     
       <div class="contain-div">
         <div class="sub-contain-div1">
           <div class="sub-header-content">
@@ -150,7 +127,6 @@ import Feed from "../components/Feed";
 import ReviewSection from "../components/ReviewSection";
 import database from "../firebase.js";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
-import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 export default {
   name: "LandPage",
@@ -162,7 +138,7 @@ export default {
     Feed,
     ReviewSection,
     ScaleLoader,
-    ClipLoader
+    
     // // Ratings
   },
   data: function() {
