@@ -140,6 +140,7 @@
                         :year="modalyear"
                         :grade="grade"
                         :code="code"
+                        :SUselect="SU"
                         :purpose="'Edit'"
                       />
                     </md-dialog-content>
@@ -378,7 +379,6 @@ export default {
           yearlist.push({
             value: sems[i].year
           });
-     
         }
       }
       return yearlist;
@@ -463,14 +463,16 @@ export default {
       }
       this.grade = "";
       this.code = "";
+      this.SU = "No";
       this.showAddModal = true;
     },
     editmod(mod) {
       this.showModal = true;
       this.grade = mod.grade;
       this.code = mod.code;
+      this.SU = mod.SU;
       this.modalsem = mod.semester;
-      this.modalyear = mod.year
+      this.modalyear = mod.year;
     },
     deletemod(mod) {
       this.module = mod;
@@ -526,11 +528,16 @@ export default {
       var MC = 0;
       if (sem.mods.length != 0) {
         for (var i = 0; i < sem.mods.length; i++) {
-          total +=
-            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
-          MC += parseInt(sem.mods[i].MC);
+          if (sem.mods[i].SU == "No") {
+            total +=
+              parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
+            MC += parseInt(sem.mods[i].MC);
+          }
         }
         total = total / MC;
+      }
+      if (MC == 0) {
+        total = 0;
       }
       return total.toFixed(2);
     },
@@ -556,11 +563,9 @@ export default {
       this.readData();
     },
     readData() {
-      
       database.getModuleResults().then(item => {
         this.usergrades = item;
       });
-    
     }
   },
 

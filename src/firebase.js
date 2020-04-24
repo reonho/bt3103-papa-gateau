@@ -201,6 +201,7 @@ var database = {
                   .update({
                     year: module_result.selectedYear,
                     sem: module_result.selectedSemester,
+                    SU: module_result.selectedSU,
                     grade: module_result.selectedGrade,
                   });
                 database.updateStudentInfo();
@@ -280,7 +281,7 @@ var database = {
       .get();
     var promise = new Promise((resolve, reject) => {
       module_delete.forEach((doc) => {
-        console.log(doc.data());
+      
         doc.ref
           .delete()
           .then((e) => {
@@ -750,17 +751,17 @@ var database = {
             var sam_by_sem = [];
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
-                console.log(ModGrade);
+              
               
                 var ModGrade = grade.data();
                 if (ModGrade.SU == "No") {
                   var flag = "dummy";
                   
-                  console.log(ModGrade);
+             
                 
                   for (var sem = 0; sem < sam_by_sem.length; sem++) {
                     
-                    console.log(sam_by_sem[sem].year + " " +  sam_by_sem[sem].sem)
+                  
                     if (
                       sam_by_sem[sem].year == ModGrade.year &&
                       sam_by_sem[sem].sem == ModGrade.sem 
@@ -771,7 +772,7 @@ var database = {
                         flag = "not dummy"
                         break;
                       } 
-                      console.log(ModGrade);
+                    
                       if (sam_by_sem[sem].cap == 0) {
                        
                         sam_by_sem[sem].cap = database.convertCap(
@@ -800,17 +801,16 @@ var database = {
                     });
                   }
                   if (flag == "dummy" && ModGrade.grade != "") {
-                    console.log(ModGrade)
-                    console.log(sam_by_sem);
+                  
                     sam_by_sem.push({
                       amt: 1,
                       cap: database.convertCap(ModGrade.grade),
                       sem: ModGrade.sem,
                       year: ModGrade.year,
                     });
-                    console.log(sam_by_sem);
+                  
                   }
-                  console.log(flag + " " + " " + database.convertCap(ModGrade.grade))
+               
                 
                 }
               });

@@ -102,7 +102,8 @@ export default {
     year: String,
     grade: String,
     code: String,
-    purpose: String
+    purpose: String,
+    SUselect: String
   },
   components: {
     // FollowUpModal
@@ -194,7 +195,7 @@ export default {
         selectedModule: this.code,
         selectedSemester: this.sem,
         selectedGrade: this.grade,
-        selectedSU: "No",
+        selectedSU: this.SUselect,
         selectedYear: this.year
       }
     };
@@ -234,6 +235,7 @@ export default {
             .addModuleResults(this.detailsForm)
             .then(e => {
               console.log(e);
+             
               // create an alert saying you have already added this module
               this.showError = false;
               this.error = "";
@@ -253,6 +255,7 @@ export default {
           database
             .updateModuleResults(this.detailsForm)
             .then(e => {
+              console.log(this.detailsForm)
               console.log(e);
               // create an alert saying you have already added this module
 
