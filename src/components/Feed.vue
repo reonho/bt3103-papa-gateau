@@ -92,6 +92,7 @@ export default {
       loading: false,
       series: [
         {
+          name: "Number of students taking the module",
           data: []
         }
       ],

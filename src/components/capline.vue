@@ -44,6 +44,13 @@ export default {
             }
           }
         ],
+        xaxis: {
+          tooltip: {
+            formatter: function (value) {
+              return "Semester " + value
+            }
+          }
+        },
         dataLabels: {
           enabled: true,
           formatter: function(val) {
