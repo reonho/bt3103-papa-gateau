@@ -24,6 +24,7 @@
               md-label="Basic Details"
               :md-done.sync="first"
               v-on:click.prevent="active = 'first'"
+              :md-error='detailsForm.error'
             >
               <!-- <md-card> -->
               <md-card-content>
@@ -87,7 +88,6 @@
                     class="md-error"
                     v-if="!$v.detailsForm.selectedStaff.required"
                   >This field is required</span>
-
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
@@ -254,19 +254,11 @@
                   <b>As a whole, the assignments and projects were manageable.</b>
                 </label>
                 <div>
-                  <md-radio
-                    v-model="tutorialForm.ap"
-                    class="md-primary"
-                    value="1"
-                  >Strongly Disagree</md-radio>
+                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="1">Strongly Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio
-                    v-model="tutorialForm.ap"
-                    class="md-primary"
-                    value="5"
-                  >Strongly Agree</md-radio>
+                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="5">Strongly Agree</md-radio>
                   <md-radio
                     v-model="tutorialForm.ap"
                     class="md-primary"
@@ -298,11 +290,7 @@
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio
-                    v-model="tutorialForm.exam"
-                    class="md-primary"
-                    value="5"
-                  >Strongly Agree</md-radio>
+                  <md-radio v-model="tutorialForm.exam" class="md-primary" value="5">Strongly Agree</md-radio>
                   <md-radio
                     v-model="tutorialForm.exam"
                     class="md-primary"
@@ -335,7 +323,7 @@
               id="fourth"
               md-label="Comments"
               :md-done.sync="fourth"
-              v-on:click.prevent="active = 'fourth'"
+              v-on:click.prevent="active == 'fourth'"
               :md-error="commentForm.error"
             >
               <!-- <md-card> -->
@@ -385,10 +373,17 @@
                 </div>
                 <hr />
                 <br />
+                <div>
                 <label class="md-subheading">
                   <b>As a whole, how would you rate this module?</b>
                 </label>
-                <Ratings v-model="commentForm.rating" />
+                  <Ratings v-model="commentForm.rating" />
+                  <span
+                    class="md-error"
+                    style='color:red'
+                    v-if="$v.commentForm.rating.$invalid && $v.commentForm.rating.$dirty"
+                  >This field is required</span>
+                </div>
                 <hr />
                 <br />
                 <md-field>
@@ -419,11 +414,11 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import Ratings from "./Ratings";
 import NavBar from "./NavBar";
 import database from "../firebase.js";
-import firebase from 'firebase'
+import firebase from "firebase";
 export default {
   name: "ReviewForm",
   props: ["mod"],
@@ -441,7 +436,7 @@ export default {
         required
       },
       selectedStaff: {
-        required,
+        required
       },
       selectedGrade: {
         required
@@ -452,10 +447,10 @@ export default {
     },
     lectureForm: {
       lectureMaterial: {
-        required
+        // required
       },
       clarity: {
-        required
+        // required
       },
       comments: {
         // required
@@ -463,13 +458,13 @@ export default {
     },
     tutorialForm: {
       tutorialMaterial: {
-        required
+        // required
       },
       comments: {
         // required
       },
       tutor: {
-        required
+        // required
       },
       apcomments: {
         // required
@@ -479,13 +474,6 @@ export default {
       }
     },
     commentForm: {
-      comments: {},
-      recommend: {
-        required
-      },
-      difficulty: {
-        required
-      },
       rating: {
         required
       }
@@ -498,6 +486,10 @@ export default {
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
+        this.detailsForm.error = null
+        this.lectureForm.error = null
+        this.commentForm.error = null
+        this.tutorialForm.error = null
         // this.goback()
         database.getUser().then(user => {
           db.collection("reviews").add({
@@ -518,6 +510,12 @@ export default {
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true;
+        
+        if(this.$v.detailsForm.$invalid) {
+          this.detailsForm.error = 'Error'
+        } else {
+          this.detailsForm.error = null
+        }
         if (this.$v.lectureForm.$invalid) {
           this.lectureForm.error = "Error";
         } else {
@@ -544,7 +542,7 @@ export default {
         this[formName].error = null;
         this.setDone(currStep, nextStep);
       } else {
-        this[formName].error = "Error!";
+        this[formName].error = "Error";
       }
     },
     getValidationClass(formName, fieldName) {
@@ -588,7 +586,8 @@ export default {
       selectedSemester: null,
       selectedStaff: null,
       selectedGrade: null,
-      selectedFaculty: null
+      selectedFaculty: null,
+      error:null
     },
     lectureForm: {
       lectureMaterial: "3",
@@ -610,7 +609,8 @@ export default {
       recommend: "3",
       difficulty: "3",
       workload: "3",
-      rating: null
+      rating: null,
+      error: null
     },
     exitDialog: false,
     submitStatus: null,
@@ -692,16 +692,16 @@ Tentative fix to css background
 </style>
 
 <style>
-.md-steppers.md-theme-default .md-stepper-header.md-active .md-stepper-number  {
+.md-steppers.md-theme-default .md-stepper-header.md-active .md-stepper-number {
   background-color: teal !important;
 }
-.md-steppers.md-theme-default .md-stepper-header.md-done .md-stepper-number  {
+.md-steppers.md-theme-default .md-stepper-header.md-done .md-stepper-number {
   background-color: teal !important;
 }
 .md-radio.md-theme-default.md-checked.md-primary .md-radio-container {
-  border-color: #EC7663 !important;
+  border-color: #ec7663 !important;
 }
 .md-radio.md-theme-default.md-checked.md-primary .md-radio-container:after {
-    background-color: #EC7663 !important;
+  background-color: #ec7663 !important;
 }
 </style>
