@@ -69,10 +69,10 @@ export default {
     parse_sap: function(obj_array) {
       var clone_array = [...obj_array];
       clone_array = clone_array.sort(function(a, b) {
-        if (a.year == b.year) {
-          return a.sem - b.sem;
+        if (a.year.substring(2,6) == b.year.substring(2,6)) {
+          return a.sem.substring(9,10) - b.sem.substring(9,10);
         }
-        return a.year - b.year;
+        return a.year.substring(2,6) - b.year.substring(2,6);
       });
 
       var sap_series = [];
@@ -85,8 +85,6 @@ export default {
           sap_series.push(value);
           const average = list =>
             list.reduce((prev, curr) => prev + curr) / list.length;
-
-          console.log(sap_series);
           cum_series.push(average(sap_series));
         }
       }

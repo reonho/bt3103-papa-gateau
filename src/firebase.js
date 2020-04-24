@@ -2,13 +2,32 @@ import firebase from "firebase";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBHfoVSLAYvW2SFO9FRftQ6c5EtV3w-g0g",
-  authDomain: "modeaux-3089e.firebaseapp.com",
-  databaseURL: "https://modeaux-3089e.firebaseio.com",
-  projectId: "modeaux-3089e",
-  storageBucket: "modeaux-3089e.appspot.com",
-  messagingSenderId: "648954694353",
-  appId: "1:648954694353:web:8a421abb78e90c8dd513f0",
+  //actual
+  // apiKey: "AIzaSyBHfoVSLAYvW2SFO9FRftQ6c5EtV3w-g0g",
+  // authDomain: "modeaux-3089e.firebaseapp.com",
+  // databaseURL: "https://modeaux-3089e.firebaseio.com",
+  // projectId: "modeaux-3089e",
+  // storageBucket: "modeaux-3089e.appspot.com",
+  // messagingSenderId: "648954694353",
+  // appId: "1:648954694353:web:8a421abb78e90c8dd513f0",
+  //old
+  // apiKey: "AIzaSyAap-O2K4Pzkenjirw9S2Dw4ejG8kplyZA",
+  // authDomain: "papa-gateau.firebaseapp.com",
+  // databaseURL: "https://papa-gateau.firebaseio.com",
+  // projectId: "papa-gateau",
+  // storageBucket: "papa-gateau.appspot.com",
+  // messagingSenderId: "945138208035",
+  // appId: "1:945138208035:web:146ed078c96f9f09b81096",
+  // measurementId: "G-B09D9JVQ0B"
+  //temp
+  apiKey: "AIzaSyA2BGHoHZ4NmuwvKu2DfHXG6-yRJD5YrtY",
+  authDomain: "backup-977dc.firebaseapp.com",
+  databaseURL: "https://backup-977dc.firebaseio.com",
+  projectId: "backup-977dc",
+  storageBucket: "backup-977dc.appspot.com",
+  messagingSenderId: "296071110540",
+  appId: "1:296071110540:web:9c158359d309d7f5ca80a9",
+  
 };
 
 console.log(process.env.VUE_APP_APIKEY);
@@ -732,26 +751,29 @@ var database = {
             if (!snapshot.empty) {
               snapshot.forEach((grade) => {
                 console.log(ModGrade);
-                console.log(sam_by_sem);
+              
                 var ModGrade = grade.data();
                 if (ModGrade.SU == "No") {
                   var flag = "dummy";
                   
                   console.log(ModGrade);
-                  console.log(sam_by_sem);
+                
                   for (var sem = 0; sem < sam_by_sem.length; sem++) {
-                    if (sam_by_sem.amt >= 0 && ModGrade == "") {
-                      flag = "not dummy"
-                      break;
-                    } 
+                    
+                    console.log(sam_by_sem[sem].year + " " +  sam_by_sem[sem].sem)
                     if (
                       sam_by_sem[sem].year == ModGrade.year &&
-                      sam_by_sem[sem].sem == ModGrade.sem
-                 
+                      sam_by_sem[sem].sem == ModGrade.sem 
+                     
+                      
                     ) {
-
+                      if (sam_by_sem[sem].amt >= 0 && ModGrade.grade == "") {
+                        flag = "not dummy"
+                        break;
+                      } 
+                      console.log(ModGrade);
                       if (sam_by_sem[sem].cap == 0) {
-                        console.log(ModGrade);
+                       
                         sam_by_sem[sem].cap = database.convertCap(
                           ModGrade.grade
                         );
@@ -776,14 +798,20 @@ var database = {
                       sem: ModGrade.sem,
                       year: ModGrade.year,
                     });
-                  } else if (flag == "dummy" && ModGrade.grade != "") {
+                  }
+                  if (flag == "dummy" && ModGrade.grade != "") {
+                    console.log(ModGrade)
+                    console.log(sam_by_sem);
                     sam_by_sem.push({
-                      amt: 0,
+                      amt: 1,
                       cap: database.convertCap(ModGrade.grade),
                       sem: ModGrade.sem,
                       year: ModGrade.year,
                     });
+                    console.log(sam_by_sem);
                   }
+                  console.log(flag + " " + " " + database.convertCap(ModGrade.grade))
+                
                 }
               });
              
