@@ -22,7 +22,6 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
-// import database from "../firebase";
 export default {
   name: "radar",
   components: {
@@ -163,11 +162,11 @@ export default {
   },
   created() {
     this.parse_attr2(this.my_attr, this.fac_attr);
-    // this.parse_attr2(this.fac_attr, this.my_attr);
+    
   },
   computed: {
     showEmpty() {
-      console.log(this.my_attr)
+
       var attr = []
       for (var i = 0; i < this.my_attr.length; i++) {
         if (this.my_attr[i].att != "") {

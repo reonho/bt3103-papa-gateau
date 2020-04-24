@@ -218,16 +218,11 @@
 import database from "../firebase.js";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
-//import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
 import dataObject from "../Database_mods.js";
-import VueApexCharts from "vue-apexcharts";
 export default {
   components: {
     NavBar,
-    // eslint-disable-next-line vue/no-unused-components
-    apexchart: VueApexCharts,
-    //intakechart: StudentIntakeChart,
     workloadchart: WorkloadChart,
     ScaleLoader
   },
@@ -366,7 +361,6 @@ export default {
           var slookup = {};
           //Loop through each item
           querySnapShot.forEach(doc => {
-            //console.log(doc.id+"==>"+doc.data())
             var item = doc.data();
 
             this.modulesData.push(item);

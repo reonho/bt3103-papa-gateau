@@ -4,23 +4,6 @@
     <div class="contain-div">
       <div class="sub-contain-div1">
         <div class="sub-header-content">
-          <!-- <div class="sub-header-title">COMPLETED MODULES</div>
-          <div class="sub-header-content" style="padding:0;;">
-            <div class="grid-container">
-              <div
-                v-for="mod in modules"
-                :key="mod"
-                style="margin-top:1vh; margin-bottom:1vh"
-                class="grid-item"
-              >
-               <router-link class="nav-link" :to = " '/' + mod" >
-                  <b-button class="mod-btn" variant="outline-info">
-                    <h1 style="font-size:2.5vh">{{mod}}</h1>
-                  </b-button>
-                </router-link>
-              </div>
-            </div>
-          </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
             <ViewSemesterSection :User="User" v-if="User" />
@@ -127,10 +110,10 @@ export default {
       this.$router.push("/" + mod);
     },
     readData: function(modlst1) {
-      console.log(this.modlst1);
+    
       var modlst = [...modlst1];
       modlst = modlst.sort((a, b) => -a.amt + b.amt);
-      console.log(modlst);
+    
       var series_mod = [];
       var mods = [];
       for (let i = 0; i < modlst.length; i++) {
@@ -142,7 +125,7 @@ export default {
       this.series[0].data = series_mod;
       this.chartOptionsYear.xaxis.categories = mods;
       this.loading = false;
-      console.log(this.series[0].data);
+     
     }
   },
   computed: {
@@ -161,7 +144,7 @@ export default {
               var mod = this.chartOptionsYear.xaxis.categories[
                 opts.dataPointIndex
               ];
-              console.log("#/" + mod);
+             
               this.redirect(mod);
             }
           }
@@ -189,7 +172,7 @@ export default {
   watch: {
     modlist: function() {
       this.readData(this.modlist);
-      console.log(this.modlist);
+
       this.$refs.top.updateSeries(
         [
           {

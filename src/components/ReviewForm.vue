@@ -34,13 +34,6 @@
                     v-model="detailsForm.selectedFaculty"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedFaculty">
-                    <md-option
-                      v-for="fac in faculties"
-                      v-bind:key="fac.id"
-                      v-bind:value="fac.title"
-                    >{{fac.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedFaculty.required"
@@ -54,13 +47,6 @@
                     v-model="detailsForm.selectedYear"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedYear">
-                    <md-option
-                      v-for="yr in years"
-                      v-bind:key="yr.id"
-                      v-bind:value="yr.title"
-                    >{{yr.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedYear.required"
@@ -74,13 +60,6 @@
                     v-model="detailsForm.selectedSemester"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedSemester">
-                    <md-option
-                      v-for="sem in semesters"
-                      v-bind:key="sem.id"
-                      v-bind:value="sem.title"
-                    >{{sem.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedSemester.required"
@@ -93,13 +72,6 @@
                     v-model="detailsForm.selectedGrade"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedGrade">
-                    <md-option
-                      v-for="g in grades"
-                      v-bind:key="g.id"
-                      v-bind:value="g.title"
-                    >{{g.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedGrade.required"
@@ -119,9 +91,6 @@
                 </md-field>
 
                 <md-card-actions class="md-layout md-alignment-center">
-                  <!-- <router-link class="nav-link" to="/module">
-                <md-button class="md-raised cancelbtn">Cancel</md-button>
-                  </router-link>-->
                   <md-button
                     class="md-raised okaybtn"
                     type="submit"
@@ -430,8 +399,6 @@
               <md-card-actions class="md-layout md-alignment-center-center">
                 <md-button class="md-raised okaybtn" type="submit">Submit</md-button>
               </md-card-actions>
-              <!-- <md-snackbar md-active = true md-position='center'></md-snackbar> -->
-              <!-- </md-card> -->
             </md-step>
           </md-steppers>
           <md-dialog-confirm
@@ -546,14 +513,11 @@ export default {
             commentForm: this.commentForm,
             review_date: firebase.firestore.Timestamp.now()
           });
-
-          // this.setDone("first", "second");
         });
         console.log("form submitted!");
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true;
-        //This part is hard-coded for now, until I find a better way to do the error check for all the forms upon submit button press
         if (this.$v.lectureForm.$invalid) {
           this.lectureForm.error = "Error";
         } else {
@@ -600,23 +564,15 @@ export default {
     goback() {
       this.showSubmitMessage = false;
       this.$router.push({ name: "modulePage", params: { code: this.mod } });
-      // window.location.href = "/#/module";
     }
   },
 
   created() {
-    // var self = this
     let self = this;
     database.getUser().then(user => {
       database.ifAddedModule(this.mod, user).then(mod => {
-        console.log(mod);
+       
         self.added = true;
-        // this.added = true
-        // this.faculties = [{id: 1, title: mod.faculty}]
-        // this.grades = [{id: 1, title: mod.grade}]
-        // this.years = [{id: 1, title: mod.year}]
-        // this.semesters = [{id: 1, title: mod.sem}]
-        // this.added = true
         var df = self.detailsForm;
         df.selectedFaculty = mod.faculty;
         df.selectedGrade = mod.grade;
@@ -624,28 +580,6 @@ export default {
         df.selectedSemester = mod.sem;
       });
     });
-    // database.collection('faculties').get().then((querySnapShot) => {
-    //   let item = {}
-    //   querySnapShot.forEach(doc => {
-    //     item = doc.data()
-    //     this.faculties.push(item)
-    //   })
-    // })
-    // database.getFaculties().then(r => {
-    //   this.faculties = r;
-    // });
-
-    // database.getGrades().then(g => {
-    //   this.grades = g;
-    // });
-
-    // database.getYears().then(y => {
-    //   this.years = y
-    // })
-
-    // database.getSemesters().then(s => {
-    //   this.semesters = s
-    // })
   },
 
   data: () => ({
@@ -742,15 +676,6 @@ export default {
   font-weight: bold;
   color: white !important;
 }
-
-/* .html .body {
-  height:100vh !important;
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
-  padding:0px;
-  margin:0px;
-
-
-} */
 
 /*
 Tentative fix to css background

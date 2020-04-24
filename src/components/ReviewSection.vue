@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     setReviewStatus(value) {
-      console.log('value ' + value)
+    
       if (value.length > 0) {
         this.hasReviews = true;
       } else {
@@ -39,9 +39,6 @@ export default {
     },
 
   },
-  // {
-  //   reviewData: Array //should be an array of reviews from the backend
-  // },
   data: () => ({
     hasReviews: false,
     dataLoaded: false
@@ -56,12 +53,12 @@ export default {
   },
   watch: {
     reviewData(value) {
-      console.log('watch')
+     
       this.setReviewStatus(value);
-      console.log(this.reviewData)
+      
     }
   }
-  // }
+
 };
 </script>
 

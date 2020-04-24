@@ -241,8 +241,6 @@ export default {
             users_liked: this.review.users_liked
           });
       }
-      //replace this.liked with some variable that stores whether the user has liked/disliked the post already. Probably a backend call to the list of likers/dislikers
-      //possibly can add the user to the list of likers for a review too, all depends on how we store this
       else if (this.liked === true) {
         //if post already liked, unlike it
         this.liked = false;
@@ -282,7 +280,6 @@ export default {
               users_liked: this.review.users_liked
             });
         }
-        //update count in db
       }
     },
 
@@ -340,23 +337,15 @@ export default {
     },
 
     edit() {
-      //find review id in collection
       //navigate to review form, while passing the fields from the review
-      //allow to edit from the review form
       this.$router.push({ name: "EditForm", params: { review: this.review } });
     },
 
     deleteReview() {
-      // let self = this
-      // console.log(this.review.commentForm.comments)
       database.firebase_data
         .collection("reviews")
         .doc(this.review.id)
         .delete();
-      //find review id in collection
-      // database.collection('reviews').doc(reviewid).delete();
-      //delete
-      // update list of reviews (to be done in reviewsection)
     }
   },
   components: {}
