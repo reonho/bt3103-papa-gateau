@@ -14,7 +14,7 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info" v-on:click="clearfilter">
                   <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
                 </b-button>
               </td>

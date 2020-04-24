@@ -167,7 +167,14 @@ export default {
   },
   computed: {
     showEmpty() {
-      if (this.type === "Faculty" && this.my_attr.length === 0) {
+      console.log(this.my_attr)
+      var attr = []
+      for (var i = 0; i < this.my_attr.length; i++) {
+        if (this.my_attr[i].att != "") {
+          attr.push(this.my_attr[i])
+        }
+      } 
+      if (this.type === "Faculty" && attr.length === 0) {
         return true;
       }
       return false;

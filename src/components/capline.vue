@@ -90,6 +90,7 @@ export default {
       var sap_series = [];
       var cum_series = [];
       var total_sems = [];
+      if (grades.length > 0) {
       for (var k = 0; k < clone_array.length; k++) {
         var sem = clone_array[k];
         var total_grades = [];
@@ -138,6 +139,7 @@ export default {
       }
       this.series1[0].data = sap_series;
       this.series1[1].data = cum_series;
+      }
     }
   },
   computed: {

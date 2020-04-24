@@ -164,14 +164,6 @@ export default {
           id: 11,
           title: "F"
         },
-        {
-          id: 12,
-          title: "S"
-        },
-        {
-          id: 13,
-          title: "U"
-        }
       ],
       SU: [
         { id: 1, title: "Yes" },

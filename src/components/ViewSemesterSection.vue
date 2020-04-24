@@ -170,6 +170,7 @@
                     :year="modalyear"
                     :grade="grade"
                     :code="code"
+                    :SUselect="SU"
                     :purpose="'Add'"
                   />
                 </md-dialog-content>
