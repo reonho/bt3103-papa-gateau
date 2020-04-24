@@ -69,10 +69,10 @@ export default {
     parse_sap: function(obj_array) {
       var clone_array = [...obj_array];
       clone_array = clone_array.sort(function(a, b) {
-        if (a.year.substring(2,6) == b.year.substring(2,6)) {
-          return a.sem.substring(9,10) - b.sem.substring(9,10);
+        if (a.year.substring(2, 6) == b.year.substring(2, 6)) {
+          return a.sem.substring(9, 10) - b.sem.substring(9, 10);
         }
-        return a.year.substring(2,6) - b.year.substring(2,6);
+        return a.year.substring(2, 6) - b.year.substring(2, 6);
       });
 
       var sap_series = [];
@@ -81,7 +81,7 @@ export default {
       for (let i = 0; i < clone_array.length; i++) {
         //console.log(obj_array[0][key])
         var value = clone_array[i]["cap"];
-        if (typeof value != "undefined" && value != 0) {
+        if (typeof value != "undefined") {
           sap_series.push(value);
           const average = list =>
             list.reduce((prev, curr) => prev + curr) / list.length;
@@ -99,9 +99,16 @@ export default {
     sap: function() {
       console.log("changed");
       this.parse_sap(this.sap);
-      this.$refs.chart.updateSeries([{
-          data: this.series1[0].data
-      }], false, true)
+      this.$refs.chart.updateSeries(
+        [
+          {
+            data: this.series1[0].data
+          },
+          { data: this.series1[1].data }
+        ],
+        false,
+        true
+      );
     }
   }
 };

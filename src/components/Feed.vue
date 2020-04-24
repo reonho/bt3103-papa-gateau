@@ -23,7 +23,7 @@
           </div>-->
           <div class="sub-header-title">COMPLETED MODULES</div>
           <div class="sub-header-content" style="padding:3vh;">
-            <ViewSemesterSection :User = "User"  v-if="User"/>
+            <ViewSemesterSection :User="User" v-if="User" />
           </div>
         </div>
       </div>
@@ -32,18 +32,24 @@
         <div class="sub-header-content">
           <div class="sub-header-title">TOP MODULES TAKEN BY YOUR COHORT</div>
           <div v-show="loading">
-                <md-empty-state
-                  id="statebox"
-                  style="max-width:0 !important; color: #2e4053;"
-                  md-label="Loading Modules..."
-                >
-                <br/>
-                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
-                </md-empty-state>
+            <md-empty-state
+              id="statebox"
+              style="max-width:0 !important; color: #2e4053;"
+              md-label="Loading Modules..."
+            >
+              <br />
+              <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
+            </md-empty-state>
           </div>
           <div class="sub-header-content" style="padding-top:1vw;" v-show="!loading">
             <div id="chart">
-              <apexchart type="bar" :options="chartOptionsYear" v-show="!showEmpty" :series="series"></apexchart>
+              <apexchart
+                type="bar"
+                :options="chartOptionsYear"
+                v-show="!showEmpty"
+                :series="series"
+                ref="top"
+              ></apexchart>
               <div v-show="showEmpty">
                 <md-empty-state
                   id="stateboxcor"
@@ -65,12 +71,12 @@
 <script>
 import VueApexCharts from "vue-apexcharts";
 import ViewSemesterSection from "../components/ViewSemesterSection";
-import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
-import database from "../firebase.js";
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
+//import database from "../firebase.js";
 export default {
   name: "Feed",
   props: {
-    modules: Array,
+    modlist: Array,
     sem: String,
     User: Object
   },
@@ -81,9 +87,9 @@ export default {
   },
   data: function() {
     return {
-      course:Object,
+      course: Object,
       color: "#eda200",
-      loading: true,
+      loading: false,
       series: [
         {
           data: []
@@ -112,40 +118,30 @@ export default {
     };
   },
   created() {
-    
-    const self = this
-
-    
-        var result = self.User;
-        //query database for cohort top modules
-        database.getCohortTopModules(result.batch).then(doc => {
-          self.loading = false
-          self.course = doc;
-          var modlst = [];
-          
-          for (let i = 0; i < self.course.module.length; i++) {
-            var mod = {};
-            mod["amt"] = self.course.amount[i];
-            mod["mod"] = self.course.module[i];
-            modlst.push(mod);
-          }
-          
-          modlst = modlst.sort((a, b) => -a.amt + b.amt);
-          //console.log(modlst)
-          for (let i = 0; i < self.course.module.length; i++) {
-            self.series[0].data.push(modlst[i].amt);
-            self.chartOptionsYear.xaxis.categories.push(modlst[i].mod);
-          }
-        })
-      
-
-    
-    //console.log(this.series[0].data);
+    this.readData(this.modlist);
   },
 
   methods: {
     redirect: function(mod) {
       this.$router.push("/" + mod);
+    },
+    readData: function(modlst1) {
+      console.log(this.modlst1);
+      var modlst = [...modlst1];
+      modlst = modlst.sort((a, b) => -a.amt + b.amt);
+      console.log(modlst);
+      var series_mod = [];
+      var mods = [];
+      for (let i = 0; i < modlst.length; i++) {
+        series_mod.push(modlst[i].amt);
+        if (!mods.includes(modlst[i].mod)) {
+          mods.push(modlst[i].mod);
+        }
+      }
+      this.series[0].data = series_mod;
+      this.chartOptionsYear.xaxis.categories = mods;
+      this.loading = false;
+      console.log(this.series[0].data);
     }
   },
   computed: {
@@ -188,6 +184,26 @@ export default {
       }
       return false;
     }
+  },
+  watch: {
+    modlist: function() {
+      this.readData(this.modlist);
+      console.log(this.modlist);
+      this.$refs.top.updateSeries(
+        [
+          {
+            data: this.series[0].data
+          }
+        ],
+        false,
+        true
+      );
+      this.$refs.top.updateOptions({
+        xaxis: {
+          categories: this.chartOptionsYear.xaxis.categories
+        }
+      });
+    }
   }
 };
 </script>
@@ -213,7 +229,6 @@ div {
 .chart {
   overflow-y: scroll;
   max-height: 100vh;
-
 }
 .sub-header-title {
   font-size: 2.3vh;
@@ -278,7 +293,7 @@ div {
 <style>
 #stateboxcor .md-icon.md-icon-font.md-empty-state-icon.md-theme-default {
   font-size: 9vw !important;
-  color: teal
+  color: teal;
 }
 
 #stateboxcor .md-empty-state-label {

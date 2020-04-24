@@ -22,22 +22,23 @@
         <table>
           <tr>
             <td>
-              <span>{{updatedtime}}</span>
+              <span>Last Refreshed at {{updatedtime}}</span>
             </td>
             <td>
-               
               <md-button
                 class="addsem"
                 style="margin-left:3vh"
                 :md-ripple="false"
                 v-on:click="refreshpage"
               >Refresh</md-button>
-            
             </td>
             <td>
-              <ClipLoader style="margin-bottom: -0.5vh; margin-left:1vh" :loading="loading" :color="color"></ClipLoader>
+              <ClipLoader
+                style="margin-bottom: -0.5vh; margin-left:1vh"
+                :loading="loading"
+                :color="color"
+              ></ClipLoader>
             </td>
-
           </tr>
         </table>
       </div>
@@ -86,7 +87,7 @@
                 md-label="Loading Attributes..."
               >
                 <br />
-                <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
+                <ScaleLoader :color="color"></ScaleLoader>
               </md-empty-state>
             </div>
             <div v-show="facultyAttributes">
@@ -120,7 +121,7 @@
       <br />
       <br />
       <Feed
-        :modules="modules"
+        :modlist="modlist"
         :sem="sem"
         :User="User"
         :course="cohortTopMods"
@@ -171,13 +172,14 @@ export default {
       reviewData: [],
       facultyAttributes: null,
       modules: [],
+      modlist: [],
       sem: null,
       cohortTopMods: null,
       showModal: false,
       cohort_loaded: false,
       color: "#eda200",
       updatedtime: "",
-      loading:false
+      loading: false
     };
   },
   methods: {
@@ -229,9 +231,8 @@ export default {
     },
     refreshpage() {
       this.$router.go();
-      this.loading = true
+      this.loading = true;
     }
-    
   },
   created() {
     const self = this;
@@ -279,6 +280,19 @@ export default {
           database.getCohortTopModules(result.batch).then(doc => {
             self.cohortTopMods = doc;
           });
+          database.getCohortTopModules(result.batch).then(doc => {
+            var course = doc;
+            var modlst = [];
+
+            for (let i = 0; i < course.module.length; i++) {
+              var mod = {};
+              mod["amt"] = course.amount[i];
+              mod["mod"] = course.module[i];
+              modlst.push(mod);
+            }
+            self.modlist = modlst;
+            console.log(modlst)
+          });
           // query database for course attributes
           // database.getModuleAttributes("BT2101").then(r => {
           //   self.facultyAttributes = r;
@@ -308,7 +322,7 @@ export default {
       ":" +
       (today.getSeconds() < 10 ? "0" : "") +
       today.getSeconds();
-    this.updatedtime = " Updated at " + time + " on " + date;
+    this.updatedtime = time + " on " + date;
   },
   mounted() {
     if (this.userPassed) {
