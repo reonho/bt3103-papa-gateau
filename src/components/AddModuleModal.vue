@@ -44,7 +44,6 @@ export default {
       this.showFollowUp = true;
     },
     showNewForm() {
-      console.log("hi");
       this.showModal = true;
       this.showFollowUp = false;
     },
@@ -61,5 +60,6 @@ export default {
 .md-dialog {
   overflow: auto;
   display: block;
+  background-color: grey;
 }
 </style>

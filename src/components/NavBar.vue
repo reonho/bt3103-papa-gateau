@@ -6,9 +6,6 @@
            <md-button style="font-weight:600;font-size: 150%;color:white;font-family: 'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</md-button>
         </router-link>
         </h3>
-          <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>
-        <md-menu md-size="medium" md-align-trigger>
-        </md-menu>
         <router-link class="nav-link" to="/">
           <md-button style="color:white;font-weight:bold">Dashboard</md-button>
         </router-link>
@@ -16,6 +13,10 @@
         <router-link class="nav-link" to="/ModuleList">
           <md-button style="color:white;font-weight:bold" class="md-primary">Modules</md-button>
         </router-link>
+
+        <md-button style="color:white;font-weight:bold" v-on:click="logout()">Logout</md-button>
+        <md-menu md-size="medium" md-align-trigger>
+        </md-menu>
         
     </md-toolbar>
     
