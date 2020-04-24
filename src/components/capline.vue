@@ -15,9 +15,9 @@ export default {
   },
   props: {
     msg: String,
-    sap: Array,
+
     User: Object,
-    usergrades: Array
+
   },
   data: function() {
     return {
@@ -139,19 +139,19 @@ export default {
     }
   },
   created() {
-    this.parse_sap(this.sap, this.usergrades);
+        this.parse_sap(this.User.sap_by_sem, this.User.usergrades);
   },
   watch: {
-    combined(value) {
-      if (value) {
+    User: function() {
+     
         console.log("changed");
-        this.parse_sap(this.sap, this.usergrades);
+        this.parse_sap(this.User.sap_by_sem, this.User.usergrades);
         console.log(this.series1[1].data);
         this.$refs.chart.updateSeries([
           { data: this.series1[0].data },
-          { data: this.series1[1].data }
+          { data: this.series1[1].data}
         ]);
-      }
+      
     }
   }
 };
