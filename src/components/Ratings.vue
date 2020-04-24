@@ -55,10 +55,6 @@ export default {
       case 5:
         this.clickRating('five')
     }
-    // if (this.initialValue !== undefined) {
-    //   this.rating = this.initialValue
-    //   this.value = this.initialValue
-    // }
   },
 
   components: {},

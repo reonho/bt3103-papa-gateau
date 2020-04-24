@@ -83,7 +83,7 @@
       </div>
       <br />
       <md-card-actions class="md-layout md-alignment-center">
-        <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="submitForm">Submit</md-button>
+        <md-button type="submit" class="addsem" v-on:click.prevent="submitForm">Submit</md-button>
       </md-card-actions>
     </form>
   </div>
@@ -102,7 +102,8 @@ export default {
     year: String,
     grade: String,
     code: String,
-    purpose: String
+    purpose: String,
+    SUselect: String
   },
   components: {
     // FollowUpModal
@@ -163,14 +164,6 @@ export default {
           id: 11,
           title: "F"
         },
-        {
-          id: 12,
-          title: "S"
-        },
-        {
-          id: 13,
-          title: "U"
-        }
       ],
       SU: [
         { id: 1, title: "Yes" },
@@ -194,7 +187,7 @@ export default {
         selectedModule: this.code,
         selectedSemester: this.sem,
         selectedGrade: this.grade,
-        selectedSU: "No",
+        selectedSU: this.SUselect,
         selectedYear: this.year
       }
     };
@@ -229,10 +222,12 @@ export default {
       if (!this.$v.$invalid) {
         console.log("ok");
         if (this.purpose == "Add") {
+         
           database
             .addModuleResults(this.detailsForm)
             .then(e => {
               console.log(e);
+             
               // create an alert saying you have already added this module
               this.showError = false;
               this.error = "";
@@ -245,13 +240,14 @@ export default {
               this.showError = true;
               this.error = error;
 
-              //this.$root.$emit("closeModal2");
+  
             });
         } else {
           console.log(this.detailsForm.selectedYear,)
           database
             .updateModuleResults(this.detailsForm)
             .then(e => {
+              console.log(this.detailsForm)
               console.log(e);
               // create an alert saying you have already added this module
 
@@ -264,14 +260,10 @@ export default {
             .catch(error => {
               this.showError = true;
               this.error = error;
-              //this.$root.$emit("closeModal2");
+            
             });
         }
 
-        // else if(error == "module already taken!"){
-        //   alert("Module already taken!");
-        //   this.$root.$emit("closeModal2");
-        // }
       }
     }
   },
@@ -325,6 +317,13 @@ export default {
 }
 </style>
 <style lang="scss">
+.md-button.addsem {
+  background-color: teal !important;
+  color: white !important;
+  margin-top: 1vh;
+  width: 8vw;
+  font-size: 1vw;
+}
 .md-menu-content {
   z-index: 11 !important;
 }

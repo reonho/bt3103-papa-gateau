@@ -8,7 +8,7 @@
       md-content="Your changes will not be saved."
       md-confirm-text="Exit"
       md-cancel-text="Cancel"
-      @md-confirm='goback'
+      @md-confirm="goback"
     />
     <div class="page">
       <div class="pageHeader">
@@ -34,13 +34,7 @@
                     v-model="detailsForm.selectedFaculty"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedFaculty">
-                    <md-option
-                      v-for="fac in faculties"
-                      v-bind:key="fac.id"
-                      v-bind:value="fac.title"
-                    >{{fac.title}}</md-option>
-                  </md-select> -->
+
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedFaculty.required"
@@ -54,13 +48,7 @@
                     v-model="detailsForm.selectedYear"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedYear">
-                    <md-option
-                      v-for="yr in years"
-                      v-bind:key="yr.id"
-                      v-bind:value="yr.title"
-                    >{{yr.title}}</md-option>
-                  </md-select> -->
+
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedYear.required"
@@ -74,13 +62,6 @@
                     v-model="detailsForm.selectedSemester"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedSemester">
-                    <md-option
-                      v-for="sem in semesters"
-                      v-bind:key="sem.id"
-                      v-bind:value="sem.title"
-                    >{{sem.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedSemester.required"
@@ -93,13 +74,6 @@
                     v-model="detailsForm.selectedGrade"
                     :disabled="this.added"
                   />
-                  <!-- <md-select v-if="added===false" v-model="detailsForm.selectedGrade">
-                    <md-option
-                      v-for="g in grades"
-                      v-bind:key="g.id"
-                      v-bind:value="g.title"
-                    >{{g.title}}</md-option>
-                  </md-select> -->
                   <span
                     class="md-error"
                     v-if="!$v.detailsForm.selectedGrade.required"
@@ -284,19 +258,11 @@
                   <b>As a whole, the assignments and projects were manageable.</b>
                 </label>
                 <div>
-                  <md-radio
-                    v-model="tutorialForm.ap"
-                    class="md-primary"
-                    value="1"
-                  >Strongly Disagree</md-radio>
+                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="1">Strongly Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.ap" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio
-                    v-model="tutorialForm.ap"
-                    class="md-primary"
-                    value="5"
-                  >Strongly Agree</md-radio>
+                  <md-radio v-model="tutorialForm.ap" class="md-primary" value="5">Strongly Agree</md-radio>
                   <md-radio
                     v-model="tutorialForm.ap"
                     class="md-primary"
@@ -328,11 +294,7 @@
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="2">Disagree</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="3">Neutral</md-radio>
                   <md-radio v-model="tutorialForm.exam" class="md-primary" value="4">Agree</md-radio>
-                  <md-radio
-                    v-model="tutorialForm.exam"
-                    class="md-primary"
-                    value="5"
-                  >Strongly Agree</md-radio>
+                  <md-radio v-model="tutorialForm.exam" class="md-primary" value="5">Strongly Agree</md-radio>
                   <md-radio
                     v-model="tutorialForm.exam"
                     class="md-primary"
@@ -418,7 +380,7 @@
                 <label class="md-subheading">
                   <b>As a whole, how would you rate this module?</b>
                 </label>
-                <Ratings v-model="commentForm.rating" :initialValue='commentForm.rating' />
+                <Ratings v-model="commentForm.rating" :initialValue="commentForm.rating" />
                 <hr />
                 <br />
                 <md-field>
@@ -533,7 +495,6 @@ export default {
       if (!this.$v.$invalid) {
         this.submitStatus = "OK";
         this.showSubmitMessage = true;
-        // this.setDone("first", "second");
         database.firebase_data
           .collection("reviews")
           .doc(this.review.id)
@@ -547,7 +508,6 @@ export default {
       } else {
         this.submitStatus = "INVALID";
         this.showErrorMessage = true;
-        //This part is hard-coded for now, until I find a better way to do the error check for all the forms upon submit button press
         if (this.$v.lectureForm.$invalid) {
           this.lectureForm.error = "Error";
         } else {
@@ -594,7 +554,7 @@ export default {
     goback() {
       this.showSubmitMessage = false;
       // this.$router.push({ path: "/" });
-      this.$router.go(-1)
+      this.$router.go(-1);
       // window.location.href = "/#/module";
     }
   },
@@ -614,26 +574,6 @@ export default {
         }
       });
     });
-    // database.getFaculties().then(r => {
-    //   this.faculties = r;
-    //   console.log(this.faculties)
-    // });
-
-    // database.getGrades().then(g => {
-    //   this.grades = g;
-    // });
-
-    // database.getYears().then(y => {
-    //   this.years = y;
-    // });
-
-    // database.getSemesters().then(s => {
-    //   this.semesters = s;
-    //   this.detailsForm = this.review.detailsForm;
-    //   this.lectureForm = this.review.lectureForm;
-    //   this.tutorialForm = this.review.tutorialForm;
-    //   this.commentForm = this.review.commentForm;
-    // });
     this.detailsForm = this.review.detailsForm;
     this.lectureForm = this.review.lectureForm;
     this.tutorialForm = this.review.tutorialForm;

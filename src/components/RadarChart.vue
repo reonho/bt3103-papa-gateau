@@ -22,7 +22,6 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts";
-// import database from "../firebase";
 export default {
   name: "radar",
   components: {
@@ -63,7 +62,7 @@ export default {
         },
 
         legend: {
-          position: "top"
+          position: "bottom"
         },
 
         title: {
@@ -103,33 +102,9 @@ export default {
     };
   },
   methods: {
-    parse_attr: function(my_attr, fac_attr) {
-      var my_attrs = [];
-      var attr_labels = [];
-      var fac_attrs = [];
-      var len = my_attr.length;
-      var lenf = fac_attr.length;
-      for (let i = 0; i < len; i++) {
-        if (my_attr[i].att != "") {
-          var m_code = my_attr[i].att;
-          attr_labels.push(m_code);
-          var m_val = my_attr[i].grade;
-          my_attrs.push(m_val);
-          for (let u = 0; u < lenf; u++) {
-            var f_code = fac_attr[u].att;
-            if (f_code == m_code) {
-              fac_attrs.push(fac_attr[u].grade);
-            }
-          }
-        }
-      }
-
-      this.series1[0].data = my_attrs;
-      this.series1[1].data = fac_attrs;
-      this.chartOptions2.xaxis.categories = attr_labels;
-    },
-
-    parse_attr2: function(my_attr, fac_attr) {
+    parse_attr2: function(my_attr1, fac_attr1) {
+      var my_attr = [...my_attr1];
+      var fac_attr = [...fac_attr1];
       var attr_labels = [];
       var fac_attrs = {};
       var m_list = [];
@@ -166,6 +141,7 @@ export default {
         }
         for (let i = 0; i < len; i++) {
           m_code = my_attr[i].att;
+   
           if (m_code !== "") {
             m_list.push(my_attr[i].grade.toFixed(2));
             attr_labels.push(m_code);
@@ -181,18 +157,47 @@ export default {
       this.series1[0].data = m_list;
       this.series1[1].data = f_list;
       this.chartOptions2.xaxis.categories = attr_labels;
+   
     }
   },
   created() {
     this.parse_attr2(this.my_attr, this.fac_attr);
-    // this.parse_attr2(this.fac_attr, this.my_attr);
+    
   },
   computed: {
     showEmpty() {
-      if (this.type === "Faculty" && this.my_attr.length === 0) {
+
+      var attr = []
+      for (var i = 0; i < this.my_attr.length; i++) {
+        if (this.my_attr[i].att != "") {
+          attr.push(this.my_attr[i])
+        }
+      } 
+      if (this.type === "Faculty" && attr.length === 0) {
         return true;
       }
       return false;
+    }
+  },
+  watch: {
+    my_attr: function() {
+      //console.log("changed");
+      this.parse_attr2(this.my_attr, this.fac_attr);
+      this.$refs.strengths.updateSeries(
+        [
+          {
+            data: this.series1[0].data
+          },
+          { data: this.series1[1].data }
+        ],
+        false,
+        true
+      );
+      this.$refs.strengths.updateOptions({
+        xaxis: {
+          categories: this.chartOptions2.xaxis.categories
+        }
+      });
     }
   }
 };

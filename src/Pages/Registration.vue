@@ -9,18 +9,6 @@
               <h1 class="text-center" style="color:white;font-weight:600;font-size:6vh;font-family:'Varela Round','Dosis','Fira Sans'"><img src="../../public/logo_transparent2.png" style="height:40px;width:50px;padding-bottom:5px" /> MODEAUX</h1>
             </div>
             <div class="card-body">
-              <!---form>
-                      <div class="form-group">
-                        <label for="username"> Username:</label>
-                        <input type="username" id="username" placeholder="Enter username" v-model = "user">
-                      </div>
-                      <div class="form-group">
-                        <label for="Password"> Password:</label>
-                        <input type="password" id="password" placeholder="Password" v-model = "password">
-                      </div>
-                      <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" v-on:click = "validate">Sign In</button>
-                      <span> {{this.error}}</span>
-              </form-->
               <div style="text-align:center">
                 <h1 style="color:DARKCYAN; font-size:3vh;">REGISTRATION</h1>
               </div>
@@ -82,10 +70,6 @@
                 </div>
                 <div class="md-layout-item md-size-5"></div>
                 <div class="md-layout-item md-size-40">
-                  <!-- <md-field>
-                    <label>Number of semesters completed</label>
-                    <md-input type="number" v-on:keyup="filtersem" id="currentsem" v-model="semnum"></md-input>
-                  </md-field>-->
                   <md-field :class="getValidationClass('regForm', 'yearchosen')">
                     <label>Year of Enrollment</label>
                     <md-select v-model="regForm.yearchosen" name="yearchosen" id="yearchosen">
@@ -263,11 +247,6 @@ export default {
     }
   },
   created() {
-    //const self = this;
-    //  database.getCourses().then(item => {
-    //   this.courselist = item;
-    //   console.log(this.courselist);
-    // });
     database.firebase_data
       .collection("courses")
       .get()

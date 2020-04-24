@@ -140,6 +140,7 @@
                         :year="modalyear"
                         :grade="grade"
                         :code="code"
+                        :SUselect="SU"
                         :purpose="'Edit'"
                       />
                     </md-dialog-content>
@@ -169,6 +170,7 @@
                     :year="modalyear"
                     :grade="grade"
                     :code="code"
+                    :SUselect="SU"
                     :purpose="'Add'"
                   />
                 </md-dialog-content>
@@ -186,7 +188,6 @@
 </template>
 
 <script>
-//import AddModuleModal from "./AddModuleModal.vue";
 import ModuleForm from "./ModuleForm.vue";
 import ConfirmModal from "./ConfirmModal.vue";
 import database from "../firebase.js";
@@ -217,7 +218,6 @@ export default {
     module: ""
   }),
   components: {
-    //AddModuleModal
     ModuleForm,
     ConfirmModal
   },
@@ -283,11 +283,9 @@ export default {
                 flag3 = false;
                 if (!years.includes(sems[i].year)) {
                   years.push(sems[i].year);
-                  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                 }
                 if (!semesterslist.includes(sems[i].sem)) {
                   semesterslist.push(sems[i].sem);
-                  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                 }
 
                 semesters.push({
@@ -329,7 +327,6 @@ export default {
                 year: sem.year,
                 semester: sem.semester
               };
-              //check if its in the mods
 
               this.setModuleDetails(result.code);
 
@@ -343,7 +340,7 @@ export default {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.semnum = semnum;
 
-      ///filtering
+      //filtering
       let filterData = semesters;
       if (this.yearchosen.length > 0) {
         filterData = filterData.filter(item => {
@@ -383,7 +380,6 @@ export default {
           yearlist.push({
             value: sems[i].year
           });
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         }
       }
       return yearlist;
@@ -413,9 +409,6 @@ export default {
       var semnum = this.semnum;
       var latest = this.User.batch.year;
       var latestsem = "Semester 1";
-
-      //check if prev sem is filled with modules
-
       if (semnum > 0) {
         latestsem = this.semesters[semnum - 1].semester;
         if (latestsem == "Semester 1") {
@@ -471,15 +464,16 @@ export default {
       }
       this.grade = "";
       this.code = "";
+      this.SU = "No";
       this.showAddModal = true;
     },
     editmod(mod) {
       this.showModal = true;
       this.grade = mod.grade;
       this.code = mod.code;
+      this.SU = mod.SU;
       this.modalsem = mod.semester;
-      this.modalyear = mod.year
-      //database.updateModuleResults(mod);
+      this.modalyear = mod.year;
     },
     deletemod(mod) {
       this.module = mod;
@@ -511,70 +505,6 @@ export default {
       }
       this.semesters = currentsems;
     },
-    accumulatesems() {
-      let sems = this.User.sap_by_sem;
-      var years = [];
-      var semesters = [];
-      for (var i = 0; i < sems.length; i++) {
-        if (Object.keys(sems[i]).length > 0) {
-          this.semnum++;
-
-          if (!years.includes(sems[i].year)) {
-            years.push(sems[i].year);
-            this.yearlist.push({
-              value: sems[i].year
-            });
-          }
-          if (!semesters.includes(sems[i].sem)) {
-            semesters.push(sems[i].sem);
-            this.semlist.push({
-              value: sems[i].sem
-            });
-          }
-          this.semesters.push({
-            year: sems[i].year,
-            semester: sems[i].sem,
-            mods: [],
-            cap: sems[i].cap,
-            collapse: false
-          });
-        }
-      }
-    },
-    updatefilter(year, sem) {
-      var years = [];
-      var sems = [];
-      for (var i = 0; i < this.yearlist.length; i++) {
-        years.push(this.yearlist[i].value);
-      }
-      for (var k = 0; k < this.semlist.length; k++) {
-        sems.push(this.semlist[k].value);
-      }
-      if (!years.includes(year)) {
-        years.push(year);
-        this.yearlist.push({
-          value: year
-        });
-      }
-      if (!sems.includes(sem)) {
-        sems.push(sem);
-        this.semlist.push({
-          value: sem
-        });
-      }
-    },
-    updateSemestermod(mod) {
-      var semesters = this.semesters;
-
-      for (var i = 0; i < semesters.length; i++) {
-        let mods = semesters[i].mods;
-        for (var k = 0; k < mods.length; k++) {
-          if (mods[k].code == mod) {
-            this.semesters[i].mods.$remove(mods[k]);
-          }
-        }
-      }
-    },
     setModuleDetails(mod) {
       database.getModules(mod).then(item => {
         var list = item;
@@ -599,11 +529,16 @@ export default {
       var MC = 0;
       if (sem.mods.length != 0) {
         for (var i = 0; i < sem.mods.length; i++) {
-          total +=
-            parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
-          MC += parseInt(sem.mods[i].MC);
+          if (sem.mods[i].SU == "No") {
+            total +=
+              parseInt(sem.mods[i].MC) * database.convertCap(sem.mods[i].grade);
+            MC += parseInt(sem.mods[i].MC);
+          }
         }
         total = total / MC;
+      }
+      if (MC == 0) {
+        total = 0;
       }
       return total.toFixed(2);
     },
@@ -627,21 +562,15 @@ export default {
     deleteitem() {
       this.showDeleteModal = false;
       this.readData();
-      //delete from this.semesters
-      // this.updatefilter(val.year, val.sem);
     },
     readData() {
-      
       database.getModuleResults().then(item => {
         this.usergrades = item;
       });
-    
     }
   },
 
   created() {
-    //this.accumulatesems();
-console.log(database.getUser())
     this.readData();
   },
   mounted() {

@@ -14,7 +14,7 @@
                 <span class="filter-head">FILTERS</span>
               </td>
               <td>
-                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info">
+                <b-button style="width: 8.5vw; padding:1vh;" variant="outline-info" v-on:click="clearfilter">
                   <span style="font-size:0.8vw; font-weight: bold">CLEAR FILTER</span>
                 </b-button>
               </td>
@@ -218,15 +218,11 @@
 import database from "../firebase.js";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
-//import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
-import VueApexCharts from "vue-apexcharts";
+import dataObject from "../Database_mods.js";
 export default {
   components: {
     NavBar,
-    // eslint-disable-next-line vue/no-unused-components
-    apexchart: VueApexCharts,
-    //intakechart: StudentIntakeChart,
     workloadchart: WorkloadChart,
     ScaleLoader
   },
@@ -365,7 +361,6 @@ export default {
           var slookup = {};
           //Loop through each item
           querySnapShot.forEach(doc => {
-            //console.log(doc.id+"==>"+doc.data())
             var item = doc.data();
 
             this.modulesData.push(item);
@@ -397,6 +392,20 @@ export default {
             this.loading = false;
           });
         });
+    },
+    writeDatabase: function() {
+      var items = dataObject.Modules;
+
+      for (var i = 0; i < items.length; i++) {
+        var item = {
+          info: items[i],
+        };
+
+        database.firebase_data
+          .collection("modules")
+          .doc(items[i].moduleCode)
+          .set(item);
+      }
     },
     clearfilter: function() {
       this.searchbar = "";
@@ -512,8 +521,11 @@ export default {
     calcwork(arr) {
       arr = arr.info.workload;
       var num = 0;
+      if (arr != null) {
+      
       for (var i = 0; i < arr.length; i++) {
         num = num + arr[i];
+      }
       }
       return num;
     },
@@ -549,6 +561,7 @@ export default {
   },
   mounted() {
     this.loading = true;
+   // this.writeDatabase();
     this.readDatabase();
   }
 };
