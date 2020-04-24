@@ -32,7 +32,7 @@ export default {
     three: false,
     four: false,
     five: false,
-    rating: 0,
+    rating: null,
     starColor: '#FFDF00'
     
   }),
