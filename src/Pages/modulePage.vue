@@ -777,13 +777,14 @@ export default {
           item.id = doc.id;
           this.reviewData.push(item);
         });
-        this.reviewData.sort(function(a, b) {
-          let diff = b.likes - a.likes;
-          if (diff == 0) {
-            return b.review_date.toDate() - a.review_date.toDate();
-          } // sort by number of likes then by newest
-          return diff;
-        });
+        this.changeSort(this.sortingMethod)
+        // this.reviewData.sort(function(a, b) {
+        //   let diff = b.likes - a.likes;
+        //   if (diff == 0) {
+        //     return b.review_date.toDate() - a.review_date.toDate();
+        //   } // sort by number of likes then by newest
+        //   return diff;
+        // });
       });
     //get module details
     database.getModules(this.code).then(item => {
