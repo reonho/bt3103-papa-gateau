@@ -134,7 +134,7 @@ export default {
       var series_mod = [];
       var mods = [];
       for (let i = 0; i < modlst.length; i++) {
-        series_mod.push(modlst[i].amt);
+        series_mod.push(Math.trunc(modlst[i].amt));
         if (!mods.includes(modlst[i].mod)) {
           mods.push(modlst[i].mod);
         }
@@ -148,7 +148,11 @@ export default {
   computed: {
     chartOptionsYear: function() {
       return {
+        colors: ["#008080"],
         chart: {
+          toolbar: {
+            show: false
+          },
           type: "bar",
           events: {
             dataPointSelection: (e, chart, opts) => {
@@ -166,10 +170,6 @@ export default {
           bar: {
             horizontal: true
           }
-        },
-
-        fill: {
-          colors: ["#008080"]
         },
         dataLabels: {
           enabled: false
