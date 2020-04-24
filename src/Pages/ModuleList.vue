@@ -220,6 +220,7 @@ import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
 //import StudentIntakeChart from "../components/StudentIntakeChart";
 import WorkloadChart from "../components/WorkloadChart";
+import dataObject from "../Database_mods.js";
 import VueApexCharts from "vue-apexcharts";
 export default {
   components: {
@@ -398,6 +399,20 @@ export default {
           });
         });
     },
+    writeDatabase: function() {
+      var items = dataObject.Modules;
+
+      for (var i = 0; i < items.length; i++) {
+        var item = {
+          info: items[i],
+        };
+
+        database.firebase_data
+          .collection("modules")
+          .doc(items[i].moduleCode)
+          .set(item);
+      }
+    },
     clearfilter: function() {
       this.searchbar = "";
       this.chosensems = [];
@@ -512,8 +527,11 @@ export default {
     calcwork(arr) {
       arr = arr.info.workload;
       var num = 0;
+      if (arr != null) {
+      
       for (var i = 0; i < arr.length; i++) {
         num = num + arr[i];
+      }
       }
       return num;
     },
@@ -549,6 +567,7 @@ export default {
   },
   mounted() {
     this.loading = true;
+   // this.writeDatabase();
     this.readDatabase();
   }
 };
