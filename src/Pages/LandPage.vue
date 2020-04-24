@@ -5,13 +5,9 @@
       <div class="header-card">
         <div class="md-layout md-gutter md-alignment-center-right">
           <div class="md-layout-item md-size-85">
-            <h1 class="header">
-              Welcome to your dashboard, {{User.name}}
-            </h1>
+            <h1 class="header">Welcome to your dashboard, {{User.name}}</h1>
           </div>
-          <div class="md-layout-item md-size-15">
-            
-          </div>
+          <div class="md-layout-item md-size-15"></div>
         </div>
         <div>
           <div class="header-content" style="padding-top:2vw;">
@@ -22,7 +18,29 @@
           </div>
         </div>
       </div>
+      <div style="margin-bottom:2vh">
+        <table>
+          <tr>
+            <td>
+              <span>{{updatedtime}}</span>
+            </td>
+            <td>
+               
+              <md-button
+                class="addsem"
+                style="margin-left:3vh"
+                :md-ripple="false"
+                v-on:click="refreshpage"
+              >Refresh</md-button>
+            
+            </td>
+            <td>
+              <ClipLoader style="margin-bottom: -0.5vh; margin-left:1vh" :loading="loading" :color="color"></ClipLoader>
+            </td>
 
+          </tr>
+        </table>
+      </div>
       <div class="contain-div">
         <div class="sub-contain-div1">
           <div class="sub-header-content">
@@ -62,49 +80,53 @@
             <!-- However, when using to display My Attributes vs Module Attributes, type as Faculty, set my_attr to be user attributes and fac_attr to be top student attributes.  -->
             <!-- Also, set label_1 as 'Top Students Attributes' and label_2 as 'My Attributes -->
             <div v-if="!facultyAttributes">
-                <md-empty-state
-                  id="statebox"
-                  style="max-width:0 !important; color: #2e4053;"
-                  md-label="Loading Attributes..."
-                >
-                <br/>
-                <ScaleLoader :loading="loading" :color="color" ></ScaleLoader>
-                </md-empty-state>
-          </div>
-          <div  v-show="facultyAttributes">
-          
-            <RadarChart
-           
-              v-if="facultyAttributes"
-              v-bind:my_attr="User.attributes"
-              v-bind:fac_attr="facultyAttributes"
-              type='Faculty'
-              label_1='My Attributes'
-              label_2='Faculty Average'
-            ></RadarChart>
-            <!-- <RadarChart
+              <md-empty-state
+                id="statebox"
+                style="max-width:0 !important; color: #2e4053;"
+                md-label="Loading Attributes..."
+              >
+                <br />
+                <ScaleLoader :loading="loading" :color="color"></ScaleLoader>
+              </md-empty-state>
+            </div>
+            <div v-show="facultyAttributes">
+              <RadarChart
+                v-if="facultyAttributes"
+                v-bind:my_attr="User.attributes"
+                v-bind:fac_attr="facultyAttributes"
+                type="Faculty"
+                label_1="My Attributes"
+                label_2="Faculty Average"
+              ></RadarChart>
+              <!-- <RadarChart
               v-if="facultyAttributes"
               :my_attr="User.attributes"
               :fac_attr="facultyAttributes"
               type="Module"
               label_1="Top Student Attributes"
               label_2="My Attributes"
-            ></RadarChart> -->
+              ></RadarChart>-->
+            </div>
           </div>
-          </div>
-<!-- 
+          <!-- 
           <RadarChart
             v-if="facultyAttributes"
             :my_attr="User.attributes"
             :fac_attr="facultyAttributes"
-          ></RadarChart> -->
+          ></RadarChart>-->
         </div>
       </div>
 
       <br />
       <br />
-      <Feed :modules="modules" :sem="sem" :User="User" :course= "cohortTopMods" v-if="User.sap_by_sem" ></Feed>
-      
+      <Feed
+        :modules="modules"
+        :sem="sem"
+        :User="User"
+        :course="cohortTopMods"
+        v-if="User.sap_by_sem"
+      ></Feed>
+
       <br />
       <br />
       <div>
@@ -126,7 +148,9 @@ import capline from "../components/capline";
 import Feed from "../components/Feed";
 import ReviewSection from "../components/ReviewSection";
 import database from "../firebase.js";
-import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+
 export default {
   name: "LandPage",
   props: ["userPassed"],
@@ -136,7 +160,8 @@ export default {
     NavBar,
     Feed,
     ReviewSection,
-   ScaleLoader
+    ScaleLoader,
+    ClipLoader
     // // Ratings
   },
   data: function() {
@@ -150,16 +175,17 @@ export default {
       cohortTopMods: null,
       showModal: false,
       cohort_loaded: false,
-       color: "#eda200",
+      color: "#eda200",
+      updatedtime: "",
+      loading:false
     };
   },
   methods: {
     // tester method
-    test(){
-      database.getNUSAttributes().then(e =>{
-        console.log(e)
-      })
-
+    test() {
+      database.getNUSAttributes().then(e => {
+        console.log(e);
+      });
     },
     //use this method to find data of a specific module
     findModule(mod, database) {
@@ -173,9 +199,8 @@ export default {
     get_currentsem(obj_array) {
       var sem_no = 1;
       for (let i = 0; i < obj_array.length; i++) {
-
         var value = obj_array[i];
-        sem_no = i
+        sem_no = i;
         if (Object.entries(value).length == 0) {
           sem_no = i;
           break;
@@ -184,7 +209,6 @@ export default {
       var year = Math.floor(sem_no / 2) + 1;
       var sem = (sem_no % 2) + 1;
       this.sem = "Year " + year.toString() + " Semester " + sem.toString();
-     
     },
 
     get_modules(modules) {
@@ -197,12 +221,17 @@ export default {
 
     formatcap(cap) {
       if (cap >= 0) {
-      return cap.toFixed(2);
+        return cap.toFixed(2);
       } else {
-        cap = 0
+        cap = 0;
         return cap.toFixed(2);
       }
+    },
+    refreshpage() {
+      this.$router.go();
+      this.loading = true
     }
+    
   },
   created() {
     const self = this;
@@ -222,49 +251,64 @@ export default {
         });
     });
     database.getUser().then(user => {
-    // query database for user info
-    database.firebase_data
-      .collection("students")
-      .doc(user)
-      .onSnapshot(function(user) {
-        var userData = user.data();
-        var attr = [];
-        
-        console.log(attr)
-        var result = {
-          name: userData.name,
-          faculty: userData.faculty,
-          dept: userData.dept,
-          course: userData.course,
-          modules: userData.modules_taken,
-          sap_by_sem: userData.sam_by_sem,
-          overall_cap: userData.overall_cap,
-          batch: userData.batch, // for querying cohort top modules
-          modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
-          attributes: userData.attributes //individual attributes can be found in self.User.attributes
-        };
+      // query database for user info
+      database.firebase_data
+        .collection("students")
+        .doc(user)
+        .onSnapshot(function(user) {
+          var userData = user.data();
+          var attr = [];
 
-        self.User = result;
-       console.log(database.getStudentSam_by_sem())
-        //query database for cohort top modules
-        database.getCohortTopModules(result.batch).then(doc => {
-          self.cohortTopMods = doc;
-         
-        });
-        // query database for course attributes
-        // database.getModuleAttributes("BT2101").then(r => {
-        //   self.facultyAttributes = r;
-        // });
-        database.getFacultyAttributes(result.faculty).then(attributes => {
+          console.log(attr);
+          var result = {
+            name: userData.name,
+            faculty: userData.faculty,
+            dept: userData.dept,
+            course: userData.course,
+            modules: userData.modules_taken,
+            sap_by_sem: userData.sam_by_sem,
+            overall_cap: userData.overall_cap,
+            batch: userData.batch, // for querying cohort top modules
+            modules_taken: userData.modules_taken, //!!!THIS PART IS TO QUERY MODULES TAKEN; array of modules:[{SU:false,module:"BT2101"},....]
+            attributes: userData.attributes //individual attributes can be found in self.User.attributes
+          };
 
-          self.facultyAttributes = attributes;
-        //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          self.User = result;
+          console.log(result);
+          //query database for cohort top modules
+          database.getCohortTopModules(result.batch).then(doc => {
+            self.cohortTopMods = doc;
+          });
+          // query database for course attributes
+          // database.getModuleAttributes("BT2101").then(r => {
+          //   self.facultyAttributes = r;
+          // });
+          database.getFacultyAttributes(result.faculty).then(attributes => {
+            self.facultyAttributes = attributes;
+            //added the attributes data from faculties in self.facultyAttributes ==> format is an array: [{att: "BT", grade: 4, amt: 2},{att: "CS", grade: 4.5, amt: 3}]
+          });
+          self.get_currentsem(self.User.sap_by_sem);
+          self.get_modules(self.User.modules_taken);
         });
-        self.get_currentsem(self.User.sap_by_sem);
-        self.get_modules(self.User.modules_taken);
-      });
     });
-    
+    var today = new Date();
+    var date =
+      (today.getDate() < 10 ? "0" : "") +
+      today.getDate() +
+      "/" +
+      (today.getMonth() + 1 < 10 ? "0" : "") +
+      (today.getMonth() + 1) +
+      "/" +
+      today.getFullYear();
+    var time =
+      today.getHours() +
+      ":" +
+      (today.getMinutes() < 10 ? "0" : "") +
+      today.getMinutes() +
+      ":" +
+      (today.getSeconds() < 10 ? "0" : "") +
+      today.getSeconds();
+    this.updatedtime = " Updated at " + time + " on " + date;
   },
   mounted() {
     if (this.userPassed) {
@@ -290,6 +334,14 @@ export default {
 
 .landPage {
   background: #ebecf0;
+}
+.md-button.addsem {
+  background-color: teal !important;
+  font-weight: bold;
+  color: white;
+  margin-top: 1vh;
+  width: 8vw;
+  font-size: 0.8vw;
 }
 /* Header card css */
 .header-card {
