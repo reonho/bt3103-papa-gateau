@@ -219,7 +219,6 @@ import database from "../firebase.js";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 import NavBar from "../components/NavBar";
 import WorkloadChart from "../components/WorkloadChart";
-import dataObject from "../Database_mods.js";
 export default {
   components: {
     NavBar,
@@ -393,20 +392,6 @@ export default {
           });
         });
     },
-    writeDatabase: function() {
-      var items = dataObject.Modules;
-
-      for (var i = 0; i < items.length; i++) {
-        var item = {
-          info: items[i],
-        };
-
-        database.firebase_data
-          .collection("modules")
-          .doc(items[i].moduleCode)
-          .set(item);
-      }
-    },
     clearfilter: function() {
       this.searchbar = "";
       this.chosensems = [];
@@ -561,7 +546,6 @@ export default {
   },
   mounted() {
     this.loading = true;
-   // this.writeDatabase();
     this.readDatabase();
   }
 };
