@@ -15,7 +15,6 @@ export default {
   },
   props: {
     msg: String,
-
     User: Object
   },
   data: function() {
@@ -79,11 +78,11 @@ export default {
     parse_sap: function(obj_array, grades) {
       var clone_array = [...obj_array];
       var clone_grades = [...grades];
-
+      console.log(clone_grades);
       var sap_series = [];
       var cum_series = [];
       var total_sems = [];
-      if (grades.length > 0) {
+      if (clone_grades.length > 0) {
         clone_array = clone_array.sort(function(a, b) {
           if (a.year.substring(2, 6) == b.year.substring(2, 6)) {
             return a.sem.substring(9, 10) - b.sem.substring(9, 10);
@@ -125,7 +124,8 @@ export default {
           //console.log(obj_array[0][key])
           for (var m = 0; m < actmodules.length; m++) {
             var module = actmodules[m];
-            totalscore += database.convertCap(module.grade, module.SU) * module.MC;
+            totalscore +=
+              database.convertCap(module.grade, module.SU) * module.MC;
             mc += module.MC;
           }
           if (i != 0) {
@@ -136,9 +136,10 @@ export default {
           }
           sap_series.push(total_sems[i].cap);
         }
-        this.series1[0].data = sap_series;
-        this.series1[1].data = cum_series;
       }
+      this.series1[0].data = sap_series;
+      this.series1[1].data = cum_series;
+      console.log(sap_series);
     }
   },
   computed: {
@@ -152,7 +153,8 @@ export default {
   watch: {
     User: function() {
       this.parse_sap(this.User.sap_by_sem, this.User.usergrades);
-     
+      console.log(this.series1[0].data);
+      console.log(this.series1[1].data);
       this.$refs.chart.updateSeries([
         { data: this.series1[0].data },
         { data: this.series1[1].data }
