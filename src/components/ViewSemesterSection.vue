@@ -93,26 +93,37 @@
               <div class="md-layout-item">
                 <p>{{formatMC(post)}} MCs Completed</p>
               </div>
-              <div class="md-layout-item md-size-10"></div>
-              <div class="md-layout-item md-size-35">
+              <div class="md-layout-item md-size-20"></div>
+              <div class="md-layout-item md-size-10">
                 <span
-                  style="margin-top: -0.6vw; width:10vw; color:#EC7663;"
+                  style="width:10vw; color:#EC7663;"
                   v-on:click="deleteSem(post.semester, post.year)"
                   v-if="showDeleteSem(post.semester, post.year)"
                 >
                   <md-icon
-                    style="font-size:1vw !important;color:#EC7663;"
+                    class="md-icon-button-link"
+                    style="margin-left:1.2vw;margin-top:-3vh;font-size:1.5vw !important; color:#DC143C"
                     v-on:click="hideContent(post)"
-                  >close</md-icon>
-                  <span class="md-icon-button-link">Delete Semester</span>
+                  >close
+                  <md-tooltip
+                md-direction="top"
+              >Delete Semester</md-tooltip>
+                  </md-icon>
+                   
+                  <span></span>
                 </span>
                 <md-dialog :md-active.sync="showDeleteSemModal">
-                    <md-dialog-title>Remove {{modalyear}}  {{modalsem}}?</md-dialog-title>
-                    <md-dialog-content>
-                      Are You Sure?
-                      <ConfirmModal :module="module" :purpose="'deletesem'" :year="modalyear" :sem="modalsem" />
-                    </md-dialog-content>
-                  </md-dialog>
+                  <md-dialog-title>Remove {{modalyear}} {{modalsem}}?</md-dialog-title>
+                  <md-dialog-content>
+                    Are You Sure?
+                    <ConfirmModal
+                      :module="module"
+                      :purpose="'deletesem'"
+                      :year="modalyear"
+                      :sem="modalsem"
+                    />
+                  </md-dialog-content>
+                </md-dialog>
               </div>
             </div>
 
@@ -173,10 +184,9 @@
                     <md-dialog-title>Remove {{code}} Module?</md-dialog-title>
                     <md-dialog-content>
                       Are You Sure?
-                      <ConfirmModal :module="module" :purpose="'deletemod'"/>
+                      <ConfirmModal :module="module" :purpose="'deletemod'" />
                     </md-dialog-content>
                   </md-dialog>
-                  
                 </span>
               </div>
             </md-list>
@@ -221,7 +231,7 @@ export default {
     showModal: false,
     showAddModal: false,
     showDeleteModModal: false,
-    showDeleteSemModal:false,
+    showDeleteSemModal: false,
     yearlist: [],
     semlist: [],
     grade: null,
@@ -715,7 +725,6 @@ export default {
 }
 
 .md-icon-button-link:hover {
-  text-decoration: underline;
   cursor: pointer;
 }
 </style>
