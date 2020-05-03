@@ -126,7 +126,9 @@ export default {
           for (var m = 0; m < actmodules.length; m++) {
             var module = actmodules[m];
             totalscore += database.convertCap(module.grade, module.SU) * module.MC;
-            mc += module.MC;
+            if (module.SU == "No") {
+              mc += module.MC;
+            }
           }
           if (i != 0) {
             var cum = totalscore / mc;
