@@ -1,7 +1,7 @@
 <template>
   <div id="ConfirmModal">
     <md-card-actions class="md-layout md-alignment-center">
-      <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="deletemod">Yes</md-button>
+      <md-button class="md-primary md-raised" type="submit" v-on:click.prevent="deleteitem">Yes</md-button>
     </md-card-actions>
   </div>
 </template>
@@ -14,24 +14,39 @@ export default {
 
   data: () => ({}),
   props: {
-    module: Object
+    module: Object,
+    purpose: String,
+    sem: String,
+    year: String
   },
   components: {},
   methods: {
-    deletemod() {
+    deleteitem() {
       console.log("ok");
-
-      database
-        .deleteModuleResults(this.module.code)
-        .then(e => {
-          console.log(e);
-          // create an alert saying you have already added this module
-          this.$root.$emit("deleteitem");
-        })
-        .catch(() => {
-          //alert("Fail");
-          this.$root.$emit("closeModal2");
-        });
+      if (this.purpose == "deletemod") {
+        database
+          .deleteModuleResults(this.module.code)
+          .then(e => {
+            console.log(e);
+            // create an alert saying you have already added this module
+            this.$root.$emit("deleteitem");
+          })
+          .catch(() => {
+            //alert("Fail");
+            this.$root.$emit("closeModal2");
+          });
+      } else if (this.purpose == "deletesem") {
+        database
+          .deleteSemModules(this.year, this.sem)
+          .then(e => {
+            console.log(e);
+            this.$root.$emit("deleteitem");
+          })
+          .catch(() => {
+            //alert("Fail");
+            this.$root.$emit("closeModal2");
+          });
+      }
     }
   }
 };

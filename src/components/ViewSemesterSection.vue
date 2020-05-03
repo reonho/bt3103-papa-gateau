@@ -94,6 +94,26 @@
                 <p>{{formatMC(post)}} MCs Completed</p>
               </div>
               <div class="md-layout-item md-size-10"></div>
+              <div class="md-layout-item md-size-35">
+                <span
+                  style="margin-top: -0.6vw; width:10vw; color:#EC7663;"
+                  v-on:click="deleteSem(post.semester, post.year)"
+                  v-if="showDeleteSem(post.semester, post.year)"
+                >
+                  <md-icon
+                    style="font-size:1vw !important;color:#EC7663;"
+                    v-on:click="hideContent(post)"
+                  >close</md-icon>
+                  <span class="md-icon-button-link">Delete Semester</span>
+                </span>
+                <md-dialog :md-active.sync="showDeleteSemModal">
+                    <md-dialog-title>Remove {{modalyear}}  {{modalsem}}?</md-dialog-title>
+                    <md-dialog-content>
+                      Are You Sure?
+                      <ConfirmModal :module="module" :purpose="'deletesem'" :year="modalyear" :sem="modalsem" />
+                    </md-dialog-content>
+                  </md-dialog>
+              </div>
             </div>
 
             <md-empty-state v-show="showmod(post.mods)">
@@ -149,13 +169,14 @@
                   <md-button class="md-icon-button mod-icon" v-on:click="deletemod(mod)">
                     <md-icon>delete</md-icon>
                   </md-button>
-                  <md-dialog :md-active.sync="showDeleteModal">
+                  <md-dialog :md-active.sync="showDeleteModModal">
                     <md-dialog-title>Remove {{code}} Module?</md-dialog-title>
                     <md-dialog-content>
                       Are You Sure?
-                      <ConfirmModal :module="module" />
+                      <ConfirmModal :module="module" :purpose="'deletemod'"/>
                     </md-dialog-content>
                   </md-dialog>
+                  
                 </span>
               </div>
             </md-list>
@@ -199,7 +220,8 @@ export default {
   data: () => ({
     showModal: false,
     showAddModal: false,
-    showDeleteModal: false,
+    showDeleteModModal: false,
+    showDeleteSemModal:false,
     yearlist: [],
     semlist: [],
     grade: null,
@@ -369,6 +391,7 @@ export default {
       }
       return true;
     },
+
     showyears() {
       let sems = this.semesters;
 
@@ -404,6 +427,17 @@ export default {
     clearfilter() {
       this.yearchosen = [];
       this.semchosen = [];
+    },
+    showDeleteSem(sem, year) {
+      let sems = this.semesters;
+      if (sems.length > 0) {
+        var latestsem = sems[sems.length - 1].semester;
+        var latestyear = sems[sems.length - 1].year;
+        if (sem == latestsem && year == latestyear) {
+          return true;
+        }
+      }
+      return false;
     },
     addsem() {
       var semnum = this.semnum;
@@ -478,8 +512,7 @@ export default {
     deletemod(mod) {
       this.module = mod;
       this.code = mod.code;
-
-      this.showDeleteModal = true;
+      this.showDeleteModModal = true;
     },
     hideContent(sem) {
       let currentsems = this.semesters;
@@ -560,13 +593,20 @@ export default {
       this.readData();
     },
     deleteitem() {
-      this.showDeleteModal = false;
+      this.showDeleteModModal = false;
+      this.showDeleteSemModal = false;
       this.readData();
     },
     readData() {
       database.getModuleResults().then(item => {
         this.usergrades = item;
       });
+    },
+    deleteSem(sem, year) {
+      this.showDeleteSemModal = true;
+      this.module = null;
+      this.modalyear = year;
+      this.modalsem = sem;
     }
   },
 
@@ -672,5 +712,10 @@ export default {
 }
 .md-empty-state {
   padding-top: 1.5vw;
+}
+
+.md-icon-button-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
