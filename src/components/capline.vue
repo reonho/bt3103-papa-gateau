@@ -102,7 +102,8 @@ export default {
                 grade: mod.grade,
                 MC: 4,
                 year: mod.year,
-                sem: mod.sem
+                sem: mod.sem,
+                SU: mod.SU
               };
 
               total_grades.push(result);
@@ -124,8 +125,7 @@ export default {
           //console.log(obj_array[0][key])
           for (var m = 0; m < actmodules.length; m++) {
             var module = actmodules[m];
-
-            totalscore += database.convertCap(module.grade) * module.MC;
+            totalscore += database.convertCap(module.grade, module.SU) * module.MC;
             mc += module.MC;
           }
           if (i != 0) {
@@ -151,7 +151,6 @@ export default {
   },
   watch: {
     User: function() {
-      console.log("changed");
       this.parse_sap(this.User.sap_by_sem, this.User.usergrades);
      
       this.$refs.chart.updateSeries([

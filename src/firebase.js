@@ -63,7 +63,10 @@ var database = {
     return promise;
   },
 
-  convertCap(grade) {
+  convertCap(grade, SU) {
+    if (SU == "Yes") {
+      return 0;
+    }
     if (grade == "A" || grade == "A+") {
       return 5;
     } else if (grade == "A-") {
