@@ -3,21 +3,13 @@ import "firebase/firestore";
 
 const firebaseConfig = {
   //actual
-  // apiKey: process.env.VUE_APP_APIKEY,
-  // authDomain: "modeaux-3089e.firebaseapp.com",
-  // databaseURL: "https://modeaux-3089e.firebaseio.com",
-  // projectId: "modeaux-3089e",
-  // storageBucket: "modeaux-3089e.appspot.com",
-  // messagingSenderId: "648954694353",
-  // appId: "1:648954694353:web:8a421abb78e90c8dd513f0",
-
-  apiKey: "AIzaSyA2BGHoHZ4NmuwvKu2DfHXG6-yRJD5YrtY",
-  authDomain: "backup-977dc.firebaseapp.com",
-  databaseURL: "https://backup-977dc.firebaseio.com",
-  projectId: "backup-977dc",
-  storageBucket: "backup-977dc.appspot.com",
-  messagingSenderId: "296071110540",
-  appId: "1:296071110540:web:9c158359d309d7f5ca80a9",
+  apiKey: process.env.VUE_APP_APIKEY,
+  authDomain: "modeaux-3089e.firebaseapp.com",
+  databaseURL: "https://modeaux-3089e.firebaseio.com",
+  projectId: "modeaux-3089e",
+  storageBucket: "modeaux-3089e.appspot.com",
+  messagingSenderId: "648954694353",
+  appId: "1:648954694353:web:8a421abb78e90c8dd513f0"
 };
 
 //  console.log(process.env.VUE_APP_APIKEY);

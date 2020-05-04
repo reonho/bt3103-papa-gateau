@@ -102,7 +102,7 @@
                 >
                   <md-icon
                     class="md-icon-button-link"
-                    style="margin-left:1.2vw;margin-top:-3vh;font-size:1.5vw !important; color:#DC143C"
+                    style="margin-left:1.2vw;margin-top:-3vh;font-size:1.5vw !important; color:#DC143C;"
                     v-on:click="hideContent(post)"
                   >close
                   <md-tooltip
