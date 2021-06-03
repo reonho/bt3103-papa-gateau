@@ -44,7 +44,6 @@ export default {
       this.showFollowUp = true;
     },
     showNewForm() {
-      console.log("hi");
       this.showModal = true;
       this.showFollowUp = false;
     },

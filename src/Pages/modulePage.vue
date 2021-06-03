@@ -803,18 +803,15 @@ export default {
       });
      })
     database.getModuleAttributes(this.code).then(ma => {
-      //console.log(ma);
       this.topAttributes = ma;
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
-      var self = this;
       async function check(self) {
         // console.log(typeof ma );
         while (typeof ma[0] == "undefined") {
           await sleep(1000);
         }
-        self.topAttCheck = ma[0].att;
       }
       //no top students data
       if (ma !== "no data") {

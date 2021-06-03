@@ -176,6 +176,32 @@ export default {
             }
           }
         }
+      } else {
+        var lenf = fac_attr.length;
+        for (let i = 0; i < lenf; i++) {
+          var f_code = fac_attr[i].att;
+          if (fac_attrs[f_code] == undefined) {
+            fac_attrs[f_code] = fac_attr[i].grade.toFixed(2);
+          }
+        }
+        my_attr.sort(function(a, b) {
+          return b.grade - a.grade;
+        });
+        len = my_attr.length;
+        console.log(my_attr.length);
+        if (len > 6) {
+          len = 6;
+        }
+        for (let i = 0; i < len; i++) {
+          m_code = my_attr[i].att;
+          m_list.push(my_attr[i].grade.toFixed(2));
+          attr_labels.push(m_code);
+          if (fac_attrs[m_code] !== undefined) {
+            f_list.push(fac_attrs[m_code]);
+          } else {
+            f_list.push(0);
+          }
+        }
       }
 
       this.series1[0].data = m_list;

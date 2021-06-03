@@ -68,7 +68,6 @@
                 this.$emit('scroll',ev)
             },
             logout(){
-                console.log("hi")
                 var self = this
                 database.logout().then(function(e){
                     if(e){
